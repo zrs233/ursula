@@ -1,0 +1,22 @@
+---
+
+- hosts: all
+  gather_facts: false
+  connection: ssh
+  sudo: yes
+  tasks:
+    - include: fireball.yml
+    - action: fireball
+
+
+- hosts: all
+  connection: fireball
+  tasks:
+    - include: common.yml
+
+
+- hosts: os-controller
+  connection: fireball
+  tasks:
+    - include: db.yml
+    - include: keystone.yml

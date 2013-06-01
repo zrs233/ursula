@@ -1,0 +1,7 @@
+---
+- name: get keystone source repo
+  git: |
+    repo=https://github.com/openstack/keystone.git dest=/opt/stack/keystone version="${keystone_rev}"
+
+- name: install keystone
+  command: pip install /opt/stack/keystone

@@ -1,0 +1,8 @@
+#!/bin/bash
+set -ex
+sudo add-apt-repository --yes ppa:rquillo/ansible
+sudo apt-get update
+DEBIAN_FRONTEND=noninteractive sudo apt-get install --yes ansible
+
+# required only for 'fireball' 0mq mode:
+DEBIAN_FRONTEND=noninteractive sudo apt-get install --yes python-zmq python-pyasn1 python-crypto python-keyczar

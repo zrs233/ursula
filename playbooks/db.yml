@@ -1,0 +1,21 @@
+---
+
+- name: install mysql
+  apt: pkg=mysql-server
+
+- name: python mysqldb
+  apt: pkg=python-mysqldb
+
+
+- name: keystone db
+  mysql_db: db=keystone state=present
+
+- name: glance db
+  mysql_db: db=glance state=present
+
+- name: nova db
+  mysql_db: db=nova state=present
+
+- name: quantum db
+  mysql_db: db=quantum state=present
+
