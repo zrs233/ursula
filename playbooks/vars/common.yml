@@ -1,0 +1,13 @@
+---
+secrets:
+  admin_token: 843ut8hahgAEdfkJieijKFjeijq
+  db_password: sadfjiejiehinrbirnb34839SDF
+
+endpoints:
+  db: 15.185.117.129
+
+keystone:
+  rev: master
+
+glance:
+  rev: master

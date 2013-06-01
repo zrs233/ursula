@@ -8,15 +8,13 @@
     - include: fireball.yml
     - action: fireball
 
-
 - hosts: all
   connection: fireball
   tasks:
     - include: common.yml
 
 
-- hosts: os-controller
-  connection: fireball
-  tasks:
-    - include: db.yml
-    - include: keystone.yml
+- include: db.yml
+- include: rabbit.yml
+- include: keystone.yml
+- include: glance.yml

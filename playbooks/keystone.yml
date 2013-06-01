@@ -1,7 +1,45 @@
 ---
-- name: get keystone source repo
-  git: |
-    repo=https://github.com/openstack/keystone.git dest=/opt/stack/keystone version="${keystone_rev}"
+- hosts: os-controller
+  connection: fireball
 
-- name: install keystone
-  command: pip install /opt/stack/keystone
+  vars_files:
+    - vars/common.yml
+
+  tasks:
+
+    - name: keystone user
+      user: name=keystone shell=/bin/false
+
+    - name: get keystone source repo
+      git: |
+        repo=https://github.com/openstack/keystone.git dest=/opt/stack/keystone version="${keystone.rev}"
+      notify:
+        - pip install keystone
+
+    - name: /etc/keystone
+      file: dest=/etc/keystone state=directory
+
+    - name: keystone.conf
+      template: src=templates/etc/keystone/keystone.conf dest=/etc/keystone/keystone.conf
+      notify:
+        - restart keystone
+
+    - name: policy.json
+      template: src=templates/etc/keystone/policy.json dest=/etc/keystone/policy.json
+      notify:
+        - restart keystone
+
+    - name: keystone start script
+      template: src=templates/etc/init/keystone.conf dest=/etc/init/keystone.conf
+      notify:
+        - restart keystone
+
+    - name: keystone is running
+      service: name=keystone state=started
+
+  handlers:
+    - name: restart keystone
+      action: service name=keystone state=restarted
+
+    - name: pip install keystone
+      action: command pip install /opt/stack/keystone

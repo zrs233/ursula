@@ -1,0 +1,53 @@
+---
+- hosts: os-controller
+  connection: fireball
+
+  vars_files:
+    - vars/common.yml
+
+  tasks:
+
+    - name: glance user
+      user: name=glance shell=/bin/false
+
+    - name: get glance source repo
+      git: |
+        repo=https://github.com/openstack/glance.git dest=/opt/stack/glance version="${glance.rev}"
+      notify:
+        - pip install glance
+
+    - name: /etc/glance
+      file: dest=/etc/glance state=directory
+
+    - name: glance config
+      action: template src={{ item }} dest=/etc/glance
+      with_fileglob: templates/etc/glance/*
+      notify:
+        - restart glance-api
+        - restart glance-registry
+
+    - name: glance-api start script
+      template: src=templates/etc/init/glance-api.conf dest=/etc/init/glance-api.conf
+      notify:
+        - restart glance-api
+
+    - name: glance-registry start script
+      template: src=templates/etc/init/glance-registry.conf dest=/etc/init/glance-registry.conf
+      notify:
+        - restart glance-registry
+
+    - name: glance-api is running
+      service: name=glance-api state=started
+
+    - name: glance-registry is running
+      service: name=glance-registry state=started
+
+  handlers:
+    - name: restart glance-api
+      action: service name=glance-api state=restarted
+
+    - name: restart glance-registry
+      action: service name=glance-registry state=restarted
+
+    - name: pip install glance
+      action: command pip install /opt/stack/glance
