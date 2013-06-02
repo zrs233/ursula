@@ -1,7 +1,8 @@
 ---
 
+#
 # software and config
-
+#
 - hosts: os-controller:os-compute
   connection: fireball
 
@@ -19,12 +20,16 @@
         repo=https://github.com/openstack/nova.git dest=/opt/stack/nova version="${nova.rev}"
       notify:
         - pip install nova
+        - nova rootwrap
 
     - file: dest=/etc/nova state=directory
-
     - file: dest=/var/lib/nova state=directory owner=nova
 
     - name: nova config
+      action: template src={{ item }} dest=/etc/nova
+      with_fileglob: templates/etc/nova/*
+
+    - name: nova rootwrap config
       action: template src={{ item }} dest=/etc/nova
       with_fileglob: templates/etc/nova/*
 
@@ -34,10 +39,42 @@
   handlers:
     - name: pip install nova
       action: command pip install /opt/stack/nova
+    - name: nova rootwrap
+      action: command rsync -avh /opt/stack/nova/etc/nova/rootwrap.d /etc/nova
 
-
+#
+# nova 'controller' services
+#
 - hosts: os-controller
   connection: fireball
   tasks:
-    - template: src=templates/etc/init/nova-api.conf dest=/etc/init/nova-api.conf
-    - service: name=nova-api state=started
+    - action: template src=templates/etc/init/{{ item }}.conf dest=/etc/init/{{ item }}.conf
+      with_items:
+        - nova-api
+        - nova-cert
+        - nova-conductor
+        - nova-consoleauth
+        - nova-scheduler
+    - action: service name=nova-api state=started
+      with_items:
+        - nova-api
+        - nova-cert
+        - nova-conductor
+        - nova-consoleauth
+        - nova-scheduler
+
+#
+# nova compute services
+#
+- hosts: os-compute
+  connection: fireball
+  tasks:
+    - action: apt pkg={{ item }}
+      with_items:
+        - libvirt-bin
+        - python-libvirt
+        - kvm
+    - user: name=nova groups=libvirtd
+    - file: dest=/var/lib/nova/instances state=directory owner=nova
+    - template: src=templates/etc/init/nova-compute.conf dest=/etc/init/nova-compute.conf
+    - service: name=nova-compute state=started
