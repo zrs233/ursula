@@ -12,7 +12,7 @@
 
     - name: keystone-client
       git: |
-        repo=https://github.com/openstack/python-keystoneclient.git
+        repo={{ openstack.git_mirror }}/python-keystoneclient.git
         dest=/opt/stack/python-keystoneclient
         version=master
       notify:
@@ -20,7 +20,7 @@
 
     - name: glance-client
       git: |
-        repo=https://github.com/openstack/python-glanceclient.git
+        repo={{ openstack.git_mirror }}/python-glanceclient.git
         dest=/opt/stack/python-glanceclient
         version=master
       notify:
@@ -28,7 +28,7 @@
 
     - name: nova-client
       git: |
-        repo=https://github.com/openstack/python-novaclient.git
+        repo={{ openstack.git_mirror }}/python-novaclient.git
         dest=/opt/stack/python-novaclient
         version=master
       notify:
@@ -36,7 +36,7 @@
 
     - name: quantum-client
       git: |
-        repo=https://github.com/openstack/python-quantumclient.git
+        repo={{ openstack.git_mirror }}/python-quantumclient.git
         dest=/opt/stack/python-quantumclient
         version=master
       notify:
@@ -44,13 +44,13 @@
 
   handlers:
     - name: pip install keystoneclient
-      action: command pip install /opt/stack/python-keystoneclient
+      action: command pip install -i {{ openstack.pypi_mirror }} /opt/stack/python-keystoneclient
 
     - name: pip install glanceclient
-      action: command pip install /opt/stack/python-glanceclient
+      action: command pip install -i {{ openstack.pypi_mirror }} /opt/stack/python-glanceclient
 
     - name: pip install novaclient
-      action: command pip install /opt/stack/python-novaclient
+      action: command pip install -i {{ openstack.pypi_mirror }} /opt/stack/python-novaclient
 
     - name: pip install quantumclient
-      action: command pip install /opt/stack/python-quantumclient
+      action: command pip install -i {{ openstack.pypi_mirror }} /opt/stack/python-quantumclient

@@ -15,11 +15,31 @@ endpoints:
   glance:   15.185.117.129
   quantum:  15.185.117.129
 
+openstack:
+  pypi_mirror: https://pypi.openstack.org/openstack
+  git_mirror:  https://review.openstack.org/openstack
 
 nova:
   rev: master
   libvirt_type: qemu
   compute_driver: nova.virt.libvirt.LibvirtDriver
+
+quantum:
+  rev: master
+  tenant_network_type: gre
+  physical_bridge: br-ex
+  physical_network: br-ex
+  tenant_network_type: gre
+  enable_tunneling: True
+#  fixed_range: "172.16.100.0/24"
+#  fixed_net_name: tenants
+#  ovs_range: "172.16.100.0/24"
+
+glance:
+  rev: master
+  images:
+    - name: cirros
+      url: https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img
 
 keystone:
   rev: master
@@ -79,14 +99,14 @@ keystone:
       admin_url: http://15.185.117.129:8774/v2/%(tenant_id)s
     - name: glance
       type: image
-      description: Image Service
+      description: 'Image Service'
       public_url: http://15.185.117.129:9292
       internal_url: http://15.185.117.129:9292
       admin_url: http://15.185.117.129:9292
+    - name: quantum
+      type: network
+      description: 'Network Service'
+      public_url: http://15.185.117.129:9696
+      internal_url: http://15.185.117.129:9696
+      admin_url: http://15.185.117.129:9696
 
-glance:
-  rev: master
-
-  images:
-    - name: cirros
-      url: https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img

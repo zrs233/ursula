@@ -19,3 +19,4 @@
 - include: keystone.yml
 - include: glance.yml
 - include: nova.yml
+- include: quantum.yml

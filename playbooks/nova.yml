@@ -17,7 +17,7 @@
 
     - name: get nova source repo
       git: |
-        repo=https://github.com/openstack/nova.git dest=/opt/stack/nova version="${nova.rev}"
+        repo={{ openstack.git_mirror}}/nova.git dest=/opt/stack/nova version="${nova.rev}"
       notify:
         - pip install nova
         - nova rootwrap
@@ -38,7 +38,7 @@
 
   handlers:
     - name: pip install nova
-      action: command pip install /opt/stack/nova
+      action: command pip install -i {{ openstack.pypi_mirror }} /opt/stack/nova
     - name: nova rootwrap
       action: command rsync -avh /opt/stack/nova/etc/nova/rootwrap.d /etc/nova
 
@@ -55,7 +55,7 @@
         - nova-conductor
         - nova-consoleauth
         - nova-scheduler
-    - action: service name=nova-api state=started
+    - action: service name={{ item }} state=started
       with_items:
         - nova-api
         - nova-cert
