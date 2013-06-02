@@ -13,7 +13,7 @@
   tasks:
     - include: common.yml
 
-
+- include: client.yml
 - include: db.yml
 - include: rabbit.yml
 - include: keystone.yml

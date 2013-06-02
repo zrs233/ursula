@@ -1,0 +1,23 @@
+---
+- hosts: os-controller
+  connection: fireball
+
+  vars_files:
+    - vars/common.yml
+
+  tasks:
+
+    - name: openstack creds
+      template: src=templates/root/stackrc dest=/root/stackrc
+
+    - name: keystone-client
+      git: |
+        repo=https://github.com/openstack/python-keystoneclient.git
+        dest=/opt/stack/python-keystoneclient
+        version=master
+      notify:
+        - pip install keystoneclient
+
+  handlers:
+    - name: pip install keystoneclient
+      action: command pip install /opt/stack/python-keystoneclient

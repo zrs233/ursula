@@ -2,10 +2,17 @@
 - hosts: os-controller
   connection: fireball
 
+  vars_files:
+    - vars/common.yml
+
   tasks:
 
     - name: install mysql
       apt: pkg=mysql-server
+
+    - name: listen on all ips
+      template: src=templates/etc/mysql/conf.d/all_ips.cnf dest=/etc/mysql/conf.d/all_ips.cnf
+      notify: restart mysql
 
     - name: python mysqldb
       apt: pkg=python-mysqldb
@@ -14,12 +21,45 @@
     - name: keystone db
       mysql_db: db=keystone state=present
 
+    - name: keystone db user
+      mysql_user: |
+        name=keystone
+        host=%
+        password={{ secrets.db_password }}
+        priv=keystone.*:ALL
+        state=present
+
     - name: glance db
       mysql_db: db=glance state=present
+    - name: glance db user
+      mysql_user: |
+        name=glance
+        host=%
+        password={{ secrets.db_password }}
+        priv=glance.*:ALL
+        state=present
 
     - name: nova db
       mysql_db: db=nova state=present
+    - name: nova db user
+      mysql_user: |
+        name=nova
+        host=%
+        password={{ secrets.db_password }}
+        priv=nova.*:ALL
+        state=present
 
     - name: quantum db
       mysql_db: db=quantum state=present
+    - name: quantum db user
+      mysql_user: |
+        name=quantum
+        host=%
+        password={{ secrets.db_password }}
+        priv=quantum.*:ALL
+        state=present
 
+
+  handlers:
+    - name: restart mysql
+      action: service name=mysql state=restart

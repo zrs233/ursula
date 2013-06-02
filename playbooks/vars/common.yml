@@ -1,10 +1,15 @@
 ---
 secrets:
-  admin_token: 843ut8hahgAEdfkJieijKFjeijq
-  db_password: sadfjiejiehinrbirnb34839SDF
+  admin_token:      843ut8hahgAEdfkJieijKF
+  db_password:      sadfjiejiehinrbirnb348
+  admin_password:   39ihaihiavhuirnrniij3j
+  service_password: oiieanxknra.r3i5lkajbe
+  rabbit_password:  guest
 
 endpoints:
-  db: 15.185.117.129
+  db:       15.185.117.129
+  keystone: 15.185.117.129
+  rabbit:   15.185.117.129
 
 keystone:
   rev: master

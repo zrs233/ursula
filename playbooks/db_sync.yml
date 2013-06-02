@@ -1,0 +1,14 @@
+---
+- hosts: os-controller
+  connection: fireball
+
+  vars_files:
+    - vars/common.yml
+
+  tasks:
+
+    - name: keystone db sync
+      command: keystone-manage db_sync
+
+    - name: glance db sync
+      command: glance-manage db_sync
