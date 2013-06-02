@@ -7,6 +7,7 @@ secrets:
   admin_password:   &admin_password kilgore
   metadata_proxy_shared_secret: ijeiwfjivnsidnwe3jihji
   horizon_secret_key:           knbiieohjlkieo3id9iajf
+
 endpoints:
   db:       15.185.117.129
   keystone: 15.185.117.129

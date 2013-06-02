@@ -85,11 +85,25 @@
 #
 - hosts: os-controller
   connection: fireball
+  vars_files:
+    - vars/common.yml
   tasks:
-    - quantum_network: |
+    - quantum_network: >
         name=tenants
         provider_network_type=gre
         state=present
         router_external=no
         provider_segmentation_id=256
-        network_type=gre
+        login_tenant_name=admin
+        login_password={{ secrets.admin_password }}
+
+    - quantum_subnet: >
+        name=internal
+        network_name=tenants
+        cidr=172.16.100.0/24
+        enable_dhcp=true
+        gateway_ip=172.16.100.1
+        ip_version=4
+        state=present
+        login_tenant_name=admin
+        login_password={{ secrets.admin_password }}
