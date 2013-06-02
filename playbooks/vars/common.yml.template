@@ -9,12 +9,12 @@ secrets:
   horizon_secret_key:           knbiieohjlkieo3id9iajf
 
 endpoints:
-  db:       15.185.104.155
-  keystone: 15.185.104.155
-  rabbit:   15.185.104.155
-  nova:     15.185.104.155
-  glance:   15.185.104.155
-  quantum:  15.185.104.155
+  db:       15.185.117.129
+  keystone: 15.185.117.129
+  rabbit:   15.185.117.129
+  nova:     15.185.117.129
+  glance:   15.185.117.129
+  quantum:  15.185.117.129
 
 openstack:
   pypi_mirror: https://pypi.openstack.org/openstack
@@ -92,25 +92,25 @@ keystone:
     - name: keystone
       type: identity
       description: 'Identity Service'
-      public_url: http://15.185.104.155:5000/v2.0
-      internal_url: http://15.185.104.155:5000/v2.0
-      admin_url: http://15.185.104.155:35357/v2.0
+      public_url: http://15.185.117.129:5000/v2.0
+      internal_url: http://15.185.117.129:5000/v2.0
+      admin_url: http://15.185.117.129:35357/v2.0
     - name: nova
       type: compute
       description: 'Compute Service'
-      public_url: http://15.185.104.155:8774/v2/%(tenant_id)s
-      internal_url: http://15.185.104.155:8774/v2/%(tenant_id)s
-      admin_url: http://15.185.104.155:8774/v2/%(tenant_id)s
+      public_url: http://15.185.117.129:8774/v2/%(tenant_id)s
+      internal_url: http://15.185.117.129:8774/v2/%(tenant_id)s
+      admin_url: http://15.185.117.129:8774/v2/%(tenant_id)s
     - name: glance
       type: image
       description: 'Image Service'
-      public_url: http://15.185.104.155:9292
-      internal_url: http://15.185.104.155:9292
-      admin_url: http://15.185.104.155:9292
+      public_url: http://15.185.117.129:9292
+      internal_url: http://15.185.117.129:9292
+      admin_url: http://15.185.117.129:9292
     - name: quantum
       type: network
       description: 'Network Service'
-      public_url: http://15.185.104.155:9696
-      internal_url: http://15.185.104.155:9696
-      admin_url: http://15.185.104.155:9696
+      public_url: http://15.185.117.129:9696
+      internal_url: http://15.185.117.129:9696
+      admin_url: http://15.185.117.129:9696
 

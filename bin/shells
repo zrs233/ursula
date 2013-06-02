@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+require 'yaml'
+
+screenrc = "/tmp/ansible-screen-${ENV['USER']}"
+`rm #{screenrc}`
+
+ssh_args = '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+
+File.open(screenrc, 'w') do |f|
+  f.write "startup_message off\n"
+  f.write "hardstatus alwayslastline \"%w\"\n"
+
+  YAML::load(`salt \\* network.ip_addrs`).each_pair do |host, ips|
+    ips.select { |ip| ip =~ /^10./ }.each do |ip|
+      f.write "screen -t #{host} sh -c \"ssh #{ssh_args} ubuntu@#{ip}\"\n"
+    end
+  end
+
+  f.flush
+end
+
+exec "screen -c #{screenrc}"
