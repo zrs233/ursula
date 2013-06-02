@@ -3,17 +3,14 @@
 - name: update package index
   apt: update_cache=yes
 
-- name: pip
-  apt: pkg=python-pip
-
-- name: python libxml2
-  apt: pkg=python-libxml2
-
-- name: python lxml
-  apt: pkg=python-lxml
-
-- name: python greenlet
-  apt: pkg=python-greenlet
+- apt: pkg={{ item }}
+  with_items:
+    - python-pip
+    - git
+    - python-pip
+    - python-libxml2
+    - python-lxml
+    - python-greenlet
 
 - name: /opt/stack
   file: dest=/opt/stack state=directory

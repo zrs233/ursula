@@ -79,3 +79,17 @@
         - quantum-l3-agent
         - quantum-dhcp-agent
         - quantum-metadata-agent
+
+#
+# default networks
+#
+- hosts: os-controller
+  connection: fireball
+  tasks:
+    - quantum_network: |
+        name=tenants
+        provider_network_type=gre
+        state=present
+        router_external=no
+        provider_segmentation_id=256
+        network_type=gre

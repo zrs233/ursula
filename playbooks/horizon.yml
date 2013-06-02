@@ -1,0 +1,42 @@
+---
+- hosts: os-controller
+  connection: fireball
+  vars_files:
+    - vars/common.yml
+
+  tasks:
+    - name: get horizon source repo
+      git: |
+        repo={{ openstack.git_mirror}}/horizon.git dest=/opt/stack/horizon version="${horizon.rev}"
+      notify:
+        - horizon venv
+        - restart apache
+
+    - apt: pkg={{ item }}
+      with_items:
+        - python-dev
+        - nodejs
+        - apache2
+        - memcached
+        - libapache2-mod-wsgi
+
+    - file: dest=/opt/stack/horizon/static state=directory owner=www-data
+
+    - template: src=templates/etc/apache2/httpd.conf dest=/etc/apache2/httpd.conf
+      notify:
+        - restart apache
+    - template: |
+        src=templates/opt/stack/horizon/openstack_dashboard/local/local_settings.py
+        dest=/opt/stack/horizon/openstack_dashboard/local/local_settings.py
+      notify:
+        - restart apache
+
+    - service: name=apache2 state=started
+
+  handlers:
+    - name: horizon venv
+      # TODO: don't redo this if it's already done
+      action: command python /opt/stack/horizon/tools/install_venv.py
+    - name: restart apache
+      action: service name=apache2 action=restart
+

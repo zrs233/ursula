@@ -6,7 +6,7 @@ secrets:
   rabbit_password:  guest
   admin_password:   &admin_password kilgore
   metadata_proxy_shared_secret: ijeiwfjivnsidnwe3jihji
-
+  horizon_secret_key:           knbiieohjlkieo3id9iajf
 endpoints:
   db:       15.185.117.129
   keystone: 15.185.117.129
@@ -23,6 +23,9 @@ nova:
   rev: master
   libvirt_type: qemu
   compute_driver: nova.virt.libvirt.LibvirtDriver
+
+horizon:
+  rev: master
 
 quantum:
   rev: master

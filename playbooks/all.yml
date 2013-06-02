@@ -20,3 +20,4 @@
 - include: glance.yml
 - include: nova.yml
 - include: quantum.yml
+- include: horizon.yml
