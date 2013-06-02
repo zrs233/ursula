@@ -19,5 +19,41 @@
         - pip install keystoneclient
 
   handlers:
+    - name: glance-client
+      git: |
+        repo=https://github.com/openstack/python-glanceclient.git
+        dest=/opt/stack/python-glanceclient
+        version=master
+      notify:
+        - pip install glanceclient
+
+  handlers:
+    - name: nova-client
+      git: |
+        repo=https://github.com/openstack/python-novaclient.git
+        dest=/opt/stack/python-novaclient
+        version=master
+      notify:
+        - pip install novaclient
+
+  handlers:
+    - name: quantum-client
+      git: |
+        repo=https://github.com/openstack/python-quantumclient.git
+        dest=/opt/stack/python-quantumclient
+        version=master
+      notify:
+        - pip install quantumclient
+
+  handlers:
     - name: pip install keystoneclient
       action: command pip install /opt/stack/python-keystoneclient
+
+    - name: pip install glanceclient
+      action: command pip install /opt/stack/python-glanceclient
+
+    - name: pip install novaclient
+      action: command pip install /opt/stack/python-novaclient
+
+    - name: pip install quantumclient
+      action: command pip install /opt/stack/python-quantumclient

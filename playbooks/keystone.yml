@@ -37,6 +37,27 @@
     - name: keystone is running
       service: name=keystone state=started
 
+
+    # keystone tenants / users / roles
+
+    - name: keystone tenants
+      action: |
+        keystone_user
+          tenant={{ item }}
+          tenant_description="{{ item }} tenant"
+          token={{ secrets.admin_token }}
+      with_items: keystone.tenants
+
+
+    - name: keystone users
+      action: |
+        keystone_user
+          user={{ item.name }}
+          password={{ item.password }}
+          tenant={{ item.tenant }}
+          token={{ secrets.admin_token }}
+      with_items: keystone.users
+
   handlers:
     - name: restart keystone
       action: service name=keystone state=restarted

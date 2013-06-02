@@ -2,17 +2,40 @@
 secrets:
   admin_token:      843ut8hahgAEdfkJieijKF
   db_password:      sadfjiejiehinrbirnb348
-  admin_password:   39ihaihiavhuirnrniij3j
-  service_password: oiieanxknra.r3i5lkajbe
+  service_password: &service_password oiieanxknra.r3i5lkajbe
   rabbit_password:  guest
+  admin_password:   kilgore
 
 endpoints:
   db:       15.185.117.129
   keystone: 15.185.117.129
   rabbit:   15.185.117.129
 
+
 keystone:
   rev: master
+  tenants:
+    - admin
+    - service
+    - demo
+
+  users:
+    - name: admin
+      password: secrets.admin_password
+      tenant: admin
+    - name: demo
+      password: demopass
+      tenant: demo
+
+    - name: nova
+      password: *service_password
+      tenant: service
+    - name: glance
+      password: *service_password
+      tenant: service
+    - name: quantum
+      password: *service_password
+      tenant: service
 
 glance:
   rev: master
