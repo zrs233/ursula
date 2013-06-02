@@ -7,8 +7,8 @@
 
   tasks:
 
-    - name: keystone db sync
-      command: keystone-manage db_sync
+    - command: keystone-manage db_sync
 
-    - name: glance db sync
-      command: glance-manage db_sync
+    - command: glance-manage db_sync
+
+    - command: nova-manage db sync

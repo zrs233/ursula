@@ -5,12 +5,21 @@ secrets:
   service_password: &service_password oiieanxknra.r3i5lkajbe
   rabbit_password:  guest
   admin_password:   &admin_password kilgore
+  metadata_proxy_shared_secret: ijeiwfjivnsidnwe3jihji
 
 endpoints:
   db:       15.185.117.129
   keystone: 15.185.117.129
   rabbit:   15.185.117.129
+  nova:     15.185.117.129
+  glance:   15.185.117.129
+  quantum:  15.185.117.129
 
+
+nova:
+  rev: master
+  libvirt_type: qemu
+  compute_driver: nova.virt.libvirt.LibvirtDriver
 
 keystone:
   rev: master

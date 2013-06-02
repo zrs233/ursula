@@ -1,0 +1,43 @@
+---
+
+# software and config
+
+- hosts: os-controller:os-compute
+  connection: fireball
+
+  vars_files:
+    - vars/common.yml
+
+  tasks:
+    - name: nova user
+      user: name=nova shell=/bin/false
+
+    - apt: pkg=python-numpy
+
+    - name: get nova source repo
+      git: |
+        repo=https://github.com/openstack/nova.git dest=/opt/stack/nova version="${nova.rev}"
+      notify:
+        - pip install nova
+
+    - file: dest=/etc/nova state=directory
+
+    - file: dest=/var/lib/nova state=directory owner=nova
+
+    - name: nova config
+      action: template src={{ item }} dest=/etc/nova
+      with_fileglob: templates/etc/nova/*
+
+    - name: nova sudoer
+      template: src=templates/etc/sudoers.d/nova dest=/etc/sudoers.d/nova owner=root group=root mode=0440
+
+  handlers:
+    - name: pip install nova
+      action: command pip install /opt/stack/nova
+
+
+- hosts: os-controller
+  connection: fireball
+  tasks:
+    - template: src=templates/etc/init/nova-api.conf dest=/etc/init/nova-api.conf
+    - service: name=nova-api state=started

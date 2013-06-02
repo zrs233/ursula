@@ -18,3 +18,4 @@
 - include: rabbit.yml
 - include: keystone.yml
 - include: glance.yml
+- include: nova.yml
