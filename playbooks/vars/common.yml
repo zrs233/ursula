@@ -4,7 +4,7 @@ secrets:
   db_password:      sadfjiejiehinrbirnb348
   service_password: &service_password oiieanxknra.r3i5lkajbe
   rabbit_password:  guest
-  admin_password:   kilgore
+  admin_password:   &admin_password kilgore
 
 endpoints:
   db:       15.185.117.129
@@ -21,7 +21,7 @@ keystone:
 
   users:
     - name: admin
-      password: secrets.admin_password
+      password: *admin_password
       tenant: admin
     - name: demo
       password: demopass
@@ -37,5 +37,47 @@ keystone:
       password: *service_password
       tenant: service
 
+  user_roles:
+    - user: admin
+      tenant: admin
+      role: admin
+    - user: admin
+      tenant: demo
+      role: admin
+    - user: nova
+      tenant: service
+      role: admin
+    - user: glance
+      tenant: service
+      role: admin
+    - user: quantum
+      tenant: service
+      role: admin
+
+  # TODO: fill ips/hostnames in dynamically.
+  services:
+    - name: keystone
+      type: identity
+      description: 'Identity Service'
+      public_url: http://15.185.117.129:5000/v2.0
+      internal_url: http://15.185.117.129:5000/v2.0
+      admin_url: http://15.185.117.129:35357/v2.0
+    - name: nova
+      type: compute
+      description: 'Compute Service'
+      public_url: http://15.185.117.129:8774/v2/%(tenant_id)s
+      internal_url: http://15.185.117.129:8774/v2/%(tenant_id)s
+      admin_url: http://15.185.117.129:8774/v2/%(tenant_id)s
+    - name: glance
+      type: image
+      description: Image Service
+      public_url: http://15.185.117.129:9292
+      internal_url: http://15.185.117.129:9292
+      admin_url: http://15.185.117.129:9292
+
 glance:
   rev: master
+
+  images:
+    - name: cirros
+      url: https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img

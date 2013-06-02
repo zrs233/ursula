@@ -34,29 +34,64 @@
       notify:
         - restart keystone
 
+    - name: keystone pki
+      command: keystone-manage pki_setup
+
     - name: keystone is running
       service: name=keystone state=started
+
+
+    # TODO: generate only once and distribute.
+    - name: keystone pki
+      command: keystone-manage pki_setup
+    - file: |
+        recurse=True
+        dest=/etc/keystone/ssl
+        state=directory
+        owner=keystone
+        group=keystone
+      notify:
+        - restart keystone
 
 
     # keystone tenants / users / roles
 
     - name: keystone tenants
-      action: |
-        keystone_user
-          tenant={{ item }}
-          tenant_description="{{ item }} tenant"
-          token={{ secrets.admin_token }}
+      keystone_user: >
+        tenant={{ item }}
+        tenant_description="{{ item }} tenant"
+        token={{ secrets.admin_token }}
       with_items: keystone.tenants
 
 
     - name: keystone users
-      action: |
-        keystone_user
-          user={{ item.name }}
-          password={{ item.password }}
-          tenant={{ item.tenant }}
-          token={{ secrets.admin_token }}
+      keystone_user: >
+        user={{ item.name }}
+        password={{ item.password }}
+        tenant={{ item.tenant }}
+        token={{ secrets.admin_token }}
       with_items: keystone.users
+
+    - name: keystone roles
+      keystone_user: >
+        role={{ item.role }}
+        user={{ item.user }}
+        tenant={{ item.tenant }}
+        token={{ secrets.admin_token }}
+      with_items: keystone.user_roles
+
+    - name: keystone services
+      keystone_service: >
+        name={{ item.name }}
+        type={{ item.type }}
+        description='{{ item.description }}'
+        public_url={{ item.public_url }}
+        internal_url={{ item.internal_url }}
+        admin_url={{ item.admin_url }}
+        region=RegionOne
+        token={{ secrets.admin_token }}
+      with_items: keystone.services
+
 
   handlers:
     - name: restart keystone

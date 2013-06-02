@@ -42,6 +42,18 @@
     - name: glance-registry is running
       service: name=glance-registry state=started
 
+
+    - name: default images
+      action: |
+        glance_image
+          name={{ item.name }}
+          copy_from={{ item.url }}
+          container_format=bare
+          disk_format=qcow2
+          login_tenant_name=admin
+          login_password={{ secrets.admin_password }}
+      with_items: glance.images
+
   handlers:
     - name: restart glance-api
       action: service name=glance-api state=restarted
