@@ -1,0 +1,24 @@
+---
+- hosts: controller
+  connection: fireball
+  tasks:
+    - include: client/tasks/main.yml
+    - include: rabbit/tasks/main.yml
+    - include: db/tasks/main.yml
+    - include: keystone/tasks/main.yml
+    - include: glance/tasks/main.yml
+    - include: nova/tasks/controller.yml
+    - include: neutron/tasks/controller.yml
+    - include: db/tasks/sync.yml
+    - include: keystone/tasks/users.yml
+    - include: glance/tasks/images.yml
+    - include: neutron/tasks/networks.yml
+    - include: horizon/tasks/main.yml
+  handlers:
+    - include: db/handlers/main.yml
+    - include: client/handlers/main.yml
+    - include: keystone/handlers/main.yml
+    - include: glance/handlers/main.yml
+    - include: nova/handlers/main.yml
+    - include: neutron/handlers/main.yml
+    - include: horizon/handlers/main.yml

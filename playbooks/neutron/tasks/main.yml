@@ -1,0 +1,25 @@
+---
+- name: neutron user
+  user: name=neutron shell=/bin/false
+
+- name: get neutron source repo
+  git: |
+    repo={{ openstack.git_mirror }}/neutron.git dest=/opt/stack/neutron version={{ neutron.rev }}
+  notify:
+    - pip install neutron
+    - neutron rootwrap
+
+- file: dest=/etc/neutron state=directory
+- file: dest=/etc/neutron/plugins/openvswitch state=directory
+- file: dest=/var/lib/neutron state=directory owner=neutron
+
+- name: neutron config
+  action: template src={{ item }} dest=/etc/neutron
+  with_fileglob: ../templates/etc/neutron/*
+
+- template: |
+    src=etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini
+    dest=/etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini
+
+- name: neutron sudoer
+  template: src=etc/sudoers.d/neutron dest=/etc/sudoers.d/neutron owner=root group=root mode=0440

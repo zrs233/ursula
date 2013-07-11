@@ -1,0 +1,7 @@
+---
+- hosts: network
+  connection: fireball
+  tasks:
+    - include: neutron/tasks/network.yml
+  handlers:
+    - include: neutron/handlers/main.yml

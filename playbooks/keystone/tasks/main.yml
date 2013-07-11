@@ -1,0 +1,34 @@
+---
+- name: keystone user
+  user: name=keystone shell=/bin/false
+
+- name: get keystone source repo
+  git: |
+    repo={{ openstack.git_mirror }}/keystone.git dest=/opt/stack/keystone version={{ keystone.rev }}
+  notify:
+    - pip install keystone
+
+- name: /etc/keystone
+  file: dest=/etc/keystone state=directory
+
+- name: keystone.conf
+  template: src=etc/keystone/keystone.conf dest=/etc/keystone/keystone.conf
+  notify:
+    - restart keystone
+
+- name: policy.json
+  template: src=etc/keystone/policy.json dest=/etc/keystone/policy.json
+  notify:
+    - restart keystone
+
+- name: keystone start script
+  template: src=etc/init/keystone.conf dest=/etc/init/keystone.conf
+  notify:
+    - restart keystone
+
+# TODO: generate only once and distribute.
+- name: keystone pki
+  command: keystone-manage pki_setup --keystone-user keystone --keystone-group keystone
+
+- name: keystone is running
+  service: name=keystone state=started

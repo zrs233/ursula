@@ -1,0 +1,20 @@
+---
+
+#- name: update dpkg index
+#  apt: update_cache=yes
+
+- name: python dependencies
+  apt: pkg={{ item }}
+  with_items:
+    - python-pip
+    - python-pip
+    - python-libxml2
+    - python-lxml
+    - python-greenlet
+    - python-openssl
+    - python-dev
+
+- apt: pkg=git
+
+- name: /opt/stack
+  file: dest=/opt/stack state=directory

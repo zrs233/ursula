@@ -1,0 +1,36 @@
+---
+- name: keystone tenants
+  keystone_user: >
+    tenant={{ item }}
+    tenant_description="{{ item }} tenant"
+    token={{ secrets.admin_token }}
+  with_items: keystone.tenants
+ 
+ 
+- name: keystone users
+  keystone_user: >
+    user={{ item.name }}
+    password={{ item.password }}
+    tenant={{ item.tenant }}
+    token={{ secrets.admin_token }}
+  with_items: keystone.users
+ 
+- name: keystone roles
+  keystone_user: >
+    role={{ item.role }}
+    user={{ item.user }}
+    tenant={{ item.tenant }}
+    token={{ secrets.admin_token }}
+  with_items: keystone.user_roles
+ 
+- name: keystone services
+  keystone_service: >
+    name={{ item.name }}
+    type={{ item.type }}
+    description='{{ item.description }}'
+    public_url={{ item.public_url }}
+    internal_url={{ item.internal_url }}
+    admin_url={{ item.admin_url }}
+    region=RegionOne
+    token={{ secrets.admin_token }}
+  with_items: keystone.services

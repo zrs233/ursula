@@ -1,0 +1,8 @@
+---
+- include: main.yml
+- apt: pkg=openvswitch-switch
+- apt: pkg=openvswitch-datapath-dkms
+- template: |
+    src=etc/init/neutron-openvswitch-agent.conf
+    dest=/etc/init/neutron-openvswitch-agent.conf
+- service: name=neutron-openvswitch-agent state=started

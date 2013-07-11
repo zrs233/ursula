@@ -1,0 +1,6 @@
+---
+- name: pip install neutron
+  action: command pip install -i {{ openstack.pypi_mirror }} /opt/stack/neutron
+
+- name: neutron rootwrap
+  action: command rsync -avh /opt/stack/neutron/etc/neutron/rootwrap.d /etc/neutron

@@ -1,0 +1,12 @@
+---
+- name: pip install keystoneclient
+  action: command pip install -i {{ openstack.pypi_mirror }} /opt/stack/python-keystoneclient
+
+- name: pip install glanceclient
+  action: command pip install -i {{ openstack.pypi_mirror }} /opt/stack/python-glanceclient
+
+- name: pip install novaclient
+  action: command pip install -i {{ openstack.pypi_mirror }} /opt/stack/python-novaclient
+
+- name: pip install neutronclient
+  action: command pip install -i {{ openstack.pypi_mirror }} /opt/stack/python-neutronclient

@@ -1,0 +1,9 @@
+---
+- hosts: compute
+  connection: fireball
+  tasks:
+    - include: nova/tasks/compute.yml
+    - include: neutron/tasks/compute.yml
+  handlers:
+    - include: nova/handlers/main.yml
+    - include: neutron/handlers/main.yml
