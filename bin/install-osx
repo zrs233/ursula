@@ -1,0 +1,17 @@
+#!/bin/bash
+set -eu
+
+die() {
+  echo "ERROR: " $1
+  exit 1
+}
+
+install_pip() {
+  which brew >/dev/null || \
+    die "this script requires a homebrew installation to proceed.  http://mxcl.github.io/homebrew/"
+  brew install python
+}
+
+which pip >/dev/null || install_pip
+
+pip freeze | grep ansible || sudo pip install -U git+https://github.com/ansible/ansible.git
