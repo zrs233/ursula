@@ -12,6 +12,13 @@ install_pip() {
   brew install python
 }
 
-which pip >/dev/null || install_pip
+pip_pkgs() {
+  for pkg in $*; do
+    pip freeze | grep $pkg || pip install $pkg
+  done
+}
 
-pip freeze | grep ansible || sudo pip install -U git+https://github.com/ansible/ansible.git
+which pip >/dev/null || install_pip
+pip_pkgs ansible
+pip_pkgs python-keyczar pyzmq pyasn1 pycrypto # for fireball mode
+echo -e "\nall set!\n"
