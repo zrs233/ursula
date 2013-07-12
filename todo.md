@@ -2,6 +2,10 @@
 
 # TODO
 
+## make a nice wrapper deployment script
+
+    ansible-playbook -i envs/tim/hosts -u root -M ./library playbooks/site.yml
+
 
 ## glance image create times out
 
@@ -11,6 +15,9 @@
 
 ## configure quantum external bridge
 
+all nodes running ovs-agent need br-int.
+network node needs br-ex.
+
     ovs-vsctl add-br br-int
     ovs-vsctl add-br br-ex
     ovs-vsctl add-port br-ex eth1
@@ -18,6 +25,10 @@
 ## notifications are not always happening
 
 e.g. pip installs, rootwrap syncs.
+
+## change virt type from qemu to kvm
+
+this may make the below /dev/net/tun thing unncessary.
 
 ## /dev/net/tun
 
@@ -54,3 +65,15 @@ just run nova-novncproxy after insalling novnc from source, to avoid bogus nova-
     install -d -m 0755 -o root -g root /usr/share/novnc/include
     install -m 0644 -o root -g root /opt/stack/novnc/include/*.css /usr/share/novnc/include
     install -m 0644 -o root -g root /opt/stack/novnc/include/*.js /usr/share/novnc/include
+
+## release tool
+
+- accept env name as parameter
+- fail on a dirty git tree?
+- log ansible commands and git status
+- use sudo rules to hide ssh key from normal users?
+- playbook to set it all up
+
+## horizon branding
+
+copy over logo.png and logo-splash.ping, but still allow for git pulls.  fork?
