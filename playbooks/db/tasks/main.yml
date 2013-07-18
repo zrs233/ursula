@@ -42,3 +42,5 @@
     - glance
     - nova
     - neutron
+
+- include: sync.yml
