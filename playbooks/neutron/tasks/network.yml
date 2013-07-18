@@ -1,6 +1,9 @@
 ---
 - include: ovs_agent.yml
 
+- name: ovs ex bridge
+  ovs_bridge: name=br-ex state=present
+
 - action: template src=etc/init/{{ item }}.conf dest=/etc/init/{{ item }}.conf
   with_items:
     - neutron-l3-agent

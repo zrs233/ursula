@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'antsy'
+
+args = Antsy.args
+name = args[:name]
+state = args[:state]
+
+Antsy.fail! "bad bridge name: '#{name}'" unless name  and name  =~ /\w+/
+Antsy.fail! "bad state: '#{state}'"      unless state and state == 'present'
+Antsy.fail! 'ovs-vsctl is not present'   unless system 'which ovs-vsctl'
+
+if system "ovs-vsctl list-br | grep #{args[:name]}"
+  Antsy.no_change!
+else
+  add_cmd = "ovs-vsctl add-br #{args[:name]}"
+  if system add_cmd
+    Antsy.changed!
+  else
+    Antsy.fail! "failed to add bridge with command: #{add_cmd}"
+  end
+end
