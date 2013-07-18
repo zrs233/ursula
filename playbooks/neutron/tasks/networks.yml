@@ -1,6 +1,6 @@
 ---
 # TODO: pull networks from vars
-- quantum_network: >
+- neutron_network: >
     name=tenants
     provider_network_type=gre
     state=present
@@ -9,7 +9,7 @@
     login_tenant_name=admin
     login_password={{ secrets.admin_password }}
 
-- quantum_subnet: >
+- neutron_subnet: >
     name=internal
     network_name=tenants
     cidr=172.16.100.0/24
