@@ -1,6 +1,6 @@
 ---
 - name: pip install nova
-  action: command pip install -i {{ openstack.pypy_mirror }} /opt/stack/nova
+  command: pip install -i {{ openstack.pypi_mirror }} /opt/stack/nova
 
 - name: nova rootwrap
-  action: command rsync -avh /opt/stack/nova/etc/nova/rootwrap.d /etc/nova
+  command: rsync -avh /opt/stack/nova/etc/nova/rootwrap.d /etc/nova
