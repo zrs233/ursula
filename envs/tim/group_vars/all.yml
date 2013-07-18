@@ -17,12 +17,13 @@ endpoints:
   neutron:  ds590.blueboxgrid.com
 
 openstack:
-  pypi_mirror: https://pypi.openstack.org/openstack
+  # TODO: pypi should use https, but fails currently.
+  pypi_mirror: http://pypi.openstack.org/openstack
   git_mirror:  https://review.openstack.org/openstack
 
 nova:
   rev: master
-  libvirt_type: qemu
+  libvirt_type: kvm
   compute_driver: nova.virt.libvirt.LibvirtDriver
 
 horizon:
