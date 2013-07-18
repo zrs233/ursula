@@ -15,16 +15,9 @@
 
 ## configure quantum external bridge
 
-all nodes running ovs-agent need br-int.
-network node needs br-ex.
+*br-ex must be attached to a nic*
 
-    ovs-vsctl add-br br-int
-    ovs-vsctl add-br br-ex
     ovs-vsctl add-port br-ex eth1
-
-## notifications are not always happening
-
-e.g. pip installs, rootwrap syncs.
 
 ## change virt type from qemu to kvm
 
@@ -73,7 +66,3 @@ just run nova-novncproxy after insalling novnc from source, to avoid bogus nova-
 - log ansible commands and git status
 - use sudo rules to hide ssh key from normal users?
 - playbook to set it all up
-
-## horizon branding
-
-copy over logo.png and logo-splash.ping, but still allow for git pulls.  fork?
