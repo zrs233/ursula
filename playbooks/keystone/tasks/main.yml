@@ -27,6 +27,7 @@
     - restart keystone
 
 # TODO: generate only once and distribute.
+- meta: flush_handlers # ensure keystone-manage is pip-installed.
 - name: keystone pki
   command: keystone-manage pki_setup --keystone-user keystone --keystone-group keystone
 
