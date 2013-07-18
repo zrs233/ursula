@@ -1,7 +1,6 @@
 ---
 - name: horizon venv
-  # TODO: don't redo this if it's already done
-  action: command python /opt/stack/horizon/tools/install_venv.py
+  command: python /opt/stack/horizon/tools/install_venv.py
 
 - name: restart apache
-  action: service name=apache2 action=restarted
+  service: name=apache2 state=restarted
