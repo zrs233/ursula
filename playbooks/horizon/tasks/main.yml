@@ -25,4 +25,13 @@
   notify:
     - restart apache
 
+- name: custom horizon logo
+  copy: src=logo.png dest=/opt/stack/horizon/openstack_dashboard/static/dashboard/img/logo.png
+
+- name: custom horizon splash logo
+  copy: src=logo.png dest=/opt/stack/horizon/openstack_dashboard/static/dashboard/img/logo-splash.png
+
+- name: custom horizon favicon
+  copy: src=favicon.ico dest=/opt/stack/horizon/openstack_dashboard/static/dashboard/img/favicon.ico
+
 - service: name=apache2 state=started
