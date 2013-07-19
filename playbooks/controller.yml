@@ -13,6 +13,7 @@
     - horizon
   tasks:
     - include: nova/tasks/controller.yml
+    - include: nova/tasks/novnc.yml
     - include: neutron/tasks/controller.yml
     - include: keystone/tasks/users.yml
     - include: glance/tasks/images.yml

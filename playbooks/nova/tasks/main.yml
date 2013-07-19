@@ -6,7 +6,7 @@
 
 - name: get nova source repo
   git: |
-    repo={{ openstack.git_mirror }}/nova.git dest=/opt/stack/nova version={{ nova.rev }} depth=3
+    repo={{ openstack.git_mirror }}/nova.git dest=/opt/stack/nova version={{ nova.rev }} depth=30
   notify:
     - pip install nova
     - nova rootwrap

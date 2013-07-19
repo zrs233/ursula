@@ -1,0 +1,11 @@
+---
+
+- name: novnc repo
+  git: |
+    repo={{ novnc.repo }} dest=/usr/share/novnc version={{ novnc.rev }}
+  notify:
+    - pip install nova
+    - nova rootwrap
+
+- template: src=etc/init/nova-novncproxy.conf dest=/etc/init/nova-novncproxy.conf
+- service: name=nova-novncproxy state=started

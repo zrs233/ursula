@@ -26,6 +26,10 @@ nova:
   libvirt_type: kvm
   compute_driver: nova.virt.libvirt.LibvirtDriver
 
+novnc:
+  repo: https://github.com/kanaka/noVNC.git
+  rev: master
+
 horizon:
   rev: master
 
