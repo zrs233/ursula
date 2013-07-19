@@ -5,8 +5,8 @@
     tenant_description="{{ item }} tenant"
     token={{ secrets.admin_token }}
   with_items: keystone.tenants
- 
- 
+
+
 - name: keystone users
   keystone_user: >
     user={{ item.name }}
@@ -14,7 +14,7 @@
     tenant={{ item.tenant }}
     token={{ secrets.admin_token }}
   with_items: keystone.users
- 
+
 - name: keystone roles
   keystone_user: >
     role={{ item.role }}
@@ -22,7 +22,7 @@
     tenant={{ item.tenant }}
     token={{ secrets.admin_token }}
   with_items: keystone.user_roles
- 
+
 - name: keystone services
   keystone_service: >
     name={{ item.name }}

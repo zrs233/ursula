@@ -5,14 +5,17 @@ This document describes at a high level the steps required to set up a new OpenS
 
 ## Hardware Provisioning
 
+* Select machines to serve as controller (1), network (1), and compute (N) nodes.
 * Image all nodes with Ubuntu 12.04 (Precise)
-* Ensure KVM virtualization is enabled in the BIOS. (this can be checked from the running host):
-    apt-get install qemu-kvm libvirt-bin
-    kvm-ok
+* For each compute node:
+    * Ensure KVM virtualization is enabled in the BIOS. (this can be checked from the running host): `apt-get install cpu-checker; kvm-ok`
+    * If not enabled, enter BIOS settings and enable "Intel Virtualization Techonology"
 
 ## Networking / Routing
 
-    TODO
+* Provision a public ipv4 subnet, and route it to the network node
+
+    ip route $PUBLIC_SUBNET $NETWORK_NODE_IP name $NAME
 
 ## Ansible Installation
 
