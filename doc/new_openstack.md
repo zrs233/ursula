@@ -10,6 +10,7 @@ This document describes at a high level the steps required to set up a new OpenS
 * For each compute node:
     * Ensure KVM virtualization is enabled in the BIOS. (this can be checked from the running host): `apt-get install cpu-checker; kvm-ok`
     * If not enabled, enter BIOS settings and enable "Intel Virtualization Techonology"
+* Ensure SSH access to all machines as root or a sudoer
 
 ## Networking / Routing
 
