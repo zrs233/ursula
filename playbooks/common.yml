@@ -2,7 +2,13 @@
 - hosts: all
   gather_facts: false
   connection: ssh
-  sudo: yes
+  tasks:
+    - name: update dpkg index
+      apt: update_cache=yes
+
+- hosts: all
+  gather_facts: false
+  connection: ssh
   tasks:
     - include: common/tasks/fireball.yml
     - action: fireball
