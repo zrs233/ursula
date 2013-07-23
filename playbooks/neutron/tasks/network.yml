@@ -1,6 +1,8 @@
 ---
 - include: ovs_agent.yml
 
+- apt: pkg=dnsmasq
+
 - name: ovs ex bridge
   ovs_bridge: name=br-ex state=present
 
