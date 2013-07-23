@@ -50,3 +50,9 @@ workaround for precise: add /dev/net/tun to cgroup_device_acl in /etc/libvirt/qe
 - use sudo rules to hide ssh key from normal users?
 - playbook to set it all up
 
+## hypervisor type shows as qemu
+
+    `nova hypervisor-show` and horizon show type qemu even though kvm is configured
+
+[see bug here](https://bugs.launchpad.net/nova/+bug/1195361)
+

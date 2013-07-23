@@ -84,13 +84,13 @@ keystone:
       role: admin
     - user: nova
       tenant: service
-      role: admin
+      role: service
     - user: glance
       tenant: service
-      role: admin
+      role: service
     - user: neutron
       tenant: service
-      role: admin
+      role: service
 
   # TODO: fill ips/hostnames in dynamically.
   services:
