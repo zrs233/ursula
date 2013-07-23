@@ -1,9 +1,10 @@
 ---
 # TODO: pull networks from vars
 - neutron_network: >
-    name=tenants
+    name=internal
     provider_network_type=gre
     state=present
+    shared=true
     router_external=no
     provider_segmentation_id=256
     login_tenant_name=admin
@@ -11,10 +12,10 @@
 
 - neutron_subnet: >
     name=internal
-    network_name=tenants
-    cidr=172.16.100.0/24
+    network_name=internal
+    cidr=172.16.0.0/12
     enable_dhcp=true
-    gateway_ip=172.16.100.1
+    gateway_ip=172.16.0.1
     ip_version=4
     state=present
     login_tenant_name=admin
