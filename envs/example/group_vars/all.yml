@@ -1,20 +1,20 @@
 ---
 secrets:
-  admin_token:      843ut8hahgAEdfkJieijKF
-  db_password:      sadfjiejiehinrbirnb348
-  service_password: &service_password oiieanxknra.r3i5lkajbe
+  admin_token:      ertnerknidfbnirgiernir
+  db_password:      oiwenioenriobnerioneri
+  service_password: &service_password wiefinionrioenlkalknb
   rabbit_password:  guest
   admin_password:   &admin_password kilgore
-  metadata_proxy_shared_secret: ijeiwfjivnsidnwe3jihji
-  horizon_secret_key:           knbiieohjlkieo3id9iajf
+  metadata_proxy_shared_secret: wieaiboairnbodsznbnfbn
+  horizon_secret_key:           iweniownoinfboiernnrir
 
 endpoints:
-  db:       ds590.blueboxgrid.com
-  keystone: ds590.blueboxgrid.com
-  rabbit:   ds590.blueboxgrid.com
-  nova:     ds590.blueboxgrid.com
-  glance:   ds590.blueboxgrid.com
-  neutron:  ds590.blueboxgrid.com
+  db:       foo.example.com
+  keystone: foo.example.com
+  rabbit:   foo.example.com
+  nova:     foo.example.com
+  glance:   foo.example.com
+  neutron:  foo.example.com
 
 openstack:
   # TODO: pypi should use https, but fails currently.
@@ -97,25 +97,25 @@ keystone:
     - name: keystone
       type: identity
       description: 'Identity Service'
-      public_url: http://ds590.blueboxgrid.com:5000/v2.0
-      internal_url: http://ds590.blueboxgrid.com:5000/v2.0
-      admin_url: http://ds590.blueboxgrid.com:35357/v2.0
+      public_url: http://foo.example.com:5000/v2.0
+      internal_url: http://foo.example.com:5000/v2.0
+      admin_url: http://foo.example.com:35357/v2.0
     - name: nova
       type: compute
       description: 'Compute Service'
-      public_url: http://ds590.blueboxgrid.com:8774/v2/%(tenant_id)s
-      internal_url: http://ds590.blueboxgrid.com:8774/v2/%(tenant_id)s
-      admin_url: http://ds590.blueboxgrid.com:8774/v2/%(tenant_id)s
+      public_url: http://foo.example.com:8774/v2/%(tenant_id)s
+      internal_url: http://foo.example.com:8774/v2/%(tenant_id)s
+      admin_url: http://foo.example.com:8774/v2/%(tenant_id)s
     - name: glance
       type: image
       description: 'Image Service'
-      public_url: http://ds590.blueboxgrid.com:9292
-      internal_url: http://ds590.blueboxgrid.com:9292
-      admin_url: http://ds590.blueboxgrid.com:9292
+      public_url: http://foo.example.com:9292
+      internal_url: http://foo.example.com:9292
+      admin_url: http://foo.example.com:9292
     - name: neutron
       type: network
       description: 'Network Service'
-      public_url: http://ds590.blueboxgrid.com:9696
-      internal_url: http://ds590.blueboxgrid.com:9696
-      admin_url: http://ds590.blueboxgrid.com:9696
+      public_url: http://foo.example.com:9696
+      internal_url: http://foo.example.com:9696
+      admin_url: http://foo.example.com:9696
 
