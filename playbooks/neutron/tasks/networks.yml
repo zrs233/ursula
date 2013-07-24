@@ -1,22 +1,49 @@
 ---
-# TODO: pull networks from vars
-- neutron_network: >
-    name=internal
-    provider_network_type=gre
-    state=present
-    shared=true
-    router_external=no
-    provider_segmentation_id=256
-    login_tenant_name=admin
-    login_password={{ secrets.admin_password }}
+- name: neutron networks
+  action: |
+    neutron_network
+      name={{ item.name }}
+      provider_network_type={{ item.network_type }}
+      state=present
+      shared={{ item.shared }}
+      router_external={{ item.external }}
+      provider_segmentation_id={{ item.segmentation_id }}
+      login_tenant_name=admin
+      login_password={{ secrets.admin_password }}
+  with_items: neutron.networks
 
-- neutron_subnet: >
-    name=internal
-    network_name=internal
-    cidr=172.16.0.0/12
-    enable_dhcp=true
-    gateway_ip=172.16.0.1
-    ip_version=4
-    state=present
-    login_tenant_name=admin
-    login_password={{ secrets.admin_password }}
+- name: neutron subnets
+  action: |
+    neutron_subnet
+      name={{ item.name }}
+      network_name={{ item.network_name }}
+      cidr={{ item.cidr }}
+      enable_dhcp={{ item.enable_dhcp }}
+      gateway_ip={{ item.gateway_ip }}
+      ip_version={{ item.ip_version }}
+      state=present
+      login_tenant_name=admin
+      login_password={{ secrets.admin_password }}
+  with_items: neutron.subnets
+
+- name: neutron routers
+  action: |
+    neutron_router
+      state=present
+      name={{ item.name }}
+      tenant_name={{ item.tenant_name }}
+      admin_state_up=true
+      login_tenant_name=admin
+      login_password={{ secrets.admin_password }}
+  with_items: neutron.routers
+
+- name: neutron router interfaces
+  action: |
+    neutron_router_interface
+      router_name={{ item.router_name }}
+      subnet_name={{ item.subnet_name }}
+      tenant_name={{ item.tenant_name }}
+      state=present
+      login_tenant_name=admin
+      login_password={{ secrets.admin_password }}
+  with_items: neutron.router_interfaces
