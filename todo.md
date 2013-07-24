@@ -7,8 +7,8 @@
 - ds489 - ✓ controller
 - ds669 - ✓ compute
 - ds590 - ✓ network (should really be compute) - has power info
-- ds482 - NEED POWER INFO, check raid+VT+networking
-- ds483 - NEED POWER INFO, check raid+VT+networking
+- ds482 - ✓ compute
+- ds483 - ✓ compute
 
 ## make a nice wrapper deployment script
 
@@ -22,9 +22,8 @@
 
 ## glance image create times out sometimes
 
-- tried setting 'timeout' parameter to glance_image ansible module, but it fails with str/numeric mismatch.
 - manual workaround:
-    glance image-create --name cirros --disk-format=qcow2 --container-format=bare --is-public=True --is-protected=FTrue --location https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img
+    glance image-create --name cirros --disk-format=qcow2 --container-format=bare --is-public=True --is-protected=True --location https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img
 
 ## automate configuration of quantum external bridge
 
@@ -33,15 +32,13 @@
     neutron security-group-rule-create --direction ingress --protocol tcp --port_range_min 22 --port_range_max 22 UUID
     neutron security-group-rule-create --direction ingress --protocol icmp --port_range_min 0 --port_range_max 0 UUID
 
-## change virt type from qemu to kvm
-
-this may make the below /dev/net/tun thing unncessary.
-
 ## /dev/net/tun
 
 issue with precise and ovs:  https://lists.launchpad.net/openstack/msg12269.html
 
 workaround for precise: add /dev/net/tun to cgroup_device_acl in /etc/libvirt/qemu.conf, restart libvirt-bin
+
+is this only a problem with qemu, and not kvm ?
 
 ## release tool
 
@@ -80,3 +77,6 @@ should it be removed from config on compute nodes?
     ovs-vsctl --no-wait -- --may-exist add-br br-ex
 
 ## configure ntp !
+
+
+## default m1.tiny flavor "root disk" size is too small to boot ubuntu.
