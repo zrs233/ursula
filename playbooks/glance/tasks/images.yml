@@ -8,5 +8,5 @@
       disk_format=qcow2
       login_tenant_name=admin
       login_password={{ secrets.admin_password }}
-      timeout=600
+      timeout=12000
   with_items: glance.images
