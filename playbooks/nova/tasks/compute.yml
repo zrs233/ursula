@@ -5,6 +5,11 @@
     - python-libvirt
     - kvm
 
+# TODO: don't run this unless nova.libvirt_type is set to kvm
+# TODO: don't show as changed when re-run.
+- name: ensure kvm is supported by cpu and enabled in bios
+  command: kvm-ok
+
 - user: name=nova groups=libvirtd
 - file: dest=/var/lib/nova/instances state=directory owner=nova
 - template: src=etc/init/nova-compute.conf dest=/etc/init/nova-compute.conf
