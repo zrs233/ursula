@@ -2,6 +2,8 @@
 - include: main.yml
 - apt: pkg=openvswitch-switch
 - apt: pkg=openvswitch-datapath-dkms
+- apt: pkg=vlan
+- apt: pkg=bridge-utils
 
 - name: ovs int bridge
   ovs_bridge: name=br-int state=present
