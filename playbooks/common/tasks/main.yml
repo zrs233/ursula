@@ -12,6 +12,8 @@
 
 - apt: pkg=git
 
+- apt: pkg=ntp
+
 - name: /opt/stack
   file: dest=/opt/stack state=directory
 

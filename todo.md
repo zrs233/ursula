@@ -13,6 +13,7 @@
 ## make a nice wrapper deployment script
 
     ansible-playbook -i envs/$ENV/hosts -u root -M ./library playbooks/site.yml
+    export ANSIBLE_NOCOWS=1
 
 ## ubuntu image(s)
 
@@ -75,8 +76,5 @@ br-ex appears in the neutron config, but is not currently installed on compute n
 should it be removed from config on compute nodes?
 
     ovs-vsctl --no-wait -- --may-exist add-br br-ex
-
-## configure ntp !
-
 
 ## default m1.tiny flavor "root disk" size is too small to boot ubuntu.
