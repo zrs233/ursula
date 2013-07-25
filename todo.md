@@ -2,24 +2,20 @@
 
 # TODO
 
-## new deploy
-
-- ds489 - ✓ controller
-- ds669 - ✓ compute
-- ds590 - ✓ network (should really be compute) - has power info
-- ds482 - ✓ compute
-- ds483 - ✓ compute
-
 ## make a nice wrapper deployment script
 
     ansible-playbook -i envs/$ENV/hosts -u root -M ./library playbooks/site.yml
     export ANSIBLE_NOCOWS=1
 
-## ubuntu image(s)
-
-## store config in seperate repo
+- fail on a dirty git tree?
+- log ansible commands and git status
+- use sudo rules to hide ssh key from normal users?
+- playbook to set it all up
 
 ## split into global/default config and site config
+
+
+# Bugs
 
 ## glance image create times out sometimes
 
@@ -33,21 +29,6 @@
     neutron security-group-rule-create --direction ingress --protocol tcp --port_range_min 22 --port_range_max 22 UUID
     neutron security-group-rule-create --direction ingress --protocol icmp --port_range_min 0 --port_range_max 0 UUID
 
-## /dev/net/tun
-
-issue with precise and ovs:  https://lists.launchpad.net/openstack/msg12269.html
-
-workaround for precise: add /dev/net/tun to cgroup_device_acl in /etc/libvirt/qemu.conf, restart libvirt-bin
-
-is this only a problem with qemu, and not kvm ?
-
-## release tool
-
-- accept env name as parameter
-- fail on a dirty git tree?
-- log ansible commands and git status
-- use sudo rules to hide ssh key from normal users?
-- playbook to set it all up
 
 ## hypervisor type shows as qemu
 
