@@ -18,7 +18,10 @@ pip_pkgs() {
   done
 }
 
+uname | grep Darwin || die "this is not osx."
+
 which pip >/dev/null || install_pip
 pip_pkgs ansible
 pip_pkgs python-keyczar pyzmq pyasn1 pycrypto # for fireball mode
+
 echo -e "\nall set!\n"

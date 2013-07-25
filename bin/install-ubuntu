@@ -1,5 +1,11 @@
 #!/bin/bash
 set -ex
+
+if ! grep Ubuntu /etc/lsb-release; then
+  echo "this isn't ubuntu."
+  exit 1
+fi
+
 sudo add-apt-repository --yes ppa:rquillo/ansible
 sudo apt-get update
 DEBIAN_FRONTEND=noninteractive sudo apt-get install --yes ansible
