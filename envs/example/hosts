@@ -2,7 +2,7 @@
 foo.example.com
 
 [compute]
-foo.example.com
+bar.example.com
 
 [network]
-foo.example.com
+baz.example.com

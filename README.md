@@ -7,7 +7,7 @@ Ansible playbooks for operating OpenStack.
 ```bash
 git clone $repo_url
 cd $name
-./bin/install-ubuntu || ./bin/install-osx
+sudo bin/install-ubuntu || sudo bin/install-osx
 ```
 
 # basic usage
