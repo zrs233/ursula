@@ -14,4 +14,6 @@
 - name: sensu client config
   template: src=config.json dest=/etc/sensu/config.json owner=root group=root mode=0444
 
+- file: dest=/etc/sensu/conf.d/checks state=directory owner=root
+
 - service: name=sensu-client state=started

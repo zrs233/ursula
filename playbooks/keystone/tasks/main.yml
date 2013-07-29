@@ -33,3 +33,5 @@
 
 - name: keystone is running
   service: name=keystone state=started
+
+- sensu_service_check: service=keystone-all

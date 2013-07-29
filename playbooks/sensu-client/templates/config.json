@@ -8,7 +8,7 @@
   },
   "rabbitmq": {
     "host": "{{ sensu.rabbit.host }}",
-    "port": 5672,
+    "port": {{ sensu.rabbit.port }},
     "user": "{{ sensu.rabbit.user }}",
     "password": "{{ sensu.rabbit.pass }}",
     "vhost": "/sensu"

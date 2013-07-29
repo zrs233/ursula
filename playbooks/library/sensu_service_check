@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'antsy'
+
+args = Antsy.args
+service=args[:service]
+
+Antsy.fail! "argument 'service' is required" unless service and not service.empty?
+
+check_fname = "/etc/sensu/conf.d/checks/#{service}-service.json"
+
+if File.exists? check_fname
+  Antsy.no_change!
+else
+  File.open(check_fname, 'w') do |f|
+    f.write JSON.pretty_generate({
+      'checks' => {
+        service => {
+          'command' => "pgrep #{service}",
+          'standalone' => true,
+          'handlers' => [ 'default' ],
+          'interval' => 30,
+          'notification' => "#{service} is not running",
+          'occurrences' => 2
+        }
+      }
+    })
+  end
+  Antsy.changed!
+end

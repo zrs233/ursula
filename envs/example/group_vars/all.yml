@@ -19,6 +19,7 @@ endpoints:
 sensu:
   rabbit:
     host: sensu.example.com
+    port: 5672
     user: sensu
     pass: sensu
 
