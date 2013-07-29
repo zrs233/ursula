@@ -15,5 +15,7 @@
 
 - hosts: all
   connection: fireball
+  roles:
+    - sensu-client
   tasks:
     - include: common/tasks/main.yml

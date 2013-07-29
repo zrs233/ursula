@@ -1,0 +1,17 @@
+---
+- apt_key: url=http://repos.sensuapp.org/apt/pubkey.gpg state=present
+
+
+# TODO: use ansible apt_repository module instead of adding a source manually
+#    https://bugs.launchpad.net/ubuntu/+source/software-properties/+bug/987264
+#- apt_repository: repo='deb http://repos.sensuapp.org/apt sensu main'
+- name: sensu apt source
+  template: src=sensu.list dest=/etc/apt/sources.list.d/sensu.list owner=root group=root mode=0444
+- apt: update_cache=True
+
+- apt: pkg=sensu
+
+- name: sensu client config
+  template: src=config.json dest=/etc/sensu/config.json owner=root group=root mode=0444
+
+- service: name=sensu-client state=started

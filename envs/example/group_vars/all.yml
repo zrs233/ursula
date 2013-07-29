@@ -16,6 +16,12 @@ endpoints:
   glance:   foo.example.com
   neutron:  foo.example.com
 
+sensu:
+  rabbit:
+    host: sensu.example.com
+    user: sensu
+    pass: sensu
+
 openstack:
   # TODO: pypi should use https, but fails currently.
   pypi_mirror: http://pypi.openstack.org/openstack

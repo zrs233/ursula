@@ -1,0 +1,16 @@
+{
+  "client": {
+    "name": "{{ inventory_hostname }}",
+    "address": "{{ ansible_eth0["ipv4"]["address"] }}",
+    "subscriptions": [
+      "openstack"
+    ]
+  },
+  "rabbitmq": {
+    "host": "{{ sensu.rabbit.host }}",
+    "port": 5672,
+    "user": "{{ sensu.rabbit.user }}",
+    "password": "{{ sensu.rabbit.pass }}",
+    "vhost": "/sensu"
+  }
+}
