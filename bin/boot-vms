@@ -3,7 +3,7 @@ set -eu
 
 image=81078
 flavor=101
-key_name=default
+key_name=ansible
 prefix="tmp"
 login_user=ubuntu
 vms="$prefix-controller $prefix-compute0 $prefix-compute1 $prefix-network"
@@ -29,7 +29,7 @@ for vm in $vms; do
 done
 
 get_ip() {
-  nova list | grep "$1" | awk -F\| '{print $7}' | awk -F, '{print $2}' | awk '{print $1}'
+  nova list | grep "$1" | awk -F\| '{print $5}' | awk -F, '{print $2}' | awk '{print $1}'
 }
 
 echo "waiting for vms to come up"
@@ -45,19 +45,23 @@ for vm in $vms; do
     echo -n '.'
     sleep 1
   done
+
+  # copy default pubkey to root account
+  ssh $ssh_args $login_user@$ip sudo mkdir -p /root/.ssh
+  ssh $ssh_args $login_user@$ip sudo cp /home/$login_user/.ssh/authorized_keys /root/.ssh/authorized_keys
 done
 
-cat > ansible_hosts <<eof
+echo "writing ansible inventory file"
+cat > envs/test/hosts <<eof
 [os-controller]
 $(get_ip "$prefix-controller")
+
 [os-compute]
 $(get_ip "$prefix-compute0")
 $(get_ip "$prefix-compute1")
+
 [os-network]
 $(get_ip "$prefix-network")
 eof
-
-cp playbooks/vars/common-template.yml playbooks/vars/common.yml
-sed -i "s/CONTROLLER_IP/$(get_ip "$prefix-controller")/" playbooks/vars/common.yml
 
 echo "vms are up: $vms !!"
