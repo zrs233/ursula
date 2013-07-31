@@ -15,3 +15,5 @@
 - file: dest=/var/lib/nova/instances state=directory owner=nova
 - template: src=etc/init/nova-compute.conf dest=/etc/init/nova-compute.conf
 - service: name=nova-compute state=started
+
+- sensu_service_check: service=nova-compute

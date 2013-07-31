@@ -35,3 +35,5 @@
   copy: src=favicon.ico dest=/opt/stack/horizon/openstack_dashboard/static/dashboard/img/favicon.ico
 
 - service: name=apache2 state=started
+
+- sensu_service_check: service=apache2

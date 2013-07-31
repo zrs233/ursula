@@ -18,3 +18,11 @@
     - nova-conductor
     - nova-consoleauth
     - nova-scheduler
+
+- sensu_service_check: service={{ item }}
+  with_items:
+    - nova-api
+    - nova-cert
+    - nova-conductor
+    - nova-consoleauth
+    - nova-scheduler
