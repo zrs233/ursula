@@ -5,10 +5,11 @@
     - python-libvirt
     - kvm
 
-# TODO: don't run this unless nova.libvirt_type is set to kvm
-# TODO: don't show as changed when re-run.
 - name: ensure kvm is supported by cpu and enabled in bios
   command: kvm-ok
+  # TODO: don't run this unless nova.libvirt_type is set to kvm
+  # available in ansible 1.3
+  # changed_when: "False"
 
 - user: name=nova groups=libvirtd
 - file: dest=/var/lib/nova/instances state=directory owner=nova
