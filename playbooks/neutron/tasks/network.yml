@@ -18,7 +18,7 @@
     - neutron-dhcp-agent
     - neutron-metadata-agent
 
-- sensu_service_check: service={{ item }}
+- sensu_process_check: service={{ item }}
   with_items:
     - neutron-l3-agent
     - neutron-dhcp-agent

@@ -7,8 +7,8 @@
 
 - name: ensure kvm is supported by cpu and enabled in bios
   command: kvm-ok
-  # TODO: don't run this unless nova.libvirt_type is set to kvm
-  # available in ansible 1.3
+  when: "'{{ nova.libvirt_type }}' == 'kvm'"
+  # TODO: available in ansible 1.3
   # changed_when: "False"
 
 - user: name=nova groups=libvirtd
@@ -16,4 +16,4 @@
 - template: src=etc/init/nova-compute.conf dest=/etc/init/nova-compute.conf
 - service: name=nova-compute state=started
 
-- sensu_service_check: service=nova-compute
+- sensu_process_check: service=nova-compute

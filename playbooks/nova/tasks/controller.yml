@@ -19,7 +19,7 @@
     - nova-consoleauth
     - nova-scheduler
 
-- sensu_service_check: service={{ item }}
+- sensu_process_check: service={{ item }}
   with_items:
     - nova-api
     - nova-cert

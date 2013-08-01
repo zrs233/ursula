@@ -36,4 +36,4 @@
 
 - service: name=apache2 state=started
 
-- sensu_service_check: service=apache2
+- sensu_process_check: service=apache2

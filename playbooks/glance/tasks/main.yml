@@ -34,5 +34,5 @@
 - name: glance-registry is running
   service: name=glance-registry state=started
 
-- sensu_service_check: service=glance-api
-- sensu_service_check: service=glance-registry
+- sensu_process_check: service=glance-api
+- sensu_process_check: service=glance-registry
