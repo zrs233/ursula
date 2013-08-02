@@ -5,8 +5,8 @@ Ansible playbooks for operating OpenStack.
 # installation
 
 ```bash
-git clone $repo_url
-cd $name
+git clone git@github.com:blueboxgroup/ursula.git
+cd ursula
 sudo bin/install-ubuntu || sudo bin/install-osx
 ```
 
