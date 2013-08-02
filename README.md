@@ -14,7 +14,7 @@ sudo bin/install-ubuntu || sudo bin/install-osx
 
 ```bash
 # run the main playbook on a host inventory file
-$name /path/to/env/hosts
+ans /path/to/env
 ```
 
 # envs
