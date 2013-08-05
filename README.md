@@ -10,11 +10,26 @@ cd ursula
 sudo bin/install-ubuntu || sudo bin/install-osx
 ```
 
+# prerequisites
+
+You have some hosts running ubuntu 12.04, and you can ssh to them from your workstation.
+
+# setup
+
+create a new environment, keep it somewhere outside this repo:
+
+    cp envs/example /your/env
+
+add your hosts to the inventory:
+
+    $editor /your/new/env/hosts
+
+
 # basic usage
 
 ```bash
-# run the main playbook on a host inventory file
-ans /path/to/env
+# run the main playbook to install and configure all the things
+./bin/ursula /your/new/env playbooks/site.yml
 ```
 
 # envs
