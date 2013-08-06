@@ -1,20 +1,17 @@
 ---
 - hosts: all
   gather_facts: false
-  connection: ssh
   tasks:
     - name: update dpkg index
       apt: update_cache=yes
 
 - hosts: all
   gather_facts: false
-  connection: ssh
   tasks:
     - include: common/tasks/fireball.yml
     - action: fireball
 
 - hosts: all
-  connection: fireball
   roles:
     - sensu-client
   tasks:

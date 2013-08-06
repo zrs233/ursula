@@ -1,6 +1,5 @@
 ---
 - hosts: compute
-  connection: fireball
   roles:
     - common
     - nova
