@@ -1,6 +1,5 @@
 ---
 - hosts: controller
-  connection: fireball
   roles:
     - common
     - client
