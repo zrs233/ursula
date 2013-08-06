@@ -1,7 +1,18 @@
 #!/bin/bash
+env=$1
+playbook=$2
+
+hosts=$1/hosts
+ssh_config=$1/ssh_config
+
+if [ -e $ssh_config ]; then
+  export ANSIBLE_SSH_ARGS="-F $ssh_config"
+fi
+
 export ANSIBLE_NOCOWS=1
+
 ansible-playbook \
-  --inventory-file $1/hosts \
+  --inventory-file $hosts \
   --user root \
   --module-path ./library \
-  $2
+  $playbook
