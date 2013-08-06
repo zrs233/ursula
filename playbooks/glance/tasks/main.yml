@@ -12,19 +12,19 @@
   file: dest=/etc/glance state=directory
 
 - name: glance config
-  action: template src={{ item }} dest=/etc/glance
+  action: template src={{ item }} dest=/etc/glance mode=0644
   with_fileglob: ../templates/etc/glance/*
   notify:
     - restart glance-api
     - restart glance-registry
 
 - name: glance-api start script
-  template: src=etc/init/glance-api.conf dest=/etc/init/glance-api.conf
+  template: src=etc/init/glance-api.conf dest=/etc/init/glance-api.conf mode=0644
   notify:
     - restart glance-api
 
 - name: glance-registry start script
-  template: src=etc/init/glance-registry.conf dest=/etc/init/glance-registry.conf
+  template: src=etc/init/glance-registry.conf dest=/etc/init/glance-registry.conf mode=0644
   notify:
     - restart glance-registry
 

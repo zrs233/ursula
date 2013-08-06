@@ -3,7 +3,7 @@
   apt: pkg=mysql-server
 
 - name: listen on all ips
-  template: src=etc/mysql/conf.d/all_ips.cnf dest=/etc/mysql/conf.d/all_ips.cnf
+  template: src=etc/mysql/conf.d/all_ips.cnf dest=/etc/mysql/conf.d/all_ips.cnf mode=0644
   notify: restart mysql
 
 - name: python mysqldb

@@ -12,17 +12,17 @@
   file: dest=/etc/keystone state=directory
 
 - name: keystone.conf
-  template: src=etc/keystone/keystone.conf dest=/etc/keystone/keystone.conf
+  template: src=etc/keystone/keystone.conf dest=/etc/keystone/keystone.conf mode=0644
   notify:
     - restart keystone
 
 - name: policy.json
-  template: src=etc/keystone/policy.json dest=/etc/keystone/policy.json
+  template: src=etc/keystone/policy.json dest=/etc/keystone/policy.json mode=0644
   notify:
     - restart keystone
 
 - name: keystone start script
-  template: src=etc/init/keystone.conf dest=/etc/init/keystone.conf
+  template: src=etc/init/keystone.conf dest=/etc/init/keystone.conf mode=0644
   notify:
     - restart keystone
 

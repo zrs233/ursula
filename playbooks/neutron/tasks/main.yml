@@ -14,12 +14,13 @@
 - file: dest=/var/lib/neutron state=directory owner=neutron
 
 - name: neutron config
-  action: template src={{ item }} dest=/etc/neutron
+  action: template src={{ item }} dest=/etc/neutron mode=0644
   with_fileglob: ../templates/etc/neutron/*
 
 - template: |
     src=etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini
     dest=/etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini
+    mode=0644
 
 - name: neutron sudoer
   template: src=etc/sudoers.d/neutron dest=/etc/sudoers.d/neutron owner=root group=root mode=0440
