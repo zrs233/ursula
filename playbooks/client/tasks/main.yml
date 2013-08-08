@@ -6,7 +6,7 @@
   git: |
     repo={{ openstack.git_mirror }}/python-keystoneclient.git
     dest=/opt/stack/python-keystoneclient
-    version=master
+    version={{ keystone.client.rev }}
   notify:
     - pip install keystoneclient
 
@@ -14,7 +14,7 @@
   git: |
     repo={{ openstack.git_mirror }}/python-glanceclient.git
     dest=/opt/stack/python-glanceclient
-    version=master
+    version={{ glance.client.rev }}
   notify:
     - pip install glanceclient
 
@@ -22,7 +22,7 @@
   git: |
     repo={{ openstack.git_mirror }}/python-novaclient.git
     dest=/opt/stack/python-novaclient
-    version=master
+    version={{ nova.client.rev }}
   notify:
     - pip install novaclient
 
@@ -30,6 +30,6 @@
   git: |
     repo={{ openstack.git_mirror }}/python-neutronclient.git
     dest=/opt/stack/python-neutronclient
-    version=master
+    version={{ neutron.client.rev }}
   notify:
     - pip install neutronclient

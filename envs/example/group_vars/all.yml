@@ -30,6 +30,8 @@ openstack:
 
 nova:
   rev: master
+  client:
+    rev: master
   libvirt_type: kvm
   compute_driver: nova.virt.libvirt.LibvirtDriver
 
@@ -42,6 +44,8 @@ horizon:
 
 neutron:
   rev: master
+  client:
+    rev: master
   tenant_network_type: gre
   physical_bridge: br-ex
   physical_network: br-ex
@@ -53,12 +57,16 @@ neutron:
 
 glance:
   rev: master
+  client:
+    rev: master
   images:
     - name: cirros
       url: https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img
 
 keystone:
   rev: master
+  client:
+    rev: master
   tenants:
     - admin
     - service
