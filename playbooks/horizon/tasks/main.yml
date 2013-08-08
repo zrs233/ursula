@@ -22,14 +22,15 @@
 - template: |
     src=opt/stack/horizon/openstack_dashboard/local/local_settings.py
     dest=/opt/stack/horizon/openstack_dashboard/local/local_settings.py
+    mode=0644
   notify:
     - restart apache
 
 - name: custom horizon logo
-  copy: src=logo.png dest=/opt/stack/horizon/openstack_dashboard/static/dashboard/img/logo.png
+  copy: src=logo.png dest=/opt/stack/horizon/openstack_dashboard/static/dashboard/img/logo.png mode=0644
 
 - name: custom horizon splash logo
-  copy: src=logo.png dest=/opt/stack/horizon/openstack_dashboard/static/dashboard/img/logo-splash.png
+  copy: src=logo.png dest=/opt/stack/horizon/openstack_dashboard/static/dashboard/img/logo-splash.png mode=0644
 
 - name: custom horizon favicon
   copy: src=favicon.ico dest=/opt/stack/horizon/openstack_dashboard/static/dashboard/img/favicon.ico
