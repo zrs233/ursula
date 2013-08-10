@@ -2,24 +2,32 @@
 
 # TODO
 
-## make a nice wrapper deployment script
+## mtu issue
 
-    ansible-playbook -i envs/$ENV/hosts -u root -M ./library playbooks/site.yml
-    export ANSIBLE_NOCOWS=1
+to repro:
 
-- fail on a dirty git tree?
-- log ansible commands and git status
-- use sudo rules to hide ssh key from normal users?
-- playbook to set it all up
+    curl -v https://github.com    # on instance
+    tcpdump host $GITHUB_IP       # on net node
+
+error:
+
+    IP 173.247.112.18 > github.com: ICMP 173.247.112.18 unreachable - need to frag (mtu 1454), length 556
+
+to workaround:
+
+    sudo ifconfig eth0 mtu 1454   # on instance
+
+## dns
+
+set working nameserver by default in config. (added manually for now)
+
 
 ## split into global/default config and site config
 
-
-# Bugs
-
 ## glance image create times out sometimes
 
-- manual workaround:
+manual workaround:
+
     glance image-create --name cirros --disk-format=qcow2 --container-format=bare --is-public=True --is-protected=True --location https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img
 
 ## automate configuration of quantum external bridge
@@ -49,13 +57,5 @@ it should be set and persisted.
     # persist
     # TODO
 
-
-## ovs agent dies on dedicated compute because of no br-ex
-
-br-ex appears in the neutron config, but is not currently installed on compute nodes.
-
-should it be removed from config on compute nodes?
-
-    ovs-vsctl --no-wait -- --may-exist add-br br-ex
 
 ## default m1.tiny flavor "root disk" size is too small to boot ubuntu.
