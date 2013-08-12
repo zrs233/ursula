@@ -1,0 +1,12 @@
+---
+- apt: pkg=git
+- apt: pkg=python-software-properties
+- apt_repository: repo=ppa:rquillo/ansible
+- apt: pkg=ansible
+
+- user: name=ansible state=present
+
+- file: dest=/home/ansible/.ssh state=directory owner=ansible group=ansible
+
+- git: repo=https://github.com/blueboxgroup/ursula.git dest=/home/ansible/ursula
+- git: repo=git@github.blueboxgrid.com:bluebox-tech/openstack-envs.git dest=/home/ansible/envs
