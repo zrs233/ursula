@@ -1,6 +1,6 @@
 ---
 - name: horizon venv
-  command: python /opt/stack/horizon/tools/install_venv.py
+  shell: cd /opt/stack/horizon && python tools/install_venv.py
 
 - name: restart apache
   service: name=apache2 state=restarted
