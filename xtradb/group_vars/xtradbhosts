@@ -1,0 +1,22 @@
+---
+xtradb_client_version: 5.5
+xtradb_server_version: 5.5
+
+xtradb_fw_ports:
+  - 3306
+  - 4444
+  - 4567
+  - 4568
+
+xtradb_wsrep_cluster_addresses:
+  - # host1
+  - # host2
+  - # host3
+
+xtradb_repl_username: repl_user
+xtradb_repl_password: repl_password
+
+xtradb_sst_auth_user: sst_admin
+xtradb_sst_auth_password: sst_password
+
+mysql_root_password: root_password

@@ -1,0 +1,63 @@
+---
+- name: check if percona gpg apt-key is installed
+  action: shell /usr/bin/apt-key list | grep -i percona
+  register: percona_gpg_key_exists
+  ignore_errors: True
+
+- name: check if percona apt repo is installed
+  action: shell /bin/ls /etc/apt/sources.list.d/Percona.list
+  register: percona_apt_sources_exists
+  ignore_errors: True
+
+- name: check if my.cnf exists
+  action: shell /bin/ls /etc/my.cnf
+  register: my_cnf_exists
+  ignore_errors: True
+
+- name: adding percona gpg apt-key 
+  action: apt_key url=http://www.percona.com/redir/downloads/RPM-GPG-KEY-percona state=present
+  only_if: ${percona_gpg_key_exists.rc} > 0
+
+- name: adding percona apt repository
+  template: src=apt/percona.list dest=/etc/apt/sources.list.d/Percona.list mode=0644
+  only_if: ${percona_apt_sources_exists.rc} > 0
+
+- name: update apt cache
+  apt: update_cache=yes
+
+- name: install percona xtradb packages
+  register: pkg_installed
+  apt: pkg=$item state=installed
+  with_items:
+  - percona-xtradb-cluster-client-{{ xtradb_client_version }}
+  - percona-xtradb-cluster-server-{{ xtradb_server_version }}
+  - percona-xtrabackup
+
+# Ubuntu auto starts mysql after installtion. We need to stop mysql
+# if this is the first time xtradb packages are being installed
+# in order to bootstrap properly
+- name: stopping mysql if packages were just installed
+  action: shell service mysql stop
+  when: pkg_installed.changed
+
+- name: adding my.cnf
+  template: src=mysql/my.cnf dest=/etc/my.cnf mode=0644
+  only_if: ${my_cnf_exists.rc} > 0
+
+- name: populating gcomm:// with node IPs in my.cnf
+  lineinfile: dest=/etc/my.cnf regexp=^wsrep_cluster_address line=wsrep_cluster_address=gcomm://{% for host in groups['xtradbhosts'] %}{% if not loop.last %}{{ hostvars[host]['ansible_eth0:0']['ipv4']['address'] }},{% else %}{{ hostvars[host]['ansible_eth0:0']['ipv4']['address'] }}{% endif %}{% endfor %}
+
+# need to improve accuracy of determining bind-address... 
+- name: set bind-address to eth0 alias
+  lineinfile: dest=/etc/my.cnf regexp=^bind-address line=bind-address={{ ansible_all_ipv4_addresses[1] }}
+
+- name: set cluster's node ip address
+  lineinfile: dest=/etc/my.cnf regexp=^wsrep_node_address line=wsrep_node_address={{ ansible_all_ipv4_addresses[1] }}
+
+- name: disable mysqld profile if exists in apparmor
+  action: shell /bin/ln -s /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable/
+  ignore_errors: True
+
+- name: remove mysqld profile from apparmor
+  action: shell /sbin/apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
+  ignore_errors: True
