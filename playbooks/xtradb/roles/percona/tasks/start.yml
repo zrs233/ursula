@@ -1,0 +1,23 @@
+---
+- name: is mysql running?
+  action: shell service mysql status
+  register: mysql_status
+  ignore_errors: true
+
+- name: start mysql 
+  action: shell service mysql start
+  only_if: ${mysql_status.rc} > 0
+
+- name: install root's .my.cnf file
+  action: template src=mysql/root_my.cnf dest=/root/.my.cnf owner=root group=root mode=0600
+
+#- name: check if the cluster is already up
+#  action: shell mysql --silent -e 'show status like "wsrep_cluster_size"' | cut -f 2
+#  register: wsrep_cluster_size
+#  ignore_errors: true
+
+#- name: if the cluster isn't started already, start it 
+#  action: service name=mysql state=restarted
+#  # not sure what wsrep_custer_size is actually going to be in this case...???
+#  # I want stdout but .stdout wasn't working...
+#  only_if: ${wsrep_cluster_size.rc} != 0 or ${wsrep_cluster_size} < 1 
