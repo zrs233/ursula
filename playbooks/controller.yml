@@ -1,7 +1,6 @@
 ---
 - hosts: controller
   roles:
-    - common
     - client
     - keystone
     - glance
