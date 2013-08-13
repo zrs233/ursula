@@ -1,0 +1,19 @@
+---
+
+mysql:
+  root_password: root_password
+
+xtradb:
+  client_version: 5.5
+  server_version: 5.5
+
+  sst_auth_user: sst_admin
+  sst_auth_password: sst_password
+
+  # currently unused. here for documentation.
+  fw_ports:
+    - 3306
+    - 4444
+    - 4567
+    - 4568
+
