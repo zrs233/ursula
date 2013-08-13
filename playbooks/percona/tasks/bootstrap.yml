@@ -1,0 +1,43 @@
+---
+
+#
+# These tasks should only run on the "primary" cluster node
+#
+
+# check if mysql is running, if so don't bootstrap
+- name: is mysql running?
+  register: should_bootstrap
+  shell: service mysql status >/dev/null || echo "yes"
+
+- name: set empty gcomm:// url in my.cnf to allow bootstrapping
+  lineinfile: dest=/etc/my.cnf regexp=^wsrep_cluster_address line=wsrep_cluster_address=gcomm://
+  only_if: "'${should_bootstrap.stdout}' == 'yes'"
+
+- name: bootstrapping primary node
+  service: name=mysql state=started
+  only_if: "'${should_bootstrap.stdout}' == 'yes'"
+
+- name: populate gcomm:// url in my.cnf with quorum node IPs now that we're bootstrapped
+  lineinfile: >
+    dest=/etc/my.cnf regexp=^wsrep_cluster_address
+    line=wsrep_cluster_address=gcomm://{% for host in groups['percona'] %}{% if not loop.last %}{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }},{% else %}{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}{% endif %}{% endfor %}
+
+- name: create state snapshot transfer user from anywhere
+  action: shell mysql -e "CREATE USER '"{{ xtradb.sst_auth_user }}"'@'%' IDENTIFIED BY '"{{ xtradb.sst_auth_password }}"';"
+  only_if: "'${should_bootstrap.stdout}' == 'yes'"
+
+- name: create state snapshot transfer user from localhost
+  action: shell mysql -e "CREATE USER '{{ xtradb.sst_auth_user }}'@'localhost' IDENTIFIED BY '{{ xtradb.sst_auth_password }}';"
+  only_if: "'${should_bootstrap.stdout}' == 'yes'"
+
+- name: set privileges for state snapshot transfer user
+  action: shell mysql -e "GRANT RELOAD, LOCK TABLES, REPLICATION CLIENT ON *.* TO '{{ xtradb.sst_auth_user }}'@'%';"
+  only_if: "'${should_bootstrap.stdout}' == 'yes'"
+
+- name: set privileges for state snapshot transfer user and flush privileges
+  action: shell mysql -e "GRANT RELOAD, LOCK TABLES, REPLICATION CLIENT ON *.* TO '{{ xtradb.sst_auth_user }}'@'localhost'; FLUSH PRIVILEGES;"
+  only_if: "'${should_bootstrap.stdout}' == 'yes'"
+
+- name:  set mysql root password
+  action: shell mysql -e "UPDATE mysql.user SET password=PASSWORD('{{ mysql.root_password }}') where user='root';"
+  only_if: "'${should_bootstrap.stdout}' == 'yes'"

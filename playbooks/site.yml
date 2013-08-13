@@ -1,4 +1,5 @@
 ---
+- include: percona.yml
 - include: common.yml
 - include: controller.yml
 - include: compute.yml

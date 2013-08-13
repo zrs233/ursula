@@ -1,0 +1,26 @@
+---
+- name: Install Percona Xtradb and Configure Quorum
+  hosts: percona
+  vars_files:
+    - percona/vars/defaults.yml
+  tasks:
+    - include: percona/tasks/main.yml
+
+- name: Bootstrap Primary Quorum Node
+  hosts: percona[0]
+  vars_files:
+    - percona/vars/defaults.yml
+  tasks:
+   - include: percona/tasks/bootstrap.yml
+
+- name: Start XtraDB On Secondary Nodes
+  hosts: percona[1-2]
+  vars_files:
+    - percona/vars/defaults.yml
+  tasks:
+  - include: percona/tasks/start.yml
+
+- name: Verify wsrep_cluster_size
+  hosts: percona
+  tasks:
+    - shell: mysql --silent -e 'show global status like "wsrep_cluster_size"' | tail -1 | cut -f 2 | grep {{ groups['percona']|count }}
