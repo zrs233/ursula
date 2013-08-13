@@ -9,7 +9,7 @@ Antsy.fail! "argument 'service' is required" unless service and not service.empt
 
 check_fname = "/etc/sensu/conf.d/checks/#{service}-service.json"
 
-file_contents = JSON.pretty_generate({
+check = {
   'checks' => {
     service => {
       'command' => "/etc/sensu/plugins/check-procs.rb -p #{service} -w 10 -c 30 -W 1 -C 1",
@@ -20,13 +20,13 @@ file_contents = JSON.pretty_generate({
       'occurrences' => 2
     }
   }
-})
+}
 
-if File.exists?(check_fname) and File.read(check_fname) == file_contents
+if File.exists?(check_fname) and (JSON.parse(File.read(check_fname)) == check)
   Antsy.no_change!
 else
   File.open(check_fname, 'w') do |f|
-    f.write file_contents
+    f.write JSON.pretty_generate(check)
   end
   Antsy.changed!
 end
