@@ -1,18 +1,15 @@
 ---
 - name: Install Percona Xtradb and Configure Quorum
-  hosts: xtradbhosts
-  user: root
+  hosts: percona
   tasks:
-    - include: roles/percona/tasks/main.yml
+    - include: percona/tasks/main.yml
 
-- name: Bootstrap Primary Quorum Node 
-  hosts: xtradbhosts[0]
-  user: root
+- name: Bootstrap Primary Quorum Node
+  hosts: percona[0]
   tasks:
-   - include: roles/percona/tasks/bootstrap.yml
+   - include: percona/tasks/bootstrap.yml
 
 - name: Start XtraDB On Secondary Nodes
-  hosts: xtradbhosts[1-2]
-  user: root
+  hosts: percona[1-2]
   tasks:
-  - include: roles/percona/tasks/start.yml
+  - include: percona/tasks/start.yml
