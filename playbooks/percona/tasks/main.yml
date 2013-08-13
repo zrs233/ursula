@@ -1,21 +1,15 @@
 ---
-- name: adding percona gpg apt-key
-  action: apt_key url=http://www.percona.com/redir/downloads/RPM-GPG-KEY-percona state=present
-
-- name: adding percona apt repository
-  apt_repository: repo='deb http://repo.percona.com/apt precise main'
-- name: adding percona deb-src repository
-  apt_repository: repo='deb-src http://repo.percona.com/apt precise main'
-
-- name: update apt cache
-  apt: update_cache=yes
-
 - name: check if my.cnf exists
-  action: shell test -e /etc/my.cnf && echo "exists" || echo ""
+  shell: test -e /etc/my.cnf && echo "exists" || echo "nope"
   register: my_cnf_exists
+  ignore_errors: True
+
+- apt_key: url=http://www.percona.com/redir/downloads/RPM-GPG-KEY-percona state=present
+- apt_repository: repo='deb http://repo.percona.com/apt precise main'
+- apt: update_cache=yes
 
 - name: install percona xtradb packages
-  register: percona_installed
+  register: pkg_installed
   apt: pkg=$item state=installed
   with_items:
   - percona-xtradb-cluster-client-{{ xtradb.client_version }}
@@ -26,22 +20,18 @@
 # if this is the first time xtradb packages are being installed
 # in order to bootstrap properly
 - name: stopping mysql if packages were just installed
-  action: shell service mysql stop
-  when: percona_installed.changed
+  service: name=mysql state=stopped
+  when: pkg_installed.changed
 
 - name: adding my.cnf
   template: src=mysql/my.cnf dest=/etc/my.cnf mode=0644
-  when_string: $(my_cnf_exists) == "exists"
+  only_if: "'${my_cnf_exists.stdout}' == 'nope'"
 
 - name: populating gcomm:// with node IPs in my.cnf
-  lineinfile: >
-    dest=/etc/my.cnf
-    regexp=^wsrep_cluster_address
-    line=wsrep_cluster_address=gcomm://{% for host in groups['percona'] %}{% if not loop.last %}{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }},{% else %}{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}{% endif %}{% endfor %}
+  lineinfile: dest=/etc/my.cnf regexp=^wsrep_cluster_address line=wsrep_cluster_address=gcomm://{% for host in groups['percona'] %}{% if not loop.last %}{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }},{% else %}{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}{% endif %}{% endfor %}
 
-# need to improve accuracy of determining bind-address...
-- name: set bind-address to eth0
+- name: set bind-address to eth0 alias
   lineinfile: dest=/etc/my.cnf regexp=^bind-address line=bind-address={{ ansible_eth0['ipv4']['address'] }}
 
-- name: set cluster node ip address
+- name: set cluster's node ip address
   lineinfile: dest=/etc/my.cnf regexp=^wsrep_node_address line=wsrep_node_address={{ ansible_eth0['ipv4']['address'] }}
