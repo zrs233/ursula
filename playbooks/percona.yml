@@ -23,4 +23,6 @@
 - name: Verify wsrep_cluster_size
   hosts: percona
   tasks:
-    - shell: mysql --silent -e 'show global status like "wsrep_cluster_size"' | tail -1 | cut -f 2 | grep {{ groups['percona']|count }}
+    - name: check wsrep_cluster_size
+      shell: mysql --silent -e 'show global status like "wsrep_cluster_size"' | tail -1 | cut -f 2 | grep {{ groups['percona']|count }}
+      changed_when: False
