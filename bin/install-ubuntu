@@ -6,9 +6,11 @@ if ! grep Ubuntu /etc/lsb-release; then
   exit 1
 fi
 
-sudo add-apt-repository --yes ppa:rquillo/ansible
 sudo apt-get update
-DEBIAN_FRONTEND=noninteractive sudo apt-get install --yes ansible
+DEBIAN_FRONTEND=noninteractive sudo apt-get install --yes python-pip
+sudo apt-get remove --yes ansible || echo "ok"
+
+sudo pip install -U git+https://github.com/ansible/ansible.git@devel
 
 # required only for 'fireball' 0mq mode:
 DEBIAN_FRONTEND=noninteractive sudo apt-get install --yes python-zmq python-pyasn1 python-crypto python-keyczar
