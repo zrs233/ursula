@@ -15,4 +15,5 @@ ansible-playbook \
   --inventory-file $hosts \
   --user root \
   --module-path ./library \
+  --connection ssh \
   $playbook
