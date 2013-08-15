@@ -32,7 +32,7 @@
   lineinfile: dest=/etc/my.cnf regexp=^wsrep_cluster_address line=wsrep_cluster_address=gcomm://{% for host in groups['percona'] %}{% if not loop.last %}{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }},{% else %}{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}{% endif %}{% endfor %}
 
 - name: set bind-address to eth0 alias
-  lineinfile: dest=/etc/my.cnf regexp=^bind-address line=bind-address={{ ansible_eth0['ipv4']['address'] }}
+  lineinfile: dest=/etc/my.cnf regexp=^bind-address line=bind-address=0.0.0.0
 
 - name: set cluster's node ip address
   lineinfile: dest=/etc/my.cnf regexp=^wsrep_node_address line=wsrep_node_address={{ ansible_eth0['ipv4']['address'] }}
