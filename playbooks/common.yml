@@ -6,12 +6,6 @@
       apt: update_cache=yes
 
 - hosts: all
-  gather_facts: false
-  tasks:
-    - include: common/tasks/fireball.yml
-    - action: fireball
-
-- hosts: all
   roles:
     - sensu-client
   tasks:
