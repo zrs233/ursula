@@ -24,6 +24,10 @@
     line=wsrep_cluster_address=gcomm://{% for host in groups['percona'] %}{% if not loop.last %}{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }},{% else %}{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}{% endif %}{% endfor %}
   when: should_bootstrap.stdout.find('yes') != -1
 
+- name:  set mysql root password
+  action: shell mysql -e "UPDATE mysql.user SET password=PASSWORD('{{ mysql.root_password }}') where user='root';"
+  when: should_bootstrap.stdout.find('yes') != -1
+
 - name: create state snapshot transfer user from anywhere
   action: shell mysql -e "CREATE USER '"{{ xtradb.sst_auth_user }}"'@'%' IDENTIFIED BY '"{{ xtradb.sst_auth_password }}"';"
   when: should_bootstrap.stdout.find('yes') != -1
@@ -40,6 +44,5 @@
   action: shell mysql -e "GRANT RELOAD, LOCK TABLES, REPLICATION CLIENT ON *.* TO '{{ xtradb.sst_auth_user }}'@'localhost'; FLUSH PRIVILEGES;"
   when: should_bootstrap.stdout.find('yes') != -1
 
-- name:  set mysql root password
-  action: shell mysql -e "UPDATE mysql.user SET password=PASSWORD('{{ mysql.root_password }}') where user='root';"
-  when: should_bootstrap.stdout.find('yes') != -1
+- name: install root's .my.cnf file
+  template: src=mysql/root_my.cnf dest=/root/.my.cnf owner=root group=root mode=0600
