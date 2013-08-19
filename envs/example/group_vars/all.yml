@@ -1,27 +1,35 @@
 ---
 secrets:
-  admin_token:      ertnerknidfbnirgiernir
-  db_password:      oiwenioenriobnerioneri
-  service_password: &service_password wiefinionrioenlkalknb
-  rabbit_password:  guest
-  admin_password:   &admin_password kilgore
-  metadata_proxy_shared_secret: wieaiboairnbodsznbnfbn
-  horizon_secret_key:           iweniownoinfboiernnrir
+  admin_token:      asdf
+  db_password:      asdf
+  service_password: &service_password asdf
+  rabbit_password:  asdf
+  admin_password:   &admin_password asdf
+  metadata_proxy_shared_secret: asdf
+  horizon_secret_key:           asdf
 
 endpoints:
-  db:       foo.example.com
-  keystone: foo.example.com
-  rabbit:   foo.example.com
-  nova:     foo.example.com
-  glance:   foo.example.com
-  neutron:  foo.example.com
+  db:       controller.example.com
+  keystone: controller.example.com
+  rabbit:   controller.example.com
+  nova:     controller.example.com
+  glance:   controller.example.com
+  neutron:  controller.example.com
+
+mysql:
+  root_password: asdf
+xtradb:
+  client_version: 5.5
+  server_version: 5.5
+  sst_auth_user: sst_admin
+  sst_auth_password: asdf
 
 sensu:
   rabbit:
     host: sensu.example.com
-    port: 5672
+    port: 5671
     user: sensu
-    pass: sensu
+    pass: asdf
 
 openstack:
   # TODO: pypi should use https, but fails currently.
@@ -29,46 +37,50 @@ openstack:
   git_mirror:  https://review.openstack.org/openstack
 
 nova:
-  rev: master
-  client:
-    rev: master
-  libvirt_type: kvm
+  rev: 83865447
+  libvirt_type: qemu
   compute_driver: nova.virt.libvirt.LibvirtDriver
+  client:
+    rev: 01635a2a
 
 novnc:
   repo: https://github.com/kanaka/noVNC.git
-  rev: master
+  rev: 292f6a5d
 
 horizon:
-  rev: master
+  rev: fe659b23
 
 neutron:
-  rev: master
+  rev: f3c016d7
   client:
-    rev: master
-  tenant_network_type: gre
+    rev: 5a382451
   physical_bridge: br-ex
   physical_network: br-ex
   tenant_network_type: gre
   enable_tunneling: True
-#  fixed_range: "172.16.100.0/24"
-#  fixed_net_name: tenants
-#  ovs_range: "172.16.100.0/24"
+  networks:
+    - name: internal
+      shared: true
+      external: false
+      network_type: gre
+      segmentation_id: 256
 
 glance:
-  rev: master
+  rev: 563c71c1
   client:
-    rev: master
+    rev: 3de64660
   images:
     - name: cirros
       url: https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img
 #    - name: ubuntu-12.04
 #      url: http://cloud-images.ubuntu.com/precise/current/precise-server-cloudimg-amd64-disk1.img
+#    - name: ubuntu-13.04
+#      url: http://cloud-images.ubuntu.com/releases/13.04/release/ubuntu-13.04-server-cloudimg-amd64-disk1.img
 
 keystone:
-  rev: master
+  rev: 708ccf08
   client:
-    rev: master
+    rev: 8429623b
   tenants:
     - admin
     - service
@@ -108,31 +120,34 @@ keystone:
     - user: neutron
       tenant: service
       role: service
+    - user: neutron
+      tenant: service
+      role: admin
 
   # TODO: fill ips/hostnames in dynamically.
   services:
     - name: keystone
       type: identity
       description: 'Identity Service'
-      public_url: http://foo.example.com:5000/v2.0
-      internal_url: http://foo.example.com:5000/v2.0
-      admin_url: http://foo.example.com:35357/v2.0
+      public_url: http://controller.example.com:5000/v2.0
+      internal_url: http://controller.example.com:5000/v2.0
+      admin_url: http://controller.example.com:35357/v2.0
     - name: nova
       type: compute
       description: 'Compute Service'
-      public_url: http://foo.example.com:8774/v2/%(tenant_id)s
-      internal_url: http://foo.example.com:8774/v2/%(tenant_id)s
-      admin_url: http://foo.example.com:8774/v2/%(tenant_id)s
+      public_url: http://controller.example.com:8774/v2/%(tenant_id)s
+      internal_url: http://controller.example.com:8774/v2/%(tenant_id)s
+      admin_url: http://controller.example.com:8774/v2/%(tenant_id)s
     - name: glance
       type: image
       description: 'Image Service'
-      public_url: http://foo.example.com:9292
-      internal_url: http://foo.example.com:9292
-      admin_url: http://foo.example.com:9292
+      public_url: http://controller.example.com:9292
+      internal_url: http://controller.example.com:9292
+      admin_url: http://controller.example.com:9292
     - name: neutron
       type: network
       description: 'Network Service'
-      public_url: http://foo.example.com:9696
-      internal_url: http://foo.example.com:9696
-      admin_url: http://foo.example.com:9696
+      public_url: http://controller.example.com:9696
+      internal_url: http://controller.example.com:9696
+      admin_url: http://controller.example.com:9696
 
