@@ -1,0 +1,10 @@
+#!/bin/bash
+set -eu
+source $(dirname $0)/common
+
+which nova >/dev/null || die "nova client must be present"
+
+which ansible-playbook >/dev/null || die "ansible-playbook must be present"
+ansible --version | grep "1.3" || die "ansible 1.3 is required"
+
+[ -e $HOME/.stackrc ] || die "\$HOME/.stackrc must be present"

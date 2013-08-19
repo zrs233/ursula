@@ -1,0 +1,54 @@
+#!/bin/bash
+set -eu
+source $(dirname $0)/common
+
+$root/test/check-deps
+
+source $HOME/.stackrc
+
+destroy_vms
+
+if ! nova keypair-list | grep $key_name >/dev/null; then
+  nova keypair-add $key_name > $key_path
+  chmod 600 $key_path
+fi
+
+echo "booting vms"
+for vm in $vms; do
+  nova boot --image $image --flavor $flavor --key_name $key_name $vm >/dev/null
+  sleep 3
+  add_floating_ip $vm
+done
+
+echo "waiting for vms to come up"
+for vm in $vms; do
+  while ! nova list | grep $vm | grep ACTIVE >/dev/null; do sleep 1; echo -n '.'; done; echo
+  ip=$(public_ip $vm)
+  echo "$vm $ip: waiting for sshd"
+  until echo '' | nc $ip 22 2>&1 >/dev/null; do echo -n '.'; sleep 1; done
+
+  # hostkeys are currently not generated until a few seconds after sshd comes up.
+  until ssh $ssh_args $login_user@$ip uptime 2>&1 >/dev/null; do
+    echo -n '.'
+    sleep 1
+  done
+done
+
+echo "writing ansible inventory file"
+cat > $root/envs/example/hosts <<eof
+[percona]
+$(public_ip "test-controller-0")
+$(public_ip "test-controller-1")
+
+[controller]
+$(public_ip "test-controller-0")
+$(public_ip "test-controller-1")
+
+[compute]
+$(public_ip "test-compute-0")
+
+[network]
+$(public_ip "test-controller-0")
+eof
+
+echo "vms are up: $vms !!"

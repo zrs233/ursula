@@ -1,0 +1,7 @@
+#!/bin/bash
+set -eu
+source $(dirname $0)/common
+
+source $HOME/.stackrc
+
+destroy_vms
