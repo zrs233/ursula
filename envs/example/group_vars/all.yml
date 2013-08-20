@@ -1,4 +1,6 @@
 ---
+controller_primary: &controller "{{ hostvars[groups['controller'][0]]['ansible_eth0']['ipv4']['address'] }}"
+
 secrets:
   admin_token:      asdf
   db_password:      asdf
@@ -9,12 +11,12 @@ secrets:
   horizon_secret_key:           asdf
 
 endpoints:
-  db:       controller.example.com
-  keystone: controller.example.com
-  rabbit:   controller.example.com
-  nova:     controller.example.com
-  glance:   controller.example.com
-  neutron:  controller.example.com
+  db:       *controller
+  keystone: *controller
+  rabbit:   *controller
+  nova:     *controller
+  glance:   *controller
+  neutron:  *controller
 
 mysql:
   root_password: asdf
@@ -26,7 +28,7 @@ xtradb:
 
 sensu:
   rabbit:
-    host: sensu.example.com
+    host: *controller
     port: 5671
     user: sensu
     pass: asdf
