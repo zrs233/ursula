@@ -32,6 +32,9 @@ for vm in $vms; do
     echo -n '.'
     sleep 1
   done
+
+  # TODO: this is a workaround for an MTU issue. it should be removed once fixed.
+  ssh $ssh_args $login_user@$ip sudo ifconfig eth0 mtu 1454 2>&1 >/dev/null
 done
 
 echo "writing ansible inventory file"
