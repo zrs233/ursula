@@ -7,7 +7,6 @@
     - nova
     - neutron
     - rabbit
-    - db
     - horizon
   tasks:
     - include: nova/tasks/controller.yml
@@ -15,6 +14,9 @@
     - include: neutron/tasks/controller.yml
 
 - hosts: controller[0]
+  name: things which should be run on only one controller.
+  roles:
+    - db
   tasks:
     - include: keystone/tasks/users.yml
     - include: glance/tasks/images.yml
