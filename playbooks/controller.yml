@@ -13,6 +13,9 @@
     - include: nova/tasks/controller.yml
     - include: nova/tasks/novnc.yml
     - include: neutron/tasks/controller.yml
+
+- hosts: controller[0]
+  tasks:
     - include: keystone/tasks/users.yml
     - include: glance/tasks/images.yml
     - include: neutron/tasks/networks.yml
