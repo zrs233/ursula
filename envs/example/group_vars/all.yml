@@ -11,6 +11,7 @@ secrets:
   horizon_secret_key:           asdf
 
 endpoints:
+  main:     *controller
   db:       *controller
   keystone: *controller
   rabbit:   *controller
@@ -131,25 +132,25 @@ keystone:
     - name: keystone
       type: identity
       description: 'Identity Service'
-      public_url: http://controller.example.com:5000/v2.0
-      internal_url: http://controller.example.com:5000/v2.0
-      admin_url: http://controller.example.com:35357/v2.0
+      public_url: http://{{ endpoints.main }}:5000/v2.0
+      internal_url: http://{{ endpoints.main }}:5000/v2.0
+      admin_url: http://{{ endpoints.main }}:35357/v2.0
     - name: nova
       type: compute
       description: 'Compute Service'
-      public_url: http://controller.example.com:8774/v2/%(tenant_id)s
-      internal_url: http://controller.example.com:8774/v2/%(tenant_id)s
-      admin_url: http://controller.example.com:8774/v2/%(tenant_id)s
+      public_url: http://{{ endpoints.main }}:8774/v2/%(tenant_id)s
+      internal_url: http://{{ endpoints.main }}:8774/v2/%(tenant_id)s
+      admin_url: http://{{ endpoints.main }}:8774/v2/%(tenant_id)s
     - name: glance
       type: image
       description: 'Image Service'
-      public_url: http://controller.example.com:9292
-      internal_url: http://controller.example.com:9292
-      admin_url: http://controller.example.com:9292
+      public_url: http://{{ endpoints.main }}:9292
+      internal_url: http://{{ endpoints.main }}:9292
+      admin_url: http://{{ endpoints.main }}:9292
     - name: neutron
       type: network
       description: 'Network Service'
-      public_url: http://controller.example.com:9696
-      internal_url: http://controller.example.com:9696
-      admin_url: http://controller.example.com:9696
+      public_url: http://{{ endpoints.main }}:9696
+      internal_url: http://{{ endpoints.main }}:9696
+      admin_url: http://{{ endpoints.main }}:9696
 
