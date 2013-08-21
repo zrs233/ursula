@@ -6,7 +6,5 @@
       apt: update_cache=yes
 
 - hosts: all
-  roles:
-    - sensu-client
   tasks:
     - include: common/tasks/main.yml

@@ -26,3 +26,6 @@
 
 # requried by some custom modules
 - gem: name=antsy state=latest
+
+- name: sensu check directory
+  file: dest=/etc/sensu/conf.d/checks/ state=directory mode=0755
