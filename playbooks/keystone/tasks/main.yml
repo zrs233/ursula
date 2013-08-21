@@ -2,6 +2,9 @@
 - name: keystone user
   user: name=keystone shell=/bin/false
 
+- name: WORKAROUND - keystone doesn't include babel in dependencies
+  pip: name=babel
+
 - name: get keystone source repo
   git: |
     repo={{ openstack.git_mirror }}/keystone.git dest=/opt/stack/keystone version={{ keystone.rev }}
