@@ -1,8 +1,12 @@
 #!/usr/bin/python
 
+# this file is forked from upstream to fix some shit:
 
-# this file is forked from the upstream ansible repo, pending the merge of this fix:
-#    https://github.com/ansible/ansible/pull/3648
+#    fix timeout setting (MERGED, but not in a tagged release):
+#      https://github.com/ansible/ansible/pull/3648
+#
+#    actually support copy_from:
+#      no pull-req yet.
 
 
 
@@ -119,6 +123,7 @@ requirements: ["glanceclient", "keystoneclient"]
 '''
 
 import time
+import urllib
 try:
     import glanceclient
     from keystoneclient.v2_0 import client as ksclient
@@ -180,6 +185,9 @@ def _glance_image_create(module, params, client):
         image = client.images.create(**kwargs)
         if not params['copy_from']:
             image.update(data=open(params['file'], 'rb'))
+        else:
+            opener = urllib.FancyURLopener()
+            image.update(data=opener.open(params['copy_from']))
         while time.time() < expire:
             image = client.images.get(image.id)
             if image.status == 'active':
