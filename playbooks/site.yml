@@ -4,4 +4,4 @@
 - include: controller.yml
 - include: compute.yml
 - include: network.yml
-- include: sensu-client
+- include: sensu-client.yml
