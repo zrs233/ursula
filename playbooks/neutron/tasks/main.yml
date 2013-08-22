@@ -8,6 +8,7 @@
   notify:
     - pip install neutron
     - neutron rootwrap
+- meta: flush_handlers
 
 - file: dest=/etc/neutron state=directory
 - file: dest=/etc/neutron/plugins/openvswitch state=directory

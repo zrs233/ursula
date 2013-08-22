@@ -10,6 +10,7 @@
   notify:
     - pip install nova
     - nova rootwrap
+- meta: flush_handlers
 
 - file: dest=/etc/nova state=directory
 - file: dest=/var/lib/nova state=directory owner=nova

@@ -10,6 +10,7 @@
     repo={{ openstack.git_mirror }}/keystone.git dest=/opt/stack/keystone version={{ keystone.rev }}
   notify:
     - pip install keystone
+- meta: flush_handlers
 
 - name: /etc/keystone
   file: dest=/etc/keystone state=directory
