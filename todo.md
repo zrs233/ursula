@@ -2,6 +2,10 @@
 
 # TODO
 
+## restart affected services when code or config changes
+
+## update db (once) when code changes
+
 ## mtu issue
 
 to repro:

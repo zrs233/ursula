@@ -1,0 +1,21 @@
+---
+- name: glance user
+  user: name=glance shell=/bin/false
+
+- name: get glance source repo
+  git: |
+    repo={{ openstack.git_mirror }}/glance.git dest=/opt/stack/glance version={{ glance.rev }}
+  notify:
+    - pip install glance
+- meta: flush_handlers
+
+- name: /etc/glance
+  file: dest=/etc/glance state=directory
+
+- name: /var/lib/glance
+  file: dest=/var/lib/glance state=directory owner=glance group=glance
+- file: dest=/var/lib/glance/images state=directory owner=glance group=glance
+
+- name: glance config
+  action: template src={{ item }} dest=/etc/glance mode=0644
+  with_fileglob: ../templates/etc/glance/*

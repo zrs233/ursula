@@ -1,8 +1,0 @@
----
-- hosts: compute
-  roles:
-    - nova
-    - neutron
-  tasks:
-    - include: nova/tasks/compute.yml
-    - include: neutron/tasks/compute.yml

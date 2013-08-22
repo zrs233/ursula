@@ -1,0 +1,36 @@
+---
+- name: databases
+  mysql_db: db={{ item }} state=present
+  with_items:
+    - keystone
+    - glance
+    - nova
+    - neutron
+
+- name: database users
+  mysql_user: |
+    name={{ item }}
+    host=%
+    password={{ secrets.db_password }}
+    priv={{ item }}.*:ALL
+    state=present
+  with_items:
+    - keystone
+    - glance
+    - nova
+    - neutron
+
+- name: local database users
+  mysql_user: |
+    name={{ item }}
+    host=localhost
+    password={{ secrets.db_password }}
+    priv={{ item }}.*:ALL
+    state=present
+  with_items:
+    - keystone
+    - glance
+    - nova
+    - neutron
+
+- include: sync.yml

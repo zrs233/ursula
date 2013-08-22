@@ -1,0 +1,61 @@
+---
+- hosts: all
+  roles:
+    - common
+
+- name: replicated db setup
+  include: playbooks/percona.yml
+
+- name: nova code and config
+  hosts: controller:db:compute
+  roles:
+    - nova-common
+
+- name: neutron code and config
+  hosts: controller:db:compute:network
+  roles:
+    - neutron-common
+
+- name: glance code and config
+  hosts: controller:db
+  roles:
+    - glance-common
+
+- name: keystone code and config
+  hosts: controller:db
+  roles:
+    - keystone-common
+
+- name: dbs, db users, db schema updates
+  hosts: db[0]
+  roles:
+    - db
+
+- name: openstack controller services
+  hosts: controller
+  roles:
+    - rabbit
+    - client
+    - controller
+    - horizon
+
+- hosts: compute
+  roles:
+    - compute
+
+- hosts: network:compute
+  roles:
+    - openvswitch
+
+- name: openstack network services
+  hosts: network
+  roles:
+    - network
+
+- hosts: controller[0]
+  roles:
+    - openstack-setup
+
+- hosts: all
+  roles:
+    - sensu-client

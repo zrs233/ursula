@@ -1,0 +1,6 @@
+---
+- include: keystone.yml
+- include: nova.yml
+- include: glance.yml
+- include: neutron.yml
+- include: novnc.yml

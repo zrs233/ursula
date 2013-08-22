@@ -1,7 +1,0 @@
----
-- include: percona.yml
-- include: common.yml
-- include: controller.yml
-- include: compute.yml
-- include: network.yml
-- include: sensu-client.yml

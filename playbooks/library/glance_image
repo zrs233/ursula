@@ -155,7 +155,7 @@ def _get_glance_client(module, kwargs):
     try:
         client = glanceclient.Client('2', endpoint, **kwargs)
     except Exception as e:
-        module.fail_json(msg = "Error in connecting to glance: %s" %e.message)
+        module.fail_json(msg = "Error in connecting to glance: %s" % str(e))
     return client
 
 def _glance_image_present(module, params, client):

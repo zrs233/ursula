@@ -1,0 +1,34 @@
+---
+- name: update apt index
+  apt: update_cache=yes
+
+- name: python dependencies
+  apt: pkg={{ item }}
+  with_items:
+    - python-pip
+    - python-pip
+    - python-libxml2
+    - python-lxml
+    - python-greenlet
+    - python-openssl
+    - python-dev
+
+- apt: pkg=git
+
+- apt: pkg=ntp
+- apt: pkg=vlan
+
+- name: /opt/stack
+  file: dest=/opt/stack state=directory
+
+# required for apt-add-repository
+- apt: pkg=python-software-properties
+
+- apt: pkg=ruby
+- apt: pkg=rubygems
+
+# requried by some custom modules
+- gem: name=antsy state=latest
+
+- name: sensu check directory
+  file: dest=/etc/sensu/conf.d/checks/ state=directory mode=0755

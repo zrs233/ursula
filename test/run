@@ -13,4 +13,4 @@ ansible-playbook \
   --connection ssh \
   --user $login_user \
   --sudo \
-  playbooks/site.yml
+  site.yml

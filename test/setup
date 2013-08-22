@@ -39,7 +39,7 @@ done
 
 echo "writing ansible inventory file"
 cat > $root/envs/example/hosts <<eof
-[percona]
+[db]
 $(public_ip "test-controller-0")
 $(public_ip "test-controller-1")
 
