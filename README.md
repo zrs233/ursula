@@ -45,6 +45,10 @@ cp -r envs/example /some/private/dir
 # edit /some/private/dir/hosts, /some/private/dir/group_vars/all.yml
 ```
 
+# dev/test environment on vms
+
+See [this doc](https://github.com/blueboxgroup/ursula/blob/master/doc/dev-test.md)
+
 # more docs
 
 See the `/doc` directory of this repo.
