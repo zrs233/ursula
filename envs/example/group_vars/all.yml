@@ -30,7 +30,7 @@ xtradb:
 sensu:
   rabbit:
     host: *controller
-    port: 5671
+    port: 5672
     user: sensu
     pass: asdf
 

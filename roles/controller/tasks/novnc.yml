@@ -1,0 +1,8 @@
+---
+- name: novnc repo
+  git: |
+    repo={{ novnc.repo }} dest=/usr/share/novnc version={{ novnc.rev }}
+
+- template: src=etc/init/nova-novncproxy.conf dest=/etc/init/nova-novncproxy.conf
+
+- service: name=nova-novncproxy state=started

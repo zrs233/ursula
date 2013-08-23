@@ -1,0 +1,15 @@
+---
+- name: glance-api start script
+  template: src=etc/init/glance-api.conf dest=/etc/init/glance-api.conf mode=0644
+
+- name: glance-registry start script
+  template: src=etc/init/glance-registry.conf dest=/etc/init/glance-registry.conf mode=0644
+
+- name: glance-api is running
+  service: name=glance-api state=started
+
+- name: glance-registry is running
+  service: name=glance-registry state=started
+
+- sensu_process_check: service=glance-api
+- sensu_process_check: service=glance-registry

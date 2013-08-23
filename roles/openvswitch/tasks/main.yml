@@ -1,0 +1,14 @@
+---
+- apt: pkg=openvswitch-switch
+- apt: pkg=openvswitch-datapath-dkms
+- apt: pkg=vlan
+- apt: pkg=bridge-utils
+
+- name: ovs int bridge
+  ovs_bridge: name=br-int state=present
+
+- template: src=etc/init/neutron-openvswitch-agent.conf dest=/etc/init/neutron-openvswitch-agent.conf
+
+- service: name=neutron-openvswitch-agent state=started
+
+- sensu_process_check: service=neutron-openvswitch-agent

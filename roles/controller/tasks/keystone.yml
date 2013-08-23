@@ -1,0 +1,8 @@
+---
+- name: keystone start script
+  template: src=etc/init/keystone.conf dest=/etc/init/keystone.conf mode=0644
+
+- name: keystone is running
+  service: name=keystone state=started
+
+- sensu_process_check: service=keystone-all

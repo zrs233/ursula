@@ -1,0 +1,5 @@
+---
+# TODO: don't run if db is up to date.
+- command: keystone-manage db_sync
+- command: glance-manage db_sync
+- command: nova-manage db sync

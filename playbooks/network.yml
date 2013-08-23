@@ -1,6 +1,0 @@
----
-- hosts: network
-  roles:
-    - neutron
-  tasks:
-    - include: neutron/tasks/network.yml

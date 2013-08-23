@@ -1,0 +1,5 @@
+---
+- template: src=etc/init/neutron-server.conf dest=/etc/init/neutron-server.conf
+- service: name=neutron-server state=started
+
+- sensu_process_check: service=neutron-server

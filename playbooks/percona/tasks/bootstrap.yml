@@ -21,7 +21,7 @@
 - name: populate gcomm:// url in my.cnf with quorum node IPs now that we're bootstrapped
   lineinfile: >
     dest=/etc/my.cnf regexp=^wsrep_cluster_address
-    line=wsrep_cluster_address=gcomm://{% for host in groups['percona'] %}{% if not loop.last %}{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }},{% else %}{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}{% endif %}{% endfor %}
+    line=wsrep_cluster_address=gcomm://{% for host in groups['db'] %}{% if not loop.last %}{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }},{% else %}{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}{% endif %}{% endfor %}
   when: should_bootstrap.stdout.find('yes') != -1
 
 - name:  set mysql root password

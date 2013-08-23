@@ -1,0 +1,3 @@
+---
+- name: pip install glance
+  action: command pip install -i {{ openstack.pypi_mirror }} /opt/stack/glance
