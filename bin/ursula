@@ -5,8 +5,9 @@ playbook=$2
 hosts=$1/hosts
 ssh_config=$1/ssh_config
 
+export ANSIBLE_SSH_ARGS="-o ControlMaster=auto -o ControlPath=~/.ssh/ursula-%l-%r@%h:%p -o ControlPersist=yes "
 if [ -e $ssh_config ]; then
-  export ANSIBLE_SSH_ARGS="-F $ssh_config"
+  export ANSIBLE_SSH_ARGS="$ANSIBLE_SSH_ARGS -F $ssh_config"
 fi
 
 export ANSIBLE_NOCOWS=1
