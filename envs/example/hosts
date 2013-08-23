@@ -1,3 +1,7 @@
+[db]
+db.example.com
+db2.example.com
+
 [controller]
 foo.example.com
 
