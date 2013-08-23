@@ -67,6 +67,13 @@ neutron:
       external: false
       network_type: gre
       segmentation_id: 256
+  subnets:
+    - name: internal
+      network_name: internal
+      cidr: 172.16.255.0/24
+      enable_dhcp: "true"
+      gateway_ip: 172.16.255.1
+      ip_version: 4
 
 glance:
   rev: 563c71c1

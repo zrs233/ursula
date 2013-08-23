@@ -13,20 +13,20 @@
       login_password={{ secrets.admin_password }}
   with_items: neutron.networks
 
-#- name: neutron subnets
-#  action: |
-#    neutron_subnet
-#      name={{ item.name }}
-#      network_name={{ item.network_name }}
-#      cidr={{ item.cidr }}
-#      enable_dhcp={{ item.enable_dhcp }}
-#      gateway_ip={{ item.gateway_ip }}
-#      ip_version={{ item.ip_version }}
-#      state=present
-#      auth_url=http://{{ endpoints.main }}:5000/v2.0/
-#      login_tenant_name=admin
-#      login_password={{ secrets.admin_password }}
-#  with_items: neutron.subnets
+- name: neutron subnets
+  action: |
+    neutron_subnet
+      name={{ item.name }}
+      network_name={{ item.network_name }}
+      cidr={{ item.cidr }}
+      enable_dhcp={{ item.enable_dhcp }}
+      gateway_ip={{ item.gateway_ip }}
+      ip_version={{ item.ip_version }}
+      state=present
+      auth_url=http://{{ endpoints.main }}:5000/v2.0/
+      login_tenant_name=admin
+      login_password={{ secrets.admin_password }}
+  with_items: neutron.subnets
 
 #- name: neutron routers
 #  action: |
