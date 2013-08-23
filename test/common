@@ -6,7 +6,7 @@ net_name=external
 key_name=int-test
 key_path=$HOME/.ssh/$key_name.pem
 login_user=ubuntu
-ssh_args="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i $key_path"
+ssh_args="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i $key_path -o ControlMaster=auto -o ControlPath=~/.ssh/ursula-%l-%r@%h:%p -o ControlPersist=yes"
 root="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
 
 die() {
