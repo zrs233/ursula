@@ -29,7 +29,7 @@ add your hosts to the inventory:
 
 ```bash
 # run the main playbook to install and configure all the things
-./bin/ursula /your/new/env playbooks/site.yml
+./bin/ursula /your/new/env site.yml
 ```
 
 # envs
@@ -45,6 +45,6 @@ cp -r envs/example /some/private/dir
 # edit /some/private/dir/hosts, /some/private/dir/group_vars/all.yml
 ```
 
-# detailed documentation
+# more docs
 
 See the `/doc` directory of this repo.
