@@ -20,7 +20,7 @@ public_ip() {
 
 destroy_vms() {
   echo "destroying: $vms"
-  rm ~/.ssh/ursula-*
+  ls ~/.ssh/ursula-* 2>/dev/null && rm -f ~/.ssh/ursula-*
   for vm in $vms; do
     nova list | grep $vm >/dev/null && nova delete $vm
   done
