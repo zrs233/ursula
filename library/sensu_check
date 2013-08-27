@@ -1,0 +1,37 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'antsy'
+
+args = Antsy.args
+name = args[:name]
+plugin = args[:plugin]
+plugin_args = args[:args] or ''
+plugin_path = "/etc/sensu/plugins/#{plugin}"
+check_path = "/etc/sensu/conf.d/checks/#{name}"
+
+Antsy.fail! "argument 'name' is required" unless name and not name.empty?
+Antsy.fail! "argument 'plugin' is required" unless plugin and not plugin.empty?
+Antsy.fail! "plugin #{plugin_path} does not exist" unless File.exists? plugin_path
+
+
+check = {
+  'checks' => {
+    name => {
+      'command' => "#{plugin_path} #{plugin_args}",
+      'standalone' => true,
+      'handlers' => [ 'pagerduty' ],
+      'interval' => 30,
+      'notification' => "#{name} check failed",
+      'occurrences' => 2
+    }
+  }
+}
+
+if File.exists?(check_path) and (JSON.parse(File.read(check_path)) == check)
+  Antsy.no_change!
+else
+  File.open(check_path, 'w') do |f|
+    f.write JSON.pretty_generate(check)
+  end
+  Antsy.changed!
+end

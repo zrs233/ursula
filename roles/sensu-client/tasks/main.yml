@@ -17,8 +17,15 @@
   template: src=config.json dest=/etc/sensu/config.json owner=root group=root mode=0444
 
 - file: dest=/etc/sensu/plugins state=directory owner=root
-- copy: src=check-procs.rb dest=/etc/sensu/plugins/check-procs.rb mode=0755
+- copy: src={{ item }} dest=/etc/sensu/plugins/{{ item }} mode=0755
+  with_items:
+    - check-procs.rb
+    - check-cpu.rb
+    - check-disk.rb
 
 - file: dest=/etc/sensu/conf.d/checks state=directory owner=root
+
+- sensu_check: name=cpu  plugin=check-cpu.rb
+- sensu_check: name=disk plugin=check-disk.rb
 
 - service: name=sensu-client state=started
