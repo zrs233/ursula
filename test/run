@@ -8,7 +8,7 @@ export ANSIBLE_SSH_ARGS="$ssh_args"
 export ANSIBLE_FORCE_COLOR=yes
 
 ansible-playbook \
-  --inventory-file envs/example/hosts \
+  --inventory-file envs/test/hosts \
   --module-path ./library \
   --connection ssh \
   --user $login_user \

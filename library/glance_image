@@ -121,6 +121,8 @@ requirements: ["glanceclient", "keystoneclient"]
 
 import time
 import urllib
+import tempfile
+import shutil
 try:
     import glanceclient
     from keystoneclient.v2_0 import client as ksclient
@@ -182,8 +184,11 @@ def _glance_image_create(module, params, client):
         if not params['copy_from']:
             client.images.upload(image.id, open(params['file'], 'rb'))
         else:
-            opener = urllib.FancyURLopener()
-            client.images.upload(image.id, opener.open(params['copy_from']))
+            tmpdir = tempfile.mkdtemp()
+            tmpfile = tmpdir + "/image"
+            urllib.urlretrieve(params['copy_from'], tmpfile)
+            client.images.upload(image.id, open(tmpfile, 'rb'))
+            shutil.rmtree(tmpdir)
         while time.time() < expire:
             image = client.images.get(image.id)
             if image.status == 'active':
