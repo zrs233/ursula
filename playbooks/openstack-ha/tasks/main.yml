@@ -1,0 +1,46 @@
+---
+- name: check if corosync.conf exists
+  shell: test -e /etc/corosync/corosync.conf && echo "exists" || echo "absent"
+  register: corosync_conf_status
+  changed_when: False
+
+- name: check if authkey exists 
+  shell: test -e /etc/corosync/authkey && echo "exists" || echo "absent"
+  register: authkey_exists
+  changed_when: False
+
+- name: install corosync and pacemaker packages
+  apt: pkg=$item state=present
+  with_items:
+    - corosync
+    - pacemaker
+
+- name: add corosync.conf 
+  template: src=corosync.conf dest=/etc/corosync/corosync.conf mode=0400 
+  when: corosync_conf_status.stdout.find("exists") == -1
+
+- name: add corosync authkey
+  shell: 'echo "{{ corosync.authkey }}" | openssl base64 -d > /etc/corosync/authkey && chown root: /etc/corosync/authkey && chmod 0600 /etc/corosync/authkey'
+  when: authkey_exists.stdout.find("exists") == -1
+
+- name: enable corosync at boot
+  lineinfile:  dest=/etc/default/corosync regexp=^START= line=START=yes
+
+- name: create openstack ocf resource directory
+  action: file path=/usr/lib/ocf/resource.d/openstack state=directory
+
+- name: add openstack haresource agents
+  template: src=resource_agents/$item dest=/usr/lib/ocf/resource.d/openstack/$item owner=root group=root mode=0755
+  with_items:
+  - neutron-agent-dhcp  
+  - neutron-agent-l3  
+  - neutron-server
+  - neutron-metadata-agent
+
+# any neutron daemons started by OCF (and not upstart/init.d) will need 
+# neutron user writable directories in order to log successfully
+- name: create ocf writable log directory
+  action: file path=/var/log/resource-agents/neutron state=directory owner=root group=neutron mode=0775 
+
+- service: name=corosync state=started enabled=yes
+- service: name=pacemaker state=started enabled=yes

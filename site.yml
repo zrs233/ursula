@@ -3,6 +3,9 @@
   roles:
     - common
 
+- name: install & configure openstack-ha
+  include: playbooks/openstack-ha.yml
+
 - name: replicated db setup
   include: playbooks/percona.yml
 

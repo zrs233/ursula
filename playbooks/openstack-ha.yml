@@ -1,0 +1,12 @@
+---
+- name: Install and initialize corosync and pacemaker
+  hosts: cluster
+  tasks:
+  - include: openstack-ha/tasks/main.yml
+
+# Only configure pacemaker on the primary node
+# and the settings will replicate to the secondary node.
+- name: Configure pacemaker HA services
+  hosts: cluster[0]
+  tasks:
+  - include: openstack-ha/tasks/pacemaker_crm.yml

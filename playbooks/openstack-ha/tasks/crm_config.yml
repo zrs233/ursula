@@ -1,0 +1,20 @@
+---
+- name: check for existing ClusterIP configuration
+  shell: crm configure show  | grep ClusterIP > /dev/null 2>&1 && echo "exists" || echo "absent"
+  register: cluster_ip_exists
+  changed_when: False
+
+- name: check for existing stonith configuration
+  shell: crm configure show | grep 'stonith-enabled="false"' > /dev/null 2>&1 && echo "exists" || echo "absent"
+  register: stonith_enabled
+  changed_when: False
+
+- shell: crm configure property stonith-enabled=false; sleep 5
+  when: stonith_enabled.stdout.find("exists") == -1
+
+- shell: crm configure primitive ClusterIP ocf:heartbeat:IPaddr2 params ip={{ floating_ipv4 }} cidr_netmask=32 op monitor interval=30s; sleep 5
+  when: cluster_ip_exists.stdout.find("exists") == -1
+  
+# TO DO: These resources should be applied at the end of all plays
+#- shell: crm configure primitive p_neutron-server ocf:openstack:neutron-server params os_password="{{ secrets.admin_password }}" os_username="admin" os_tenant_name="admin" keystone_get_token_url="http://{{ endpoints.keystone }}:5000/v2.0/tokens" op monitor interval="30s" timeout="30s"; sleep 5
+#- shell: crm configure primitive p_neutron-agent-l3 ocf:openstack:neutron-agent-l3 op monitor interval="30s" timeout="30s"
