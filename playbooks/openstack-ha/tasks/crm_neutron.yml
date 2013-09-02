@@ -1,0 +1,11 @@
+---
+
+# we'll want to stop any running instances of neutron-l3-agent
+# and have pacemaker bring up this service
+- service: name=neutron-l3-agent state=stopped
+
+- name: create resource-agents pid directory
+  action: file path=/var/run/resource-agents state=directory owner=root group=root mode0755
+
+- shell: primitive p_neutron-agent-l3 ocf:openstack:neutron-agent-l3 op monitor interval="30s" timeout="30s"; sleep 5 
+

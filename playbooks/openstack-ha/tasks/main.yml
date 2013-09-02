@@ -37,10 +37,5 @@
   - neutron-server
   - neutron-metadata-agent
 
-# any neutron daemons started by OCF (and not upstart/init.d) will need 
-# neutron user writable directories in order to log successfully
-- name: create ocf writable log directory
-  action: file path=/var/log/resource-agents/neutron state=directory owner=root group=neutron mode=0775 
-
 - service: name=corosync state=started enabled=yes
 - service: name=pacemaker state=started enabled=yes
