@@ -25,6 +25,9 @@
 #######################################################################
 # Initialization:
 
+# OCF_ROOT added by mpatterson@bluebox.net
+OCF_ROOT="/usr/lib/ocf"
+
 : ${OCF_FUNCTIONS_DIR=${OCF_ROOT}/lib/heartbeat}
 . ${OCF_FUNCTIONS_DIR}/ocf-shellfuncs
 
@@ -32,11 +35,13 @@
 
 # Fill in some defaults if no values are specified
 
-OCF_RESKEY_binary_default="neutron-dhcp-agent"
+OCF_RESKEY_binary_default="/usr/local/bin/neutron-dhcp-agent"
 OCF_RESKEY_config_default="/etc/neutron/neutron.conf"
 OCF_RESKEY_plugin_config_default="/etc/neutron/dhcp_agent.ini"
 OCF_RESKEY_user_default="neutron"
-OCF_RESKEY_pid_default="$HA_RSCTMP/$OCF_RESOURCE_INSTANCE.pid"
+
+# modified by mpatterson@bluebox.net
+OCF_RESKEY_pid_default="$HA_RSCTMP/neutron-dhcp-agent.pid"
 OCF_RESKEY_amqp_server_port_default="5672"
 
 : ${OCF_RESKEY_binary=${OCF_RESKEY_binary_default}}
@@ -203,7 +208,7 @@ neutron_dhcp_agent_status() {
 neutron_dhcp_agent_monitor() {
     local rc
     local pid
-    local network_amqp_check
+    local os_rc_file=/root/stackrc
     
     neutron_dhcp_agent_status
     rc=$?
@@ -213,16 +218,23 @@ neutron_dhcp_agent_monitor() {
         return $rc
     fi
 
-    # Check the connections according to the PID.
-    # We are sure to hit the scheduler process and not other Neutron process with the same connection behavior (for example neutron-server)
-        pid=`cat $OCF_RESKEY_pid`
-        # check the connections according to the PID
-        network_amqp_check=`netstat -punt | grep -s "$OCF_RESKEY_amqp_server_port" | grep -s "$pid" | grep -qs "ESTABLISHED"`
-        rc=$?
-	    if [ $rc -ne 0 ]; then
-	        ocf_log err "Neutron DHCP Server is not connected to the AMQP server : $rc"
-	        return $OCF_NOT_RUNNING
-	    fi
+    # Query neutron agent commands to verify that the agent service is actually alive
+    # rather than just looking for a valid pid.
+    #
+    # source openstack rc file
+    if [ -f $os_rc_file ]; then
+      . $os_rc_file
+    else
+      echo "No Openstack Source File Exists at: $os_rc_file"
+      return $OCF_NOT_RUNNING
+    fi
+
+    rc=$(/usr/local/bin/neutron agent-show `/usr/local/bin/neutron agent-list | grep -i dhcp | grep $(/bin/hostname) | awk '{print \$2}'` | grep -i alive | grep -i true > /dev/null 2>&1 && echo "pass" || echo "fail")
+
+    if [ $rc != "pass" ]; then
+        ocf_log err "Neutron DHCP Server is not connected to the Neutron server: $rc"
+        return $OCF_NOT_RUNNING
+    fi
 
     ocf_log debug "OpenStack DHCP Server (neutron-dhcp-agent) monitor succeeded"
     return $OCF_SUCCESS
@@ -237,12 +249,9 @@ neutron_dhcp_agent_start() {
         ocf_log info "OpenStack DHCP Server (neutron-dhcp-agent) already running"
         return $OCF_SUCCESS
     fi
-
-    # run the actual neutron-dhcp-agent daemon. Don't use ocf_run as we're sending the tool's output
-    # straight to /dev/null anyway and using ocf_run would break stdout-redirection here.
-    su ${OCF_RESKEY_user} -s /bin/sh -c "${OCF_RESKEY_binary} --config-file=$OCF_RESKEY_config \
-       --config-file=$OCF_RESKEY_plugin_config --log-file=/var/log/neutron/dhcp-agent.log $OCF_RESKEY_additional_parameters"' >> \
-	/dev/null 2>&1 & echo $!' > $OCF_RESKEY_pid
+    
+    /sbin/start neutron-dhcp-agent
+    rc=$?
 
     # Spin waiting for the server to come up.
     # Let the CRM/LRM time us out if required
@@ -272,46 +281,17 @@ neutron_dhcp_agent_stop() {
         return $OCF_SUCCESS
     fi
 
-    # Try SIGTERM
-    pid=`cat $OCF_RESKEY_pid`
-    pid="$pid `ps ax | grep -v grep | grep 'dnsmasq' | cut -c1-5`"
-    ocf_run kill -s TERM $pid
+    # Try stop via upstart
+    /sbin/stop neutron-dhcp-agent
     rc=$?
+
     if [ $rc -ne 0 ]; then
         ocf_log err "OpenStack DHCP Server (neutron-dhcp-agent) couldn't be stopped"
         exit $OCF_ERR_GENERIC
     fi
 
-    # stop waiting
-    shutdown_timeout=15
-    if [ -n "$OCF_RESKEY_CRM_meta_timeout" ]; then
-        shutdown_timeout=$((($OCF_RESKEY_CRM_meta_timeout/1000)-5))
-    fi
-    count=0
-    while [ $count -lt $shutdown_timeout ]; do
-        neutron_dhcp_agent_status
-        rc=$?
-        if [ $rc -eq $OCF_NOT_RUNNING ]; then
-            break
-        fi
-        count=`expr $count + 1`
-        sleep 1
-        ocf_log debug "OpenStack DHCP Server (neutron-dhcp-agent) still hasn't stopped yet. Waiting ..."
-    done
-
-    neutron_dhcp_agent_status
-    rc=$?
-    if [ $rc -ne $OCF_NOT_RUNNING ]; then
-        # SIGTERM didn't help either, try SIGKILL
-        ocf_log info "OpenStack DHCP Server (neutron-dhcp-agent) failed to stop after ${shutdown_timeout}s \
-          using SIGTERM. Trying SIGKILL ..."
-        ocf_run kill -s KILL $pid
-    fi
-
+    test -e $OCF_RESKEY_pid && rm $OCF_RESKEY_pid
     ocf_log info "OpenStack DHCP Server (neutron-dhcp-agent) stopped"
-
-    rm -f $OCF_RESKEY_pid
-
     return $OCF_SUCCESS
 }
 

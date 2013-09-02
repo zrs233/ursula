@@ -8,3 +8,4 @@
   action: file path=/var/run/resource-agents state=directory owner=root group=root mode=0755
 
 - shell: crm configure primitive p_neutron-agent-l3 ocf:openstack:neutron-agent-l3 op monitor interval="30s" timeout="30s"; sleep 5 
+- shell: crm configure primitive p_neutron-agent-dhcp ocf:openstack:neutron-agent-dhcp op monitor interval="30s" timeout="30s"; sleep 5 
