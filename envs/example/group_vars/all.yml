@@ -134,7 +134,6 @@ keystone:
       tenant: service
       role: admin
 
-  # TODO: fill ips/hostnames in dynamically.
   services:
     - name: keystone
       type: identity
