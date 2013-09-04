@@ -1,0 +1,17 @@
+---
+- name: custom CA cert directory
+  file: dest=/usr/share/ca-certificates/openstack state=directory
+
+- name: (possibly self-signed) ssl cert
+  template: src=openstack.crt dest=/usr/share/ca-certificates/openstack/{{ endpoints.main }}.crt
+  notify: refresh CAs
+- file: dest=/opt/stack/ssl state=directory
+- template: src=openstack.crt dest=/opt/stack/ssl/openstack.crt mode=0644
+
+- lineinfile: >
+    dest=/etc/ca-certificates.conf
+    regexp=openstack/{{ endpoints.main }}.crt
+    line=openstack/{{ endpoints.main }}.crt
+  notify: refresh CAs
+
+- meta: flush_handlers

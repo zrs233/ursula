@@ -10,12 +10,19 @@
   with_items:
     - python-dev
     - nodejs
-    - apache2
     - memcached
     - libapache2-mod-wsgi
 
+- apt: pkg=apache2
+  notify:
+    - disable default apache site
+
 - file: dest=/opt/stack/horizon/static state=directory owner=www-data
 
+
+- template: src=etc/apache2/ports.conf dest=/etc/apache2/ports.conf
+  notify:
+    - restart apache
 - template: src=etc/apache2/httpd.conf dest=/etc/apache2/httpd.conf
   notify:
     - restart apache

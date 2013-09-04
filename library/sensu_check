@@ -11,8 +11,6 @@ check_path = "/etc/sensu/conf.d/checks/#{name}"
 
 Antsy.fail! "argument 'name' is required" unless name and not name.empty?
 Antsy.fail! "argument 'plugin' is required" unless plugin and not plugin.empty?
-Antsy.fail! "plugin #{plugin_path} does not exist" unless File.exists? plugin_path
-
 
 check = {
   'checks' => {

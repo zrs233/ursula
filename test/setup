@@ -8,6 +8,7 @@ source $HOME/.stackrc
 
 destroy_vms
 
+echo "setting up ssh key"
 if ! nova keypair-list | grep $key_name >/dev/null; then
   nova keypair-add $key_name > $key_path
   chmod 600 $key_path
@@ -36,9 +37,33 @@ for vm in $vms; do
   # TODO: this is a workaround for an MTU issue. it should be removed once fixed.
   ssh $ssh_args $login_user@$ip sudo ifconfig eth0 mtu 1454 2>&1 >/dev/null
 done
+controller_ip=$(public_ip test-controller-0)
 
-echo "writing ansible inventory file"
-cat > $root/envs/example/hosts <<eof
+echo "building config"
+rm -rf $root/envs/test
+cp -r $root/envs/example $root/envs/test
+sed -i "s/^controller_primary: \&controller.*/controller_primary: \&controller $controller_ip/" envs/test/group_vars/all.yml
+
+
+echo "generating ssl cert for $controller_ip"
+cert_dir=$(mktemp -d)
+pushd $cert_dir
+$root/test/gen-cert $controller_ip
+cat >> $root/envs/test/group_vars/all.yml <<eof
+nginx:
+  crt: |
+eof
+cat $cert_dir/$controller_ip.crt | sed 's/^/    /' >> $root/envs/test/group_vars/all.yml
+cat >> $root/envs/test/group_vars/all.yml <<eof
+  key: |
+eof
+cat $cert_dir/$controller_ip.key | sed 's/^/    /' >> $root/envs/test/group_vars/all.yml
+popd
+rm -rf $cert_dir
+
+
+echo "writing inventory file"
+cat > $root/envs/test/hosts <<eof
 [db]
 $(public_ip "test-controller-0")
 $(public_ip "test-controller-1")

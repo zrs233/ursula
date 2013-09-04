@@ -4,3 +4,6 @@
 
 - name: restart apache
   service: name=apache2 state=restarted
+
+- name: disable default apache site
+  shell: a2dissite default

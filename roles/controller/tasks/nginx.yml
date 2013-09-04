@@ -1,0 +1,32 @@
+---
+- apt_repository: repo='ppa:nginx/stable'
+- apt: update_cache=yes
+- apt: pkg=nginx
+
+- file: dest=/etc/nginx/ssl state=directory
+
+- name: remove default nginx site
+  file: dest=/etc/nginx/sites-enabled/default state=absent
+  notify: restart nginx
+
+- name: install ssl cert
+  template: src=etc/nginx/ssl/openstack.crt dest=/etc/nginx/ssl/openstack.crt
+  notify: restart nginx
+
+- name: install ssl key
+  template: src=etc/nginx/ssl/openstack.key dest=/etc/nginx/ssl/openstack.key
+  notify: restart nginx
+
+- name: nginx config
+  template: src=etc/nginx/sites-available/openstack dest=/etc/nginx/sites-available/openstack
+  notify: restart nginx
+
+- file: >
+    src=/etc/nginx/sites-available/openstack
+    dest=/etc/nginx/sites-enabled/openstack
+    state=link
+  notify: restart nginx
+
+- service: name=nginx state=started
+
+- sensu_check: name=nginx plugin=check-procs.rb args="-p nginx -w 10 -c 30 -W 1 -C 1"

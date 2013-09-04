@@ -1,0 +1,3 @@
+---
+- name: refresh CAs
+  command: update-ca-certificates
