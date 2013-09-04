@@ -137,12 +137,13 @@ def _get_neutron_client(module, kwargs):
     endpoint = _get_endpoint(module, _ksclient)
     kwargs = {
             'token': token,
-            'endpoint_url': endpoint
+            'endpoint_url': endpoint,
+            'ca_cert': kwargs.get('cacert')
     }
     try:
         neutron = client.Client('2.0', **kwargs)
     except Exception as e:
-        module.fail_json(msg = " Error in connecting to neutron: %s " %e.message)
+        module.fail_json(msg = " Error in connecting to neutron: %s " % str(e))
     return neutron
 
 def _set_tenant_id(module):
@@ -168,7 +169,7 @@ def _get_net_id(neutron, module):
     try:
         networks = neutron.list_networks(**kwargs)
     except Exception as e:
-        module.fail_json("Error in listing neutron networks: %s" % e.message)
+        module.fail_json(msg = "Error in listing neutron networks: %s" % str(e))
     if not networks['networks']:
         return None
     return networks['networks'][0]['id']
