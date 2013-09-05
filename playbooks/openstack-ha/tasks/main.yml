@@ -15,6 +15,16 @@
     - corosync
     - pacemaker
 
+- shell: mv /etc/init.d/corosync /etc/init.d/corosync.bak
+- shell: update-rc.d corosync remove
+- shell: mv /etc/init.d/corosync.bak /etc/init.d/corosync
+- shell: update-rc.d corosync start 19 2 3 4 5 . stop 20 0 1 6 .
+
+- shell: mv /etc/init.d/pacemaker /etc/init.d/pacemaker.bak
+- shell: update-rc.d pacemaker remove
+- shell: mv /etc/init.d/pacemaker.bak /etc/init.d/pacemaker
+- shell: update-rc.d pacemaker start 20 2 3 4 5 . stop 19 0 1 6 .
+
 - name: add corosync.conf 
   template: src=corosync.conf dest=/etc/corosync/corosync.conf mode=0400 
   when: corosync_conf_status.stdout.find("exists") == -1
