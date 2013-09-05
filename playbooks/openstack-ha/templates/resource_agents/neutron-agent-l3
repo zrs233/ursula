@@ -41,6 +41,7 @@ OCF_RESKEY_config_default="/etc/neutron/neutron.conf"
 OCF_RESKEY_plugin_config_default="/etc/neutron/l3_agent.ini"
 OCF_RESKEY_user_default="neutron"
 
+# modified by mpatterson@bluebox.net
 OCF_RESKEY_pid_default="$HA_RSCTMP/neutron-l3-agent.pid"
 OCF_RESKEY_neutron_server_port_default="9696"
 
@@ -235,13 +236,13 @@ neutron_l3_agent_monitor() {
  
     rc=$(/usr/local/bin/neutron agent-show `/usr/local/bin/neutron agent-list | grep -i l3 | grep $(/bin/hostname) | awk '{print \$2}'` | grep -i alive | grep -i true > /dev/null 2>&1 && echo "pass" || echo "fail")
 
-	if [ $rc != "pass" ]; then
-	    ocf_log err "Neutron L3 Server is not connected to the Neutron server: $rc" 
-	    return $OCF_NOT_RUNNING
-	else
-	    ocf_log debug "OpenStack L3 Server (neutron-l3-agent) monitor succeeded"
-	    return $OCF_SUCCESS
-	fi 
+    if [ $rc != "pass" ]; then
+        ocf_log err "Neutron L3 Server is not connected to the Neutron server: $rc" 
+        return $OCF_NOT_RUNNING
+    fi 
+
+    ocf_log debug "OpenStack L3 Server (neutron-l3-agent) monitor succeeded"
+    return $OCF_SUCCESS
 }
 
 # modified by mpatterson@bluebox.net
