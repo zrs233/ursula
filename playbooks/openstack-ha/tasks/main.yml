@@ -8,7 +8,7 @@
 # in order to allow each control node to be self-sufficient.
 # i.e. we don't want a VIP transition failure of pacemaker to cause 
 # every OS-related service to fail because the VIP isn't reachable.
-- lineinfile: dest=/etc/hosts regexp='^127\.0\.0\.1' localhost line="127.0.0.1 localhost {{ endpoints.main }}"
+- lineinfile: dest=/etc/hosts regexp='^127\.0\.0\.1' line="127.0.0.1 localhost {{ endpoints.main }}"
 
 - name: check if authkey exists 
   shell: test -e /etc/corosync/authkey && echo "exists" || echo "absent"
