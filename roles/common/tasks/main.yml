@@ -12,6 +12,7 @@
     - python-greenlet
     - python-openssl
     - python-dev
+    - python-httplib2
 
 - apt: pkg=git
 
