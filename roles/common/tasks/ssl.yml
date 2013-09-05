@@ -2,19 +2,26 @@
 - name: custom CA cert directory
   file: dest=/usr/share/ca-certificates/openstack state=directory
 
-# ugly hack: neutron depends on this lib, and we need to shoehorn
-# the cert into its cacerts.txt file.
-- pip: name=httplib2 state=latest
-
 - name: (possibly self-signed) ssl cert
   template: src=openstack.crt dest=/usr/share/ca-certificates/openstack/{{ endpoints.main }}.crt
   notify:
     - refresh CAs
     - update httplib2 CAs
 
-- file: dest=/opt/stack/ssl state=directory
-- template: src=openstack.crt dest=/opt/stack/ssl/openstack.crt mode=0644
+# ugly hack: neutron depends on this lib, and we need to shoehorn
+# the cert into its cacerts.txt file.
+- pip: name=httplib2 state=latest
+  notify:
+    - update httplib2 CAs
 
+- file: dest=/opt/stack/ssl state=directory
+- template: src=openstack.crt dest=/opt/stack/ssl/openstack.crt mode=0645
+
+# ugly hack: neutron depends on this lib, and we need to shoehorn
+# the cert into its cacerts.txt file.
+- pip: name=httplib2 state=latest
+  notify:
+    - update httplib2 CAs
 - lineinfile: >
     dest=/etc/ca-certificates.conf
     regexp=openstack/{{ endpoints.main }}.crt
