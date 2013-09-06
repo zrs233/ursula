@@ -48,10 +48,7 @@
 - name: add openstack haresource agents
   template: src=resource_agents/$item dest=/usr/lib/ocf/resource.d/openstack/$item owner=root group=root mode=0755
   with_items:
-  - neutron-agent-dhcp  
   - neutron-agent-l3  
-  - neutron-server
-  - neutron-metadata-agent
 
 - service: name=corosync state=started enabled=yes
 - service: name=pacemaker state=started enabled=yes
