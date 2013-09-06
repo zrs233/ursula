@@ -1,4 +1,7 @@
 ---
+- name: test
+  shell: echo "hello!"
+
 - name: check for existing ClusterIP configuration
   shell: crm configure show  | grep ClusterIP > /dev/null 2>&1 && echo "exists" || echo "absent"
   register: cluster_ip_exists
