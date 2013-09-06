@@ -6,7 +6,7 @@ net_name=external
 key_name=int-test
 key_path=$HOME/.ssh/$key_name.pem
 login_user=ubuntu
-ssh_args="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i $key_path -o ControlMaster=auto -o ControlPath=~/.ssh/ursula-%l-%r@%h:%p -o ControlPersist=yes"
+ssh_args="-o LogLevel=quiet -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i $key_path -o ControlMaster=auto -o ControlPath=~/.ssh/ursula-%l-%r@%h:%p -o ControlPersist=yes"
 root="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
 
 die() {
@@ -53,9 +53,9 @@ ensure_free_floating_ip() {
 
 # given an ansible host match string, and a command,
 # run the command on the host(s)
-run_cmd_on_hosts() {
-  local hosts=$(ansible -i $root/envs/example/hosts --list-hosts "$1" | awk '{print $1}')
+run_on_hosts() {
+  local hosts=$(ansible -i $root/envs/test/hosts --list-hosts "$1" | awk '{print $1}')
   for host in $hosts; do
-    ssh $ssh_args $login_user@$host "$2"
+    ssh $ssh_args root@$host "$2"
   done
 }
