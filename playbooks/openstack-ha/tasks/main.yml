@@ -20,6 +20,7 @@
   with_items:
     - corosync
     - pacemaker
+    - resource-agents
 
 - shell: mv /etc/init.d/corosync /etc/init.d/corosync.bak
 - shell: update-rc.d corosync remove
@@ -51,4 +52,9 @@
   - neutron-agent-l3  
 
 - service: name=corosync state=started enabled=yes
+- name: sleeping while corosync service comes online
+  shell: sleep 5
+
 - service: name=pacemaker state=started enabled=yes
+- name: sleeping while pacemaker service comes online
+  shell: sleep 10
