@@ -13,4 +13,12 @@ ansible-playbook \
   --connection ssh \
   --user $login_user \
   --sudo \
-  site.yml -v
+  site.yml
+
+for test in $(ls $root/test/tests.d); do
+  echo
+  echo
+  echo "### running test:  $test"
+  echo
+  $root/test/tests.d/$test
+done

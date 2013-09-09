@@ -1,0 +1,8 @@
+#!/bin/bash
+set -e
+source $(dirname $0)/../common
+
+# an example test.
+
+echo "ensure glance is up, and contains the cirros image"
+run_on_hosts controller[0] "source /root/stackrc; glance index | grep cirros"

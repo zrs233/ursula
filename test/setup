@@ -34,8 +34,13 @@ for vm in $vms; do
     sleep 1
   done
 
+  ssh $ssh_args $login_user@$ip "echo '127.0.1.1 $vm' | sudo tee -a /etc/hosts"
+
   # TODO: this is a workaround for an MTU issue. it should be removed once fixed.
   ssh $ssh_args $login_user@$ip sudo ifconfig eth0 mtu 1454 2>&1 >/dev/null
+
+  ssh $ssh_args $login_user@$ip sudo mkdir -p /root/.ssh 2>&1 >/dev/null
+  ssh $ssh_args $login_user@$ip sudo cp /home/$login_user/.ssh/authorized_keys /root/.ssh/. 2>&1 >/dev/null
 done
 controller_ip=$(public_ip test-controller-0)
 
