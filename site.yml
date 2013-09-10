@@ -5,7 +5,8 @@
 
 - name: Install corosync and pacemaker
   hosts: controller
-  tasks: openstack-ha/tasks/main.yml
+  tasks: 
+  - include: playbooks/openstack-ha/tasks/main.yml
 
 - name: replicated db setup
   include: playbooks/percona.yml
