@@ -74,6 +74,13 @@ neutron:
       enable_dhcp: "true"
       gateway_ip: 172.16.255.1
       ip_version: 4
+  routers:
+    - name: default
+      tenant_name: admin
+  router_interfaces:
+    - router_name: default
+      subnet_name: internal
+      tenant_name: admin
 
 glance:
   rev: 563c71c1
