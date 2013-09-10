@@ -15,8 +15,9 @@ if ! nova keypair-list | grep $key_name >/dev/null; then
 fi
 
 echo "booting vms"
+net_id=$(nova net-list | grep internal | awk '{print $2}')
 for vm in $vms; do
-  nova boot --image $image --flavor $flavor --key_name $key_name $vm >/dev/null
+  nova boot --image $image --flavor $flavor --key_name $key_name --nic net-id=$net_id $vm >/dev/null
   sleep 3
   add_floating_ip $vm
 done
