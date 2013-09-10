@@ -22,11 +22,21 @@
     - pacemaker
     - resource-agents
 
+# By default, the corosync rc startup/shutdown script on Percise 
+# attempts to stop corosync before pacemaker during a 
+# reboot or shutdown event which causes the system to hang.
+#
+# In order to resolve this, the rc ordering must be updated
+#
+# http://manpages.ubuntu.com/manpages/precise/man8/update-rc.d.8.html
+#
+# ensure corosync starts before pacemaker and shutsdown after pacemerk
 - shell: mv /etc/init.d/corosync /etc/init.d/corosync.bak
 - shell: update-rc.d corosync remove
 - shell: mv /etc/init.d/corosync.bak /etc/init.d/corosync
 - shell: update-rc.d corosync start 19 2 3 4 5 . stop 20 0 1 6 .
 
+# ensure pacemaker starts after corosync and shutsdown before corosync
 - shell: mv /etc/init.d/pacemaker /etc/init.d/pacemaker.bak
 - shell: update-rc.d pacemaker remove
 - shell: mv /etc/init.d/pacemaker.bak /etc/init.d/pacemaker

@@ -16,6 +16,6 @@
 - shell: crm configure property no-quorum-policy="ignore"
 - shell: sleep 5
 
-- shell: crm configure primitive ClusterIP ocf:heartbeat:IPaddr2 params ip={{ floating_ipv4 }} cidr_netmask=32 op monitor interval=20s 
+- shell: crm configure primitive ClusterIP ocf:heartbeat:IPaddr2 params ip={{ corosync.floating_ipv4 }} cidr_netmask=32 op monitor interval=20s 
   when: cluster_ip_exists.stdout.find("exists") == -1
 - shell: sleep 5
