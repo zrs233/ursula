@@ -30,28 +30,28 @@
       cacert=/opt/stack/ssl/openstack.crt
   with_items: neutron.subnets
 
-#- name: neutron routers
-#  action: |
-#    neutron_router
-#      state=present
-#      name={{ item.name }}
-#      tenant_name={{ item.tenant_name }}
-#      admin_state_up=true
-#      auth_url=https://{{ endpoints.main }}:5001/v2.0/
-#      login_tenant_name=admin
-#      login_password={{ secrets.admin_password }}
-#      cacert=/opt/stack/ssl/openstack.crt
-#  with_items: neutron.routers
+- name: neutron routers
+  action: |
+    neutron_router
+      state=present
+      name={{ item.name }}
+      tenant_name={{ item.tenant_name }}
+      admin_state_up=true
+      auth_url=https://{{ endpoints.main }}:5001/v2.0/
+      login_tenant_name=admin
+      login_password={{ secrets.admin_password }}
+      cacert=/opt/stack/ssl/openstack.crt
+  with_items: neutron.routers
 
-#- name: neutron router interfaces
-#  action: |
-#    neutron_router_interface
-#      router_name={{ item.router_name }}
-#      subnet_name={{ item.subnet_name }}
-#      tenant_name={{ item.tenant_name }}
-#      state=present
-#      auth_url=https://{{ endpoints.main }}:5001/v2.0/
-#      login_tenant_name=admin
-#      login_password={{ secrets.admin_password }}
-#      cacert=/opt/stack/ssl/openstack.crt
-#  with_items: neutron.router_interfaces
+- name: neutron router interfaces
+  action: |
+    neutron_router_interface
+      router_name={{ item.router_name }}
+      subnet_name={{ item.subnet_name }}
+      tenant_name={{ item.tenant_name }}
+      state=present
+      auth_url=https://{{ endpoints.main }}:5001/v2.0/
+      login_tenant_name=admin
+      login_password={{ secrets.admin_password }}
+      cacert=/opt/stack/ssl/openstack.crt
+  with_items: neutron.router_interfaces
