@@ -1,0 +1,3 @@
+---
+- name: restart iscsitarget
+  service: name=iscsitarget state=restarted

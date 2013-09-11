@@ -1,0 +1,6 @@
+---
+- name: pip install cinder
+  command: pip install -i {{ openstack.pypi_mirror }} /opt/stack/cinder
+
+- name: cinder rootwrap
+  command: rsync -avh /opt/stack/cinder/etc/cinder/rootwrap.d /etc/cinder

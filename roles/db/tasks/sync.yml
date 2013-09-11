@@ -3,3 +3,4 @@
 - command: keystone-manage db_sync
 - command: glance-manage db_sync
 - command: nova-manage db sync
+- command: cinder-manage db sync

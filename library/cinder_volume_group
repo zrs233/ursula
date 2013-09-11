@@ -1,0 +1,41 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'antsy'
+
+# create a volume group for cinder, named `cinder-volumes`,
+# backed by either a disk partition, or a file mounted over
+# loop device
+
+# example usages:
+#   cinder_volume_group: path=/some/path/foo size=100G
+#   cinder_volume_group: device=/dev/sdb size=1T
+
+args = Antsy.args
+size = args[:size]     # used only for file-backed VGs
+file = args[:file]     # used only for file-backed VGs
+device = args[:device] # used only for device-backed VGs
+vgname = 'cinder-volumes'
+
+Antsy.fail! 'must provide either file+size or device' unless ((file and size) or device)
+Antsy.fail! 'file and device are mutually exclusive' if (file and device)
+
+if system "vgs #{vgname}"
+  Antsy.no_change!
+else
+  if file
+    Antsy.fail! "can't create volume file"  unless system "truncate -s #{size} #{file}"
+    Antsy.fail! "can't setup loop device"   unless system "losetup /dev/loop0 #{file}"
+    Antsy.fail! "can't create volume group" unless system "vgcreate #{vgname} /dev/loop0"
+    File.open '/etc/init/losetup.conf', 'w' do |f|
+      f.write <<-eof.gsub /^\s+/, ""
+        start on filesystem
+        task
+        exec losetup /dev/loop0 #{file}
+      eof
+    end
+    Antsy.changed!
+  else
+    Antsy.fail! 'TODO: device-backed volume groups are untested (see library/cinder_volume_group)'
+    system "vgcreate #{vgname} #{device}" ? Antsy.changed! : Antsy.fail!('volume group creation failed')
+  end
+end
