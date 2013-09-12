@@ -1,0 +1,21 @@
+---
+- name: check for existing ClusterIP configuration
+  shell: crm configure show  | grep ClusterIP > /dev/null 2>&1 && echo "exists" || echo "absent"
+  register: cluster_ip_exists
+  changed_when: False
+
+- name: check for existing stonith configuration
+  shell: crm configure show | grep 'stonith-enabled="false"' > /dev/null 2>&1 && echo "exists" || echo "absent"
+  register: stonith_enabled
+  changed_when: False
+
+- shell: crm configure property stonith-enabled=false
+  when: stonith_enabled.stdout.find("exists") == -1
+- shell: sleep 5
+
+- shell: crm configure property no-quorum-policy="ignore"
+- shell: sleep 5
+
+- shell: crm configure primitive ClusterIP ocf:heartbeat:IPaddr2 params ip={{ corosync.floating_ipv4 }} cidr_netmask=32 op monitor interval=20s 
+  when: cluster_ip_exists.stdout.find("exists") == -1
+- shell: sleep 5

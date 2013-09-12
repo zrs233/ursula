@@ -10,6 +10,15 @@ secrets:
   metadata_proxy_shared_secret: asdf
   horizon_secret_key:           asdf
 
+
+corosync:
+  floating_ipv4: 173.247.112.252
+  # authkey generation command: openssl rand 128 -base64
+  authkey: |
+    1Fq2vvgLrzjTkYB1J4HE2/NvZnVcqUyz83d+Ds/uYtZ7TRxbwBmPtywdY4axyWSQ
+    +D2NCNmsdeqtiIMDPgO3HLpfwkFUBqtMZ41N+romic9LaPp9DzkSvopOQfiF+E+2
+    0QJoh4biaU2vM8A2/vHcvMnEQmDmEY/ZYGOFuDOsvnw=
+
 endpoints:
   main:     *controller
   db:       *controller
