@@ -46,6 +46,9 @@
   template: src=corosync.conf dest=/etc/corosync/corosync.conf mode=0400 
   when: corosync_conf_status.stdout.find("exists") == -1
 
+# Would prefer to use a template here, containing the base64. However the ansible play
+# errors with an "unable to process as utf-8" message when doing so.
+# Until a workaround is discovered, we'll decrypt and store the authkey on the fly.
 - name: add corosync authkey
   shell: 'echo "{{ corosync.authkey }}" | openssl base64 -d > /etc/corosync/authkey && chown root: /etc/corosync/authkey && chmod 0600 /etc/corosync/authkey'
   when: authkey_exists.stdout.find("exists") == -1
