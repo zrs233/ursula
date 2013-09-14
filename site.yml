@@ -31,6 +31,11 @@
   roles:
     - keystone-common
 
+- name: cinder code and config
+  hosts: controller:db:compute
+  roles:
+    - cinder-common
+
 - name: dbs, db users, db schema updates
   hosts: db[0]
   roles:
@@ -47,6 +52,7 @@
 - hosts: compute
   roles:
     - compute
+    - cinder-volume
 
 - hosts: network:compute
   roles:

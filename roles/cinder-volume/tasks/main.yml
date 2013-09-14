@@ -1,0 +1,26 @@
+---
+- apt: pkg={{ item }}
+  with_items:
+    - lvm2
+    - tgt
+    - iscsitarget
+    - iscsitarget-dkms
+
+- file: dest=/etc/tgt/conf.d state=directory
+- template: src=etc/tgt/targets.conf dest=/etc/tgt/targets.conf mode=0644
+- template: src=etc/tgt/conf.d/cinder_tgt.conf dest=/etc/tgt/conf.d/cinder_tgt.conf mode=0644
+
+- lineinfile: dest=/etc/default/iscsitarget regexp=^ISCSITARGET_ENABLE= line=ISCSITARGET_ENABLE=true
+  notify: restart iscsitarget
+
+# TODO: allow for device-backed VGs in addition to file-backed VGs
+- name: cinder volume group
+  cinder_volume_group: file={{ cinder.volume_file }} size={{ cinder.volume_file_size }}
+
+- name: cinder-volume start script
+  template: src=etc/init/cinder-volume.conf dest=/etc/init/cinder-volume.conf mode=0644
+
+- name: cinder-volume is running
+  service: name=cinder-volume state=started
+
+- sensu_process_check: service=cinder-volume

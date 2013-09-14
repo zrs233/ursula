@@ -1,10 +1,3 @@
 ---
 - name: refresh CAs
   command: update-ca-certificates
-
-# Ugly Hack
-# python httplib2 does not honor system trusted CAs in /etc/ssl.
-# It ships with it's own list of trusted certs.
-# To allow self-signed certs, stick our cert in httplib's trusted list.
-- name: update httplib2 CAs
-  shell: cat /opt/stack/ssl/openstack.crt >> /usr/local/lib/python2.7/dist-packages/httplib2/cacerts.txt

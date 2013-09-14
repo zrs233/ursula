@@ -1,0 +1,25 @@
+---
+- name: cinder user
+  user: name=cinder shell=/bin/false
+
+- name: get cinder source repo
+  git: |
+    repo={{ openstack.git_mirror }}/cinder.git dest=/opt/stack/cinder version={{ cinder.rev }}
+  notify:
+    - pip install cinder
+    - cinder rootwrap
+- meta: flush_handlers
+
+- name: /etc/cinder
+  file: dest=/etc/cinder state=directory
+
+- name: /var/lib/cinder
+  file: dest=/var/lib/cinder state=directory owner=cinder group=cinder
+- file: dest=/var/lib/cinder/images state=directory owner=cinder group=cinder
+
+- name: cinder config
+  action: template src={{ item }} dest=/etc/cinder mode=0644
+  with_fileglob: ../templates/etc/cinder/*
+
+- name: cinder sudoer
+  template: src=etc/sudoers.d/cinder dest=/etc/sudoers.d/cinder owner=root group=root mode=0440

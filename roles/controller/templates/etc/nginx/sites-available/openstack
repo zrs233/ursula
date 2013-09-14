@@ -22,6 +22,10 @@ upstream neutron {
   server localhost:9696;
 }
 
+upstream cinder {
+  server localhost:8776;
+}
+
 # force ssl on horizon
 server {
   listen 80;
@@ -33,8 +37,9 @@ server {
       'horizon': 443,
       'keystone': 5001,
       'keystone-admin': 35358,
-      'nova': 8776,
-      'neutron': 9797
+      'nova': 8777,
+      'neutron': 9797,
+      'cinder': 8778
     }.items() %}
 
 # {{ upstream }}

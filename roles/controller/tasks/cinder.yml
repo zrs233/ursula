@@ -1,0 +1,15 @@
+---
+- name: cinder-api start script
+  template: src=etc/init/cinder-api.conf dest=/etc/init/cinder-api.conf mode=0644
+
+- name: cinder-scheduler start script
+  template: src=etc/init/cinder-scheduler.conf dest=/etc/init/cinder-scheduler.conf mode=0644
+
+- name: cinder-api is running
+  service: name=cinder-api state=started
+
+- name: cinder-scheduler is running
+  service: name=cinder-scheduler state=started
+
+- sensu_process_check: service=cinder-api
+- sensu_process_check: service=cinder-scheduler

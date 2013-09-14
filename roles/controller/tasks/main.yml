@@ -4,4 +4,5 @@
 - include: nova.yml
 - include: glance.yml
 - include: neutron.yml
+- include: cinder.yml
 - include: novnc.yml

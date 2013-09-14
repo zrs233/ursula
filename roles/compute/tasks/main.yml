@@ -4,6 +4,7 @@
     - libvirt-bin
     - python-libvirt
     - kvm
+    - open-iscsi
 
 - name: ensure kvm is supported by cpu and enabled in bios
   command: kvm-ok
