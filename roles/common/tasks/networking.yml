@@ -1,0 +1,6 @@
+---
+- template: src=etc/network/interfaces dest=/etc/network/interfaces owner=root group=root mode=0644
+  when: network_interfaces is defined
+
+- lineinfile: dest=/etc/hosts regexp=^{{ item.ip }} line="{{ item.ip }} {{ item.name }}"
+  with_items: etc_hosts
