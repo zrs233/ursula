@@ -1,6 +1,10 @@
 ---
 - apt: pkg=dnsmasq
 
+- name: set instance mtu, if different than default
+  lineinfile: dest=/etc/dnsmasq.conf regexp=^dhcp-option=26, line=dhcp-option=26,{{ neutron_dhcp_mtu }}
+  when: neutron_dhcp_mtu is defined
+
 - name: ovs ex bridge
   ovs_bridge: name=br-ex state=present
 
