@@ -10,9 +10,15 @@ secrets:
   metadata_proxy_shared_secret: asdf
   horizon_secret_key:           asdf
 
+fqdn: &fqdn openstack.example.com
+floating_ip: &floating_ip 173.247.112.252
+
+etc_hosts:
+  - name: *fqdn
+    ip: *floating_ip
 
 corosync:
-  floating_ipv4: 173.247.112.252
+  floating_ipv4: *floating_ip
   # authkey generation command: openssl rand 128 -base64
   authkey: |
     1Fq2vvgLrzjTkYB1J4HE2/NvZnVcqUyz83d+Ds/uYtZ7TRxbwBmPtywdY4axyWSQ
