@@ -13,6 +13,8 @@
 - apt: pkg=rubygems
 - gem: name=sensu-plugin state=latest
 
+- lineinfile: dest=/etc/default/sensu regexp=^EMBEDDED_RUBY line=EMBEDDED_RUBY=true
+
 - name: sensu client config
   template: src=config.json dest=/etc/sensu/config.json owner=root group=root mode=0444
 
