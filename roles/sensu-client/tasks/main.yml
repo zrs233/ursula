@@ -22,10 +22,16 @@
     - check-procs.rb
     - check-cpu.rb
     - check-disk.rb
+    - vmstat-metrics.rb
+    - load-metrics.rb
 
 - file: dest=/etc/sensu/conf.d/checks state=directory owner=root
 
 - sensu_check: name=cpu  plugin=check-cpu.rb
 - sensu_check: name=disk plugin=check-disk.rb
+
+- sensu_metrics_check: name=vmstat-metrics plugin=vmstat-metrics.rb args='--scheme stats.{{ inventory_hostname  }}'
+- sensu_metrics_check: name=load-metrics plugin=vmstat-metrics.rb args='--scheme stats.{{ inventory_hostname  }}'
+
 
 - service: name=sensu-client state=started
