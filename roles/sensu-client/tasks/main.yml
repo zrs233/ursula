@@ -26,6 +26,7 @@
     - check-disk.rb
     - vmstat-metrics.rb
     - load-metrics.rb
+    - check-http.rb
 
 - file: dest=/etc/sensu/conf.d/checks state=directory owner=root
 

@@ -23,3 +23,5 @@
 
 - name: keystone pki - TODO generate once and distribute
   command: keystone-manage pki_setup --keystone-user keystone --keystone-group keystone
+
+- sensu_check: name=check-keystone-api plugin=check-http.rb args='-u {{ services.keystone.public_url }} -k true -C {{ nginx.crt }}'
