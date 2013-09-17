@@ -29,7 +29,7 @@
 
 - file: dest=/etc/sensu/conf.d/checks state=directory owner=root
 
-- sensu_check: name=cpu  plugin=check-cpu.rb
+- sensu_check: name=cpu  plugin=check-cpu.rb args='-w 80 -c 90'
 - sensu_check: name=disk plugin=check-disk.rb
 
 - sensu_metrics_check: name=vmstat-metrics plugin=vmstat-metrics.rb args='--scheme stats.{{ inventory_hostname  }}'
