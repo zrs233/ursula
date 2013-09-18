@@ -4,11 +4,6 @@
   register: my_cnf_exists
   changed_when: False
 
-- name: percona apt source
-  apt_key: url=http://www.percona.com/redir/downloads/RPM-GPG-KEY-percona state=present
-- apt_repository: repo='deb http://repo.percona.com/apt precise main'
-- apt: update_cache=yes
-
 - name: install percona xtradb packages
   register: pkg_installed
   apt: pkg=$item state=installed
