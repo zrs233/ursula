@@ -2,7 +2,7 @@
 # compute node needs Percona apt repo in order
 # to obtain garbd and act as abriter for two-node cluster
 - name: Install Percona Apt Repository
-  hosts: db:compute
+  hosts: db:compute[0]
   tasks:
   - apt_key: url=http://www.percona.com/redir/downloads/RPM-GPG-KEY-percona state=present
   - apt_repository: repo='deb http://repo.percona.com/apt precise main'
@@ -31,6 +31,6 @@
       changed_when: False
 
 - name: Install Percona Arbiter
-  hosts: compute
+  hosts: compute[0]
   tasks:
   - include: percona/tasks/arbiter.yml
