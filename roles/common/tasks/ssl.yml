@@ -13,12 +13,13 @@
 # ugly hack: some python http libs don't honor the system ca-certs, and ship with
 # their own list, instead.
 # pre-install these client libs, and force them to use the system cert list.
-- pip: name=httplib2 state=latest
-- pip: name=requests state=latest
+- pip: name=httplib2 version=0.8
+- pip: name=requests version=1.2.3
 - file: src=/etc/ssl/certs/ca-certificates.crt dest={{ item }} owner=root mode=0644 state=link force=yes
   with_items:
     - /usr/local/lib/python2.7/dist-packages/httplib2/cacerts.txt
     - /usr/local/lib/python2.7/dist-packages/requests/cacert.pem
+  notify: refresh CAs
 
 - lineinfile: >
     dest=/etc/ca-certificates.conf
