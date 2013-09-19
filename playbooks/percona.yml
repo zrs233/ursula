@@ -23,11 +23,12 @@
   tasks:
   - include: percona/tasks/start.yml
 
+# We want at least two nodes in the cluster (and possibly more).
 - name: Verify wsrep_cluster_size
   hosts: db
   tasks:
     - name: check wsrep_cluster_size
-      shell: mysql --silent -e 'show global status like "wsrep_cluster_size"' | tail -1 | cut -f 2 | grep {{ groups['db']|count }}
+      shell: mysql -e "SHOW STATUS WHERE Variable_name like '%wsrep_cluster_size%' AND Value > 1;" | grep 'wsrep_cluster_size'
       changed_when: False
 
 - name: Install Percona Arbiter
