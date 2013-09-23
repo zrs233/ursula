@@ -10,8 +10,7 @@
 - name: install garbd upstart script
   template: src=etc/init/garbd.conf dest=/etc/init/garbd.conf mode=0400
 
-- name: populate garbd upstart script with cluster IPs 
+- name: populate garbd upstart script with cluster IPs
   lineinfile: dest=/etc/init/garbd.conf regexp='-a gcomm' line="-a gcomm://{% for host in groups['db'] %}{% if not loop.last %}{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }},{% else %}{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}{% endif %}{% endfor %} &"
 
-- name: start garbd
-  shell: /sbin/start garbd
+- service: name=garbd state=started
