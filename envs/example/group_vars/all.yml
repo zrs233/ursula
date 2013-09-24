@@ -81,6 +81,8 @@ neutron:
   physical_network: br-ex
   tenant_network_type: gre
   enable_tunneling: True
+  network_vlan_ranges: ''
+  bridge_mappings: ''
   networks:
     - name: internal
       shared: true
