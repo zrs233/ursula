@@ -89,6 +89,7 @@ neutron:
       external: false
       network_type: gre
       segmentation_id: 256
+      provider_physical_network: ~
   subnets:
     - name: internal
       network_name: internal
