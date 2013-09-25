@@ -25,3 +25,6 @@
     - nova-consoleauth
     - nova-scheduler
   notify: restart sensu-client
+
+- sensu_check: name=check-nova-api plugin=check-http.rb args='-u https://localhost:8777/v2 -k true --password {{ secrets.admin_password }} --username admin'
+  notify: restart sensu-client
