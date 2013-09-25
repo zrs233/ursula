@@ -7,3 +7,7 @@
 
 - sensu_process_check: service=keystone-all
   notify: restart sensu-client
+
+- sensu_check: name=check-keystone-api plugin=check-http.rb args='-u https://localhost:5001/v2.0 -k true --password {{ secrets.admin_password }} --username admin'
+  notify: restart sensu-client
+
