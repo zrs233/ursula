@@ -12,4 +12,7 @@
   service: name=cinder-scheduler state=started
 
 - sensu_process_check: service=cinder-api
+  notify: restart sensu-client
+
 - sensu_process_check: service=cinder-scheduler
+  notify: restart sensu-client

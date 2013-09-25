@@ -25,3 +25,4 @@
   command: keystone-manage pki_setup --keystone-user keystone --keystone-group keystone
 
 - sensu_check: name=check-keystone-api plugin=check-http.rb args='-u https://localhost:5001/v2.0 -k true --password {{ secrets.admin_password }} --username admin'
+  notify: restart sensu-client

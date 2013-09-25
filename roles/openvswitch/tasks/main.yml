@@ -12,3 +12,4 @@
 - service: name=neutron-openvswitch-agent state=started
 
 - sensu_process_check: service=neutron-openvswitch-agent
+  notify: restart sensu-client

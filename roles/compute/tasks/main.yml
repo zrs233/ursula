@@ -17,3 +17,4 @@
 - service: name=nova-compute state=started
 
 - sensu_process_check: service=nova-compute
+  notify: restart sensu-client
