@@ -43,3 +43,5 @@
 
 - sensu_metrics_check: name=load-metrics plugin=load-metrics.rb args='--scheme stats.{{ inventory_hostname  }}'
   notify: restart sensu-client
+
+- include: ../handlers/main.yml

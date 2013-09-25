@@ -71,6 +71,9 @@
   roles:
     - sensu-client
 
+handlers:
+  - include: roles/sensu-client/handlers/main.yml
+
 # Only configure pacemaker on the primary node.
 # Settings will replicate to the secondary node.
 # - hosts: controller[0] 
