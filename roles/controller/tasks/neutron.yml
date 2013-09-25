@@ -3,3 +3,4 @@
 - service: name=neutron-server state=started
 
 - sensu_process_check: service=neutron-server
+  notify: restart sensu-client

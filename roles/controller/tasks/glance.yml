@@ -12,4 +12,7 @@
   service: name=glance-registry state=started
 
 - sensu_process_check: service=glance-api
+  notify: restart sensu-client
+
 - sensu_process_check: service=glance-registry
+  notify: restart sensu-client

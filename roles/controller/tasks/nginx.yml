@@ -30,3 +30,4 @@
 - service: name=nginx state=started
 
 - sensu_check: name=nginx plugin=check-procs.rb args="-p nginx -w 10 -c 30 -W 1 -C 1"
+  notify: restart sensu-client

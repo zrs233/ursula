@@ -6,3 +6,4 @@
   service: name=keystone state=started
 
 - sensu_process_check: service=keystone-all
+  notify: restart sensu-client

@@ -24,3 +24,4 @@
     - nova-conductor
     - nova-consoleauth
     - nova-scheduler
+  notify: restart sensu-client

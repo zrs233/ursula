@@ -14,9 +14,11 @@
 - gem: name=sensu-plugin state=latest
 
 - lineinfile: dest=/etc/default/sensu regexp=^EMBEDDED_RUBY line=EMBEDDED_RUBY=true
+  notify: restart sensu-client
 
 - name: sensu client config
   template: src=config.json dest=/etc/sensu/config.json owner=root group=root mode=0444
+  notify: restart sensu-client
 
 - file: dest=/etc/sensu/plugins state=directory owner=root
 - copy: src={{ item }} dest=/etc/sensu/plugins/{{ item }} mode=0755
@@ -31,10 +33,15 @@
 - file: dest=/etc/sensu/conf.d/checks state=directory owner=root
 
 - sensu_check: name=cpu  plugin=check-cpu.rb args='-w 80 -c 90'
+  notify: restart sensu-client
+
 - sensu_check: name=disk plugin=check-disk.rb
+  notify: restart sensu-client
 
 - sensu_metrics_check: name=vmstat-metrics plugin=vmstat-metrics.rb args='--scheme stats.{{ inventory_hostname  }}'
+  notify: restart sensu-client
+
 - sensu_metrics_check: name=load-metrics plugin=load-metrics.rb args='--scheme stats.{{ inventory_hostname  }}'
+  notify: restart sensu-client
 
-
-- service: name=sensu-client state=started
+- include: ../handlers/main.yml
