@@ -20,5 +20,5 @@
 - sensu_check: name=check-glance-api plugin=check-http.rb args='-u https://localhost:9393 -k true --password {{ secrets.admin_password }} --username admin'
   notify: restart sensu-client
 
-- sensu_check: name=check-glance-registry plugin=check-http.rb args='-u https://localhost:9191 -k true --password {{ secrets.admin_password }} --username admin'
-  notify: restart sensu-client
+#- sensu_check: name=check-glance-registry plugin=check-http.rb args='-u https://localhost:9191 -k true --password {{ secrets.admin_password }} --username admin'
+#  notify: restart sensu-client
