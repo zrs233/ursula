@@ -4,7 +4,10 @@
     "address": "{{ ansible_eth0["ipv4"]["address"] }}",
     "subscriptions": [
       "openstack"
-    ]
+    ],
+    "keepalive": {
+      "handler": "{{ sensu.keepalive.handler }}"
+    }
   },
   "rabbitmq": {
     "host": "{{ sensu.rabbit.host }}",
