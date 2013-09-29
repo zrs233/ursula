@@ -1,3 +1,4 @@
 ---
 dependencies:
- - role: sensu-client
+  - role: common
+  - role: sensu-client
