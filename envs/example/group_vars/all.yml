@@ -44,10 +44,10 @@ xtradb:
 
 sensu:
   rabbit:
-    host: sensu-staging.sea03.blueboxgrid.com
+    host: *controller
     port: 5672
-    user: sensu
-    pass: iI3c9m5nBTHd
+    user: openstack
+    pass: asdf
   keepalive:
     handler: email
 
