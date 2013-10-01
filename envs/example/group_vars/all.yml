@@ -46,8 +46,10 @@ sensu:
   rabbit:
     host: *controller
     port: 5672
-    user: sensu
+    user: openstack
     pass: asdf
+  keepalive:
+    handler: email
 
 openstack:
   # TODO: pypi should use https, but fails currently.
