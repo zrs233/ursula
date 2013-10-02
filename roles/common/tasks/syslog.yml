@@ -1,0 +1,13 @@
+---
+- name: install tls encryption library
+  apt: pkg=rsyslog-gnutls state=installed
+
+- name: install syslog server certs
+  get_url: url={{ syslog_cert_url }} dest=/etc/syslog.ursula.crt mode=0644
+  when: syslog_cert_url is defined
+
+- name: configure syslog to ship across the wire
+  template: src=syslog.conf dest=/etc/rsyslog.d/90-ursula.conf
+  when: syslog_server is defined
+  notify:
+    - restart rsyslog

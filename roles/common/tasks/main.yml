@@ -34,5 +34,6 @@
 - name: sensu check directory
   file: dest=/etc/sensu/conf.d/checks/ state=directory mode=0755
 
+- include: syslog.yml
 - include: ssl.yml
 - include: networking.yml
