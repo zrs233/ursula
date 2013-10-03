@@ -1,6 +1,8 @@
 ---
+# send local syslog to a remote server
 - name: install tls encryption library
   apt: pkg=rsyslog-gnutls state=installed
+  when: syslog_server is defined
 
 - name: install syslog server certs
   get_url: url={{ syslog_cert_url }} dest=/etc/syslog.ursula.crt mode=0644
@@ -11,3 +13,23 @@
   when: syslog_server is defined
   notify:
     - restart rsyslog
+
+# send normal log files to a remote syslog server
+- gem: name=remote_syslog state=present user_install=no include_dependencies=yes
+  when: syslog_server is defined
+
+- name: syslog start script
+  template: src=remote_syslog.conf dest=/etc/init/remote_syslog.conf mode=0644
+  when: syslog_server is defined
+
+- name: remote_syslog config
+  template: src=log_files.yml dest=/etc/log_files.yml mode=0644
+  when: syslog_server is defined
+  notify:
+    - restart remote_syslog
+
+- service: name=remote_syslog state=started
+  when: syslog_server is defined
+
+- sensu_process_check: service=remote_syslog
+  when: syslog_server is defined
