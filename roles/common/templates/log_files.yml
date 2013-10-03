@@ -1,0 +1,7 @@
+---
+# non-existent log files will just be ignored
+files:
+  - /var/log/upstart/*.log
+destination:
+  host: {{ syslog_server }}
+  port: {{ syslog_port }}
