@@ -51,6 +51,9 @@ sensu:
   keepalive:
     handler: email
 
+monitoring:
+  scan_for_log_errors: true
+
 openstack:
   # TODO: pypi should use https, but fails currently.
   pypi_mirror: http://pypi.openstack.org/openstack
