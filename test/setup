@@ -48,8 +48,7 @@ controller_ip=$(public_ip test-controller-0)
 echo "building config"
 rm -rf $root/envs/test
 cp -r $root/envs/example $root/envs/test
-sed -i "s/^controller_primary: \&controller.*/controller_primary: \&controller $controller_ip/" envs/test/group_vars/all.yml
-
+sed -i -e "s/^controller_primary: \&controller.*/controller_primary: \&controller $controller_ip/" envs/test/group_vars/all.yml
 
 echo "generating ssl cert for $controller_ip"
 cert_dir=$(mktemp -d)
