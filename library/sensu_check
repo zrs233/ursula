@@ -4,6 +4,7 @@ require 'antsy'
 
 args = Antsy.args
 name = args[:name]
+use_sudo = args[:use_sudo]
 plugin = args[:plugin]
 plugin_args = args[:args] or ''
 plugin_path = "/etc/sensu/plugins/#{plugin}"
@@ -15,7 +16,7 @@ Antsy.fail! "argument 'plugin' is required" unless plugin and not plugin.empty?
 check = {
   'checks' => {
     name => {
-      'command' => "#{plugin_path} #{plugin_args}",
+      'command' => use_sudo ? "sudo #{plugin_path} #{plugin_args}" : "#{plugin_path} #{plugin_args}",
       'standalone' => true,
       'handlers' => [ 'pagerduty' ],
       'interval' => 30,
