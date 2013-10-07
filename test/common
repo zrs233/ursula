@@ -35,7 +35,7 @@ add_floating_ip() {
 
   nova floating-ip-list | grep $net_name | while read line; do
     ip=$(echo "$line" | awk '{print $2}')
-    instance=$(echo "$line" | awk '{print $4}')
+    instance=$(echo "$line" | awk -F\| '{print $4}' | tr -d ' ')
     if [ "$instance" == "None" ]; then
       echo "reusing floating ip: " $ip
       nova add-floating-ip $1 $ip
