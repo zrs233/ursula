@@ -30,8 +30,6 @@ On your workstation, you'll need:
     export SERVICE_TYPE="compute"
 ```
 
-  - your default security group must have all tcp ports opened up for access. this can be done in horizon (easiest), or with neutron client.
-
 ## spin up a new environment
 
 ```bash
