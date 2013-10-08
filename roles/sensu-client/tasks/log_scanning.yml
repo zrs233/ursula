@@ -4,7 +4,7 @@
 
 - name: enable log scanning
   when: monitoring.scan_for_log_errors
-  sensu_check: name=check-log-{{ item }} plugin=check-log.rb use_sudo=true args="-f /var/log/upstart/{{ item }}.log -q ERROR"
+  sensu_check: name=check-log-{{ item }} plugin=check-log.rb use_sudo=true auto_resolve=false args="-f /var/log/upstart/{{ item }}.log -q ERROR"
   with_items: logs_to_scan
   notify: restart sensu-client
 

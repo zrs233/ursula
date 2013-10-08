@@ -5,6 +5,7 @@ require 'antsy'
 args = Antsy.args
 name = args[:name]
 use_sudo = args[:use_sudo]
+auto_resolve = args[:auto_resolve] || true
 plugin = args[:plugin]
 plugin_args = args[:args] or ''
 plugin_path = "/etc/sensu/plugins/#{plugin}"
@@ -21,7 +22,8 @@ check = {
       'handlers' => [ 'pagerduty' ],
       'interval' => 30,
       'notification' => "#{name} check failed",
-      'occurrences' => 2
+      'occurrences' => 2,
+      'auto_resolve' => auto_resolve
     }
   }
 }
