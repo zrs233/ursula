@@ -188,7 +188,7 @@ keystone:
       internal_url: https://{{ endpoints.main }}:8778/v1/%(tenant_id)s
       admin_url: https://{{ endpoints.main }}:8778/v1/%(tenant_id)s
 
-nginx:
+ssl:
   crt: |
     -----BEGIN CERTIFICATE-----
     MIIDrDCCApQCCQCs4G+6Zp5z9TANBgkqhkiG9w0BAQUFADCBlzELMAkGA1UEBhMC

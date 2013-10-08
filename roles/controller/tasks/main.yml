@@ -1,5 +1,6 @@
 ---
 - include: nginx.yml
+- include: haproxy.yml
 - include: keystone.yml
 - include: nova.yml
 - include: glance.yml

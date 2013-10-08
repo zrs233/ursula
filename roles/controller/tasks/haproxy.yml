@@ -1,0 +1,14 @@
+---
+- name: haproxy ppa - required to get a version new enough to support ssl
+  apt_repository: repo='ppa:vbernat/haproxy-1.5' update_cache=yes
+- apt: pkg=haproxy=1.5~dev19-2ppa1~precise
+
+- name: install ssl cert+key
+  template: src=etc/haproxy/openstack.pem dest=/etc/haproxy/openstack.pem
+  notify: restart haproxy
+
+- template: src=etc/haproxy/haproxy.cfg dest=/etc/haproxy/haproxy.cfg mode=0644
+  notify: restart haproxy
+
+- lineinfile: dest=/etc/default/haproxy regexp=^ENABLED= line=ENABLED=1
+  notify: restart haproxy
