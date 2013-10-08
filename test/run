@@ -7,7 +7,7 @@ export ANSIBLE_SSH_ARGS="$ssh_args"
 
 export ANSIBLE_FORCE_COLOR=yes
 
-ansible-playbook \
+time ansible-playbook \
   --inventory-file envs/test/hosts \
   --module-path ./library \
   --connection ssh \
@@ -15,7 +15,7 @@ ansible-playbook \
   --sudo \
   site.yml
 
-for test in $(ls $root/test/tests.d); do
+time for test in $(ls $root/test/tests.d); do
   echo
   echo
   echo "### running test:  $test"
