@@ -7,6 +7,7 @@ key_name=int-test
 key_path=$HOME/.ssh/$key_name.pem
 login_user=ubuntu
 ssh_args="-o LogLevel=quiet -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i $key_path -o ControlMaster=auto -o ControlPath=~/.ssh/ursula-%l-%r@%h:%p -o ControlPersist=yes"
+security_group=ursula
 root="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
 
 die() {

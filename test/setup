@@ -14,10 +14,30 @@ if ! nova keypair-list | grep $key_name >/dev/null; then
   chmod 600 $key_path
 fi
 
+echo "setting up security group"
+if ! nova secgroup-list-rules $security_group >/dev/null; then
+  nova secgroup-create $security_group "Rules for testing ursula" >/dev/null
+fi
+
+echo "setting up security group rules"
+default_proto=tcp
+default_ports=(22 80 443 3306 5000 5001 5672 8777 8778 9393 9797 35357 35358)
+default_cidr=0.0.0.0/0
+rules=$(nova secgroup-list-rules $security_group)
+security_group_id=$(nova secgroup-list | grep $security_group | awk -F\| '{print $2}' | tr -d ' ')
+
+for port in "${default_ports[@]}"; do
+  regexp="$default_proto .* \| $port .* \| $port .* \| $default_cidr"
+  if ! echo "$rules" | egrep "$regexp" >/dev/null; then
+    echo "- creating new security group rule for port $port"
+    nova secgroup-add-rule $security_group $default_proto $port $port $default_cidr >/dev/null
+  fi
+done
+
 echo "booting vms"
 net_id=$(nova net-list | grep internal | awk '{print $2}')
 for vm in $vms; do
-  nova boot --image $image --flavor $flavor --key_name $key_name --nic net-id=$net_id $vm >/dev/null
+  nova boot --image $image --flavor $flavor --key_name $key_name --nic net-id=$net_id --security-groups $security_group_id $vm >/dev/null
   sleep 15
   add_floating_ip $vm
 done
