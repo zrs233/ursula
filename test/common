@@ -46,7 +46,7 @@ add_floating_ip() {
 }
 
 ensure_free_floating_ip() {
-  if ! nova floating-ip-list | grep $net_name | awk '{print $4}' | grep None >/dev/null; then
+  if ! nova floating-ip-list | grep $net_name | awk -F\| '{print $4}' | grep None >/dev/null; then
     echo "creating new floating ip"
     nova floating-ip-create $net_name
   fi
