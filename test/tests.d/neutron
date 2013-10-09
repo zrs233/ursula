@@ -1,0 +1,42 @@
+#!/bin/bash
+set -e
+source $(dirname $0)/../common
+
+echo "it has an internal network"
+run_on_hosts controller[0] "neutron net-list | grep internal"
+
+echo "it has a network with network_type gre"
+run_on_hosts controller[0] "neutron net-show internal | grep provider:network_type | grep gre"
+
+echo "it has a network with provider:physical_network empty"
+run_on_hosts controller[0] "neutron net-show internal | grep provider:physical_network"
+
+echo "it has a network with segmentation_id 256"
+run_on_hosts controller[0] "neutron net-show internal | grep provider:segmentation_id | grep 256"
+
+echo "it has a network with router:external False"
+run_on_hosts controller[0] "neutron net-show internal | grep router:external | grep False"
+
+echo "it has a network with internal subnet"
+run_on_hosts controller[0] "neutron net-list | grep internal | grep 172.16.255.0/24"
+
+echo "it has the internal subnet"
+run_on_hosts controller[0] "neutron subnet-list | grep internal"
+
+echo "it has the internal subnet with cidr"
+run_on_hosts controller[0] "neutron subnet-show internal | grep cidr | grep 172.16.255.0/24"
+
+echo "it has the internal subnet with cidr start/end addresses"
+run_on_hosts controller[0] "neutron subnet-show internal | grep allocation_pools | egrep '172.16.255.2.*172.16.255.254'"
+
+echo "it has the internal subnet with dns_nameservers empty"
+run_on_hosts controller[0] "neutron subnet-show internal | grep dns_nameservers"
+
+echo "it has the internal subnet with enable_dhcp True"
+run_on_hosts controller[0] "neutron subnet-show internal | grep enable_dhcp | grep True"
+
+echo "it has the internal subnet with gateway gateway_ip"
+run_on_hosts controller[0] "neutron subnet-show internal | grep gateway | grep gateway_ip"
+
+echo "it has the default router"
+run_on_hosts controller[0] "neutron router-list | grep default"
