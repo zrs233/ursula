@@ -2,12 +2,19 @@
 require 'rubygems'
 require 'antsy'
 
+# defaults
+INTERVAL = 30
+AUTORESOLVE = true
+
 args = Antsy.args
+
 name = args[:name]
 use_sudo = args[:use_sudo]
-auto_resolve = args[:auto_resolve] || true
+auto_resolve = args[:auto_resolve] || AUTORESOLVE
+interval = args[:interval] || INTERVAL
 plugin = args[:plugin]
 plugin_args = args[:args] or ''
+
 plugin_path = "/etc/sensu/plugins/#{plugin}"
 check_path = "/etc/sensu/conf.d/checks/#{name}.json"
 
@@ -20,7 +27,7 @@ check = {
       'command' => use_sudo ? "sudo #{plugin_path} #{plugin_args}" : "#{plugin_path} #{plugin_args}",
       'standalone' => true,
       'handlers' => [ 'pagerduty' ],
-      'interval' => 30,
+      'interval' => interval,
       'notification' => "#{name} check failed",
       'occurrences' => 2,
       'auto_resolve' => auto_resolve

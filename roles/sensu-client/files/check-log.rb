@@ -62,13 +62,20 @@ class CheckLog < Sensu::Plugin::Check::CLI
          :long => '--warn-only',
          :boolean => true
 
+  option :silent,
+         :description => "do not Crit if log does not exist",
+         :short => '-s',
+         :long => '--silent',
+         :boolean => false
+  
   def run
     unknown "No log file specified" unless config[:log_file]
     unknown "No pattern specified" unless config[:pattern]
     begin
       open_log
     rescue => e
-      ok "Could not open log file: #{e}"
+      msg = "Could not open log file: #{e}"
+      config[:silent] ? ok(msg) : crit(msg)
     end
     n_warns, n_crits = search_log
     message "#{n_warns} warnings, #{n_crits} criticals"

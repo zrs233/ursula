@@ -13,8 +13,8 @@
 - apt: pkg=rubygems
 - gem: name=sensu-plugin state=latest
 
-- name: sensu user needs sudo
-  lineinfile: dest=/etc/sudoers.d/sensu state=present regexp="^sensu" line="sensu ALL=(ALL) NOPASSWD:ALL" create=yes
+- name: sensu sudoers
+  template: src=sensu-sudoers dest=/etc/sudoers.d/sensu owner=root group=root mode=0440
 
 - name: ensure /etc/sudoers.d/sensu permissions are 0440
   file: path=/etc/sudoers.d/sensu mode=0440
