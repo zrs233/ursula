@@ -1,0 +1,7 @@
+---
+- name: install memcached
+  apt: pkg=memcached
+
+- template: src=memcached.conf dest=/etc/memcached.conf mode=0644
+  notify:
+    - restart memcached
