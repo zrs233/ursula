@@ -50,7 +50,7 @@ TODO(retr0h): Bring in pbr and tox
 
 ```bash
     $ pip install -r requirements.txt
-    $ nosetest
+    $ cd test/integration; nosetest
 ```
 
 ## Re-run only a subset of tasks

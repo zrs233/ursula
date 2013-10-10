@@ -48,6 +48,7 @@
     - rabbit
     - client
     - controller
+    - memcached
     - horizon
 
 - hosts: compute

@@ -10,7 +10,6 @@
   with_items:
     - python-dev
     - nodejs
-    - memcached
     - libapache2-mod-wsgi
 
 - apt: pkg=apache2

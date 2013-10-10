@@ -16,18 +16,19 @@ def run_on_group(group, command):
     :returns: A list of _run_command returns
     """
     hosts = _get_ansible_hosts(group)
-    ssh_args = ' '.join(('-o LogLevel=quiet',
-                         '-o StrictHostKeyChecking=no',
-                         '-o UserKnownHostsFile=/dev/null',
-                         '-o ControlMaster=auto',
-                         '-o ControlPath=~/.ssh/ursula-%l-%r@%h:%p',
-                         '-o ControlPersist=yes',
-                         '-i ~/.ssh/int-test.pem'))
+    ssh_args = ('-o LogLevel=quiet '
+                '-o StrictHostKeyChecking=no '
+                '-o UserKnownHostsFile=/dev/null '
+                '-o ControlMaster=auto '
+                '-o ControlPath=~/.ssh/ursula-%l-%r@%h:%p '
+                '-o ControlPersist=yes '
+                '-i ~/.ssh/int-test.pem')
     return_list = []
     for host in hosts:
-        cmd = "ssh {0} root@{1} 'source /root/stackrc; {2}'".format(ssh_args,
-                                                                    host,
-                                                                    command)
+        heredoc = ('<<\EOF\n'
+                   'source /root/stackrc; {0}\n'
+                   'EOF').format(command)
+        cmd = 'ssh -t {0} root@{1} {2}'.format(ssh_args, host, heredoc)
         result = _run_command(cmd)
         return_list.append(result)
     return return_list
@@ -41,7 +42,7 @@ def _run_command(command):
     :returns: Raises subprocess.CalledProcessError if the command's
               return code was non-zero, otherwise returns a string.
     """
-    return subprocess.check_output(command, shell=True)
+    return subprocess.check_output(command, shell=True, stderr=subprocess.PIPE)
 
 
 def _get_ansible_hosts(group):

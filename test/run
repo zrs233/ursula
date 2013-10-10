@@ -15,4 +15,6 @@ time ansible-playbook \
   --sudo \
   site.yml
 
-nosetest
+(
+  cd $root/test/integration; nosetests
+)
