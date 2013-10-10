@@ -1,0 +1,6 @@
+---
+logs_to_scan:
+- nova-compute
+- cinder-volume
+- neutron-openvswitch-agent
+- remote_syslog

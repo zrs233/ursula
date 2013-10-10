@@ -13,6 +13,12 @@
 - apt: pkg=rubygems
 - gem: name=sensu-plugin state=latest
 
+- name: sensu sudoers
+  template: src=sensu-sudoers dest=/etc/sudoers.d/sensu owner=root group=root mode=0440
+
+- name: ensure /etc/sudoers.d/sensu permissions are 0440
+  file: path=/etc/sudoers.d/sensu mode=0440
+
 - lineinfile: dest=/etc/default/sensu regexp=^EMBEDDED_RUBY line=EMBEDDED_RUBY=true
   notify: restart sensu-client
 
@@ -29,6 +35,7 @@
     - vmstat-metrics.rb
     - load-metrics.rb
     - check-http.rb
+    - check-log.rb
 
 - file: dest=/etc/sensu/conf.d/checks state=directory owner=root
 
@@ -44,4 +51,4 @@
 - sensu_metrics_check: name=load-metrics plugin=load-metrics.rb args='--scheme stats.{{ inventory_hostname  }}'
   notify: restart sensu-client
 
-- include: ../handlers/main.yml
+- include: log_scanning.yml
