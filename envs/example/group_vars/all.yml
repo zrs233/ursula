@@ -59,6 +59,8 @@ openstack:
 nova:
   rev: 83865447
   libvirt_type: qemu
+  cpu_allocation_ratio: 1.0
+  ram_allocation_ratio: 1.0
   compute_driver: nova.virt.libvirt.LibvirtDriver
   client:
     rev: 01635a2a
