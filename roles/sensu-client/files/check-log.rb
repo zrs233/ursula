@@ -75,7 +75,7 @@ class CheckLog < Sensu::Plugin::Check::CLI
       open_log
     rescue => e
       msg = "Could not open log file: #{e}"
-      config[:silent] ? ok(msg) : crit(msg)
+      config[:silent] ? ok(msg) : critical(msg)
     end
     n_warns, n_crits = search_log
     message "#{n_warns} warnings, #{n_crits} criticals"
