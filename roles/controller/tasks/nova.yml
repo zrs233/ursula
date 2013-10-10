@@ -26,5 +26,9 @@
     - nova-scheduler
   notify: restart sensu-client
 
-- sensu_check: name=check-nova-api plugin=check-http.rb args='-u https://localhost:8777/v2 -k true --password {{ secrets.admin_password }} --username admin'
+- name: obtain admin tenant-id
+  shell: . ~/stackrc && keystone tenant-list | grep admin | awk '{print $2}'
+  register: admin_tenant_id
+
+- sensu_check: name=check-nova-api plugin=check-os-api.rb args="--stackrc /root/stackrc --host {{ fqdn }} --port 8774 --path /v2/{{ admin_tenant_id.stdout }}/servers --match-str servers --use-ssl true"
   notify: restart sensu-client
