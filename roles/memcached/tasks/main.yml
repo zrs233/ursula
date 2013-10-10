@@ -1,6 +1,8 @@
 ---
-- name: install memcached
-  apt: pkg=memcached
+- apt: pkg={{ item }}
+  with_items:
+    - memcached
+    - python-memcache
 
 - template: src=memcached.conf dest=/etc/memcached.conf mode=0644
   notify:
