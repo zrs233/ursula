@@ -36,6 +36,7 @@
     - load-metrics.rb
     - check-http.rb
     - check-log.rb
+    - check-os-api.rb
 
 - file: dest=/etc/sensu/conf.d/checks state=directory owner=root
 

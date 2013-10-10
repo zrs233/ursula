@@ -17,8 +17,9 @@
 - sensu_process_check: service=glance-registry
   notify: restart sensu-client
 
-- sensu_check: name=check-glance-api plugin=check-http.rb args='-u https://localhost:9393 -k true --password {{ secrets.admin_password }} --username admin'
-  notify: restart sensu-client
+- name: obtain admin tenant-id
+  shell: . ~/stackrc && keystone tenant-list | grep admin | awk '{print $2}'
+  register: admin_tenant_id
 
-#- sensu_check: name=check-glance-registry plugin=check-http.rb args='-u https://localhost:9191 -k true --password {{ secrets.admin_password }} --username admin'
-#  notify: restart sensu-client
+- sensu_check: name=check-nova-api plugin=check-os-api.rb args="--stackrc /root/stackrc --host {{ fqdn }} --port 9292 --path /v1/images --match-str images --use-ssl true"
+  notify: restart sensu-client
