@@ -1,6 +1,0 @@
-#!/bin/bash
-set -e
-source $(dirname $0)/../common
-
-echo "it overrides memcached_memory var default"
-run_on_hosts controller[0] "ps -ef | grep [m]emcached | grep '\-m 1024'"
