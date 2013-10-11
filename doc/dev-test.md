@@ -60,5 +60,5 @@ TODO(retr0h): Bring in pbr and tox
 ## Throw away the vms when you're done
 
 ```bash
-    ./test/cleanup     # delete vms
+    $ ./test/cleanup     # delete vms
 ```
