@@ -34,8 +34,6 @@ endpoints:
   glance:   *controller
   neutron:  *controller
 
-memcached_memory: 1024
-
 mysql:
   root_password: asdf
 xtradb:
