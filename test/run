@@ -15,10 +15,4 @@ time ansible-playbook \
   --sudo \
   site.yml
 
-time for test in $(ls $root/test/tests.d); do
-  echo
-  echo
-  echo "### running test:  $test"
-  echo
-  $root/test/tests.d/$test
-done
+nosetest
