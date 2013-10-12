@@ -1,0 +1,18 @@
+---
+- apt: pkg={{ item }}
+  with_items:
+    - ack-grep
+    - curl
+    - dstat
+    - ethtool
+    - htop
+    - iotop
+    - iperf
+    - ltrace
+    - mtr
+    - netcat
+    - pstack
+    - pv
+    - smem
+    - socat
+    - tree
