@@ -12,4 +12,4 @@ class TestNovaCommon(unittest.TestCase):
     def test_contains_a_memcached_servers_flag(self):
         cmd = ('egrep memcached_servers=[0-9.]+:11211,[0-9.]+ '
                '/etc/nova/nova.conf')
-        helper.run_on_group('controller[0]', cmd)
+        helper.run_on_group('controller', cmd)

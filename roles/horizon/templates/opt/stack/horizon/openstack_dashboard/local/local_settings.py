@@ -87,11 +87,20 @@ LOCAL_PATH = os.path.dirname(os.path.abspath(__file__))
 from horizon.utils import secret_key
 SECRET_KEY = "{{ secrets.horizon_secret_key }}"
 
-# TODO: point to a central memcached server.
+{% macro memcached_hosts() -%}
+{% for host in groups['controller'] -%}
+   {% if loop.last -%}
+'{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}:{{ memcached_port }}'
+   {%- else -%}
+'{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}:{{ memcached_port }}',
+   {%- endif -%}
+{% endfor -%}
+{% endmacro -%}
+
 CACHES = {
     'default': {
         'BACKEND' : 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION' : '127.0.0.1:11211',
+        'LOCATION' : {{ memcached_hosts() }}
     }
 }
 
