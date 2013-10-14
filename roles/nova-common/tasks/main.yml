@@ -13,6 +13,15 @@
     - nova rootwrap
 - meta: flush_handlers
 
+- name: create patch directory
+  file: dest=/usr/local/src/patches state=directory owner=root group=root mode=0755
+
+- name: copy availability zones patch
+  copy: src=patches/availability_zones.py.patch dest=/usr/local/src/patches/availability_zones.py.patch owner=root group=root mode=0644
+
+- name: patch availability zones
+  patch: patchfile=/usr/local/src/patches/availability_zones.py.patch strip=1 basedir=/usr/local/lib/python2.7/dist-packages
+
 - file: dest=/etc/nova state=directory
 - file: dest=/var/lib/nova state=directory owner=nova
 
