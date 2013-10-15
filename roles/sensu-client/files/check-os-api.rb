@@ -58,7 +58,7 @@ class CheckOSApi < Sensu::Plugin::Check::CLI
     res = http.request(req)
 
     if res.body.empty? || JSON.parse(res.body)[config[:match_str]].nil?
-      crit "no results from API at: #{config[:host]}, #{config[:port]} #{config[:path]}"
+      critical "no results from API at: #{config[:host]}, #{config[:port]} #{config[:path]}"
     else
       ok
     end
