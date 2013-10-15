@@ -53,3 +53,6 @@
   notify: restart sensu-client
 
 - include: log_scanning.yml
+
+- name: enable and start sensu-client
+  service: name=sensu-client state=started enabled=yes
