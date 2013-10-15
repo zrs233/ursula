@@ -1,2 +1,3 @@
 sensu ALL= NOPASSWD: /etc/sensu/plugins/check-log.rb
 sensu ALL= NOPASSWD: /etc/sensu/plugins/check-os-api.rb
+sensu ALL= NOPASSWD: /etc/sensu/plugins/percona-cluster-size.rb
