@@ -59,6 +59,8 @@ openstack:
   pypi_mirror: http://pypi.openstack.org/openstack
   git_mirror:  https://review.openstack.org/openstack
 
+client_self_signed_cert: true
+
 nova:
   rev: 83865447
   libvirt_type: qemu
