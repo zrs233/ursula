@@ -19,6 +19,8 @@
 - name: copy availability zones patch
   copy: src=patches/availability_zones.py.patch dest=/usr/local/src/patches/availability_zones.py.patch owner=root group=root mode=0644
 
+# Remove once we roll out code which contains this patch
+# https://review.openstack.org/#/c/41873/
 - name: patch availability zones
   patch: patchfile=/usr/local/src/patches/availability_zones.py.patch strip=1 basedir=/usr/local/lib/python2.7/dist-packages
 
