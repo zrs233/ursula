@@ -43,6 +43,3 @@
 - name: set privileges for state snapshot transfer user and flush privileges
   action: shell mysql -e "GRANT RELOAD, LOCK TABLES, REPLICATION CLIENT ON *.* TO '{{ xtradb.sst_auth_user }}'@'localhost'; FLUSH PRIVILEGES;"
   when: should_bootstrap.stdout.find('yes') != -1
-
-- name: install root's .my.cnf file
-  template: src=mysql/root_my.cnf dest=/root/.my.cnf owner=root group=root mode=0600

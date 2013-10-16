@@ -1,5 +1,0 @@
----
-- name: install root's .my.cnf file
-  template: src=mysql/root_my.cnf dest=/root/.my.cnf owner=root group=root mode=0600
-
-- service: name=mysql state=started

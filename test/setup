@@ -93,6 +93,9 @@ cat > $root/envs/test/hosts <<eof
 $(public_ip "test-controller-0")
 $(public_ip "test-controller-1")
 
+[db_arbiter]
+$(public_ip "test-compute-0")
+
 [controller]
 $(public_ip "test-controller-0")
 $(public_ip "test-controller-1")

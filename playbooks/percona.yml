@@ -2,7 +2,7 @@
 # compute node needs Percona apt repo in order
 # to obtain garbd and act as abriter for two-node cluster
 - name: Install Percona Apt Repository
-  hosts: db:compute[0]
+  hosts: db:db_arbiter
   tasks:
   - apt_key: url=http://www.percona.com/redir/downloads/RPM-GPG-KEY-percona state=present
   - apt_repository: repo='deb http://repo.percona.com/apt precise main'
@@ -18,10 +18,15 @@
   tasks:
    - include: percona/tasks/bootstrap.yml
 
+- name: Install root .my.cnf defaults file
+  hosts: db
+  tasks:
+  - template: src=percona/templates/mysql/root_my.cnf dest=/root/.my.cnf owner=root group=root mode=0600
+
 - name: Start XtraDB On Secondary Nodes
   hosts: db[1-2]
   tasks:
-  - include: percona/tasks/start.yml
+  - service: name=mysql state=started
 
 # We want at least two nodes in the cluster (and possibly more).
 - name: Verify wsrep_cluster_size
@@ -32,6 +37,13 @@
       changed_when: False
 
 - name: Install Percona Arbiter
-  hosts: compute[0]
+  hosts: db_arbiter
   tasks:
   - include: percona/tasks/arbiter.yml
+
+- name: Sensu Cluster Check
+  hosts: db
+  roles: 
+  - ../../roles/sensu-client
+  tasks:
+  - include: percona/tasks/sensu.yml
