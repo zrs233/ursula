@@ -45,5 +45,7 @@
   hosts: db
   roles: 
   - ../../roles/sensu-client
+  vars_files:
+    - percona/defaults/main.yml
   tasks:
   - include: percona/tasks/sensu.yml
