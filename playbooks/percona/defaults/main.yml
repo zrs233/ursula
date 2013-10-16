@@ -1,3 +1,2 @@
 ---
-percona:
-  num_nodes_expected: 3
+percona_num_nodes_expected: 3
