@@ -1,3 +1,4 @@
+---
 - name: nova has a working api
   hosts: controller[0]
   tasks:

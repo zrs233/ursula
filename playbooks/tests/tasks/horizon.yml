@@ -1,3 +1,4 @@
+---
 - name: horizon config has memcached servers
   hosts: controller[0]
   tasks:

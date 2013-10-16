@@ -1,10 +1,7 @@
 ---
-- name: common timezone is utc
-  hosts: controller
+- hosts: controller
   tasks:
-    - shell: grep Etc/UTC /etc/timezone
-
-- name: common date command has utc
-  hosts: controller
-  tasks:
-    - shell: date | grep UTC
+  - name: common timezone is utc
+    shell: grep Etc/UTC /etc/timezone
+  - name: common date command has utc
+    shell: date | grep UTC
