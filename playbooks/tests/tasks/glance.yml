@@ -1,0 +1,4 @@
+- name: glance has the cirros image
+  hosts: controller[0]
+  tasks:
+    - shell: . /root/stackrc; glance index | grep cirros

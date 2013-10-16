@@ -44,15 +44,6 @@ You can save time on iterating by keeping your vms around for multiple ansible r
     $ ./test/run         # re-run site.yml (much faster this time)
 ```
 
-## Run integration tests
-
-TODO(retr0h): Bring in pbr and tox
-
-```bash
-    $ pip install -r requirements.txt
-    $ cd test/integration; nosetest
-```
-
 ## Re-run only a subset of tasks
 
     TODO
