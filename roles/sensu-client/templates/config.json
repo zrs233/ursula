@@ -1,6 +1,6 @@
 {
   "client": {
-    "name": "{{ inventory_hostname }}",
+    "name": "{{ inventory_hostname }}-{{ stack_env }}",
     "address": "{{ ansible_eth0["ipv4"]["address"] }}",
     "subscriptions": [
       "openstack"
