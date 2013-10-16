@@ -1,4 +1,6 @@
 ---
+customer_env: example
+
 controller_primary: &controller "{{ hostvars[groups['controller'][0]]['ansible_eth0']['ipv4']['address'] }}"
 
 secrets:
