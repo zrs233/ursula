@@ -1,0 +1,3 @@
+---
+percona:
+  num_nodes_expected: 3
