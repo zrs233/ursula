@@ -1,0 +1,5 @@
+---
+- name: cinder has a working api
+  hosts: controller[0]
+  tasks:
+    - shell: . /root/stackrc; cinder list | grep ID

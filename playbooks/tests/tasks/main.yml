@@ -1,0 +1,9 @@
+---
+- include: cinder.yml
+- include: client.yml
+- include: common.yml
+- include: glance.yml
+- include: horizon.yml
+- include: neutron.yml
+- include: nova.yml
+- include: nova_common.yml

@@ -1,0 +1,25 @@
+---
+- hosts: controller[0]
+  tasks:
+  - name: neutron has an internal network
+    shell: . /root/stackrc; neutron net-list | grep internal
+  - name: neutron has a network with network_type gre
+    shell: . /root/stackrc; neutron net-show internal | grep provider:network_type | grep gre
+  - name: neutron has a network with segmentation_id 256
+    shell: . /root/stackrc; neutron net-show internal | grep provider:segmentation_id | grep 256
+  - name: neutron has a network with router_external False
+    shell: . /root/stackrc; neutron net-show internal | grep router:external | grep False
+  - name: neutron has a network with internal_subnet
+    shell: . /root/stackrc; neutron net-list | grep internal | grep 172.16.255.0/24
+  - name: neutron has the internal subnet
+    shell: . /root/stackrc; neutron subnet-list | grep internal
+  - name: neutron has the internal subnet with cidr
+    shell: . /root/stackrc; neutron subnet-show internal | grep cidr | grep 172.16.255.0/24
+  - name: neutron has the internal_subnet with cidr start/end addresses
+    shell: . /root/stackrc; neutron subnet-show internal | grep allocation_pools | egrep '172.16.255.2.*172.16.255.254'
+  - name: neutron has the internal_subnet with enable_dhcp True
+    shell: . /root/stackrc; neutron subnet-show internal | grep enable_dhcp | grep True
+  - name: neutron has the internal_subnet with gateway_ip
+    shell: . /root/stackrc; neutron subnet-show internal | grep gateway | grep gateway_ip
+  - name: neutron has the default router
+    shell: . /root/stackrc; neutron router-list | grep default

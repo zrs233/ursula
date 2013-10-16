@@ -4,6 +4,7 @@ source $(dirname $0)/common
 
 cd $root
 export ANSIBLE_SSH_ARGS="$ssh_args"
+echo $ANSIBLE_SSH_ARGS
 
 export ANSIBLE_FORCE_COLOR=yes
 
@@ -15,6 +16,10 @@ time ansible-playbook \
   --sudo \
   site.yml
 
-(
-  cd $root/test/integration; nosetests
-)
+time ansible-playbook \
+  --inventory-file envs/test/hosts \
+  --module-path ./library \
+  --connection ssh \
+  --user $login_user \
+  --sudo \
+  $root/playbooks/tests/tasks/main.yml

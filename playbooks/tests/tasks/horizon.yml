@@ -1,0 +1,5 @@
+---
+- name: horizon config has memcached servers
+  hosts: controller[0]
+  tasks:
+    - shell: egrep \'[0-9.]+:11211\',\'[0-9]+ /opt/stack/horizon/openstack_dashboard/local/local_settings.py
