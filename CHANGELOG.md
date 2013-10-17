@@ -1,5 +1,11 @@
 # Ursula Changelog
 
+## 0.2.1
+
+- Corrected memcached listen address
+- Corrected horizon memcached config
+- Fixed sensu-client OOO on fresh install
+
 ## 0.2.0
 
 - Removed the license attribution per review
