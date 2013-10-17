@@ -8,7 +8,7 @@
     - libxslt1-dev
 
 - name: lesscpy must be in apache's PATH
-  pip: name=lesscpy
+  pip: name=lesscpy version=0.9j
 
 - name: get horizon source repo
   git: |
