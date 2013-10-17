@@ -2,4 +2,4 @@
 - name: nova_common nova config has memcached servers
   hosts: controller
   tasks:
-    - shell: egrep \#memcached_servers=[0-9.]+:11211,[0-9.]+ /etc/nova/nova.conf
+    - shell: egrep memcached_servers=[0-9.]+:11211,[0-9.]+ /etc/nova/nova.conf

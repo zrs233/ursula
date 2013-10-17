@@ -6,4 +6,4 @@
 - include: horizon.yml
 - include: neutron.yml
 - include: nova.yml
-- include: nova_common.yml
+- include: nova-common.yml
