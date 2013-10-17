@@ -1,7 +1,13 @@
 ---
+- name: rabbit used by openstack and monitoring
+  hosts: controller
+  roles:
+    - rabbit
+
 - hosts: all
   roles:
     - common
+    - sensu-client
 
 # - name: Install corosync and pacemaker
 #   hosts: controller
@@ -68,10 +74,6 @@
 - hosts: controller[0]
   roles:
     - openstack-setup
-
-- hosts: all
-  roles:
-    - sensu-client
 
 # Only configure pacemaker on the primary node.
 # Settings will replicate to the secondary node.
