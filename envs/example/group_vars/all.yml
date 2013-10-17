@@ -74,9 +74,6 @@ novnc:
   repo: https://github.com/kanaka/noVNC.git
   rev: 292f6a5d
 
-horizon:
-  rev: fe659b23
-
 cinder:
   rev: e5b6d4d
   volume_file: /opt/stack/cinder-volumes

@@ -1,16 +1,21 @@
 ---
-- name: get horizon source repo
-  git: |
-    repo={{ openstack.git_mirror}}/horizon.git dest=/opt/stack/horizon version={{ horizon.rev }}
-  notify:
-    - horizon venv
-    - restart apache
-
 - apt: pkg={{ item }}
   with_items:
     - python-dev
     - nodejs
     - libapache2-mod-wsgi
+    - libxml2-dev
+    - libxslt1-dev
+
+- name: lesscpy must be in apache's PATH
+  pip: name=lesscpy
+
+- name: get horizon source repo
+  git: |
+    repo={{ openstack.git_mirror}}/horizon.git dest=/opt/stack/horizon version={{ horizon_rev }}
+  notify:
+    - horizon venv
+    - restart apache
 
 - apt: pkg=apache2
   notify:
@@ -51,3 +56,10 @@
   notify:
     - horizon venv
     - restart apache
+
+- name: add required lockfile package to venv
+  lineinfile: dest=/opt/stack/horizon/requirements.txt regexp='' insertafter=EOF line='lockfile'
+  notify:
+    - horizon venv
+    - restart apache
+
