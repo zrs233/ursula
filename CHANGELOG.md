@@ -8,7 +8,6 @@
 
 ## 0.2.0
 
-- Removed the license attribution per review
 - Disabled nova conductor service
 - Added system tools to common
 - Added Ansible integration testing
@@ -17,7 +16,7 @@
 - Conditionally set OS_CACERT
 - Sensu client enabled at boot
 - Percona: specify the db arbiter host
-- Percon montitoring: alert if not enough nodes in cluster
+- Percona montitoring: alert if not enough nodes in cluster
 - DRY up log scanning
 - Dashboard to use shared memcached servers vs local
 
