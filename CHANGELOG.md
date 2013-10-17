@@ -1,14 +1,20 @@
 # Ursula Changelog
 
-## 0.1.2
+## 0.2.0
+
 - Removed the license attribution per review
 - Disabled nova conductor service
 - Added system tools to common
-- unittest
-- api http checks
-- force UTC time
-- conditionally set OS_CACERT
-- sensu-client enabled at boot
-- percona: specify the db arbiter host
-- percon montitoring: alert if not enough nodes in cluster
+- Added Ansible integration testing
+- API HTTP checks
+- Force UTC time
+- Conditionally set OS_CACERT
+- Sensu client enabled at boot
+- Percona: specify the db arbiter host
+- Percon montitoring: alert if not enough nodes in cluster
 - DRY up log scanning
+- Dashboard to use shared memcached servers vs local
+
+## 0.1.0 and 0.1.1
+
+- Initial release
