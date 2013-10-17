@@ -97,10 +97,13 @@ SECRET_KEY = "{{ secrets.horizon_secret_key }}"
 {% endfor -%}
 {% endmacro -%}
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 CACHES = {
     'default': {
-        'BACKEND' : 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION' : {{ memcached_hosts() }}
+        'BACKEND' : 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION' : [
+            {{ memcached_hosts() }}
+        ]
     }
 }
 

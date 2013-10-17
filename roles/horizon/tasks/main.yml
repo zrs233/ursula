@@ -17,7 +17,7 @@
     - disable default apache site
 
 - file: dest=/opt/stack/horizon/static state=directory owner=www-data
-
+- file: dest=/opt/stack/horizon/static/dashboard state=directory owner=www-data
 
 - template: src=etc/apache2/ports.conf dest=/etc/apache2/ports.conf
   notify:
@@ -45,3 +45,9 @@
 
 - sensu_process_check: service=apache2
   notify: restart sensu-client
+
+- name: add python-memcached to venv
+  lineinfile: dest=/opt/stack/horizon/requirements.txt regexp='' insertafter=EOF line='python-memcached'
+  notify:
+    - horizon venv
+    - restart apache
