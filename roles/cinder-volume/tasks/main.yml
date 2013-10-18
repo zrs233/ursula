@@ -3,15 +3,12 @@
   with_items:
     - lvm2
     - tgt
-    - iscsitarget
-    - iscsitarget-dkms
 
 - file: dest=/etc/tgt/conf.d state=directory
 - template: src=etc/tgt/targets.conf dest=/etc/tgt/targets.conf mode=0644
 - template: src=etc/tgt/conf.d/cinder_tgt.conf dest=/etc/tgt/conf.d/cinder_tgt.conf mode=0644
 
-- lineinfile: dest=/etc/default/iscsitarget regexp=^ISCSITARGET_ENABLE= line=ISCSITARGET_ENABLE=true
-  notify: restart iscsitarget
+- service: name=tgt state=started
 
 # TODO: allow for device-backed VGs in addition to file-backed VGs
 - name: cinder volume group

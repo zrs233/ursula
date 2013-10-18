@@ -1,0 +1,6 @@
+---
+# TODO: remove this playbook once it has been applied everywhere
+- hosts: compute
+  tasks:
+    - shell: apt-get remove --purge --yes iscsitarget
+    - shell: apt-get remove --purge --yes iscsitarget-dkms
