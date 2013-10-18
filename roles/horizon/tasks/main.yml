@@ -52,13 +52,7 @@
   notify: restart sensu-client
 
 - name: add python-memcached to venv
-  lineinfile: dest=/opt/stack/horizon/requirements.txt regexp='' insertafter=EOF line='python-memcached'
-  notify:
-    - horizon venv
-    - restart apache
-
-- name: add required lockfile package to venv
-  lineinfile: dest=/opt/stack/horizon/requirements.txt regexp='' insertafter=EOF line='lockfile'
+  lineinfile: dest=/opt/stack/horizon/requirements.txt regexp=python-memcached line=python-memcached
   notify:
     - horizon venv
     - restart apache
