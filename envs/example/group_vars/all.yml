@@ -63,12 +63,7 @@ openstack:
 
 client_self_signed_cert: true
 
-nova:
-  rev: 83865447
-  libvirt_type: qemu
-  cpu_allocation_ratio: 1.0
-  ram_allocation_ratio: 1.0
-  compute_driver: nova.virt.libvirt.LibvirtDriver
+nova_common_libvirt_type: qemu
 
 cinder:
   rev: e5b6d4d

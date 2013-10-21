@@ -1,3 +1,11 @@
 ---
+nova_common_rev: 6bf7e78a6dc
+
+nova_common_libvirt_type: kvm
+nova_common_compute_driver: nova.virt.libvirt.LibvirtDriver
+
 nova_common_api_workers: 5
 nova_common_metadata_api_workers: 5
+
+nova_common_cpu_allocation_ratio: 1.0
+nova_common_ram_allocation_ratio: 1.0
