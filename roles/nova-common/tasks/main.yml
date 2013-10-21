@@ -14,22 +14,15 @@
     - restart nova services
 - meta: flush_handlers
 
-- name: create patch directory
-  file: dest=/usr/local/src/patches state=directory owner=root group=root mode=0755
-
-- name: copy availability zones patch
-  copy: src=patches/availability_zones.py.patch dest=/usr/local/src/patches/availability_zones.py.patch owner=root group=root mode=0644
-
-# Remove once we roll out code which contains this patch
-# https://review.openstack.org/#/c/41873/
-- name: patch availability zones
-  patch: patchfile=/usr/local/src/patches/availability_zones.py.patch strip=1 basedir=/usr/local/lib/python2.7/dist-packages
-  notify:
-    - restart nova services
-
 - file: dest=/etc/nova state=directory
 - file: dest=/var/lib/nova state=directory owner=nova
 - file: dest=/var/cache/nova state=directory mode=0700 owner=nova group=nova
+- file: dest=/usr/local/src/patches state=directory owner=root group=root mode=0755
+
+# TODO(retr0h): remove this task once removed everywhere
+- name: delete availability zones patch
+  shell: rm -rf /usr/local/src/patches/availability_zones.py.patch
+  ignore_errors: True
 
 - name: nova config
   action: template src={{ item }} dest=/etc/nova mode=0644
