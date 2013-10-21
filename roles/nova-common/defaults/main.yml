@@ -1,0 +1,3 @@
+---
+nova_common_api_workers: 5
+nova_common_metadata_api_workers: 5

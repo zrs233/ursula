@@ -3,3 +3,8 @@
   hosts: controller[0]
   tasks:
     - shell: . /root/stackrc; glance index | grep cirros
+
+- name: glance api has proper workers
+  hosts: controller
+  tasks:
+    - shell: grep 'workers = 5' /etc/glance/glance-api.conf
