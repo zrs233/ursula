@@ -14,6 +14,7 @@
 - file: dest=/etc/neutron state=directory
 - file: dest=/etc/neutron/plugins/openvswitch state=directory
 - file: dest=/var/lib/neutron state=directory owner=neutron
+- file: dest=/var/cache/neutron state=directory mode=0700 owner=neutron group=neutron
 
 - name: neutron config
   action: template src={{ item }} dest=/etc/neutron mode=0644
