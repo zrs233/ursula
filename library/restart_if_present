@@ -16,5 +16,5 @@ if system "service #{service} status"
   Antsy.fail! "failed to restart #{service}" unless system "service #{service} restart"
   Antsy.changed!
 else
-  Antsy.skipped!
+  Antsy.skipped! "#{service} not present"
 end
