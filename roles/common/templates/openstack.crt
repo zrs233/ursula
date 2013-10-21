@@ -1,1 +1,1 @@
-{{ nginx.crt }}
+{{ ssl.crt }}

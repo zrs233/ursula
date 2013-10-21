@@ -75,7 +75,7 @@ cert_dir=$(mktemp -d 2> /dev/null || mktemp -d -t 'setup')
 pushd $cert_dir
 $root/test/gen-cert $controller_ip
 cat >> $root/envs/test/group_vars/all.yml <<eof
-nginx:
+ssl:
   crt: |
 eof
 cat $cert_dir/$controller_ip.crt | sed 's/^/    /' >> $root/envs/test/group_vars/all.yml
