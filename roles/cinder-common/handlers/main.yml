@@ -4,3 +4,10 @@
 
 - name: cinder rootwrap
   command: rsync -avh /opt/stack/cinder/etc/cinder/rootwrap.d /etc/cinder
+
+- name: restart cinder services
+  restart_if_present: service={{ item }}
+  with_items:
+    - cinder-api
+    - cinder-scheduler
+    - cinder-volume

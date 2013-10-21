@@ -7,10 +7,11 @@
 
 - name: get nova source repo
   git: |
-    repo={{ openstack.git_mirror }}/nova.git dest=/opt/stack/nova version={{ nova.rev }} depth=30
+    repo={{ openstack.git_mirror }}/nova.git dest=/opt/stack/nova version={{ nova_common_rev }} depth=30
   notify:
     - pip install nova
     - nova rootwrap
+    - restart nova services
 - meta: flush_handlers
 
 - name: create patch directory
@@ -23,6 +24,8 @@
 # https://review.openstack.org/#/c/41873/
 - name: patch availability zones
   patch: patchfile=/usr/local/src/patches/availability_zones.py.patch strip=1 basedir=/usr/local/lib/python2.7/dist-packages
+  notify:
+    - restart nova services
 
 - file: dest=/etc/nova state=directory
 - file: dest=/var/lib/nova state=directory owner=nova
@@ -30,6 +33,8 @@
 - name: nova config
   action: template src={{ item }} dest=/etc/nova mode=0644
   with_fileglob: ../templates/etc/nova/*
+  notify:
+    - restart nova services
 
 - name: nova sudoer
   template: src=etc/sudoers.d/nova dest=/etc/sudoers.d/nova owner=root group=root mode=0440

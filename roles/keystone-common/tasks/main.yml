@@ -7,9 +7,10 @@
 
 - name: get keystone source repo
   git: |
-    repo={{ openstack.git_mirror }}/keystone.git dest=/opt/stack/keystone version={{ keystone.rev }}
+    repo={{ openstack.git_mirror }}/keystone.git dest=/opt/stack/keystone version={{ keystone_common_rev }}
   notify:
     - pip install keystone
+    - restart keystone services
 - meta: flush_handlers
 
 - name: /etc/keystone
@@ -17,9 +18,13 @@
 
 - name: keystone.conf
   template: src=etc/keystone/keystone.conf dest=/etc/keystone/keystone.conf mode=0644
+  notify:
+    - restart keystone services
 
 - name: policy.json
   template: src=etc/keystone/policy.json dest=/etc/keystone/policy.json mode=0644
+  notify:
+    - restart keystone services
 
 - name: keystone pki - TODO generate once and distribute
   command: keystone-manage pki_setup --keystone-user keystone --keystone-group keystone

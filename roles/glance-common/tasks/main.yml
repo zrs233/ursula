@@ -4,9 +4,10 @@
 
 - name: get glance source repo
   git: |
-    repo={{ openstack.git_mirror }}/glance.git dest=/opt/stack/glance version={{ glance.rev }}
+    repo={{ openstack.git_mirror }}/glance.git dest=/opt/stack/glance version={{ glance_common_rev }}
   notify:
     - pip install glance
+    - restart glance services
 - meta: flush_handlers
 
 - name: /etc/glance
@@ -19,3 +20,5 @@
 - name: glance config
   action: template src={{ item }} dest=/etc/glance mode=0644
   with_fileglob: ../templates/etc/glance/*
+  notify:
+    - restart glance services

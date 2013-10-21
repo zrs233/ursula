@@ -1,2 +1,6 @@
 ---
 client_self_signed_cert: false
+client_novaclient_rev:     516586a6b8
+client_keystoneclient_rev: 876c2d6c2a
+client_neutronclient_rev:  9fc2ac9e2f
+client_glanceclient_rev:   cd11833cff

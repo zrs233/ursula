@@ -8,7 +8,7 @@
 
 - name: ensure kvm is supported by cpu and enabled in bios
   command: kvm-ok
-  when: "'{{ nova.libvirt_type }}' == 'kvm'"
+  when: "'{{ nova_common_libvirt_type }}' == 'kvm'"
   changed_when: False
 
 - user: name=nova groups=libvirtd
