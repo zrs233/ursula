@@ -23,6 +23,11 @@
   shell: rm -rf /usr/local/src/patches/availability_zones.py.patch
   ignore_errors: True
 
+# TODO(retr0h): remove this task once removed everywhere
+- name: delete availability zones patch
+  shell: rm -rf /usr/local/src/patches/availability_zones.py.patch
+  ignore_errors: True
+
 - name: nova config
   action: template src={{ item }} dest=/etc/nova mode=0644
   with_fileglob: ../templates/etc/nova/*
