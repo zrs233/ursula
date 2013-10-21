@@ -4,7 +4,7 @@
 
 - name: get neutron source repo
   git: |
-    repo={{ openstack.git_mirror }}/neutron.git dest=/opt/stack/neutron version={{ neutron.rev }}
+    repo={{ openstack.git_mirror }}/neutron.git dest=/opt/stack/neutron version={{ neutron_rev }}
   notify:
     - pip install neutron
     - neutron rootwrap

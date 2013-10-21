@@ -71,7 +71,6 @@ cinder:
   volume_file_size: 5G
 
 neutron:
-  rev: f3c016d7
   physical_bridge: br-ex
   physical_network: br-ex
   tenant_network_type: gre
