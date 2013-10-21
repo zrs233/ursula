@@ -99,7 +99,6 @@ neutron:
       tenant_name: admin
 
 glance:
-  rev: 563c71c1
   images:
     - name: cirros
       url: https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img
