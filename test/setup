@@ -21,7 +21,7 @@ fi
 
 echo "setting up security group rules"
 default_proto=tcp
-default_ports=(22 80 443 3306 4444 4567 4568 5000 5001 5672 8777 8778 9393 9797 11211 35357 35358)
+default_ports=(22 80 443 3306 4444 4567 4568 5000 5001 5672 8080 8774 8776 8777 8778 9292 9393 9696 9797 11211 35357 35358)
 default_cidr=0.0.0.0/0
 rules=$(nova secgroup-list-rules $security_group)
 security_group_id=$(nova secgroup-list | grep $security_group | awk -F\| '{print $2}' | tr -d ' ')
