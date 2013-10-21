@@ -69,12 +69,6 @@ nova:
   cpu_allocation_ratio: 1.0
   ram_allocation_ratio: 1.0
   compute_driver: nova.virt.libvirt.LibvirtDriver
-  client:
-    rev: 01635a2a
-
-novnc:
-  repo: https://github.com/kanaka/noVNC.git
-  rev: 292f6a5d
 
 cinder:
   rev: e5b6d4d
@@ -83,8 +77,6 @@ cinder:
 
 neutron:
   rev: f3c016d7
-  client:
-    rev: 5a382451
   physical_bridge: br-ex
   physical_network: br-ex
   tenant_network_type: gre
@@ -115,8 +107,6 @@ neutron:
 
 glance:
   rev: 563c71c1
-  client:
-    rev: 3de64660
   images:
     - name: cirros
       url: https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img
@@ -127,8 +117,6 @@ glance:
 
 keystone:
   rev: 708ccf08
-  client:
-    rev: 8429623b
   tenants:
     - admin
     - service
