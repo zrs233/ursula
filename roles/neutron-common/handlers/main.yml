@@ -1,6 +1,14 @@
 ---
 - name: pip install neutron
-  action: command pip install -i {{ openstack.pypi_mirror }} /opt/stack/neutron
+  command: pip install -i {{ openstack.pypi_mirror }} /opt/stack/neutron
 
 - name: neutron rootwrap
-  action: command rsync -avh /opt/stack/neutron/etc/neutron/rootwrap.d /etc/neutron
+  command: rsync -avh /opt/stack/neutron/etc/neutron/rootwrap.d /etc/neutron
+
+- name: restart neutron services
+  restart_if_present: service={{ item }}
+  with_items:
+    - neutron-server
+    - neutron-dhcp-agent
+    - neutron-l3-agent
+    - neutron-openvswitch-agent

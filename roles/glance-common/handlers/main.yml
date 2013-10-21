@@ -1,3 +1,9 @@
 ---
 - name: pip install glance
-  action: command pip install -i {{ openstack.pypi_mirror }} /opt/stack/glance
+  command: pip install -i {{ openstack.pypi_mirror }} /opt/stack/glance
+
+- name: restart glance services
+  restart_if_present: service={{ item }}
+  with_items:
+    - glance-api
+    - glance-registry

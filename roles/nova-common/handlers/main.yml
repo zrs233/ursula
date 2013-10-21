@@ -5,3 +5,13 @@
 
 - name: nova rootwrap
   command: rsync -avh /opt/stack/nova/etc/nova/rootwrap.d /etc/nova
+
+- name: restart nova services
+  restart_if_present: service={{ item }}
+  with_items:
+    - nova-api
+    - nova-cert
+    - nova-compute
+    - nova-consoleauth
+    - nova-novncproxy
+    - nova-scheduler

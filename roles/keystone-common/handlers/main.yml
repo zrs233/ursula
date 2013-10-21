@@ -1,3 +1,6 @@
 ---
 - name: pip install keystone
   action: command pip install -i {{ openstack.pypi_mirror }} /opt/stack/keystone
+
+- name: restart keystone services
+  restart_if_present: service=keystone-all

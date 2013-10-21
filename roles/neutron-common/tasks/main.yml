@@ -8,6 +8,7 @@
   notify:
     - pip install neutron
     - neutron rootwrap
+    - restart neutron services
 - meta: flush_handlers
 
 - file: dest=/etc/neutron state=directory
@@ -17,11 +18,15 @@
 - name: neutron config
   action: template src={{ item }} dest=/etc/neutron mode=0644
   with_fileglob: ../templates/etc/neutron/*
+  notify:
+     - restart neutron services
 
 - template: |
     src=etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini
     dest=/etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini
     mode=0644
+  notify:
+    - restart neutron services
 
 - name: neutron sudoer
   template: src=etc/sudoers.d/neutron dest=/etc/sudoers.d/neutron owner=root group=root mode=0440
