@@ -1,30 +1,8 @@
-
-
 # TODO
 
 ## restart affected services when code or config changes
 
 ## update db (once) when code changes
-
-## mtu issue
-
-to repro:
-
-    curl -v https://github.com    # on instance
-    tcpdump host $GITHUB_IP       # on net node
-
-error:
-
-    IP 173.247.112.18 > github.com: ICMP 173.247.112.18 unreachable - need to frag (mtu 1454), length 556
-
-to workaround:
-
-    sudo ifconfig eth0 mtu 1454   # on instance
-
-## dns
-
-set working nameserver by default in config. (added manually for now)
-
 
 ## split into global/default config and site config
 
