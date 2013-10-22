@@ -35,6 +35,7 @@ endpoints:
   nova:     *controller
   glance:   *controller
   neutron:  *controller
+  vnc:      *controller
 
 mysql:
   root_password: asdf
