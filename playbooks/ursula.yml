@@ -1,4 +1,0 @@
----
-- hosts: ursula
-  roles:
-    - ursula
