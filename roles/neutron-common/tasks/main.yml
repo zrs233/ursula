@@ -22,6 +22,11 @@
   notify:
      - restart neutron services
 
+- name: neutron dnsmasq config
+  action: template src=etc/dnsmasq.conf dest=/etc/dnsmasq.conf mode=0644
+  notify:
+     - restart neutron services
+
 - template: |
     src=etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini
     dest=/etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini

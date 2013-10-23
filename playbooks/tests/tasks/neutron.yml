@@ -23,3 +23,10 @@
     shell: . /root/stackrc; neutron subnet-show internal | grep gateway | grep gateway_ip
   - name: neutron has the default router
     shell: . /root/stackrc; neutron router-list | grep default
+
+- hosts: controller
+  tasks:
+  - name: neutron dnsmasq has 8.8.8.8 upstream resolver
+    shell: grep 8.8.8.8 /etc/dnsmasq.conf
+  - name: neutron dnsmasq has 8.8.4.4 upstream resolver
+    shell: grep 8.8.8.8 /etc/dnsmasq.conf
