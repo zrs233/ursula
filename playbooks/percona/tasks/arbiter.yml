@@ -2,10 +2,7 @@
 # the arbiter node only needs the garbd daemon
 # (provided by galera pkg).
 - name: install percona galera package
-  register: pkg_installed
-  apt: pkg=$item state=installed
-  with_items:
-  - percona-xtradb-cluster-galera-2.x
+  apt: pkg=percona-xtradb-cluster-galera-2.x state=installed
 
 - name: install garbd upstart script
   template: src=etc/init/garbd.conf dest=/etc/init/garbd.conf mode=0400
