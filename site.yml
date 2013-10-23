@@ -11,7 +11,7 @@
 
 # - name: Install corosync and pacemaker
 #   hosts: controller
-#   tasks: 
+#   tasks:
 #   - include: playbooks/openstack-ha/tasks/main.yml
 
 - name: replicated db setup
@@ -77,7 +77,7 @@
 
 # Only configure pacemaker on the primary node.
 # Settings will replicate to the secondary node.
-# - hosts: controller[0] 
+# - hosts: controller[0]
 #   tasks:
 #     - include: playbooks/openstack-ha/tasks/crm_init.yml
 #     - include: playbooks/openstack-ha/tasks/crm_neutron.yml
