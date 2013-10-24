@@ -15,7 +15,7 @@ if ! nova keypair-list | grep $key_name >/dev/null; then
 fi
 
 echo "setting up security group"
-if ! nova secgroup-list-rules $security_group >/dev/null; then
+if ! nova secgroup-list | grep $security_group >/dev/null; then
   nova secgroup-create $security_group "Rules for testing ursula" >/dev/null
 fi
 
