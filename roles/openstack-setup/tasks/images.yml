@@ -7,8 +7,10 @@
       container_format=bare
       disk_format=qcow2
       auth_url=http://{{ endpoints.main }}:5000/v2.0/
-      cacert=/opt/stack/ssl/openstack.crt
       login_tenant_name=admin
       login_password={{ secrets.admin_password }}
       timeout=12000
+      {% if client_self_signed_cert is defined -%}
+      cacert=/opt/stack/ssl/openstack.crt
+      {% endif -%}
   with_items: glance.images
