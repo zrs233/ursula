@@ -12,7 +12,9 @@
       auth_url=https://{{ endpoints.main }}:5001/v2.0/
       login_tenant_name=admin
       login_password={{ secrets.admin_password }}
+      {% if client_self_signed_cert is defined -%}
       cacert=/opt/stack/ssl/openstack.crt
+      {% endif -%}
   with_items: neutron.networks
 
 - name: neutron subnets
@@ -28,7 +30,9 @@
       auth_url=https://{{ endpoints.main }}:5001/v2.0/
       login_tenant_name=admin
       login_password={{ secrets.admin_password }}
+      {% if client_self_signed_cert is defined -%}
       cacert=/opt/stack/ssl/openstack.crt
+      {% endif -%}
   with_items: neutron.subnets
 
 - name: neutron routers
@@ -41,7 +45,9 @@
       auth_url=https://{{ endpoints.main }}:5001/v2.0/
       login_tenant_name=admin
       login_password={{ secrets.admin_password }}
+      {% if client_self_signed_cert is defined -%}
       cacert=/opt/stack/ssl/openstack.crt
+      {% endif -%}
   with_items: neutron.routers
 
 - name: neutron router interfaces
@@ -54,5 +60,7 @@
       auth_url=https://{{ endpoints.main }}:5001/v2.0/
       login_tenant_name=admin
       login_password={{ secrets.admin_password }}
+      {% if client_self_signed_cert is defined -%}
       cacert=/opt/stack/ssl/openstack.crt
+      {% endif -%}
   with_items: neutron.router_interfaces
