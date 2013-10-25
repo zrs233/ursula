@@ -30,6 +30,3 @@
 
 - service: name=remote_syslog state=started
   when: syslog_server is defined
-
-- sensu_process_check: service=remote_syslog
-  when: syslog_server is defined

@@ -7,7 +7,6 @@
 - hosts: all
   roles:
     - common
-    - sensu-client
 
 # - name: Install corosync and pacemaker
 #   hosts: controller
@@ -81,3 +80,6 @@
 #   tasks:
 #     - include: playbooks/openstack-ha/tasks/crm_init.yml
 #     - include: playbooks/openstack-ha/tasks/crm_neutron.yml
+
+- name: Install monitoring
+  include: playbooks/monitoring.yml

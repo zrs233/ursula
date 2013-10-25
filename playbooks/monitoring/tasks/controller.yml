@@ -1,0 +1,52 @@
+---
+# cinder
+
+- sensu_process_check: service=cinder-api
+  notify: restart sensu-client
+- sensu_process_check: service=cinder-scheduler
+  notify: restart sensu-client
+
+# glance
+
+- sensu_process_check: service=glance-api
+  notify: restart sensu-client
+- sensu_process_check: service=glance-registry
+  notify: restart sensu-client
+- sensu_check: name=check-glance-api plugin=check-os-api.rb use_sudo=true args="--stackrc /root/stackrc --host {{ fqdn }} --port 9292 --path /v1/images --match-str images --use-ssl true"
+  notify: restart sensu-client
+
+# horizon
+
+- sensu_process_check: service=apache2
+  notify: restart sensu-client
+
+# keystone
+
+- sensu_process_check: service=keystone-all
+  notify: restart sensu-client
+- sensu_check: name=check-keystone-api plugin=check-http.rb args='-u https://localhost:5001/v2.0 -k true --password {{ secrets.admin_password }} --username admin'
+  notify: restart sensu-client
+
+# neutron
+
+- sensu_process_check: service=neutron-server
+  notify: restart sensu-client
+
+# nginx
+
+- sensu_check: name=nginx plugin=check-procs.rb args="-p nginx -w 10 -c 30 -W 1 -C 1"
+  notify: restart sensu-client
+
+# nova
+
+- sensu_process_check: service={{ item }}
+  with_items:
+    - nova-api
+    - nova-cert
+    - nova-conductor
+    - nova-consoleauth
+    - nova-scheduler
+  notify: restart sensu-client
+
+- sensu_check: name=check-nova-api plugin=check-os-api.rb use_sudo=true args="--stackrc /root/stackrc --host {{ fqdn }} --port 8774 --path /v2/{{ admin_tenant_id.stdout }}/servers --match-str servers --use-ssl true"
+  notify: restart sensu-client
