@@ -10,12 +10,3 @@
 
 - name: glance-registry is running
   service: name=glance-registry state=started
-
-- sensu_process_check: service=glance-api
-  notify: restart sensu-client
-
-- sensu_process_check: service=glance-registry
-  notify: restart sensu-client
-
-- sensu_check: name=check-glance-api plugin=check-os-api.rb use_sudo=true args="--stackrc /root/stackrc --host {{ fqdn }} --port 9292 --path /v1/images --match-str images --use-ssl true"
-  notify: restart sensu-client

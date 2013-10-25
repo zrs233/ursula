@@ -1,0 +1,4 @@
+---
+- copy: src=percona-cluster-size.rb dest=/etc/sensu/plugins/percona-cluster-size.rb mode=0755
+
+- sensu_check: name=percona-cluster-size use_sudo=true plugin=percona-cluster-size.rb args="-d /root/.my.cnf --expected 3"

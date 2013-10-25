@@ -48,9 +48,6 @@
 
 - service: name=apache2 state=started
 
-- sensu_process_check: service=apache2
-  notify: restart sensu-client
-
 - name: add python-memcached to venv
   lineinfile: dest=/opt/stack/horizon/requirements.txt regexp=python-memcached line=python-memcached
   notify:

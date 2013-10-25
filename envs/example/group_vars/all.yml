@@ -45,7 +45,7 @@ xtradb:
   sst_auth_user: sst_admin
   sst_auth_password: asdf
 
-sensu:
+monitoring:
   rabbit:
     host: *controller
     port: 5672
@@ -53,8 +53,6 @@ sensu:
     pass: asdf
   keepalive:
     handler: email
-
-monitoring:
   scan_for_log_errors: true
 
 openstack:

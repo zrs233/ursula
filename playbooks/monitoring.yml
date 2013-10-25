@@ -1,0 +1,38 @@
+---
+# Don't like how I have to register the handler
+# many times.
+
+- name: Install monitoring and common checks
+  hosts: all
+  tasks:
+  - include: monitoring/tasks/main.yml
+  handlers:
+  - include: ../handlers/main.yml
+
+- name: Install compute checks
+  hosts: compute
+  tasks:
+  - include: monitoring/tasks/compute.yml
+  handlers:
+  - include: ../handlers/main.yml
+
+- name: Install controller checks
+  hosts: controller
+  tasks:
+  - include: monitoring/tasks/controller.yml
+  handlers:
+  - include: ../handlers/main.yml
+
+- name: Install database checks
+  hosts: db:db_arbiter
+  tasks:
+  - include: monitoring/tasks/database.yml
+  handlers:
+  - include: ../handlers/main.yml
+
+- name: Install network checks
+  hosts: network
+  tasks:
+  - include: monitoring/tasks/network.yml
+  handlers:
+  - include: ../handlers/main.yml

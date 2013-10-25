@@ -19,6 +19,3 @@
 
 - name: cinder-volume is running
   service: name=cinder-volume state=started
-
-- sensu_process_check: service=cinder-volume
-  notify: restart sensu-client

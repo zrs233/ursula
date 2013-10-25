@@ -1,7 +1,6 @@
 ---
 - apt_key: url=http://repos.sensuapp.org/apt/pubkey.gpg state=present
 
-
 # TODO: use ansible apt_repository module instead of adding a source manually
 #    https://bugs.launchpad.net/ubuntu/+source/software-properties/+bug/987264
 #- apt_repository: repo='deb http://repos.sensuapp.org/apt sensu main'
@@ -26,33 +25,7 @@
   template: src=config.json dest=/etc/sensu/config.json owner=root group=root mode=0444
   notify: restart sensu-client
 
-- file: dest=/etc/sensu/plugins state=directory owner=root
-- copy: src={{ item }} dest=/etc/sensu/plugins/{{ item }} mode=0755
-  with_items:
-    - check-procs.rb
-    - check-cpu.rb
-    - check-disk.rb
-    - vmstat-metrics.rb
-    - load-metrics.rb
-    - check-http.rb
-    - check-log.rb
-    - check-os-api.rb
-
-- file: dest=/etc/sensu/conf.d/checks state=directory owner=root
-
-- sensu_check: name=cpu  plugin=check-cpu.rb args='-w 80 -c 90'
-  notify: restart sensu-client
-
-- sensu_check: name=disk plugin=check-disk.rb
-  notify: restart sensu-client
-
-- sensu_metrics_check: name=vmstat-metrics plugin=vmstat-metrics.rb args='--scheme stats.{{ inventory_hostname  }}'
-  notify: restart sensu-client
-
-- sensu_metrics_check: name=load-metrics plugin=load-metrics.rb args='--scheme stats.{{ inventory_hostname  }}'
-  notify: restart sensu-client
-
-- include: log_scanning.yml
-
 - name: enable and start sensu-client
   service: name=sensu-client state=started enabled=yes
+
+- include: common.yml

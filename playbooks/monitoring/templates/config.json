@@ -6,14 +6,14 @@
       "openstack"
     ],
     "keepalive": {
-      "handler": "{{ sensu.keepalive.handler }}"
+      "handler": "{{ monitoring.keepalive.handler }}"
     }
   },
   "rabbitmq": {
-    "host": "{{ sensu.rabbit.host }}",
-    "port": {{ sensu.rabbit.port }},
-    "user": "{{ sensu.rabbit.user }}",
-    "password": "{{ sensu.rabbit.pass }}",
+    "host": "{{ monitoring.rabbit.host }}",
+    "port": {{ monitoring.rabbit.port }},
+    "user": "{{ monitoring.rabbit.user }}",
+    "password": "{{ monitoring.rabbit.pass }}",
     "vhost": "/sensu"
   }
 }
