@@ -10,5 +10,5 @@
 - shell: rm -rf /etc/nginx
   ignore_errors: True
 
-- shell: rm -f /etc/sensu/cond.d/checks/nginx.json
+- shell: rm -f /etc/sensu/conf.d/checks/nginx.json
   ignore_errors: True
