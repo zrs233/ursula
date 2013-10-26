@@ -4,6 +4,7 @@
 - include: common.yml
 - include: glance.yml
 - include: horizon.yml
+- include: keystone.yml
 - include: neutron.yml
 - include: nova.yml
 - include: nova-common.yml

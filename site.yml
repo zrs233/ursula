@@ -35,6 +35,7 @@
 - name: keystone code and config
   hosts: controller:db
   roles:
+    - memcached
     - keystone-common
 
 - name: cinder code and config
