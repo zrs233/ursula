@@ -35,7 +35,7 @@ for port in "${default_ports[@]}"; do
 done
 
 echo "booting vms"
-net_id=$(nova net-list | grep internal | awk '{print $2}')
+net_id=$(nova net-list | grep " internal " | awk '{print $2}')
 for vm in $vms; do
   nova boot --image $image --flavor $flavor --key_name $key_name --nic net-id=$net_id --security-groups $security_group_id $vm >/dev/null
   sleep 15
