@@ -1,30 +1,14 @@
 ---
-- apt_repository: repo='ppa:nginx/stable'
-- apt: update_cache=yes
-- apt: pkg=nginx
+# TODO: remove this task list once nginx is gone everywhere
 
-- file: dest=/etc/nginx/ssl state=directory
+- shell: service nginx stop
+  ignore_errors: True
 
-- name: remove default nginx site
-  file: dest=/etc/nginx/sites-enabled/default state=absent
-  notify: restart nginx
+- shell: apt-get autoremove -y nginx
+  ignore_errors: True
 
-- name: install ssl cert
-  template: src=etc/nginx/ssl/openstack.crt dest=/etc/nginx/ssl/openstack.crt
-  notify: restart nginx
+- shell: rm -rf /etc/nginx
+  ignore_errors: True
 
-- name: install ssl key
-  template: src=etc/nginx/ssl/openstack.key dest=/etc/nginx/ssl/openstack.key
-  notify: restart nginx
-
-- name: nginx config
-  template: src=etc/nginx/sites-available/openstack dest=/etc/nginx/sites-available/openstack
-  notify: restart nginx
-
-- file: >
-    src=/etc/nginx/sites-available/openstack
-    dest=/etc/nginx/sites-enabled/openstack
-    state=link
-  notify: restart nginx
-
-- service: name=nginx state=started
+- shell: rm -f /etc/sensu/conf.d/checks/nginx.json
+  ignore_errors: True

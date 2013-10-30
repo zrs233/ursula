@@ -7,6 +7,6 @@
 - hosts: controller
   tasks:
   - name: nova api has proper workers
-    shell: grep 'osapi_compute_workers=5' /etc/nova/nova.conf
+    shell: grep 'osapi_compute_workers=1' /etc/nova/nova.conf
   - name: nova metadata api has proper workers
-    shell: grep 'metadata_workers=5' /etc/nova/nova.conf
+    shell: grep 'metadata_workers=1' /etc/nova/nova.conf
