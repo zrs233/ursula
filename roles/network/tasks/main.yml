@@ -1,5 +1,8 @@
 ---
-- apt: pkg=dnsmasq
+- apt: pkg={{ item }}
+  with_items:
+    - dnsmasq
+    - dnsmasq-utils
 
 - name: ovs ex bridge
   ovs_bridge: name=br-ex state=present
