@@ -2,9 +2,4 @@
 - name: keystone config has memcached servers
   hosts: controller
   tasks:
-    - shell: egrep 'backend_argument = url:[0-9.]+,[0-9.]+' /etc/keystone/keystone.conf
-
-- name: patched python-memcache system library
-  hosts: controller
-  tasks:
-    - shell: egrep "servers = ['[0-9.]+:11211','[0-9.]+:11211']" /usr/lib/python2.7/dist-packages/memcache.py
+    - shell: egrep "servers = [0-9.]+:11211,[0-9.]+" /etc/keystone/keystone.conf
