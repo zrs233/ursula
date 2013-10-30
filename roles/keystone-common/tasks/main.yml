@@ -25,13 +25,3 @@
   template: src=etc/keystone/policy.json dest=/etc/keystone/policy.json mode=0644
   notify:
     - restart keystone services
-
-- name: keystone pki - TODO generate once and distribute
-  command: keystone-manage pki_setup --keystone-user keystone --keystone-group keystone
-
-# TODO(retr0h): This is an extremely naughty hack.  Need some time to debug why
-# this is happening.
-- name: patch memcached.py with servers https://bugs.launchpad.net/keystone/+bug/1245060
-  lineinfile: dest=/usr/lib/python2.7/dist-packages/memcache.py regexp=^\s{8} insertbefore=self.set_servers line="        servers = [{% for host in groups['controller'] %}{% if not loop.last %}'{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}:{{ memcached_port }}',{% else %}'{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}:{{ memcached_port }}'{% endif %}{% endfor %}]"
-  notify:
-    - restart keystone services
