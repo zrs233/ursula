@@ -63,6 +63,8 @@ openstack:
 client_self_signed_cert: true
 
 nova_common_libvirt_type: qemu
+nova_common_api_workers: 1
+nova_common_metadata_api_workers: 1
 
 cinder:
   volume_file: /opt/stack/cinder-volumes
@@ -97,14 +99,11 @@ neutron:
       subnet_name: internal
       tenant_name: admin
 
+glance_common_api_workers: 1
 glance:
   images:
     - name: cirros
       url: https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img
-#    - name: ubuntu-12.04
-#      url: http://cloud-images.ubuntu.com/precise/current/precise-server-cloudimg-amd64-disk1.img
-#    - name: ubuntu-13.04
-#      url: http://cloud-images.ubuntu.com/releases/13.04/release/ubuntu-13.04-server-cloudimg-amd64-disk1.img
 
 keystone:
   tenants:

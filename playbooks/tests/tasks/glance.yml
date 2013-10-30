@@ -7,4 +7,4 @@
 - name: glance api has proper workers
   hosts: controller
   tasks:
-    - shell: grep 'workers = 5' /etc/glance/glance-api.conf
+    - shell: grep 'workers = 1' /etc/glance/glance-api.conf
