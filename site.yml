@@ -53,9 +53,9 @@
   roles:
     - rabbit
     - client
+    - horizon
     - controller
     - memcached
-    - horizon
 
 - hosts: compute
   roles:
