@@ -1,0 +1,10 @@
+---
+- name: de-provision test instances
+  hosts: local
+  connection: local
+  vars_files:
+  - ../../vars/main.yml
+  tasks:
+    - name: delete {{ item }}
+      local_action: nova_compute name={{ item }} state=absent
+      with_items: test_instance_names

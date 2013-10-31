@@ -1,0 +1,23 @@
+---
+- name: provision test instances
+  hosts: local
+  connection: local
+  vars_files:
+  - ../../vars/main.yml
+  tasks:
+    - name: register security group id
+      shell: source ~/.stackrc; nova secgroup-list | grep {{ test_security_groups }} | awk '{print $2}'
+      register: test_security_group_id
+    - name: create {{ item }}
+      local_action:
+        module: nova_compute
+        name: "{{ item }}"
+        state: present
+        image_id: "{{ test_image_id }}"
+        key_name: "{{ test_keypair_name }}"
+        security_groups: "{{ test_security_group_id.stdout }}"
+        wait_for: 200
+        flavor_id: 2
+        nics:
+          - net-id: "{{ test_net_id }}"
+      with_items: test_instance_names

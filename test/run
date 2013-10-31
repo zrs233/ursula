@@ -1,6 +1,7 @@
 #!/bin/bash
 set -eu
 source $(dirname $0)/common
+source $HOME/.stackrc
 
 cd $root
 export ANSIBLE_SSH_ARGS="$ssh_args"
