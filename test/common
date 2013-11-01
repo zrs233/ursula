@@ -21,7 +21,7 @@ public_ip() {
 
 # given a vm name, add a floating ip
 add_floating_ip() {
-  echo "adding floaging IPs"
+  echo "adding floating IPs"
   ensure_free_floating_ip
 
   nova floating-ip-list | grep $net_name | while read line; do
