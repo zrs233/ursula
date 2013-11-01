@@ -5,6 +5,12 @@ source $HOME/.stackrc
 
 $root/test/check-deps
 
+echo "writing initial inventory file"
+cat > $root/envs/test/hosts <<eof
+[local]
+127.0.0.1
+eof
+
 echo "destroying: $vms"
 rm -f ~/.ssh/ursula-*
 $root/test/cleanup
@@ -110,9 +116,6 @@ $(public_ip "test-compute-0")
 
 [network]
 $(public_ip "test-controller-0")
-
-[local]
-127.0.0.1
 eof
 
 echo "vms are up: $vms !!"
