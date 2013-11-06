@@ -7,6 +7,7 @@ export ANSIBLE_SSH_ARGS="$ssh_args"
 echo $ANSIBLE_SSH_ARGS
 
 export ANSIBLE_FORCE_COLOR=yes
+export ANSIBLE_NOCOWS=yes
 
 time ansible-playbook \
   --inventory-file envs/test/hosts \
