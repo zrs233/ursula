@@ -1,9 +1,19 @@
 ---
 - name: horizon venv
   shell: cd /opt/stack/horizon && python tools/install_venv.py
+  notify:
+    - force django-1.5
+
+# django 1.6 currently gets installed, and does not work.
+- name: force django-1.5
+  shell: /opt/stack/horizon/.venv/bin/pip install Django==1.5.5
+  notify:
+    - restart apache
 
 - name: disable apache status
   shell: a2dismod status
+  notify:
+    - restart apache
 
 - name: restart apache
   service: name=apache2 state=restarted
