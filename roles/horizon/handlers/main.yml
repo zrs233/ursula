@@ -2,6 +2,9 @@
 - name: horizon venv
   shell: cd /opt/stack/horizon && python tools/install_venv.py
 
+- name: disable apache status
+  shell: a2dismod status
+
 - name: restart apache
   service: name=apache2 state=restarted
 

@@ -19,7 +19,9 @@
 
 - apt: pkg=apache2
   notify:
+    - disable apache status
     - disable default apache site
+    - restart apache
 
 - file: dest=/opt/stack/horizon/static state=directory owner=www-data
 - file: dest=/opt/stack/horizon/static/dashboard state=directory owner=www-data
