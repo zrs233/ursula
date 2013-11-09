@@ -22,12 +22,6 @@
     - disable apache status
     - disable default apache site
 
-- name: remove useless readmes
-  file: dest=/usr/share/apache2/icons/{{ item }} state=absent
-  with_items:
-    - README
-    - README.html
-
 - file: dest=/opt/stack/horizon/static state=directory owner=www-data
 - file: dest=/opt/stack/horizon/static/dashboard state=directory owner=www-data
 
@@ -37,6 +31,10 @@
 - template: src=etc/apache2/httpd.conf dest=/etc/apache2/httpd.conf
   notify:
     - restart apache
+- template: src=etc/apache2/mods-available/alias.conf dest=/etc/apache2/mods-available/alias.conf
+  notify:
+    - restart apache
+
 - template: |
     src=opt/stack/horizon/openstack_dashboard/local/local_settings.py
     dest=/opt/stack/horizon/openstack_dashboard/local/local_settings.py
