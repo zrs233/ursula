@@ -1,0 +1,5 @@
+rabbitmq_erlang_cookie: 6IMgelGs3Ygu
+rabbitmq_user: openstack
+rabbitmq_nodename: '{{ rabbitmq_user }}@{{ ansible_hostname }}'
+rabbitmq_ip: '{{ ansible_eth0["ipv4"]["address"] }}'
+rabbitmq_port: 5672
