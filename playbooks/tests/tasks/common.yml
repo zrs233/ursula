@@ -5,3 +5,7 @@
     shell: grep Etc/UTC /etc/timezone
   - name: common date command has utc
     shell: date | grep UTC
+- hosts: all
+  tasks:
+  - name: disable IPv6 privacy extensions
+    shell: grep 0 /proc/sys/net/ipv6/conf/all/use_tempaddr
