@@ -4,3 +4,11 @@
 
 - lineinfile: dest=/etc/hosts regexp=^{{ item.ip }} line="{{ item.ip }} {{ item.name }}"
   with_items: etc_hosts
+
+- lineinfile: dest=/etc/sysctl.d/10-ipv6-privacy.conf regexp=^net\.ipv6\.conf\.all\.use_tempaddr line="net.ipv6.conf.all.use_tempaddr = 2"
+  notify:
+    - apply-sysctl
+
+- lineinfile: dest=/etc/sysctl.d/10-ipv6-privacy.conf regexp=^net\.ipv6\.conf\.default\.use_tempaddr line="net.ipv6.conf.default.use_tempaddr = 2"
+  notify:
+    - apply-sysctl

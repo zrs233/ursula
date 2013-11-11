@@ -10,3 +10,6 @@
 
 - name: update timezone
   command: dpkg-reconfigure --frontend noninteractive tzdata
+
+- name: apply-sysctl
+  shell: "cat /etc/sysctl.d/*.conf /etc/sysctl.conf | sysctl -e -p -"
