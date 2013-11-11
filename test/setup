@@ -33,6 +33,9 @@ for port in "${default_ports[@]}"; do
     nova secgroup-add-rule $security_group $default_proto $port $port $default_cidr >/dev/null
   fi
 done
+if ! echo "$rules" | grep icmp >/dev/null; then
+  nova secgroup-add-rule $security_group icmp -1 -1 $default_cidr >/dev/null
+fi
 
 echo "booting vms"
 net_id=$(nova net-list | grep " internal " | awk '{print $2}')
