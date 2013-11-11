@@ -1,4 +1,9 @@
 ---
+- name: horizon is up
+  hosts: controller
+  tasks:
+    - shell: curl http://localhost:8080 | grep "Login - OpenStack Dashboard"
+
 - name: horizon config has memcached servers
   hosts: controller[0]
   tasks:
