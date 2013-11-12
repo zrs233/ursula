@@ -43,13 +43,13 @@
     - restart apache
 
 - name: custom horizon logo
-  copy: src=logo.png dest=/opt/stack/horizon/openstack_dashboard/static/dashboard/img/logo.png mode=0644
+  get_url: url={{ horizon_logo_url }} dest=/opt/stack/horizon/openstack_dashboard/static/dashboard/img/logo.png mode=0644 force=yes
 
 - name: custom horizon splash logo
-  copy: src=logo.png dest=/opt/stack/horizon/openstack_dashboard/static/dashboard/img/logo-splash.png mode=0644
+  get_url: url={{ horizon_logo_url }} dest=/opt/stack/horizon/openstack_dashboard/static/dashboard/img/logo-splash.png mode=0644 force=yes
 
 - name: custom horizon favicon
-  copy: src=favicon.ico dest=/opt/stack/horizon/openstack_dashboard/static/dashboard/img/favicon.ico
+  get_url: url={{ horizon_favicon_url }} dest=/opt/stack/horizon/openstack_dashboard/static/dashboard/img/favicon.ico force=yes
 
 - name: static asset directory
   file: dest=/opt/stack/horizon/static state=directory owner=www-data group=www-data mode=0755
