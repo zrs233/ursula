@@ -1,7 +1,9 @@
 #!/bin/bash
 set -eu
 source $(dirname $0)/common
-
 source $HOME/.stackrc
 
-destroy_vms
+ansible-playbook \
+  --inventory-file envs/test/hosts \
+  --module-path ./library \
+  $root/playbooks/tests/tasks/instances/delete.yml

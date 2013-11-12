@@ -19,19 +19,9 @@ public_ip() {
   nova list | grep "$1" | awk '{print $13}'
 }
 
-destroy_vms() {
-  echo "destroying: $vms"
-  ls ~/.ssh/ursula-* 2>&1 >/dev/null && rm -f ~/.ssh/ursula-*
-  for vm in $vms; do
-    nova list | grep $vm >/dev/null && nova delete $vm
-  done
-  for vm in $vms; do
-    while nova list | grep $vm >/dev/null; do sleep 1; echo -n '.'; done; echo
-  done
-}
-
 # given a vm name, add a floating ip
 add_floating_ip() {
+  echo "adding floating IPs"
   ensure_free_floating_ip
 
   nova floating-ip-list | grep $net_name | while read line; do
