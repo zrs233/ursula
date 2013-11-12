@@ -7,5 +7,5 @@
     shell: date | grep UTC
 - hosts: all
   tasks:
-  - name: disable IPv6 privacy extensions
+  - name:IPv6 privacy extensions are disabled
     shell: grep 0 /proc/sys/net/ipv6/conf/all/use_tempaddr
