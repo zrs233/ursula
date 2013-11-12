@@ -17,7 +17,7 @@
         key_name: "{{ test_keypair_name }}"
         security_groups: "{{ test_security_group_id.stdout }}"
         wait_for: 200
-        flavor_id: 2
+        flavor_id: 3
         nics:
           - net-id: "{{ test_net_id }}"
       with_items: test_instance_names
