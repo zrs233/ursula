@@ -1,10 +1,13 @@
 ---
+- apt: pkg=libruby1.8 purge=yes state=absent
 - apt: pkg={{ item }}
   with_items:
     - ack-grep
+    - build-essential
     - curl
     - dstat
     - ethtool
+    - git
     - htop
     - iotop
     - iperf
@@ -13,7 +16,12 @@
     - netcat
     - pstack
     - pv
+    - ruby1.9.1
+    - ruby1.9.1-dev
     - smem
     - socat
     - tree
     - vim
+
+- name: requried by custom ansible modules
+  gem: name=antsy state=latest

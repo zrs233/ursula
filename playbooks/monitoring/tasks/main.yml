@@ -9,7 +9,6 @@
 - apt: update_cache=True
 
 - apt: pkg=sensu
-- apt: pkg=rubygems
 - gem: name=sensu-plugin state=latest
 
 - name: sensu sudoers
