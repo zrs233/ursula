@@ -24,7 +24,7 @@
   - include: ../handlers/main.yml
 
 - name: Install database checks
-  hosts: db:db_arbiter
+  hosts: db
   tasks:
   - include: monitoring/tasks/database.yml
   handlers:
