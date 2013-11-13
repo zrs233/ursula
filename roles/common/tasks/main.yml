@@ -13,28 +13,20 @@
     - python-openssl
     - python-dev
     - python-httplib2
+    - python-software-properties
 
-- apt: pkg=git
+- apt: pkg={{ item }}
+  with_items:
+    - ntp
+    - vlan
 
 - name: set UTC timezone
-  copy: content='Etc/UTC' dest=/etc/timezone owner=root group=root mode=0644 backup=yes
+  copy: content='Etc/UTC' dest=/etc/timezone owner=root group=root mode=0644
   notify:
     - update timezone
 
-- apt: pkg=ntp
-- apt: pkg=vlan
-
 - name: /opt/stack
   file: dest=/opt/stack state=directory
-
-# required for apt-add-repository
-- apt: pkg=python-software-properties
-
-- apt: pkg=ruby
-- apt: pkg=rubygems
-
-# requried by some custom modules
-- gem: name=antsy state=latest
 
 - include: syslog.yml
 - include: ssl.yml
