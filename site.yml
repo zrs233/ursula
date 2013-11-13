@@ -18,8 +18,9 @@
 
 - name: nova code and config
   hosts: controller:db:compute
+  vars_files:
+  - roles/memcached/defaults/main.yml
   roles:
-    - memcached
     - nova-common
 
 - name: neutron code and config
@@ -34,8 +35,9 @@
 
 - name: keystone code and config
   hosts: controller:db
+  vars_files:
+  - roles/memcached/defaults/main.yml
   roles:
-    - memcached
     - keystone-common
 
 - name: cinder code and config
