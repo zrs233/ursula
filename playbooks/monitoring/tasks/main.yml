@@ -9,7 +9,7 @@
 - apt: update_cache=True
 
 - apt: pkg=sensu
-- gem: name=sensu-plugin state=latest
+- gem: name=sensu-plugin state=latest user_install=no include_dependencies=yes
 
 - name: sensu sudoers
   template: src=sensu-sudoers dest=/etc/sudoers.d/sensu owner=root group=root mode=0440
