@@ -9,6 +9,7 @@ secrets:
   service_password: &service_password asdf
   rabbit_password:  asdf
   admin_password:   &admin_password asdf
+  provider_admin_password:   &provider_admin_password ghij
   metadata_proxy_shared_secret: asdf
   horizon_secret_key:           asdf
 
@@ -115,6 +116,9 @@ keystone:
     - name: admin
       password: *admin_password
       tenant: admin
+    - name: provider_admin
+      password: *provider_admin_password
+      tenant: admin
     - name: demo
       password: demopass
       tenant: demo
@@ -137,6 +141,12 @@ keystone:
       tenant: admin
       role: admin
     - user: admin
+      tenant: demo
+      role: admin
+    - user: provider_admin
+      tenant: admin
+      role: admin
+    - user: provider_admin
       tenant: demo
       role: admin
     - user: nova
