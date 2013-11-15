@@ -1,12 +1,22 @@
-#!/bin/bash
+set -eu
+
+[[ -f ~/.stackrc ]] && source ~/.stackrc
+source $(dirname $0)/../share/common
+
 vms="test-controller-0 test-controller-1 test-compute-0"
 image=ubuntu-12.04
 flavor=m1.medium
 net_name=external
 key_name=int-test
-key_path=$HOME/.ssh/$key_name.pem
+key_path=~/.ssh/$key_name.pem
 login_user=ubuntu
-ssh_args="-o LogLevel=quiet -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i $key_path -o ControlMaster=auto -o ControlPath=~/.ssh/ursula-%l-%r@%h:%p -o ControlPersist=yes"
+ssh_args=\
+" $ANSIBLE_SSH_ARGS"\
+' -o LogLevel=quiet'\
+' -o StrictHostKeyChecking=no'\
+' -o UserKnownHostsFile=/dev/null'\
+" -i $key_path"
+
 security_group=ursula
 root="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
 

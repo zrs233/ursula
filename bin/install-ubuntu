@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 set -ex
 
 if ! grep Ubuntu /etc/lsb-release; then

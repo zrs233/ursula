@@ -1,20 +1,17 @@
-#!/bin/bash
-env=$1
-playbook=$2
+#!/usr/bin/env bash
 
-hosts=$1/hosts
-ssh_config=$1/ssh_config
+source $(dirname $0)/../share/common
 
-export ANSIBLE_SSH_ARGS="-o ControlMaster=auto -o ControlPath=~/.ssh/ursula-%l-%r@%h:%p -o ControlPersist=yes "
-if [ -e $ssh_config ]; then
-  export ANSIBLE_SSH_ARGS="$ANSIBLE_SSH_ARGS -F $ssh_config"
+ENV=$1
+PLAYBOOK=$2
+HOSTS=${ENV}/hosts
+SSH_CONFIG=${ENV}/ssh_config
+
+if [ -e ${SSH_CONFIG} ]; then
+  export ANSIBLE_SSH_ARGS="$ANSIBLE_SSH_ARGS -F ${SSH_CONFIG}"
 fi
 
-export ANSIBLE_NOCOWS=1
-
-ansible-playbook \
-  --inventory-file $hosts \
-  --user root \
-  --module-path ./library \
-  --connection ssh \
-  $playbook
+$(ansible_command \
+  ${HOSTS} \
+  "root" \
+  ${PLAYBOOK})

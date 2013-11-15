@@ -1,7 +1,6 @@
-#!/bin/bash
-set -eu
+#!/usr/bin/env bash
+
 source $(dirname $0)/common
-source $HOME/.stackrc
 
 ansible-playbook \
   --inventory-file envs/test/hosts \

@@ -1,27 +1,19 @@
-#!/bin/bash
-set -eu
+#!/usr/bin/env bash
+
 source $(dirname $0)/common
-source $HOME/.stackrc
 
-cd $root
-export ANSIBLE_SSH_ARGS="$ssh_args"
-echo $ANSIBLE_SSH_ARGS
+cd ${root}
+export ANSIBLE_SSH_ARGS="${ssh_args}"
+echo ${ANSIBLE_SSH_ARGS}
 
-export ANSIBLE_FORCE_COLOR=yes
-export ANSIBLE_NOCOWS=yes
+time $(ansible_command \
+  "envs/test/hosts" \
+  ${login_user} \
+  "site.yml" \
+  "true")
 
-time ansible-playbook \
-  --inventory-file envs/test/hosts \
-  --module-path ./library \
-  --connection ssh \
-  --user $login_user \
-  --sudo \
-  site.yml
-
-time ansible-playbook \
-  --inventory-file envs/test/hosts \
-  --module-path ./library \
-  --connection ssh \
-  --user $login_user \
-  --sudo \
-  $root/playbooks/tests/tasks/main.yml
+time $(ansible_command \
+  "envs/test/hosts" \
+  ${login_user} \
+  ${root}/playbooks/tests/tasks/main.yml \
+  "true")
