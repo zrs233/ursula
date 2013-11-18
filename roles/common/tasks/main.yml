@@ -30,6 +30,7 @@
 
 - include: syslog.yml
 - include: ssl.yml
+- include: ssh.yml
 - include: networking.yml
 - include: system_tools.yml
 
