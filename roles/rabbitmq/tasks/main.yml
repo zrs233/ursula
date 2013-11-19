@@ -90,3 +90,9 @@
                  read_priv=.*
                  write_priv=.*
                  state=present
+
+- name: set the HA mirror queues policy
+  rabbitmq_policy: name=HA
+                   node={{ rabbitmq_nodename }}
+                   params='{"ha-mode":"all"}'
+                   pattern='.*'
