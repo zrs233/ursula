@@ -11,7 +11,6 @@ cat > $root/envs/test/hosts <<eof
 eof
 
 echo "destroying: $vms"
-rm -f ~/.ssh/ursula-*
 $root/test/cleanup
 
 echo "setting up keypair"

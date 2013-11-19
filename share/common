@@ -17,9 +17,19 @@ ansible_command() {
   echo ${cmd[@]}
 }
 
+# Safely create a controlmasters directory
+if [ ! -d $HOME/.ssh/controlmasters ]; then
+    if [ -e $HOME/.ssh/controlmasters ]; then
+        echo "$HOME/.ssh/controlmasters exists and is not a directory"
+    else
+        mkdir $HOME/.ssh/controlmasters && \
+        chmod 700 $HOME/.ssh/controlmasters
+    fi
+fi
+
 export ANSIBLE_NOCOWS=1
 export ANSIBLE_FORCE_COLOR=yes
 export ANSIBLE_SSH_ARGS=\
 ' -o ControlMaster=auto'\
-' -o ControlPath=~/.ssh/ursula-%l-%r@%h:%p'\
+' -o ControlPath=~/.ssh/controlmasters/ursula-%l-%r@%h:%p'\
 ' -o ControlPersist=yes'
