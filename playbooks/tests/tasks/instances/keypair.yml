@@ -8,8 +8,5 @@
       register: test_keypair
       local_action: nova_keypair name={{ test_keypair_name }} state=present
     - name: persist the keypair
-      shell: echo "{{ test_keypair.key }}" > {{ test_keypair_path }}
-      when: test_keypair.changed == True
-    - name: correct keypair permissions
-      shell: chmod 600 {{ test_keypair_path }}
+      shell: OLD_UMASK=`umask`; umask 0077; echo "{{ test_keypair.key }}" > {{ test_keypair_path }}; umask $OLD_UMASK
       when: test_keypair.changed == True
