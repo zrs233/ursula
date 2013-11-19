@@ -3,6 +3,7 @@
   with_items:
     - lvm2
     - tgt
+    - nbd-client
 
 - file: dest=/etc/tgt/conf.d state=directory
 - template: src=etc/tgt/targets.conf dest=/etc/tgt/targets.conf mode=0644
