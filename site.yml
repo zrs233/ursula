@@ -1,5 +1,5 @@
 ---
-- name: clustered rabbitmq used by openstack and monitoring
+- name: rabbitmq used by openstack
   hosts: controller
   serial: 1
   roles:
