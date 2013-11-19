@@ -19,7 +19,7 @@ echo "destroying: $vms"
 $root/test/cleanup
 
 echo "setting up keypair"
-ansible-playbook \
+root=$root ansible-playbook \
   --inventory-file envs/test/hosts \
   --module-path ./library \
   $root/playbooks/tests/tasks/instances/keypair.yml

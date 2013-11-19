@@ -4,7 +4,7 @@ test_instance_names:
   - test-controller-1
   - test-compute-0
 test_keypair_name: int-test
-test_keypair_path: envs/test/{{ test_keypair_name }}.pem
+test_keypair_path: "{{ ansible_env.root }}/envs/test/{{ test_keypair_name }}.pem"
 test_image_id: f1496b58-0f51-4f91-b1da-517b1ad38162
 test_security_groups: ursula
 test_net_id: 0b2f1eae-6abf-432c-b740-a72742abda24
