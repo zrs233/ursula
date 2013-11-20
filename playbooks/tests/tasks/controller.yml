@@ -23,6 +23,12 @@
     shell: grep 'metadata_workers=1' /etc/nova/nova.conf
   - name: nova config has memcached servers
     shell: egrep memcached_servers=[0-9.]+:11211,[0-9.]+ /etc/nova/nova.conf
+  - name: nova config has rabbit servers
+    shell: egrep rabbit_hosts=[0-9.]+:5672,[0-9.]+ /etc/nova/nova.conf
+  - name: cinder config has rabbit servers
+    shell: egrep "rabbit_hosts = [0-9.]+:5672,[0-9.]+" /etc/cinder/cinder.conf
+  - name: rabbitmq has a properly configured cluser
+    shell: rabbitmqctl -q cluster_status | awk '/disc/,/\},/' | grep -c test-controller | grep 2
 
 - hosts: controller[0]
   tasks:
