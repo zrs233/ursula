@@ -1,5 +1,0 @@
----
-- name: keystone config has memcached servers
-  hosts: controller
-  tasks:
-    - shell: egrep "servers = [0-9.]+:11211,[0-9.]+" /etc/keystone/keystone.conf

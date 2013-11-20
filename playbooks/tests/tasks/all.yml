@@ -1,10 +1,4 @@
 ---
-- hosts: controller
-  tasks:
-  - name: common timezone is utc
-    shell: grep Etc/UTC /etc/timezone
-  - name: common date command has utc
-    shell: date | grep UTC
 - hosts: all
   tasks:
   - name: IPv6 privacy extensions are disabled
