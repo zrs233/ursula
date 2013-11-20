@@ -3,12 +3,13 @@ set -eu
 [[ -f ~/.stackrc ]] && source ~/.stackrc
 source $(dirname $0)/../share/common
 
+root="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
 vms="test-controller-0 test-controller-1 test-compute-0"
 image=ubuntu-12.04
 flavor=m1.medium
 net_name=external
 key_name=int-test
-key_path=~/.ssh/$key_name.pem
+key_path=$root/envs/test/${key_name}.pem
 login_user=ubuntu
 ssh_args=\
 " $ANSIBLE_SSH_ARGS"\
@@ -18,7 +19,6 @@ ssh_args=\
 " -i $key_path"
 
 security_group=ursula
-root="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
 
 die() {
   echo "[ERROR] $*"; exit 1

@@ -4,6 +4,11 @@ source $(dirname $0)/common
 
 $root/test/check-deps
 
+if [ ! -e $root/envs/test ]; then
+    echo "creating $root/envs/test/ directory"
+    mkdir $root/envs/test
+fi
+
 echo "writing initial inventory file"
 cat > $root/envs/test/hosts <<eof
 [local]
@@ -11,11 +16,10 @@ cat > $root/envs/test/hosts <<eof
 eof
 
 echo "destroying: $vms"
-rm -f ~/.ssh/ursula-*
 $root/test/cleanup
 
 echo "setting up keypair"
-ansible-playbook \
+root=$root ansible-playbook \
   --inventory-file envs/test/hosts \
   --module-path ./library \
   $root/playbooks/tests/tasks/instances/keypair.yml
