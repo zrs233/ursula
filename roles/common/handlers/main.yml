@@ -13,3 +13,5 @@
 
 - name: apply-sysctl
   shell: "cat /etc/sysctl.d/*.conf /etc/sysctl.conf | sysctl -e -p -"
+
+- include: ssh.yml
