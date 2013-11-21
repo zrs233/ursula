@@ -1,9 +1,0 @@
----
-# TODO(retr0h): This is a temporary playbook to
-# cleanup the memcached package running on the
-# wrong nodes
-
-- name: remove memcached
-  hosts: compute
-  tasks:
-  - apt: pkg=memcached purge=yes state=absent
