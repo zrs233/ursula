@@ -79,5 +79,5 @@
 - name: set the HA mirror queues policy
   rabbitmq_policy: name=HA
                    node={{ rabbitmq_nodename }}
-                   params='{"ha-mode":"all"}'
                    pattern='.*'
+                   tags=ha-mode=all
