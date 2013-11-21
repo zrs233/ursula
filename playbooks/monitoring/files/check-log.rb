@@ -67,7 +67,7 @@ class CheckLog < Sensu::Plugin::Check::CLI
          :short => '-s',
          :long => '--silent',
          :boolean => false
-  
+
   def run
     unknown "No log file specified" unless config[:log_file]
     unknown "No pattern specified" unless config[:pattern]
@@ -90,7 +90,7 @@ class CheckLog < Sensu::Plugin::Check::CLI
 
   def open_log
     state_dir = config[:state_auto] || config[:state_dir]
-    @log = File.open(config[:log_file])
+    @log = File.open(config[:log_file], 'r:ISO-8859-1')
     @state_file = File.join(state_dir, File.expand_path(config[:log_file]))
     @bytes_to_skip = begin
       File.open(@state_file) do |file|
