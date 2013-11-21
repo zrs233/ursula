@@ -32,9 +32,9 @@
 - sensu_process_check: service=neutron-server
   notify: restart sensu-client
 
-# nginx
+# haproxy
 
-- sensu_check: name=nginx plugin=check-procs.rb args="-p nginx -w 10 -c 30 -W 1 -C 1"
+- sensu_check: name=haproxy plugin=check-procs.rb args="-p haproxy -w 5 -c 10 -W 1 -C 1"
   notify: restart sensu-client
 
 # nova
