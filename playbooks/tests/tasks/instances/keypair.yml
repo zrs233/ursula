@@ -4,8 +4,6 @@
   vars_files:
   - ../../vars/main.yml
   tasks:
-    - name: remove the keypair
-      local_action: nova_keypair name={{ test_keypair_name }} state=absent
     - name: always create a new keypair
       register: test_keypair
       local_action: nova_keypair name={{ test_keypair_name }} state=present
