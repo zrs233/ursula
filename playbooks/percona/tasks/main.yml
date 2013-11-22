@@ -8,6 +8,7 @@
   register: pkg_installed
   apt: pkg={{ item }} state=installed
   with_items:
+  - percona-xtradb-cluster-galera-{{ xtradb.galera_version }}
   - percona-xtradb-cluster-client-{{ xtradb.client_version }}
   - percona-xtradb-cluster-server-{{ xtradb.server_version }}
   - percona-xtrabackup
