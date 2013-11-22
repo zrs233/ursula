@@ -12,7 +12,7 @@
   notify: restart sensu-client
 - sensu_process_check: service=glance-registry
   notify: restart sensu-client
-- sensu_check: name=check-glance-api plugin=check-os-api.rb use_sudo=true args="--stackrc /root/stackrc --host {{ fqdn }} --port 9292 --path /v1/images --match-str images --use-ssl true"
+- sensu_check: name=check-glance-api plugin=check-os-api.rb use_sudo=true args="--service glance"
   notify: restart sensu-client
 
 # horizon
@@ -24,7 +24,8 @@
 
 - sensu_process_check: service=keystone-all
   notify: restart sensu-client
-- sensu_check: name=check-keystone-api plugin=check-http.rb args='-u https://localhost:5001/v2.0 -k true --password {{ secrets.admin_password }} --username admin'
+- sensu_check: name=check-keystone-api plugin=check-os-api.rb use_sudo=true args="--service keystone"
+  notify: restart sensu-client
   notify: restart sensu-client
 
 # neutron
@@ -48,5 +49,5 @@
     - nova-scheduler
   notify: restart sensu-client
 
-- sensu_check: name=check-nova-api plugin=check-os-api.rb use_sudo=true args="--stackrc /root/stackrc --host {{ fqdn }} --port 8774 --path /v2/{{ admin_tenant_id.stdout }}/servers --match-str servers --use-ssl true"
+- sensu_check: name=check-nova-api plugin=check-os-api.rb use_sudo=true args="--service nova"
   notify: restart sensu-client
