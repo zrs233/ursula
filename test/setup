@@ -19,10 +19,10 @@ echo "destroying: $vms"
 $root/test/cleanup
 
 echo "setting up keypair"
-root=$root ansible-playbook \
-  --inventory-file envs/test/hosts \
-  --module-path ./library \
-  $root/playbooks/tests/tasks/instances/keypair.yml
+$(ansible_command \
+  "envs/test/hosts" \
+  "root" \
+  $root/playbooks/tests/tasks/instances/keypair.yml)
 
 #TODO(retr0h): Move into an ansible library.
 echo "setting up security group"
@@ -50,10 +50,10 @@ if ! echo "$rules" | grep icmp >/dev/null; then
 fi
 
 echo "booting vms"
-ansible-playbook \
-  --inventory-file envs/test/hosts \
-  --module-path ./library \
-  $root/playbooks/tests/tasks/instances/create.yml
+$(ansible_command \
+  "envs/test/hosts" \
+  "root" \
+  $root/playbooks/tests/tasks/instances/create.yml)
 #TODO(retr0h): Move into an ansible library.
 for vm in $vms; do
   sleep 15
@@ -81,8 +81,11 @@ done
 controller_ip=$(public_ip test-controller-0)
 
 echo "building config"
-rm -rf $root/envs/test
-cp -r $root/envs/example $root/envs/test
+rm -rf $root/envs/test/group_vars/
+rm -f $root/envs/test/hosts
+mkdir -p $root/envs/test/
+cp -r $root/envs/example/group_vars $root/envs/test
+cp $root/envs/example/hosts $root/envs/test
 sed -i -e "s/^controller_primary: \&controller.*/controller_primary: \&controller $controller_ip/" envs/test/group_vars/all.yml
 
 echo "generating ssl cert for $controller_ip"

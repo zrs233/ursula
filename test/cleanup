@@ -2,7 +2,7 @@
 
 source $(dirname $0)/common
 
-ansible-playbook \
-  --inventory-file envs/test/hosts \
-  --module-path ./library \
-  $root/playbooks/tests/tasks/instances/delete.yml
+$(ansible_command \
+  "envs/test/hosts" \
+  "root" \
+  $root/playbooks/tests/tasks/instances/delete.yml)

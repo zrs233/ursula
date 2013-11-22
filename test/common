@@ -3,7 +3,7 @@ set -eu
 [[ -f ~/.stackrc ]] && source ~/.stackrc
 source $(dirname $0)/../share/common
 
-root="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
+export root="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
 vms="test-controller-0 test-controller-1 test-compute-0"
 image=ubuntu-12.04
 flavor=m1.medium
