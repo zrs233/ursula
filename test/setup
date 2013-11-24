@@ -4,12 +4,8 @@ source $(dirname $0)/common
 
 $root/test/check-deps
 
-if [ ! -e $root/envs/test ]; then
-    echo "creating $root/envs/test/ directory"
-    mkdir $root/envs/test
-fi
-
 echo "writing initial inventory file"
+mkdir -p $root/envs/test
 cat > $root/envs/test/hosts <<eof
 [local]
 127.0.0.1

@@ -4,7 +4,7 @@
   vars_files:
   - ../../vars/main.yml
   tasks:
-    - name: always create a new keypair
+    - name: create the keypair
       register: test_keypair
       local_action: nova_keypair name={{ test_keypair_name }} state=present
     - name: persist the keypair
