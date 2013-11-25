@@ -1,0 +1,19 @@
+---
+- name: provision test security groups
+  hosts: local
+  connection: local
+  vars_files:
+  - ../../vars/main.yml
+  tasks:
+    - name: create the security group and rules
+      local_action:
+        module: nova_group
+        name: "{{ test_security_groups }}"
+        description: Rules for testing
+        rules:
+          - ip_protocol: "{{ item.proto }}"
+            from_port: "{{ item.port }}"
+            to_port: "{{ item.port }}"
+            cidr: 0.0.0.0/0
+            state: "{{ item.state }}"
+      with_items: test_security_group_rules
