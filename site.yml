@@ -12,6 +12,11 @@
 - name: replicated db setup
   include: playbooks/percona.yml
 
+- name: memcached is used by keystone
+  hosts: controller
+  roles:
+    - memcached
+
 - name: nova code and config
   hosts: controller:db:compute
   vars_files:
@@ -57,7 +62,6 @@
     - client
     - horizon
     - controller
-    - memcached
 
 - hosts: compute
   roles:
