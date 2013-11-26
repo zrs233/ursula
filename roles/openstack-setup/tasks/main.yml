@@ -1,4 +1,7 @@
 ---
 - include: users.yml
+  when: openstack_setup.add_users == True or openstack_setup.add_users is undefined
 - include: images.yml
+  when: openstack_setup.add_images == True or openstack_setup.add_images is undefined
 - include: networks.yml
+  when: openstack_setup.add_networks == True or openstack_setup.add_networks is undefined
