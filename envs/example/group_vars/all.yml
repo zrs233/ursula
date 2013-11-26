@@ -71,6 +71,22 @@ nova_common_metadata_api_workers: 1
 cinder:
   volume_file: /opt/stack/cinder-volumes
   volume_file_size: 5G
+  volume_types:
+    - encrypted-aes-256
+    - encrypted-aes-128
+  encrypted_volume_types:
+    - encrypted-aes-256-voltype:
+      name: encrypted-aes-256
+      cipher: aes
+      key_size: 256
+      provider: path.to.ProviderModule
+      control_location: front-end
+    - encrypted-aes-128-voltype:
+      name: encrypted-aes-128
+      cipher: aes
+      key_size: 128
+      provider: path.to.ProviderModule
+      control_location: front-end
 
 neutron:
   physical_bridge: br-ex

@@ -1,0 +1,25 @@
+---
+- name: create cinder volume types
+  action: |
+    cinder_volume_type
+      volume_type={{ item }}
+      auth_url=http://{{ endpoints.main }}:5000/v2.0/
+      login_username=admin
+      login_password={{ secrets.admin_password }}
+      login_tenant_name=admin
+  with_items: cinder.volume_types
+
+- name: create cinder encryption volume types
+  action: |
+     cinder_volume_type
+      volume_type={{ item.name }}
+      encryption_type=True
+      provider={{ item.provider }}
+      cipher={{ item.cipher }}
+      key_size={{ item.key_size }}
+      control_location={{ item.control_location }}
+      auth_url=http://{{ endpoints.main }}:5000/v2.0/
+      login_username=admin
+      login_password={{ secrets.admin_password }}
+      login_tenant_name=admin
+  with_items: cinder.encrypted_volume_types
