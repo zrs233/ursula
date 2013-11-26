@@ -143,8 +143,6 @@ def main():
         if state == 'absent':
             rabbitmq_policy.clear()
             changed = True
-        else:
-            changed = False
     elif state == 'present':
         rabbitmq_policy.set()
         changed = True
