@@ -16,7 +16,7 @@
   - name: neutron dnsmasq has 8.8.8.8 upstream resolver
     shell: grep 8.8.8.8 /etc/dnsmasq.conf
   - name: neutron dnsmasq has 8.8.4.4 upstream resolver
-    shell: grep 8.8.8.8 /etc/dnsmasq.conf
+    shell: grep 8.8.4.4 /etc/dnsmasq.conf
   - name: nova api has proper workers
     shell: grep 'osapi_compute_workers=1' /etc/nova/nova.conf
   - name: nova metadata api has proper workers
