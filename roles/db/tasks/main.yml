@@ -7,6 +7,7 @@
     - nova
     - neutron
     - cinder
+    - barbican
 
 - name: database users
   mysql_user: |
@@ -21,6 +22,7 @@
     - nova
     - neutron
     - cinder
+    - barbican
 
 - name: local database users
   mysql_user: |
@@ -35,5 +37,6 @@
     - nova
     - neutron
     - cinder
+    - barbican
 
 - include: sync.yml
