@@ -1,0 +1,53 @@
+---
+- name: install system packages for barbican
+  apt: pkg={{ item }} state=installed
+  with_items:
+    - libmysqlclient-dev
+    - postgresql-server-dev-9.1
+    - libsqlite3-dev
+
+- name: barbican user
+  user: name=barbican shell=/bin/false
+
+- name: get barbican source repo
+  git: |
+    repo={{ barbican.git_mirror }}/barbican.git
+    dest=/opt/stack/barbican
+    version={{ barbican.rev }}
+  notify:
+    - create barbican virtualenv
+    - install barbican inside virtualenv
+    - install mysql inside virtualenv
+    - install uwsgi inside barbican virtualenv
+- meta: flush_handlers
+
+# FIXME(cmt): this is done here as we do not use the standard openstack
+# git_mirror. Eventually move this to the clients role, once barbicanclient
+# makes it into stackforge.
+- name: get python-barbicanclient source repo
+  git: |
+    repo={{ barbicanclient.git_mirror }}/python-barbicanclient.git
+    dest=/opt/stack/python-barbicanclient
+    version={{ barbicanclient.rev }}
+  notify:
+    - install barbicanclient
+- meta: flush_handlers
+
+- name: /etc/barbican
+  file: dest=/etc/barbican state=directory
+
+- name: /etc/barbican/vassals
+  file: dest=/etc/barbican/vassals state=directory
+
+- file: dest=/var/lib/barbican state=directory owner=barbican group=barbican
+- file: dest=/var/log/barbican state=directory owner=barbican group=barbican
+
+- name: barbican config
+  action: template src={{ item }} dest=/etc/barbican mode=0644
+  with_fileglob: ../templates/etc/barbican/*
+  notify:
+    - restart barbican service
+
+- name: barbican vassals config
+  action: template src={{ item }} dest=/etc/barbican/vassals mode=0644
+  with_fileglob: ../templates/etc/barbican/vassals/*

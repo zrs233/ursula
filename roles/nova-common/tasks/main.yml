@@ -2,7 +2,6 @@
 - name: nova user
   user: name=nova comment=nova shell=/bin/false system=yes home=/nonexistent createhome=no
 
-- apt: pkg=python-mysqldb
 - apt: pkg=python-numpy
 
 - name: get nova source repo

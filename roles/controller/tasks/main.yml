@@ -6,3 +6,4 @@
 - include: neutron.yml
 - include: cinder.yml
 - include: novnc.yml
+- include: barbican.yml
