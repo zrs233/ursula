@@ -1,17 +1,13 @@
 ---
-- name: rabbit used by openstack and monitoring
+- name: rabbitmq used by openstack
   hosts: controller
+  serial: 1
   roles:
-    - rabbit
+    - rabbitmq
 
 - hosts: all
   roles:
     - common
-
-# - name: Install corosync and pacemaker
-#   hosts: controller
-#   tasks:
-#   - include: playbooks/openstack-ha/tasks/main.yml
 
 - name: replicated db setup
   include: playbooks/percona.yml
@@ -19,12 +15,15 @@
 - name: nova code and config
   hosts: controller:db:compute
   vars_files:
-  - roles/memcached/defaults/main.yml
+    - roles/memcached/defaults/main.yml
+    - roles/rabbitmq/defaults/main.yml
   roles:
     - nova-common
 
 - name: neutron code and config
   hosts: controller:db:compute:network
+  vars_files:
+    - roles/rabbitmq/defaults/main.yml
   roles:
     - neutron-common
 
@@ -36,12 +35,14 @@
 - name: keystone code and config
   hosts: controller:db
   vars_files:
-  - roles/memcached/defaults/main.yml
+    - roles/memcached/defaults/main.yml
   roles:
     - keystone-common
 
 - name: cinder code and config
   hosts: controller:db:compute
+  vars_files:
+    - roles/rabbitmq/defaults/main.yml
   roles:
     - cinder-common
 
@@ -53,7 +54,6 @@
 - name: openstack controller services
   hosts: controller
   roles:
-    - rabbit
     - client
     - horizon
     - controller
@@ -76,13 +76,6 @@
 - hosts: controller[0]
   roles:
     - openstack-setup
-
-# Only configure pacemaker on the primary node.
-# Settings will replicate to the secondary node.
-# - hosts: controller[0]
-#   tasks:
-#     - include: playbooks/openstack-ha/tasks/crm_init.yml
-#     - include: playbooks/openstack-ha/tasks/crm_neutron.yml
 
 - name: Install monitoring
   include: playbooks/monitoring.yml

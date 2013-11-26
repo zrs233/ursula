@@ -1,0 +1,28 @@
+---
+- name: setup rabbit clustering 
+  include: cluster.yml
+  when: rabbitmq_cluster
+
+# Backward compatibility with existing configurations. 
+- name: install rabbitmq
+  apt: pkg=rabbitmq-server
+  when: not rabbitmq_cluster
+
+- name: remove default rabbit user
+  rabbitmq_user: user=guest
+                 {% if rabbitmq_cluster -%}
+                 node={{ rabbitmq_nodename }}
+                 {% endif -%}
+                 state=absent
+
+- name: openstack rabbit user
+  rabbitmq_user: user={{ rabbitmq_user }}
+                 password={{ secrets.rabbit_password }}
+                 {% if rabbitmq_cluster -%}
+                 node={{ rabbitmq_nodename }}
+                 {% endif -%}
+                 vhost=/
+                 configure_priv=.*
+                 read_priv=.*
+                 write_priv=.*
+                 state=present
