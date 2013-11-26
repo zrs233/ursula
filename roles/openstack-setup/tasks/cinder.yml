@@ -12,7 +12,7 @@
 - name: create cinder encryption volume types
   action: |
      cinder_volume_type
-      volume_type={{ item.name }}
+      volume_type={{ item.volume_type }}
       encryption_type=True
       provider={{ item.provider }}
       cipher={{ item.cipher }}

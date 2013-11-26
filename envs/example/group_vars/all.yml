@@ -75,12 +75,12 @@ cinder:
     - encrypted-aes-256
     - encrypted-aes-128
   encrypted_volume_types:
-    - name: encrypted-aes-256
+    - volume_type: encrypted-aes-256
       cipher: aes
       key_size: 256
       provider: path.to.ProviderModule
       control_location: front-end
-    - name: encrypted-aes-128
+    - volume_type: encrypted-aes-128
       cipher: aes
       key_size: 128
       provider: path.to.ProviderModule
