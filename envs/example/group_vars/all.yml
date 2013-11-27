@@ -20,12 +20,12 @@ etc_hosts:
   - name: *fqdn
     ip: *floating_ip
 
+rabbitmq_cluster: true
+
 endpoints:
   main:     *controller
   db:       *controller
   keystone: *controller
-  # not necessary when rabbitmq_cluster: true
-  rabbit:   *controller
   nova:     *controller
   glance:   *controller
   neutron:  *controller

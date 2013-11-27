@@ -1,4 +1,3 @@
-rabbitmq_cluster: false
 rabbitmq_erlang_cookie: 6IMgelGs3Ygu
 rabbitmq_user: openstack
 rabbitmq_nodename: '{{ rabbitmq_user }}@{{ ansible_hostname }}'
