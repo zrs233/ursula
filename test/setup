@@ -20,36 +20,18 @@ $(ansible_command \
   "root" \
   $root/playbooks/tests/tasks/instances/keypair.yml)
 
-#TODO(retr0h): Move into an ansible library.
 echo "setting up security group"
-if ! nova secgroup-list | grep $security_group >/dev/null; then
-  nova secgroup-create $security_group "Rules for testing ursula" >/dev/null
-fi
-
-#TODO(retr0h): Move into an ansible library.
-echo "setting up security group rules"
-default_proto=tcp
-default_ports=(22 80 443 3306 4369 4444 4567 4568 5000 5001 5672 8080 8774 8776 8777 8778 9292 9393 9696 9797 11211 35357 35358 65535)
-default_cidr=0.0.0.0/0
-rules=$(nova secgroup-list-rules $security_group)
-security_group_id=$(nova secgroup-list | grep $security_group | awk -F\| '{print $2}' | tr -d ' ')
-
-for port in "${default_ports[@]}"; do
-  regexp="$default_proto .* \| $port .* \| $port .* \| $default_cidr"
-  if ! echo "$rules" | egrep "$regexp" >/dev/null; then
-    echo "- creating new security group rule for port $port"
-    nova secgroup-add-rule $security_group $default_proto $port $port $default_cidr >/dev/null
-  fi
-done
-if ! echo "$rules" | grep icmp >/dev/null; then
-  nova secgroup-add-rule $security_group icmp -1 -1 $default_cidr >/dev/null
-fi
+$(ansible_command \
+  "envs/test/hosts" \
+  "root" \
+  $root/playbooks/tests/tasks/instances/security_groups.yml)
 
 echo "booting vms"
 $(ansible_command \
   "envs/test/hosts" \
   "root" \
   $root/playbooks/tests/tasks/instances/create.yml)
+
 #TODO(retr0h): Move into an ansible library.
 for vm in $vms; do
   sleep 15
