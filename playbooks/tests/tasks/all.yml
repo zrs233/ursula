@@ -5,3 +5,5 @@
     shell: grep 0 /proc/sys/net/ipv6/conf/all/use_tempaddr
   - name: SSH password authentication is disabled
     shell: grep 'PasswordAuthentication no' /etc/ssh/sshd_config
+  - name: /nonexistant should not exist
+    shell: test ! -e /nonexistent

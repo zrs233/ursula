@@ -4,6 +4,9 @@
     - memcached
     - python-memcache
 
+- name: "remove /nonexistent inadvertently created by memcached package: see https://bugs.launchpad.net/ubuntu/+source/memcached/+bug/1255328/"
+  shell: rm -rf /nonexistent
+
 - template: src=memcached.conf dest=/etc/memcached.conf mode=0644
   notify:
     - restart memcached
