@@ -11,7 +11,7 @@
   when: "'{{ nova_common_libvirt_type }}' == 'kvm'"
   changed_when: False
 
-- user: name=nova groups=libvirtd
+- user: name=nova comment=nova shell=/bin/false system=yes home=/nonexistent createhome=no groups=libvirtd
 - file: dest=/var/lib/nova/instances state=directory owner=nova
 - template: src=etc/init/nova-compute.conf dest=/etc/init/nova-compute.conf
 - service: name=nova-compute state=started
