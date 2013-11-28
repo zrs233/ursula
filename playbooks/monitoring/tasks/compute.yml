@@ -3,6 +3,8 @@
 
 - sensu_process_check: service=cinder-volume
   notify: restart sensu-client
+- sensu_process_check: service=iscsid
+  notify: restart sensu-client
 
 # nova compute
 
