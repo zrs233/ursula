@@ -15,4 +15,3 @@ logs_to_scan:
 - nova-consoleauth
 - nova-novncproxy
 - nove-scheduler
-- remote_syslog
