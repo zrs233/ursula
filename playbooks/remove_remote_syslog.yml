@@ -1,0 +1,17 @@
+---
+- hosts: all
+  tasks:
+  - service: name=remote_syslog state=stopped
+  - gem: name=remote_syslog state=absent
+  - name: syslog start script
+    shell: rm -f /etc/init/remote_syslog.conf
+  - name: remote_syslog config
+    shell: rm -f /etc/log_files.yml
+  - name: remove sensu remote_syslog proess check
+    shell: rm -f /etc/sensu/conf.d/checks/remote_syslog-service.json
+    notify: restart sensu-client
+  - name: remove syslog server certs
+    shell: rm -f /etc/syslog.ursula.crt
+  - name: remove syslog config which ships across the wire
+    shell: rm -f /etc/rsyslog.d/90-ursula.conf
+    notify: restart rsyslog

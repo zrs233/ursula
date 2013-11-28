@@ -28,9 +28,6 @@
 - name: log scanning caching dir
   file: path=/var/cache/check-log owner=sensu state=directory
 
-- sensu_process_check: service=remote_syslog
-  when: syslog_server is defined
-
 - name: enable log scanning
   when: monitoring.scan_for_log_errors
   sensu_check: name=check-log-{{ item }} plugin=check-log.rb use_sudo=true auto_resolve=false interval=60 args="-f /var/log/upstart/{{ item }}.log -q ERROR --silent"
