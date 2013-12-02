@@ -28,7 +28,6 @@
   notify: restart sensu-client
 - sensu_check: name=check-keystone-api plugin=check-os-api.rb use_sudo=true args="--service keystone"
   notify: restart sensu-client
-  notify: restart sensu-client
 
 # neutron
 
@@ -52,4 +51,14 @@
   notify: restart sensu-client
 
 - sensu_check: name=check-nova-api plugin=check-os-api.rb use_sudo=true args="--service nova"
+  notify: restart sensu-client
+
+# rabbitmq
+
+- sensu_process_check: service=rabbitmq
+  notify: restart sensu-client
+- sensu_check: name=rabbitmq-cluster plugin=check-rabbitmq-cluster.rb use_sudo=true args="--expected 2"
+  notify: restart sensu-client
+  when: rabbitmq_cluster
+- sensu_check: name=rabbitmq-queues plugin=check-rabbitmq-queues.rb use_sudo=true
   notify: restart sensu-client

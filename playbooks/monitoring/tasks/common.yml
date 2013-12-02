@@ -12,6 +12,8 @@
     - check-http.rb
     - check-log.rb
     - check-os-api.rb
+    - check-rabbitmq-cluster.rb
+    - check-rabbitmq-queues.rb
 
 - sensu_check: name=cpu  plugin=check-cpu.rb args='-w 80 -c 90'
   notify: restart sensu-client
