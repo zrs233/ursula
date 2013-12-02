@@ -3,3 +3,6 @@ rabbitmq_user: openstack
 rabbitmq_nodename: '{{ rabbitmq_user }}@{{ ansible_hostname }}'
 rabbitmq_ip: '{{ ansible_eth0["ipv4"]["address"] }}'
 rabbitmq_port: 5672
+rabbitmq_management_port: 15672
+rabbitmq_admin_cli_url: 'http://localhost:{{ rabbitmq_management_port }}/cli/rabbitmqadmin'
+rabbitmq_admin_cli_sha: 1d58218258edcb5502cb2781cbd186abeb253dca9519e545ba42a544b1121f3e

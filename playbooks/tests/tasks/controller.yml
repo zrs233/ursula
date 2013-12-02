@@ -29,6 +29,12 @@
     shell: egrep "rabbit_hosts = [0-9.]+:5672,[0-9.]+" /etc/cinder/cinder.conf
   - name: rabbitmq has a properly configured cluser
     shell: rabbitmqctl -q cluster_status | awk '/disc/,/\},/' | grep -c test-controller | grep 2
+  - name: rabbitmq has a default user with administrator tag
+    shell: rabbitmqctl list_users | grep openstack | grep '\[administrator\]'
+  - name: rabbitmq has the management plugin enabled
+    shell: rabbitmq-plugins list | grep '\[E\] rabbitmq_management'
+  - name: rabbitmq has the rabbitmqadmin script installed
+    shell: test -f /usr/local/bin/rabbitmqadmin
 
 - hosts: controller[0]
   tasks:
