@@ -19,6 +19,7 @@
     - install barbican inside virtualenv
     - install mysql inside virtualenv
     - install uwsgi inside barbican virtualenv
+    - install additional barbican python packages
 - meta: flush_handlers
 
 # FIXME(cmt): this is done here as we do not use the standard openstack

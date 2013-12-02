@@ -11,6 +11,11 @@
 - name: install uwsgi inside barbican virtualenv
   command: /opt/stack/barbican/.venv/bin/pip install uwsgi
 
+- name: install additional barbican python packages
+  command: /opt/stack/barbican/.venv/bin/pip install {{item}}
+  with_items: barbican.additional_pips
+  when: barbican.additional_pips is defined and barbican.additional_pips is not None
+
 - name: restart barbican service
   restart_if_present: service=barbican
 
