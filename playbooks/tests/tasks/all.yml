@@ -7,3 +7,5 @@
     shell: grep 'PasswordAuthentication no' /etc/ssh/sshd_config
   - name: /nonexistant should not exist
     shell: test ! -e /nonexistent
+  - name: Upstart should not report any failed services
+    shell: 'if dmesg | egrep "init: \w+ main process \([0-9]+\) terminated with status [0-9]+"; then false; else true; fi'
