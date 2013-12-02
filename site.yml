@@ -55,9 +55,9 @@
   hosts: controller
   roles:
     - client
+    - memcached
     - horizon
     - controller
-    - memcached
 
 - hosts: compute
   roles:
