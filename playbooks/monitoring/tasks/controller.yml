@@ -19,6 +19,10 @@
 
 - sensu_process_check: service=apache2
   notify: restart sensu-client
+- sensu_check: name=check-dashboard-clear-port-redirects plugin=check-http.rb args='-P 80 -r'
+  notify: restart sensu-client
+- sensu_check: name=check-dashboard-ssl-port plugin=check-http.rb args='-P 443'
+  notify: restart sensu-client
 
 # keystone
 
