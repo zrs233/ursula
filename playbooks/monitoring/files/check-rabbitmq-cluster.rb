@@ -19,7 +19,7 @@ class CheckRabbitCluster < Sensu::Plugin::Check::CLI
           :default => 2
 
   def run
-    cmd = "/usr/sbin/rabbitmqctl -q cluster_status | awk '/disc/,/\},/' | grep -c test-controller | grep #{config[:expected]}"
+    cmd = "/usr/sbin/rabbitmqctl -q cluster_status | awk '/disc/,/\},/' | awk '/@/ {++nodes} END {print nodes}' | grep #{config[:expected]}"
     system(cmd)
 
     if $?.exitstatus == 0
