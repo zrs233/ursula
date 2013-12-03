@@ -2,8 +2,15 @@
 
 source $(dirname $0)/../share/common
 
+usage() {
+  echo "Usage: $0 <environment> <playbook>"
+  exit -1
+}
+
 ENV=$1
 PLAYBOOK=$2
+PREDEPLOY_PLAYBOOK=${ENV}/playbooks/predeploy.yml
+POSTDEPLOY_PLAYBOOK=${ENV}/playbooks/postdeploy.yml
 HOSTS=${ENV}/hosts
 SSH_CONFIG=${ENV}/ssh_config
 
@@ -11,7 +18,15 @@ if [ -e ${SSH_CONFIG} ]; then
   export ANSIBLE_SSH_ARGS="$ANSIBLE_SSH_ARGS -F ${SSH_CONFIG}"
 fi
 
-$(ansible_command \
-  ${HOSTS} \
-  "root" \
-  ${PLAYBOOK})
+if [ -z $ENV ] || [ -z $PLAYBOOK ]; then
+  usage
+fi
+
+for PBOOK in $PREDEPLOY_PLAYBOOK $PLAYBOOK $POSTDEPLOY_PLAYBOOK; do
+  if [ -f $PBOOK ]; then
+    $(ansible_command \
+      ${HOSTS} \
+      "root" \
+      ${PBOOK})
+  fi
+done
