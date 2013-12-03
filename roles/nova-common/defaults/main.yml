@@ -1,4 +1,7 @@
 ---
+nova_common:
+  patches:
+
 nova_common_rev: 6bf7e78a6dc
 
 nova_common_compute_driver: nova.virt.libvirt.LibvirtDriver

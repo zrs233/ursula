@@ -5,10 +5,23 @@
 - apt: pkg=python-mysqldb
 - apt: pkg=python-numpy
 
+- name: create nova patches directory
+  file: path=/opt/stack/patches/nova/ state=directory owner=root group=root mode=0755
+
+- name: download nova patches
+  get_url: url={{ item }} dest=/opt/stack/patches/nova/
+  with_items: nova_common.patches
+  when: nova_common.patches is defined and nova_common.patches is not None
+
+- name: register nova patches
+  command: ls /opt/stack/patches/nova/
+  register: nova_common_patchfiles
+
 - name: get nova source repo
   git: |
     repo={{ openstack.git_mirror }}/nova.git dest=/opt/stack/nova version={{ nova_common_rev }} depth=5
   notify:
+    - patch nova
     - pip install nova
     - nova rootwrap
     - restart nova services
