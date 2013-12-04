@@ -1,19 +1,28 @@
 #!/usr/bin/env bash
 
+if [ $# -gt 0 -a "$1" != "test" -a "$1" != "deploy" ]; then
+  echo "Usage: run [test | deploy]"
+  exit 1
+fi
+
 source $(dirname $0)/common
 
 cd ${root}
 export ANSIBLE_SSH_ARGS="${ssh_args}"
 echo ${ANSIBLE_SSH_ARGS}
 
-time $(ansible_command \
-  "envs/test/hosts" \
-  ${login_user} \
-  "site.yml" \
-  "true")
+if [ $# -eq 0 -o  "$1" == "deploy" ]; then
+  time $(ansible_command \
+    "envs/test/hosts" \
+    ${login_user} \
+    "site.yml" \
+    "true")
+fi
 
+if [ $# -eq 0 -o  "$1" == "test" ]; then
 time $(ansible_command \
   "envs/test/hosts" \
   ${login_user} \
   ${root}/playbooks/tests/tasks/main.yml \
   "true")
+fi
