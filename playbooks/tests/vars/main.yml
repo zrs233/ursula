@@ -13,25 +13,26 @@ test_security_group_rules:
   - { proto: 'tcp', port: 22, state: 'present' }
   - { proto: 'tcp', port: 80, state: 'present' }
   - { proto: 'tcp', port: 443, state: 'present' }
-  - { proto: 'tcp', port: 3306, state: 'present' }
-  - { proto: 'tcp', port: 4369, state: 'present' }
-  - { proto: 'tcp', port: 4444, state: 'present' }
-  - { proto: 'tcp', port: 4567, state: 'present' }
-  - { proto: 'tcp', port: 4568, state: 'present' }
-  - { proto: 'tcp', port: 5000, state: 'present' }
-  - { proto: 'tcp', port: 5001, state: 'present' }
-  - { proto: 'tcp', port: 5672, state: 'present' }
-  - { proto: 'tcp', port: 8080, state: 'present' }
-  - { proto: 'tcp', port: 8774, state: 'present' }
-  - { proto: 'tcp', port: 8776, state: 'present' }
-  - { proto: 'tcp', port: 8777, state: 'present' }
-  - { proto: 'tcp', port: 8778, state: 'present' }
-  - { proto: 'tcp', port: 9292, state: 'present' }
-  - { proto: 'tcp', port: 9393, state: 'present' }
-  - { proto: 'tcp', port: 9696, state: 'present' }
-  - { proto: 'tcp', port: 9797, state: 'present' }
-  - { proto: 'tcp', port: 11211, state: 'present' }
-  - { proto: 'tcp', port: 35357, state: 'present' }
-  - { proto: 'tcp', port: 35358, state: 'present' }
-  - { proto: 'tcp', port: 65535, state: 'present' }
+  - { proto: 'tcp', port: 3306, state: 'present' }   # mysql
+  # TODO(retr0h): We set port to 65535 (can likely remove this rule).
+  - { proto: 'tcp', port: 4369, state: 'present' }   # erlang portmapper (epmd)
+  - { proto: 'tcp', port: 4444, state: 'present' }   # percona cluster
+  - { proto: 'tcp', port: 4567, state: 'present' }   # percona cluster
+  - { proto: 'tcp', port: 4568, state: 'present' }   # percona cluster
+  - { proto: 'tcp', port: 5000, state: 'present' }   # keystone
+  - { proto: 'tcp', port: 5001, state: 'present' }   # keystone LB SSL
+  - { proto: 'tcp', port: 5672, state: 'present' }   # rabbit
+  - { proto: 'tcp', port: 8080, state: 'present' }   # dashboard
+  - { proto: 'tcp', port: 8774, state: 'present' }   # nova
+  - { proto: 'tcp', port: 8776, state: 'present' }   # cinder
+  - { proto: 'tcp', port: 8777, state: 'present' }   # nova LB SSL
+  - { proto: 'tcp', port: 8778, state: 'present' }   # cinder LB SSL
+  - { proto: 'tcp', port: 9292, state: 'present' }   # glance
+  - { proto: 'tcp', port: 9393, state: 'present' }   # glance LB SSL
+  - { proto: 'tcp', port: 9696, state: 'present' }   # neutron
+  - { proto: 'tcp', port: 9797, state: 'present' }   # neutron LB SSL
+  - { proto: 'tcp', port: 11211, state: 'present' }  # memcached
+  - { proto: 'tcp', port: 35357, state: 'present' }  # keystone admin
+  - { proto: 'tcp', port: 35358, state: 'present' }  # keystone admin LB SSL
+  - { proto: 'tcp', port: 65535, state: 'present' }  # erlang portmapper (epmd)
   - { proto: 'icmp', port: -1, state: 'present' }
