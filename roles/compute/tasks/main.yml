@@ -1,7 +1,7 @@
 ---
 # Ensure this file is written before kvm_intel or kvm_amd module is loaded
 - name: enable nested kvm
-  template: src=etc/modprobe.d/kvm-nested.conf dest=/etc/modprobe.d/kvm-nested.conf
+  template: src=etc/modprobe.d/kvm-nested.conf dest=/etc/modprobe.d/kvm-nested.conf owner=root group=root mode=0644
 
 - action: apt pkg={{ item }}
   with_items:
@@ -17,5 +17,5 @@
 
 - user: name=nova comment=nova shell=/bin/false system=yes home=/nonexistent createhome=no groups=libvirtd
 - file: dest=/var/lib/nova/instances state=directory owner=nova
-- template: src=etc/init/nova-compute.conf dest=/etc/init/nova-compute.conf
+- template: src=etc/init/nova-compute.conf dest=/etc/init/nova-compute.conf owner=root group=root mode=0644
 - service: name=nova-compute state=started
