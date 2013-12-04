@@ -13,6 +13,8 @@
     - python-dev
     - python-httplib2
     - python-software-properties
+    - python-virtualenv
+    - python-mysqldb
 
 - apt: pkg={{ item }}
   with_items:
