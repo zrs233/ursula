@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
-if [ $# -gt 0 -a "$1" != "test" -a "$1" != "deploy" ]; then
+ACTION=all
+if [ $# -gt 0 ]; then
+    ACTION=$1
+fi
+
+if [ "$ACTION" != "all" -a "$ACTION" != "test" -a "$ACTION" != "deploy" ]; then
   echo "Usage: run [test | deploy]"
   exit 1
 fi
@@ -11,7 +16,7 @@ cd ${root}
 export ANSIBLE_SSH_ARGS="${ssh_args}"
 echo ${ANSIBLE_SSH_ARGS}
 
-if [ $# -eq 0 -o  "$1" == "deploy" ]; then
+if [ "$ACTION" == "all" -o "$ACTION" == "deploy" ]; then
   time $(ansible_command \
     "envs/test/hosts" \
     ${login_user} \
@@ -19,10 +24,10 @@ if [ $# -eq 0 -o  "$1" == "deploy" ]; then
     "true")
 fi
 
-if [ $# -eq 0 -o  "$1" == "test" ]; then
-time $(ansible_command \
-  "envs/test/hosts" \
-  ${login_user} \
-  ${root}/playbooks/tests/tasks/main.yml \
-  "true")
+if [ "$ACTION" == "all" -o "$ACTION" == "test" ]; then
+  time $(ansible_command \
+    "envs/test/hosts" \
+    ${login_user} \
+    ${root}/playbooks/tests/tasks/main.yml \
+    "true")
 fi
