@@ -1,4 +1,8 @@
 ---
+# Ensure this file is written before kvm_intel or kvm_amd module is loaded
+- name: enable nested kvm
+  template: src=etc/modprobe.d/kvm-nested.conf dest=/etc/modprobe.d/kvm-nested.conf
+
 - action: apt pkg={{ item }}
   with_items:
     - libvirt-bin
