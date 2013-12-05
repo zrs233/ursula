@@ -1,13 +1,13 @@
 ---
+- hosts: all
+  roles:
+    - common
+
 - name: rabbitmq used by openstack
   hosts: controller
   serial: 1
   roles:
     - rabbitmq
-
-- hosts: all
-  roles:
-    - common
 
 - name: replicated db setup
   include: playbooks/percona.yml
