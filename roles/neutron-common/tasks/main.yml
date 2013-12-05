@@ -1,6 +1,6 @@
 ---
 - name: neutron user
-  user: name=neutron comment=neutron shell=/bin/false system=yes home=/nonexistent createhome=no
+  user: name=neutron shell=/bin/false
 
 - name: get neutron source repo
   git: |
