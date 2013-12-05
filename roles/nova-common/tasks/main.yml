@@ -1,6 +1,6 @@
 ---
 - name: nova user
-  user: name=nova comment=nova shell=/bin/false system=yes home=/nonexistent createhome=no
+  user: name=nova shell=/bin/false
 
 - apt: pkg=python-numpy
 
