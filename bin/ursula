@@ -28,5 +28,11 @@ for PBOOK in $PREDEPLOY_PLAYBOOK $PLAYBOOK $POSTDEPLOY_PLAYBOOK; do
       ${HOSTS} \
       "root" \
       ${PBOOK})
+
+    if [ "$?" != "0" ]; then
+      echo "Run failed on playbook $PBOOK"
+      exit -1
+    fi
   fi
+
 done
