@@ -47,7 +47,7 @@
     - cinder-common
 
 - name: barbican code and config
-  hosts: controller:db
+  hosts: controller
   roles:
     - barbican
 
