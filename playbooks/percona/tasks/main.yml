@@ -4,6 +4,9 @@
   register: my_cnf_exists
   changed_when: False
 
+- name: python-mysqldb package brings in mysql-common
+  apt: pkg=mysql-common purge=yes state=absent
+
 - name: install percona xtradb packages
   register: pkg_installed
   apt: pkg={{ item }} state=installed
