@@ -28,35 +28,3 @@ die() {
 public_ip() {
   nova list | grep "$1" | awk '{print $13}'
 }
-
-# given a vm name, add a floating ip
-add_floating_ip() {
-  echo "adding floating IPs"
-  ensure_free_floating_ip
-
-  nova floating-ip-list | grep $net_name | while read line; do
-    ip=$(echo "$line" | awk '{print $2}')
-    instance=$(echo "$line" | awk -F\| '{print $4}' | tr -d ' ')
-    if [ "$instance" == "None" ]; then
-      echo "reusing floating ip: " $ip
-      nova add-floating-ip $1 $ip
-      break
-    fi
-  done
-}
-
-ensure_free_floating_ip() {
-  if ! nova floating-ip-list | grep $net_name | awk -F\| '{print $4}' | grep None >/dev/null; then
-    echo "creating new floating ip"
-    nova floating-ip-create $net_name
-  fi
-}
-
-# given an ansible host match string, and a command,
-# run the command on the host(s)
-run_on_hosts() {
-  local hosts=$(ansible -i $root/envs/test/hosts --list-hosts "$1" | awk '{print $1}')
-  for host in $hosts; do
-    ssh $ssh_args root@$host "source /root/stackrc; $2"
-  done
-}

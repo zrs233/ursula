@@ -32,12 +32,6 @@ $(ansible_command \
   "root" \
   $root/playbooks/tests/tasks/instances/create.yml)
 
-#TODO(retr0h): Move into an ansible library.
-for vm in $vms; do
-  sleep 15
-  add_floating_ip $vm
-done
-
 echo "waiting for vms to come up"
 for vm in $vms; do
   while ! nova list | grep $vm | grep ACTIVE >/dev/null; do sleep 1; echo -n '.'; done; echo
