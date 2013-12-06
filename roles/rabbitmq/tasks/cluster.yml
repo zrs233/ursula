@@ -81,3 +81,14 @@
                    node={{ rabbitmq_nodename }}
                    pattern='.*'
                    tags=ha-mode=all
+
+- name: install management plugin
+  rabbitmq_plugin: names=rabbitmq_management
+  notify: restart rabbitmq
+- meta: flush_handlers
+
+- name: install rabbitmqadmin
+  get_url: dest=/usr/local/bin/ url={{ rabbitmq_admin_cli_url }} sha256sum={{ rabbitmq_admin_cli_sha }}
+
+- name: correct rabbitmqadmin modes
+  file: group=root owner=root mode=0755 path=/usr/local/bin/rabbitmqadmin
