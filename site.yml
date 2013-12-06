@@ -56,10 +56,14 @@
   roles:
     - db
 
+- name: openstack client tools
+  hosts: all
+  roles:
+    - client
+
 - name: openstack controller services
   hosts: controller
   roles:
-    - client
     - memcached
     - horizon
     - controller
