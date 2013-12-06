@@ -10,3 +10,6 @@
 
 - name: pip install neutronclient
   action: command pip install -i {{ openstack.pypi_mirror }} /opt/stack/python-neutronclient
+
+- name: pip install cinderclient
+  action: command pip install -i {{ openstack.pypi_mirror }} /opt/stack/python-cinderclient
