@@ -15,7 +15,3 @@
     - nova-consoleauth
     - nova-novncproxy
     - nova-scheduler
-
-- name: patch nova
-  patch: basedir=/opt/stack/nova patchfile=/opt/stack/patches/nova/{{ item }} strip=1
-  with_items: nova_common_patchfiles.stdout_lines
