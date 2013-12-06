@@ -10,7 +10,7 @@
 - name: download nova patches
   get_url: url={{ item }} dest=/opt/stack/patches/nova/
   with_items: nova_common.patches
-  when: nova_common.patches is defined and nova_common.patches is not None
+  when: nova_common.patches is defined
 
 - name: register nova patches
   command: ls /opt/stack/patches/nova/

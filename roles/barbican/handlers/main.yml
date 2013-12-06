@@ -14,7 +14,7 @@
 - name: install additional barbican python packages
   command: /opt/stack/barbican/.venv/bin/pip install {{item}}
   with_items: barbican.additional_pips
-  when: barbican.additional_pips is defined and barbican.additional_pips is not None
+  when: barbican.additional_pips is defined
 
 - name: restart barbican service
   restart_if_present: service=barbican
