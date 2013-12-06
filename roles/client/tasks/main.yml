@@ -33,3 +33,11 @@
     version={{ client_neutronclient_rev }}
   notify:
     - pip install neutronclient
+
+- name: cinder-client
+  git: |
+    repo={{ openstack.git_mirror }}/python-cinderclient.git
+    dest=/opt/stack/python-cinderclient
+    version={{ client_cinderclient_rev }}
+  notify:
+    - pip install cinderclient
