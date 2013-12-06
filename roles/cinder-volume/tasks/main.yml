@@ -1,6 +1,7 @@
 ---
 - apt: pkg={{ item }}
   with_items:
+    - cryptsetup
     - lvm2
     - tgt
     - nbd-client
@@ -13,7 +14,13 @@
 
 # TODO: allow for device-backed VGs in addition to file-backed VGs
 - name: cinder volume group
-  cinder_volume_group: file={{ cinder.volume_file }} size={{ cinder.volume_file_size }}
+  cinder_volume_group: >
+    file={{ cinder.volume_file }}
+    size={{ cinder.volume_file_size }}
+    passphrase={{ cinder.passphrase }}
+
+- name: create cinder-volumes crypttab entry
+  crypttab: state=present target=cinder-volumes source=/opt/stack/cinder-volumes opts=luks,aes,noauto
 
 - name: cinder-volume start script
   template: src=etc/init/cinder-volume.conf dest=/etc/init/cinder-volume.conf mode=0644

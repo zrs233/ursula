@@ -67,6 +67,7 @@ nova_common_metadata_api_workers: 1
 cinder:
   volume_file: /opt/stack/cinder-volumes
   volume_file_size: 5G
+  passphrase: asdf
   volume_types:
     - encrypted-aes-256
     - encrypted-aes-128
