@@ -46,11 +46,6 @@
   roles:
     - cinder-common
 
-- name: barbican code and config
-  hosts: controller
-  roles:
-    - barbican
-
 - name: dbs, db users, db schema updates
   hosts: db[0]
   roles:
