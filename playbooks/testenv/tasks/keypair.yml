@@ -2,7 +2,7 @@
   hosts: local
   connection: local
   vars_files:
-  - ../../vars/main.yml
+  - ../vars/main.yml
   tasks:
     - name: create the keypair
       register: test_keypair

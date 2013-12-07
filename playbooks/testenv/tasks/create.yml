@@ -3,7 +3,7 @@
   hosts: local
   connection: local
   vars_files:
-  - ../../vars/main.yml
+  - ../vars/main.yml
   tasks:
     - name: register security group id
       shell: source ~/.stackrc; nova secgroup-list | grep {{ test_security_groups }} | awk '{print $2}'
