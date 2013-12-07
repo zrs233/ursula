@@ -7,4 +7,4 @@
   tasks:
     - name: delete {{ item }}
       local_action: nova_compute name={{ item }} state=absent
-      with_items: test_instance_names
+      with_items: testenv_instance_names

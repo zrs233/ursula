@@ -4,6 +4,9 @@ source $(dirname $0)/common
 
 $root/test/check-deps
 
+export ANSIBLE_SSH_ARGS="${ssh_args}"
+echo ${ANSIBLE_SSH_ARGS}
+
 echo "writing initial inventory file"
 mkdir -p $root/envs/test
 cat > $root/envs/test/hosts <<eof
@@ -14,45 +17,14 @@ eof
 echo "destroying: $vms"
 $root/test/cleanup
 
-echo "setting up keypair"
-$(ansible_command \
-  "envs/test/hosts" \
-  "root" \
-  $root/playbooks/testenv/tasks/keypair.yml)
-
-echo "setting up security group"
-$(ansible_command \
-  "envs/test/hosts" \
-  "root" \
-  $root/playbooks/testenv/tasks/security_groups.yml)
-
 echo "booting vms"
 $(ansible_command \
   "envs/test/hosts" \
   "root" \
   $root/playbooks/testenv/tasks/create.yml)
 
-echo "waiting for vms to come up"
-for vm in $vms; do
-  while ! nova list | grep $vm | grep ACTIVE >/dev/null; do sleep 1; echo -n '.'; done; echo
-  ip=$(public_ip $vm)
-  echo "$vm $ip: waiting for sshd"
-  until echo '' | nc $ip 22 2>&1 >/dev/null; do echo -n '.'; sleep 1; done
-
-  # hostkeys are currently not generated until a few seconds after sshd comes up.
-  until ssh $ssh_args $login_user@$ip uptime 2>&1 >/dev/null; do
-    echo -n '.'
-    sleep 1
-  done
-
-  ssh $ssh_args $login_user@$ip "echo '127.0.1.1 $vm' | sudo tee -a /etc/hosts"
-
-  ssh $ssh_args $login_user@$ip sudo mkdir -p /root/.ssh 2>&1 >/dev/null
-  ssh $ssh_args $login_user@$ip sudo cp /home/$login_user/.ssh/authorized_keys /root/.ssh/. 2>&1 >/dev/null
-done
-controller_ip=$(public_ip test-controller-0)
-
 echo "building config"
+controller_ip=$(public_ip test-controller-0)
 rm -rf $root/envs/test/group_vars/
 rm -f $root/envs/test/hosts
 mkdir -p $root/envs/test/
@@ -95,5 +67,12 @@ $(public_ip "test-compute-0")
 [network]
 $(public_ip "test-controller-0")
 eof
+
+echo "copying files"
+$(ansible_command \
+  "envs/test/hosts" \
+  ${login_user} \
+  $root/playbooks/testenv/tasks/pre-deploy.yml \
+  "true")
 
 echo "vms are up: $vms !!"
