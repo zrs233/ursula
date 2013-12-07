@@ -3,7 +3,7 @@
   hosts: local
   connection: local
   vars_files:
-  - ../../vars/main.yml
+  - ../vars/main.yml
   tasks:
     - name: create the security group and rules
       local_action:

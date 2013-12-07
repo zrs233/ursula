@@ -18,19 +18,19 @@ echo "setting up keypair"
 $(ansible_command \
   "envs/test/hosts" \
   "root" \
-  $root/playbooks/tests/tasks/instances/keypair.yml)
+  $root/playbooks/testenv/tasks/keypair.yml)
 
 echo "setting up security group"
 $(ansible_command \
   "envs/test/hosts" \
   "root" \
-  $root/playbooks/tests/tasks/instances/security_groups.yml)
+  $root/playbooks/testenv/tasks/security_groups.yml)
 
 echo "booting vms"
 $(ansible_command \
   "envs/test/hosts" \
   "root" \
-  $root/playbooks/tests/tasks/instances/create.yml)
+  $root/playbooks/testenv/tasks/create.yml)
 
 echo "waiting for vms to come up"
 for vm in $vms; do

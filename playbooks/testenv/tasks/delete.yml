@@ -3,7 +3,7 @@
   hosts: local
   connection: local
   vars_files:
-  - ../../vars/main.yml
+  - ../vars/main.yml
   tasks:
     - name: delete {{ item }}
       local_action: nova_compute name={{ item }} state=absent
