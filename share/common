@@ -1,3 +1,5 @@
+set -eu
+
 ansible_command() {
   local inventory=$1
   local user=$2
