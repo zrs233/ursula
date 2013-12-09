@@ -1,12 +1,7 @@
-- name: provision test keypair
-  hosts: local
-  connection: local
-  vars_files:
-  - ../vars/main.yml
-  tasks:
-    - name: create the keypair
-      register: test_keypair
-      local_action: nova_keypair name={{ test_keypair_name }} state=present
-    - name: persist the keypair
-      shell: OLD_UMASK=`umask`; umask 0077; echo "{{ test_keypair.key }}" > {{ test_keypair_path }}; umask ${OLD_UMASK}
-      when: test_keypair.changed == True
+---
+- name: create the keypair
+  register: testenv_keypair
+  local_action: nova_keypair name={{ testenv_keypair_name }} state=present
+- name: persist the keypair
+  shell: OLD_UMASK=`umask`; umask 0077; echo "{{ testenv_keypair.key }}" > {{ testenv_keypair_path }}; umask ${OLD_UMASK}
+  when: testenv_keypair.changed == True

@@ -1,15 +1,16 @@
 ---
-test_instance_names:
+testenv_instance_names:
   - test-controller-0
   - test-controller-1
   - test-compute-0
-test_keypair_name: int-test
-test_keypair_path: "{{ ansible_env.root }}/envs/test/{{ test_keypair_name }}.pem"
-test_image_id: f1496b58-0f51-4f91-b1da-517b1ad38162
-test_security_groups: ursula
-test_net_id: 0b2f1eae-6abf-432c-b740-a72742abda24
-test_security_groups: ursula
-test_security_group_rules:
+testenv_keypair_name: int-test
+testenv_keypair_path: "{{ ansible_env.root }}/envs/test/{{ test_keypair_name }}.pem"
+testenv_image_id: f1496b58-0f51-4f91-b1da-517b1ad38162
+testenv_security_groups: ursula
+testenv_security_groups_description: Rules for testing
+testenv_net_id: 0b2f1eae-6abf-432c-b740-a72742abda24
+testenv_security_groups: ursula
+testenv_security_group_rules:
   - { proto: 'tcp', port: 22, state: 'present' }
   - { proto: 'tcp', port: 80, state: 'present' }
   - { proto: 'tcp', port: 443, state: 'present' }
