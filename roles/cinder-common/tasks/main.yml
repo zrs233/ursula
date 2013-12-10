@@ -4,7 +4,7 @@
 
 - name: get cinder source repo
   git: |
-    repo={{ openstack.git_mirror }}/cinder.git dest=/opt/stack/cinder version={{ cinder_common_rev }}
+    repo={{ openstack.git_mirror }}/cinder.git dest=/opt/stack/cinder version={{ cinder.rev }}
   notify:
     - pip install cinder
     - cinder rootwrap

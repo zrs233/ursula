@@ -85,9 +85,9 @@ SECRET_KEY = "{{ secrets.horizon_secret_key }}"
 {% macro memcached_hosts() -%}
 {% for host in groups['controller'] -%}
    {% if loop.last -%}
-'{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}:{{ memcached_port }}'
+'{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}:{{ memcached.port }}'
    {%- else -%}
-'{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}:{{ memcached_port }}',
+'{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}:{{ memcached.port }}',
    {%- endif -%}
 {% endfor -%}
 {% endmacro -%}
