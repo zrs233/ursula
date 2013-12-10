@@ -62,3 +62,11 @@
   when: rabbitmq_cluster
 - sensu_check: name=rabbitmq-queues plugin=check-rabbitmq-queues.rb use_sudo=true
   notify: restart sensu-client
+
+# memcached
+
+- sensu_check: name=memcached-stats plugin=check-memcached-stats.rb args='--host={{ ansible_eth0["ipv4"]["address"] }}'
+  notify: restart sensu-client
+
+- sensu_check: name=memcached-graphite plugin=memcached-graphite.rb args='--host={{ ansible_eth0["ipv4"]["address"] }} --scheme=stats.{{ inventory_hostname  }}'
+  notify: restart sensu-client
