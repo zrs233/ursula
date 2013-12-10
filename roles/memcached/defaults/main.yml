@@ -1,5 +1,6 @@
 ---
-memcached_port: 11211
-memcached_user: nobody
-memcached_memory: 1024
-memcached_max_connections: 1024
+memcached:
+  port: 11211
+  user: nobody
+  memory: 1024
+  max_connections: 1024

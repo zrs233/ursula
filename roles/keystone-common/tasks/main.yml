@@ -7,7 +7,7 @@
 
 - name: get keystone source repo
   git: |
-    repo={{ openstack.git_mirror }}/keystone.git dest=/opt/stack/keystone version={{ keystone_common_rev }}
+    repo={{ openstack.git_mirror }}/keystone.git dest=/opt/stack/keystone version={{ keystone.rev }}
   notify:
     - pip install keystone
     - restart keystone services

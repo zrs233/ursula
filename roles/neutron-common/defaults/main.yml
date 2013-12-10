@@ -1,6 +1,6 @@
 ---
-neutron_common_rev: 02cd640e4a7ef9b
-
-neutron_common_dhcp_dns_servers:
-  - 8.8.8.8
-  - 8.8.4.4
+neutron:
+  rev: 02cd640e4a7ef9b
+  dhcp_dns_servers:
+    - 8.8.8.8
+    - 8.8.4.4

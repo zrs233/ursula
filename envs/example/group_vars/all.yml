@@ -20,7 +20,8 @@ etc_hosts:
   - name: *fqdn
     ip: *floating_ip
 
-rabbitmq_cluster: true
+rabbitmq:
+  cluster: true
 
 endpoints:
   main:     *controller
@@ -58,11 +59,13 @@ openstack:
   pypi_mirror: http://pypi.openstack.org/openstack
   git_mirror:  https://review.openstack.org/openstack
 
-client_self_signed_cert: true
+client:
+  self_signed_cert: true
 
-nova_common_libvirt_type: qemu
-nova_common_api_workers: 1
-nova_common_metadata_api_workers: 1
+nova:
+  libvirt_type: qemu
+  api_workers: 1
+  metadata_api_workers: 1
 
 cinder:
   volume_file: /opt/stack/cinder-volumes
@@ -112,8 +115,8 @@ neutron:
       subnet_name: internal
       tenant_name: admin
 
-glance_common_api_workers: 1
 glance:
+  api_workers: 1
   images:
     - name: cirros
       url: https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img

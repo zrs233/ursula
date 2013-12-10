@@ -1,3 +1,4 @@
 ---
-controller_novnc_repo: https://github.com/kanaka/noVNC.git
-controller_novnc_rev: 292f6a5d
+controller:
+  novnc_repo: https://github.com/kanaka/noVNC.git
+  novnc_rev: 292f6a5d

@@ -4,7 +4,7 @@
 
 - name: get glance source repo
   git: |
-    repo={{ openstack.git_mirror }}/glance.git dest=/opt/stack/glance version={{ glance_common_rev }}
+    repo={{ openstack.git_mirror }}/glance.git dest=/opt/stack/glance version={{ glance.rev }}
   notify:
     - pip install glance
     - restart glance services

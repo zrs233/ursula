@@ -14,7 +14,7 @@
 
 - name: get horizon source repo
   git: |
-    repo={{ openstack.git_mirror}}/horizon.git dest=/opt/stack/horizon version={{ horizon_rev }}
+    repo={{ openstack.git_mirror}}/horizon.git dest=/opt/stack/horizon version={{ horizon.rev }}
   notify:
     - horizon venv
     - restart apache
@@ -45,13 +45,13 @@
     - restart apache
 
 - name: custom horizon logo
-  get_url: url={{ horizon_logo_url }} dest=/opt/stack/horizon/openstack_dashboard/static/dashboard/img/logo.png mode=0644 force=yes
+  get_url: url={{ horizon.logo_url }} dest=/opt/stack/horizon/openstack_dashboard/static/dashboard/img/logo.png mode=0644 force=yes
 
 - name: custom horizon splash logo
-  get_url: url={{ horizon_logo_url }} dest=/opt/stack/horizon/openstack_dashboard/static/dashboard/img/logo-splash.png mode=0644 force=yes
+  get_url: url={{ horizon.logo_url }} dest=/opt/stack/horizon/openstack_dashboard/static/dashboard/img/logo-splash.png mode=0644 force=yes
 
 - name: custom horizon favicon
-  get_url: url={{ horizon_favicon_url }} dest=/opt/stack/horizon/openstack_dashboard/static/dashboard/img/favicon.ico force=yes
+  get_url: url={{ horizon.favicon_url }} dest=/opt/stack/horizon/openstack_dashboard/static/dashboard/img/favicon.ico force=yes
 
 - name: static asset directory
   file: dest=/opt/stack/horizon/static state=directory owner=www-data group=www-data mode=0755

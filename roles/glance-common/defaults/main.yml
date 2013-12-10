@@ -1,4 +1,4 @@
 ---
-glance_common_rev: 252fe8572400c25c35
-
-glance_common_api_workers: 5
+glance:
+  rev: 252fe8572400c25c35
+  api_workers: 5

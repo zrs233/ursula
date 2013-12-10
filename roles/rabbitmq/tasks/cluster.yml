@@ -72,13 +72,13 @@
 
 - name: wait for rabbit to start
   wait_for: >
-    port={{ rabbitmq_port }}
+    port={{ rabbitmq.port }}
     host={{ ansible_eth0["ipv4"]["address"] }}
     delay=2
 
 - name: set the HA mirror queues policy
   rabbitmq_policy: name=HA
-                   node={{ rabbitmq_nodename }}
+                   node={{ rabbitmq.nodename }}
                    pattern='.*'
                    tags=ha-mode=all
 
@@ -88,7 +88,7 @@
 - meta: flush_handlers
 
 - name: install rabbitmqadmin
-  get_url: dest=/usr/local/bin/ url={{ rabbitmq_admin_cli_url }} sha256sum={{ rabbitmq_admin_cli_sha }}
+  get_url: dest=/usr/local/bin/ url={{ rabbitmq.admin_cli_url }} sha256sum={{ rabbitmq.admin_cli_sha }}
 
 - name: correct rabbitmqadmin modes
   file: group=root owner=root mode=0755 path=/usr/local/bin/rabbitmqadmin

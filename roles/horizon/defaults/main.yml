@@ -1,4 +1,5 @@
 ---
-horizon_rev: a93c611e71
-horizon_logo_url: https://s3.amazonaws.com/horizon-branding/bluebox.png
-horizon_favicon_url: https://s3.amazonaws.com/horizon-branding/bluebox.ico
+horizon:
+  rev: a93c611e71
+  logo_url: https://s3.amazonaws.com/horizon-branding/bluebox.png
+  favicon_url: https://s3.amazonaws.com/horizon-branding/bluebox.ico
