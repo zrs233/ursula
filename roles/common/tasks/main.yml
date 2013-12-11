@@ -38,3 +38,4 @@
 # run this last so we only update if run was successful
 - name: drop an motd with ursula metadata
   action: template src=etc/motd.tail dest=/etc/motd.tail mode=0644
+  changed_when: False
