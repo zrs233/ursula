@@ -10,11 +10,10 @@ ansible_command() {
   cmd[1]="--inventory-file ${inventory}"
   cmd[2]="--user ${user}"
   cmd[3]='--module-path ./library'
-  cmd[4]='--connection ssh'
   if [[ -n "${sudo}" ]]; then
-    cmd[5]='--sudo'
+    cmd[4]='--sudo'
   fi
-  cmd[6]=${playbook}
+  cmd[5]=${playbook}
 
   echo ${cmd[@]}
 }
@@ -29,8 +28,6 @@ if [ ! -d $HOME/.ssh/controlmasters ]; then
     fi
 fi
 
-export ANSIBLE_NOCOWS=1
-export ANSIBLE_FORCE_COLOR=yes
 export ANSIBLE_SSH_ARGS=\
 ' -o ControlMaster=auto'\
 ' -o ControlPath=~/.ssh/controlmasters/ursula-%l-%r@%h:%p'\
