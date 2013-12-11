@@ -16,7 +16,3 @@
     - nova-conductor
     - nova-consoleauth
     - nova-scheduler
-
-- name: obtain admin tenant-id
-  shell: . ~/stackrc && keystone tenant-list | grep admin | awk '{print $2}'
-  register: admin_tenant_id
