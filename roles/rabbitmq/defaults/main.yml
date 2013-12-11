@@ -7,4 +7,3 @@ rabbitmq:
   port: 5672
   management_port: 15672
   admin_cli_url: 'http://localhost:15672/cli/rabbitmqadmin'
-  admin_cli_sha: 1d58218258edcb5502cb2781cbd186abeb253dca9519e545ba42a544b1121f3e

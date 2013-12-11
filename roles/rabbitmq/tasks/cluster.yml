@@ -88,7 +88,7 @@
 - meta: flush_handlers
 
 - name: install rabbitmqadmin
-  get_url: dest=/usr/local/bin/ url={{ rabbitmq.admin_cli_url }} sha256sum={{ rabbitmq.admin_cli_sha }}
+  get_url: dest=/usr/local/bin/ url={{ rabbitmq.admin_cli_url }}
 
 - name: correct rabbitmqadmin modes
   file: group=root owner=root mode=0755 path=/usr/local/bin/rabbitmqadmin
