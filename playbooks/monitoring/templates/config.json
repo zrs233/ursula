@@ -11,7 +11,7 @@
   },
   "rabbitmq": {
     "host": "{{ monitoring.rabbit.host }}",
-    "port": "{{ monitoring.rabbit.port }}",
+    "port": {{ monitoring.rabbit.port }},
     "user": "{{ monitoring.rabbit.user }}",
     "password": "{{ monitoring.rabbit.pass }}",
     "vhost": "/sensu"
