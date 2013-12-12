@@ -1,6 +1,28 @@
 ---
-# TODO: don't run if db is up to date.
+# keystone
+- shell: echo 'select version from migrate_version' | mysql keystone | egrep "^$(keystone-manage db_version)$"
+  register: keystone_db_current
+  changed_when: False
 - command: keystone-manage db_sync
-- command: glance-manage db_sync
+  when: keystone_db_current.rc != 0
+
+# nova
+- shell: echo 'select version from migrate_version' | mysql nova | egrep "^$(nova-manage db version)$"
+  register: nova_db_current
+  changed_when: False
 - command: nova-manage db sync
+  when: nova_db_current.rc != 0
+
+# glance
+- shell: echo 'select version from migrate_version' | mysql glance | egrep "^$(glance-manage db_version)$"
+  register: glance_db_current
+  changed_when: False
+- command: glance-manage db_sync
+  when: glance_db_current.rc != 0
+
+# cinder
+- shell: echo 'select version from migrate_version' | mysql cinder | egrep "^$(cinder-manage db version)$"
+  register: cinder_db_current
+  changed_when: False
 - command: cinder-manage db sync
+  when: cinder_db_current.rc != 0
