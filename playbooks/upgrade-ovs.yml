@@ -1,0 +1,79 @@
+---
+- name: check the version of openvswitch
+  hosts: all
+  tasks:
+    - command: "/usr/bin/test `dpkg -l | /bin/grep openvswitch-common | /usr/bin/awk '{print $3}' | /bin/sed 's/-.*//g'` != openvswitch.version"
+
+- name: stop neutron services on all hosts
+  hosts: all
+  tasks:
+    - service: name={{ item }} state=stopped
+      with_items:
+        - neutron-openvswitch-agent
+
+- name: stop neutron services on network nodes
+  hosts: network
+  tasks:
+    - service: name={{ item }} state=stopped
+      with_items:
+        - neutron-server
+		- neutron-dhcp-agent
+		- neutron-l3-agent
+		- neutron-openvswitch-agent
+		- neutron-ns-metadata-proxy
+		- neutron-metadata-agent
+		- neutron-ns-metadata-proxy
+
+- name: backup the ovs database
+  hosts: all
+  tasks:
+    - command: /bin/cp /etc/openvswitch/conf.db /etc/openvswitch/conf.db-backup`date +"%s.%N"`
+
+- name: update the ovs packages
+  hosts: all
+  tasks:
+    - apt: pkg={{ item }}
+      with_items:
+        - openvswitch-common
+        - openvswitch-datapath-dkms
+        - openvswitch-switch
+
+- name: upgrade the ovs database
+  hosts: all
+  tasks:
+    - command: /usr/bin/ovsdb-tool convert /etc/openvswitch/conf.db /usr/share/openvswitch/vswitch.ovsschema
+
+- name: rmmod ovs kernel module
+  hosts: all
+  tasks:
+    - command: /sbin/rmmod openvswitch
+
+- name: modprobe ovs kernel module
+  hosts: all
+  tasks:
+    - command: /sbin/modprobe openvswitch
+
+- name: restart all ovs services
+  hosts: all
+  tasks:
+    - service: name=openvswitch-switch state=restarted enabled=yes
+
+- name: start neutron services on network nodes
+  hosts: network
+  tasks:
+    - service: name={{ item }} state=started
+      with_items:
+        - neutron-server
+        - neutron-dhcp-agent
+        - neutron-l3-agent
+        - neutron-openvswitch-agent
+        - neutron-ns-metadata-proxy
+        - neutron-metadata-agent
+        - neutron-ns-metadata-proxy
+
+- name: start neutron services on all hosts
+  hosts: all
+  tasks:
+    - service: name={{ item }} state=started
+      with_items:
+        - neutron-openvswitch-agent
