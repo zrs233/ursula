@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'antsy'
+
+# run the specified shell command, and output exit status.
+# this module will always report success+no-change.
+
+system File.read(ARGV.first)
+Antsy.no_change!({:status => $?.to_i })
