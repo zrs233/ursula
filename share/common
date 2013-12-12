@@ -19,13 +19,13 @@ ansible_command() {
 }
 
 # Safely create a controlmasters directory
-if [ ! -d $HOME/.ssh/controlmasters ]; then
-    if [ -e $HOME/.ssh/controlmasters ]; then
-        echo "$HOME/.ssh/controlmasters exists and is not a directory"
-    else
-        mkdir $HOME/.ssh/controlmasters && \
-        chmod 700 $HOME/.ssh/controlmasters
-    fi
+if [ ! -d ~/.ssh/controlmasters ]; then
+  if [ -e ~/.ssh/controlmasters ]; then
+    echo "~/.ssh/controlmasters exists and is not a directory"
+  else
+    mkdir ~/.ssh/controlmasters && \
+    chmod 700 ~/.ssh/controlmasters
+  fi
 fi
 
 export ANSIBLE_SSH_ARGS=\

@@ -3,23 +3,24 @@ set -eu
 [[ -f ~/.stackrc ]] && source ~/.stackrc
 source $(dirname $0)/../share/common
 
-export root="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
-vms="test-controller-0 test-controller-1 test-compute-0"
-key_name=int-test
-key_path=$root/envs/test/${key_name}.pem
-login_user=ubuntu
-ssh_args=\
-" $ANSIBLE_SSH_ARGS"\
+export ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
+VMS="test-controller-0 test-controller-1 test-compute-0"
+KEY_NAME=int-test
+KEY_PATH=${ROOT}/envs/test/${KEY_NAME}.pem
+LOGIN_USER=ubuntu
+SSH_ARGS=\
+" ${ANSIBLE_SSH_ARGS}"\
 ' -o LogLevel=quiet'\
 ' -o StrictHostKeyChecking=no'\
 ' -o UserKnownHostsFile=/dev/null'\
-" -i $key_path"
+" -i ${KEY_PATH}"
+export ANSIBLE_SSH_ARGS="${SSH_ARGS}"
 
 die() {
   echo "[ERROR] $*"; exit 1
 }
 
-# given a vm name, return its public ip
+# Given a vm name, return its public ip
 public_ip() {
   nova list | grep "$1" | awk '{print $13}'
 }

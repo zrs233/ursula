@@ -15,24 +15,23 @@ HOSTS=${ENV}/hosts
 SSH_CONFIG=${ENV}/ssh_config
 
 if [ -e ${SSH_CONFIG} ]; then
-  export ANSIBLE_SSH_ARGS="$ANSIBLE_SSH_ARGS -F ${SSH_CONFIG}"
+  export ANSIBLE_SSH_ARGS="${ANSIBLE_SSH_ARGS} -F ${SSH_CONFIG}"
 fi
 
-if [ -z $ENV ] || [ -z $PLAYBOOK ]; then
+if [ -z ${ENV} ] || [ -z ${PLAYBOOK} ]; then
   usage
 fi
 
-for PBOOK in $PREDEPLOY_PLAYBOOK $PLAYBOOK $POSTDEPLOY_PLAYBOOK; do
-  if [ -f $PBOOK ]; then
+for pbook in ${PREDEPLOY_PLAYBOOK} ${PLAYBOOK} ${POSTDEPLOY_PLAYBOOK}; do
+  if [ -f ${pbook} ]; then
     $(ansible_command \
       ${HOSTS} \
       "root" \
-      ${PBOOK})
+      ${pbook})
 
     if [ "$?" != "0" ]; then
-      echo "Run failed on playbook $PBOOK"
+      echo "Run failed on playbook ${pbook}"
       exit -1
     fi
   fi
-
 done

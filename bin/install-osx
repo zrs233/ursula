@@ -10,7 +10,7 @@ install_pip() {
 
 pip_pkgs() {
   for pkg in $*; do
-    pip freeze | grep $pkg || pip install $pkg
+    pip freeze | grep ${pkg} || pip install ${pkg}
   done
 }
 
