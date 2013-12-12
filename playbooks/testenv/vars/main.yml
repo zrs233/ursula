@@ -33,6 +33,7 @@ testenv_security_group_rules:
   - { proto: 'tcp', port: 9696, state: 'present' }   # neutron
   - { proto: 'tcp', port: 9797, state: 'present' }   # neutron LB SSL
   - { proto: 'tcp', port: 11211, state: 'present' }  # memcached
+  - { proto: 'tcp', port: 25307, state: 'present' }  # btsync (glance images)
   - { proto: 'tcp', port: 35357, state: 'present' }  # keystone admin
   - { proto: 'tcp', port: 35358, state: 'present' }  # keystone admin LB SSL
   - { proto: 'tcp', port: 65535, state: 'present' }  # erlang portmapper (epmd)

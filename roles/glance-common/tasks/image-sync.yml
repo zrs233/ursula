@@ -1,0 +1,20 @@
+- name: add btsync ppa repository
+  apt_repository: repo='ppa:tuxpoldo/btsync' update_cache=yes
+
+- name: install btsync
+  apt: pkg=btsync
+
+- name: remove default config
+  file: dest=/etc/btsync/debconf-default.conf state=absent
+  notify:
+    - restart btsync
+
+- name: btsync config
+  template: >
+    src=etc/btsync/glance-cache.conf
+    dest=/etc/btsync/
+    owner=root
+    group=root
+    mode=0600
+  notify:
+    - restart btsync

@@ -11,6 +11,8 @@
     shell: date | grep UTC
   - name: glance api has proper workers
     shell: grep 'workers = 1' /etc/glance/glance-api.conf
+  - name: glance replicated images
+    shell: test -f /var/lib/glance/images/[a-b0-9]*
   - name: keystone config has memcached servers
     shell: egrep "servers = [0-9.]+:11211,[0-9.]+" /etc/keystone/keystone.conf
   - name: neutron dnsmasq has 8.8.8.8 upstream resolver

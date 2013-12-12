@@ -2,3 +2,12 @@
 glance:
   rev: 252fe8572400c25c35
   api_workers: 5
+  sync:
+    enabled: true
+    listening_port: 25307
+    download_limit: 0
+    upload_limit: 0
+    folder_rescan_interval: 600
+    storage_path: /var/lib/btsync
+    device_name: image-cache
+    dir: /var/lib/glance/images

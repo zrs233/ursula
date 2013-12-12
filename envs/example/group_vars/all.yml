@@ -12,6 +12,7 @@ secrets:
   provider_admin_password:   &provider_admin_password ghij
   metadata_proxy_shared_secret: asdf
   horizon_secret_key:           asdf
+  glance_sync:      ADQ64XUQLUWH75M634RVBLP55RKPGGOWG
 
 fqdn: &fqdn openstack.example.com
 floating_ip: &floating_ip 173.247.112.252
