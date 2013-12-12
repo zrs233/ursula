@@ -43,15 +43,10 @@
   tasks:
     - command: /usr/bin/ovsdb-tool convert /etc/openvswitch/conf.db /usr/share/openvswitch/vswitch.ovsschema
 
-- name: rmmod ovs kernel module
+- name: force reload the kernel modules
   hosts: all
   tasks:
-    - command: /sbin/rmmod openvswitch
-
-- name: modprobe ovs kernel module
-  hosts: all
-  tasks:
-    - command: /sbin/modprobe openvswitch
+    - command: /etc/init.d/openvswitch-switch force-reload-kmod
 
 - name: restart all ovs services
   hosts: all
