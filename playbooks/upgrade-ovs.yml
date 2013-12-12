@@ -2,7 +2,7 @@
 - name: check the version of openvswitch
   hosts: all
   tasks:
-    - command: "/usr/bin/test `dpkg -l | /bin/grep openvswitch-common | /usr/bin/awk '{print $3}' | /bin/sed 's/-.*//g'` != openvswitch.version"
+    - command: "/usr/bin/test `/usr/bin/dpkg -s openvswitch-common | /usr/bin/awk '/^Version/ {print $2}'` != {{ openvswitch.version }}"
 
 - name: stop neutron services on all hosts
   hosts: all
