@@ -22,3 +22,7 @@
   with_fileglob: ../templates/etc/glance/*
   notify:
     - restart glance services
+
+- name: setup glance image replication
+  include: image-sync.yml
+  when: glance.sync.enabled
