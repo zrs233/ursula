@@ -1,6 +1,16 @@
 ---
+- name: Check if glance user exists
+  action: shell getent passwd glance
+  register: glance_user
+  ignore_errors: True
+
+- name: glance user
+  user: name=glance shell=/bin/false
+  when: glance_user.rc == 0
+
 - name: glance user
   user: name=glance comment=glance shell=/bin/false system=yes home=/nonexistent createhome=no
+  when: glance_user.rc != 0
 
 - name: get glance source repo
   git: |
