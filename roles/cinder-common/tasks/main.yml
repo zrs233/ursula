@@ -1,6 +1,6 @@
 ---
 - name: cinder user
-  user: name=cinder shell=/bin/false
+  user: name=cinder comment=cinder shell=/bin/false system=yes home=/nonexistent createhome=no
 
 - name: get cinder source repo
   git: |

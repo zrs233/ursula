@@ -1,6 +1,6 @@
 ---
 - name: keystone user
-  user: name=keystone shell=/bin/false
+  user: name=keystone comment=keystone shell=/bin/false system=yes home=/nonexistent createhome=no
 
 - name: WORKAROUND - keystone doesn't include babel in dependencies
   pip: name=babel

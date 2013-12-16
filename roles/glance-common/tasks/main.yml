@@ -1,6 +1,6 @@
 ---
 - name: glance user
-  user: name=glance shell=/bin/false
+  user: name=glance comment=glance shell=/bin/false system=yes home=/nonexistent createhome=no
 
 - name: get glance source repo
   git: |
