@@ -24,6 +24,9 @@ etc_hosts:
 rabbitmq:
   cluster: true
 
+memcached:
+  memory: 64
+
 endpoints:
   main:     *controller
   db:       *controller
