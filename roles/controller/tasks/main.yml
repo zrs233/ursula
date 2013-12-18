@@ -1,4 +1,5 @@
 ---
+- include: iptables.yml
 - include: haproxy.yml
 - include: keystone.yml
 - include: nova.yml
