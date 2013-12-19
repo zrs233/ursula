@@ -1,6 +1,17 @@
 ---
+- name: Check if nova user exists
+  action: shell getent passwd nova
+  register: nova_user
+  ignore_errors: True
+  changed_when: False
+
 - name: nova user
   user: name=nova shell=/bin/false
+  when: nova_user.rc == 0
+
+- name: nova user
+  user: name=nova comment=nova shell=/bin/false system=yes home=/nonexistent createhome=no
+  when: nova_user.rc != 0
 
 - apt: pkg=python-numpy
 

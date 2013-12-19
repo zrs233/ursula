@@ -1,6 +1,17 @@
 ---
+- name: Check if keystone user exists
+  action: shell getent passwd keystone
+  register: keystone_user
+  ignore_errors: True
+  changed_when: False
+
 - name: keystone user
   user: name=keystone shell=/bin/false
+  when: keystone_user.rc == 0
+
+- name: keystone user
+  user: name=keystone comment=keystone shell=/bin/false system=yes home=/nonexistent createhome=no
+  when: keystone_user.rc != 0
 
 - name: WORKAROUND - keystone doesn't include babel in dependencies
   pip: name=babel

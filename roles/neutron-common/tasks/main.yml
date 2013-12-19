@@ -1,6 +1,17 @@
 ---
+- name: Check if neutron user exists
+  action: shell getent passwd neutron
+  register: neutron_user
+  ignore_errors: True
+  changed_when: False
+
 - name: neutron user
   user: name=neutron shell=/bin/false
+  when: neutron_user.rc == 0
+
+- name: neutron user
+  user: name=neutron comment=neutron shell=/bin/false system=yes home=/nonexistent createhome=no
+  when: neutron_user.rc != 0
 
 - name: get neutron source repo
   git: |

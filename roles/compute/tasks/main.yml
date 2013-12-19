@@ -15,7 +15,11 @@
   when: "'{{ nova.libvirt_type }}' == 'kvm'"
   changed_when: False
 
+# Ensure roles/nova-common/tasks/main.yml runs first, otherwise this will not be a system user
 - user: name=nova groups=libvirtd
+
 - file: dest=/var/lib/nova/instances state=directory owner=nova
+
 - template: src=etc/init/nova-compute.conf dest=/etc/init/nova-compute.conf owner=root group=root mode=0644
+
 - service: name=nova-compute state=started
