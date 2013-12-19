@@ -3,6 +3,7 @@
   action: shell getent passwd cinder
   register: cinder_user
   ignore_errors: True
+  changed_when: False
 
 - name: cinder user
   user: name=cinder shell=/bin/false

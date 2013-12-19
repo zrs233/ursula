@@ -3,6 +3,7 @@
   action: shell getent passwd neutron
   register: neutron_user
   ignore_errors: True
+  changed_when: False
 
 - name: neutron user
   user: name=neutron shell=/bin/false

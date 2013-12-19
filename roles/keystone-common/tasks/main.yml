@@ -3,6 +3,7 @@
   action: shell getent passwd keystone
   register: keystone_user
   ignore_errors: True
+  changed_when: False
 
 - name: keystone user
   user: name=keystone shell=/bin/false
