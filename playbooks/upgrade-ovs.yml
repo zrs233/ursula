@@ -10,6 +10,11 @@
     - apt_key: url='http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0xC37BA5F849DE63CB'
     - apt_repository: repo='ppa:blueboxgroup/openstack' update_cache=yes
 
+- name: stop all ovs services
+  hosts: all
+  tasks:
+    - service: name=openvswitch-switch state=stopped
+
 # FIXME(cmt): for whatever reason the PPA doesnt like the signature on openvswitch-datapath-dkms
 - name: update the ovs packages
   hosts: all
