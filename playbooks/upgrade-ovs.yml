@@ -1,38 +1,20 @@
 ---
-- name: check the version of openvswitch
-  hosts: all
-  tasks:
-    - command: "/usr/bin/test `/usr/bin/dpkg -s openvswitch-common | /usr/bin/awk '/^Version/ {print $2}'` != {{ openvswitch.version }}"
-
-- name: stop neutron services on all hosts
-  hosts: all
-  tasks:
-    - service: name={{ item }} state=stopped
-      with_items:
-        - neutron-openvswitch-agent
-
-- name: stop neutron services on network nodes
-  hosts: network
-  tasks:
-    - service: name={{ item }} state=stopped
-      with_items:
-        - neutron-server
-		- neutron-dhcp-agent
-		- neutron-l3-agent
-		- neutron-openvswitch-agent
-		- neutron-ns-metadata-proxy
-		- neutron-metadata-agent
-		- neutron-ns-metadata-proxy
-
 - name: backup the ovs database
   hosts: all
   tasks:
-    - command: /bin/cp /etc/openvswitch/conf.db /etc/openvswitch/conf.db-backup`date +"%s.%N"`
+    - shell: /bin/cp /etc/openvswitch/conf.db /etc/openvswitch/conf.db-backup`date +"%s.%N"`
 
+- name: openvswitch ppa
+  hosts: all
+  tasks:
+    - apt_key: url='http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0xC37BA5F849DE63CB'
+    - apt_repository: repo='ppa:blueboxgroup/openstack' update_cache=yes
+
+# FIXME(cmt): for whatever reason the PPA doesnt like the signature on openvswitch-datapath-dkms
 - name: update the ovs packages
   hosts: all
   tasks:
-    - apt: pkg={{ item }}
+    - apt: pkg={{ item }} state=latest force=yes
       with_items:
         - openvswitch-common
         - openvswitch-datapath-dkms
@@ -41,34 +23,27 @@
 - name: upgrade the ovs database
   hosts: all
   tasks:
-    - command: /usr/bin/ovsdb-tool convert /etc/openvswitch/conf.db /usr/share/openvswitch/vswitch.ovsschema
-
-- name: force reload the kernel modules
-  hosts: all
-  tasks:
-    - command: /etc/init.d/openvswitch-switch force-reload-kmod
+    - shell: /usr/bin/ovsdb-tool convert /etc/openvswitch/conf.db /usr/share/openvswitch/vswitch.ovsschema
 
 - name: restart all ovs services
   hosts: all
   tasks:
     - service: name=openvswitch-switch state=restarted enabled=yes
 
-- name: start neutron services on network nodes
+- name: restart neutron services on network nodes
   hosts: network
   tasks:
-    - service: name={{ item }} state=started
+    - service: name={{ item }} state=restarted enabled=yes
       with_items:
         - neutron-server
         - neutron-dhcp-agent
         - neutron-l3-agent
         - neutron-openvswitch-agent
-        - neutron-ns-metadata-proxy
         - neutron-metadata-agent
-        - neutron-ns-metadata-proxy
 
 - name: start neutron services on all hosts
   hosts: all
   tasks:
-    - service: name={{ item }} state=started
+    - service: name={{ item }} state=restarted enabled=yes
       with_items:
         - neutron-openvswitch-agent
