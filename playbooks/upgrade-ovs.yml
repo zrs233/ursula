@@ -1,0 +1,49 @@
+---
+- name: backup the ovs database
+  hosts: all
+  tasks:
+    - shell: /bin/cp /etc/openvswitch/conf.db /etc/openvswitch/conf.db-backup`date +"%s.%N"`
+
+- name: openvswitch ppa
+  hosts: all
+  tasks:
+    - apt_key: url='http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0xC37BA5F849DE63CB'
+    - apt_repository: repo='ppa:blueboxgroup/openstack' update_cache=yes
+
+# FIXME(cmt): for whatever reason the PPA doesnt like the signature on openvswitch-datapath-dkms
+- name: update the ovs packages
+  hosts: all
+  tasks:
+    - apt: pkg={{ item }} state=latest force=yes
+      with_items:
+        - openvswitch-common
+        - openvswitch-datapath-dkms
+        - openvswitch-switch
+
+- name: upgrade the ovs database
+  hosts: all
+  tasks:
+    - shell: /usr/bin/ovsdb-tool convert /etc/openvswitch/conf.db /usr/share/openvswitch/vswitch.ovsschema
+
+- name: restart all ovs services
+  hosts: all
+  tasks:
+    - service: name=openvswitch-switch state=restarted enabled=yes
+
+- name: restart neutron services on network nodes
+  hosts: network
+  tasks:
+    - service: name={{ item }} state=restarted enabled=yes
+      with_items:
+        - neutron-server
+        - neutron-dhcp-agent
+        - neutron-l3-agent
+        - neutron-openvswitch-agent
+        - neutron-metadata-agent
+
+- name: start neutron services on all hosts
+  hosts: all
+  tasks:
+    - service: name={{ item }} state=restarted enabled=yes
+      with_items:
+        - neutron-openvswitch-agent
