@@ -17,7 +17,9 @@
   cinder_volume_group: >
     file={{ cinder.volume_file }}
     size={{ cinder.volume_file_size }}
+    {% if cinder.passphrase is defined %}
     passphrase={{ cinder.passphrase }}
+    {% endif %}
 
 - name: create cinder-volumes crypttab entry
   crypttab: state=present target=cinder-volumes source=/opt/stack/cinder-volumes opts=luks,aes,noauto
