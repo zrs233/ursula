@@ -15,6 +15,11 @@
   when: "'{{ nova.libvirt_type }}' == 'kvm'"
   changed_when: False
 
+- name: disable libvirt default network autostart
+  file: dest=/etc/libvirt/qemu/networks/autostart/default.xml state=absent
+# On a host which has already started libvirt with this network we will want to run
+#  shell: virsh net-destroy default
+
 # Ensure roles/nova-common/tasks/main.yml runs first, otherwise this will not be a system user
 - user: name=nova groups=libvirtd
 
