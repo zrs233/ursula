@@ -8,8 +8,8 @@
   template: src=sensu.list dest=/etc/apt/sources.list.d/sensu.list owner=root group=root mode=0444
 - apt: update_cache=True
 
-- apt: pkg=sensu
-- gem: name=sensu-plugin state=latest user_install=no include_dependencies=yes
+- apt: pkg=sensu={{ monitoring.sensu_package_version }}
+- gem: name=sensu-plugin state=latest user_install=no include_dependencies=yes version={{ monitoring.sensu_plugin_version }}
 
 - name: sensu sudoers
   template: src=sensu-sudoers dest=/etc/sudoers.d/sensu owner=root group=root mode=0440
