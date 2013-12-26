@@ -21,10 +21,12 @@
   file: dest=/etc/sensu/ssl state=directory owner=sensu mode=0750
 
 - name: install sensu cert
+  when: monitoring.client_cert is defined 
   template: dest=/etc/sensu/ssl/cert.pem src=sensu-client-cert.pem owner=root group=sensu mode=0640
   notify: restart sensu-client
 
 - name: install sensu key
+  when: monitoring.client_key is defined 
   file: dest=/etc/sensu/ssl/key.pem src=sensu-client-key.pem owner=root group=sensu mode=0640
   notify: restart sensu-client
 
