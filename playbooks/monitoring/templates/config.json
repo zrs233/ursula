@@ -14,6 +14,10 @@
     "port": {{ monitoring.rabbit.port }},
     "user": "{{ monitoring.rabbit.user }}",
     "password": "{{ monitoring.rabbit.pass }}",
-    "vhost": "/sensu"
+    "vhost": "/sensu",
+    "ssl": {
+      "cert_chain_file": "/etc/sensu/ssl/cert.pem",
+      "private_key_file": "/etc/sensu/ssl/key.pem"
+    }
   }
 }
