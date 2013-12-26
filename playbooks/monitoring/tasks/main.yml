@@ -17,6 +17,17 @@
 - name: ensure /etc/sudoers.d/sensu permissions are 0440
   file: path=/etc/sudoers.d/sensu mode=0440
 
+- name: sensu cert directory 
+  file: dest=/etc/sensu/ssl state=directory owner=sensu mode=0750
+
+- name: install sensu cert
+  template: dest=/etc/sensu/ssl/cert.pem src=sensu-client-cert.pem owner=root group=sensu mode=0640
+  notify: restart sensu-client
+
+- name: install sensu key
+  file: dest=/etc/sensu/ssl/key.pem src=sensu-client-key.pem owner=root group=sensu mode=0640
+  notify: restart sensu-client
+
 - lineinfile: dest=/etc/default/sensu regexp=^EMBEDDED_RUBY line=EMBEDDED_RUBY=true
   notify: restart sensu-client
 
