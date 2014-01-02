@@ -27,7 +27,7 @@
 
 - name: install sensu key
   when: monitoring.client_key is defined 
-  file: dest=/etc/sensu/ssl/key.pem src=sensu-client-key.pem owner=root group=sensu mode=0640
+  template: dest=/etc/sensu/ssl/key.pem src=sensu-client-key.pem owner=root group=sensu mode=0640
   notify: restart sensu-client
 
 - lineinfile: dest=/etc/default/sensu regexp=^EMBEDDED_RUBY line=EMBEDDED_RUBY=true
