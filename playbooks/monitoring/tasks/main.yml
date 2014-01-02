@@ -8,14 +8,27 @@
   template: src=sensu.list dest=/etc/apt/sources.list.d/sensu.list owner=root group=root mode=0444
 - apt: update_cache=True
 
-- apt: pkg=sensu
-- gem: name=sensu-plugin state=latest user_install=no include_dependencies=yes
+- apt: pkg=sensu={{ monitoring.sensu_package_version }}
+- gem: name=sensu-plugin user_install=no include_dependencies=yes version={{ monitoring.sensu_plugin_version }}
 
 - name: sensu sudoers
   template: src=sensu-sudoers dest=/etc/sudoers.d/sensu owner=root group=root mode=0440
 
 - name: ensure /etc/sudoers.d/sensu permissions are 0440
   file: path=/etc/sudoers.d/sensu mode=0440
+
+- name: sensu cert directory 
+  file: dest=/etc/sensu/ssl state=directory owner=sensu mode=0750
+
+- name: install sensu cert
+  when: monitoring.client_cert is defined 
+  template: dest=/etc/sensu/ssl/cert.pem src=sensu-client-cert.pem owner=root group=sensu mode=0640
+  notify: restart sensu-client
+
+- name: install sensu key
+  when: monitoring.client_key is defined 
+  template: dest=/etc/sensu/ssl/key.pem src=sensu-client-key.pem owner=root group=sensu mode=0640
+  notify: restart sensu-client
 
 - lineinfile: dest=/etc/default/sensu regexp=^EMBEDDED_RUBY line=EMBEDDED_RUBY=true
   notify: restart sensu-client

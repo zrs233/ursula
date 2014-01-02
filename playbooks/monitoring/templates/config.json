@@ -14,6 +14,14 @@
     "port": {{ monitoring.rabbit.port }},
     "user": "{{ monitoring.rabbit.user }}",
     "password": "{{ monitoring.rabbit.pass }}",
-    "vhost": "/sensu"
+    {% if monitoring.client_cert is defined and monitoring.client_key is defined %}
+    "vhost": "/sensu",
+    "ssl": {
+      "cert_chain_file": "/etc/sensu/ssl/cert.pem",
+      "private_key_file": "/etc/sensu/ssl/key.pem"
+    }
+    {% else %}
+    "vhost": "/sensu"    
+    {% endif %}
   }
 }
