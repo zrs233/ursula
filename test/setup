@@ -2,54 +2,51 @@
 
 source $(dirname $0)/common
 
-$root/test/check-deps
-
-export ANSIBLE_SSH_ARGS="${ssh_args}"
-echo ${ANSIBLE_SSH_ARGS}
+${ROOT}/test/check-deps
 
 echo "writing initial inventory file"
-mkdir -p $root/envs/test
-cat > $root/envs/test/hosts <<eof
+mkdir -p ${ROOT}/envs/test
+cat > ${ROOT}/envs/test/hosts <<eof
 [local]
 127.0.0.1
 eof
 
-echo "destroying: $vms"
-$root/test/cleanup
+echo "destroying: ${VMS}"
+${ROOT}/test/cleanup
 
-echo "booting vms"
+echo "booting ${VMS}"
 $(ansible_command \
   "envs/test/hosts" \
   "root" \
-  $root/playbooks/testenv/tasks/create.yml)
+  ${ROOT}/playbooks/testenv/tasks/create.yml)
 
 echo "building config"
-controller_ip=$(public_ip test-controller-0)
-rm -rf $root/envs/test/group_vars/
-rm -f $root/envs/test/hosts
-mkdir -p $root/envs/test/
-cp -r $root/envs/example/group_vars $root/envs/test
-cp $root/envs/example/hosts $root/envs/test
-sed -i -e "s/^controller_primary: \&controller.*/controller_primary: \&controller $controller_ip/" envs/test/group_vars/all.yml
+CONTROLLER_IP=$(public_ip test-controller-0)
+rm -rf ${ROOT}/envs/test/group_vars/
+rm -f ${ROOT}/envs/test/hosts
+mkdir -p ${ROOT}/envs/test/
+cp -r ${ROOT}/envs/example/group_vars ${ROOT}/envs/test
+cp ${ROOT}/envs/example/hosts ${ROOT}/envs/test
+sed -i -e "s/^controller_primary: \&controller.*/controller_primary: \&controller ${CONTROLLER_IP}/" envs/test/group_vars/all.yml
 
-echo "generating ssl cert for $controller_ip"
-cert_dir=$(mktemp -d 2> /dev/null || mktemp -d -t 'setup')
-pushd $cert_dir
-$root/test/gen-cert $controller_ip
-cat >> $root/envs/test/group_vars/all.yml <<eof
+echo "generating ssl cert for ${CONTROLLER_IP}"
+CERT_DIR=$(mktemp -d 2> /dev/null || mktemp -d -t 'setup')
+pushd ${CERT_DIR}
+${ROOT}/test/gen-cert ${CONTROLLER_IP}
+cat >> ${ROOT}/envs/test/group_vars/all.yml <<eof
 ssl:
   crt: |
 eof
-cat $cert_dir/$controller_ip.crt | sed 's/^/    /' >> $root/envs/test/group_vars/all.yml
-cat >> $root/envs/test/group_vars/all.yml <<eof
+cat ${CERT_DIR}/${CONTROLLER_IP}.crt | sed 's/^/    /' >> ${ROOT}/envs/test/group_vars/all.yml
+cat >> ${ROOT}/envs/test/group_vars/all.yml <<eof
   key: |
 eof
-cat $cert_dir/$controller_ip.key | sed 's/^/    /' >> $root/envs/test/group_vars/all.yml
+cat ${CERT_DIR}/${CONTROLLER_IP}.key | sed 's/^/    /' >> ${ROOT}/envs/test/group_vars/all.yml
 popd
-rm -rf $cert_dir
+rm -rf ${CERT_DIR}
 
 echo "writing inventory file"
-cat > $root/envs/test/hosts <<eof
+cat > ${ROOT}/envs/test/hosts <<eof
 [db]
 $(public_ip "test-controller-0")
 $(public_ip "test-controller-1")
@@ -71,8 +68,8 @@ eof
 echo "copying files"
 $(ansible_command \
   "envs/test/hosts" \
-  ${login_user} \
-  $root/playbooks/testenv/tasks/pre-deploy.yml \
+  ${LOGIN_USER} \
+  ${ROOT}/playbooks/testenv/tasks/pre-deploy.yml \
   "true")
 
-echo "vms are up: $vms !!"
+echo "vms are up: ${VMS} !!"
