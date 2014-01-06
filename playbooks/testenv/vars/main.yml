@@ -5,10 +5,10 @@ testenv_instance_names:
   - test-compute-0
 testenv_keypair_name: int-test
 testenv_keypair_path: "{{ ansible_env.root }}/envs/test/{{ test_keypair_name }}.pem"
-testenv_image_id: f1496b58-0f51-4f91-b1da-517b1ad38162
+testenv_image_id: 014f8214-37b0-4920-b7ce-ec05edc253fb
 testenv_security_groups: ursula
 testenv_security_groups_description: Rules for testing
-testenv_net_id: 0b2f1eae-6abf-432c-b740-a72742abda24
+testenv_net_id: ba0fdd03-72b5-41eb-bb67-fef437fd6cb4
 testenv_security_groups: ursula
 testenv_security_group_rules:
   - { proto: 'tcp', port: 22, state: 'present' }
