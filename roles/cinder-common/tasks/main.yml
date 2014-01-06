@@ -31,6 +31,7 @@
 - name: cinder config
   action: template src={{ item }} dest=/etc/cinder mode=0644
   with_fileglob: ../templates/etc/cinder/*
+  notify: restart cinder services
 
 - name: cinder sudoer
   template: src=etc/sudoers.d/cinder dest=/etc/sudoers.d/cinder owner=root group=root mode=0440
