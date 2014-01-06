@@ -276,3 +276,6 @@ openstack_setup:
   add_images: True
   add_networks: True
   add_cinder: True
+
+percona:
+  replication: True

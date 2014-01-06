@@ -9,7 +9,7 @@
   roles:
     - rabbitmq
 
-- name: replicated db setup
+- name: percona setup
   include: playbooks/percona.yml
 
 - name: nova code and config
