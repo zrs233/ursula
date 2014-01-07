@@ -1,0 +1,9 @@
+---
+- name: install python-pycurl
+  apt: pkg=python-pycurl
+
+- name: percona apt repository key
+  apt_key: url=http://www.percona.com/redir/downloads/RPM-GPG-KEY-percona state=present
+
+- name: percona apt repository
+  apt_repository: repo='deb http://repo.percona.com/apt precise main' update_cache=yes

@@ -1,42 +1,25 @@
 ---
-# compute node needs Percona apt repo in order
-# to obtain garbd and act as abriter for two-node cluster
-- name: Install Percona Apt Repository
-  hosts: db:db_arbiter
-  tasks:
-  - apt_key: url=http://www.percona.com/redir/downloads/RPM-GPG-KEY-percona state=present
-  - apt_repository: repo='deb http://repo.percona.com/apt precise main'
-  - apt: update_cache=yes
-
-- name: Install Percona Xtradb and Configure Quorum
+- name: install common percona components and gather facts
   hosts: db
-  tasks:
-    - include: percona/tasks/main.yml
+  roles:
+    - percona-common
 
-- name: Bootstrap Primary Quorum Node
+- name: install percona on primary
   hosts: db[0]
-  tasks:
-   - include: percona/tasks/bootstrap.yml
+  vars:
+    should_bootstrap_as_primary: True
+  roles:
+    - percona-server
 
-- name: Install root .my.cnf defaults file
-  hosts: db
-  tasks:
-  - template: src=percona/templates/mysql/root_my.cnf dest=/root/.my.cnf owner=root group=root mode=0600
+- name: install percona on secondaries
+  hosts: db:!db[0]
+  vars:
+    should_bootstrap_as_primary: False
+  roles:
+    - percona-server
 
-- name: Start XtraDB On Secondary Nodes
-  hosts: db[1-2]
-  tasks:
-  - service: name=mysql state=started
-
-# We want at least two nodes in the cluster (and possibly more).
-- name: Verify wsrep_cluster_size
-  hosts: db
-  tasks:
-    - name: check wsrep_cluster_size
-      shell: mysql -e "SHOW STATUS WHERE Variable_name like '%wsrep_cluster_size%' AND Value > 1;" | grep 'wsrep_cluster_size'
-      changed_when: False
-
-- name: Install Percona Arbiter
+- name: install percona arbiter
   hosts: db_arbiter
-  tasks:
-  - include: percona/tasks/arbiter.yml
+  roles:
+    - percona-common
+    - percona-arbiter

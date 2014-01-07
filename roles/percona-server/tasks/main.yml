@@ -1,0 +1,66 @@
+---
+- name: python-mysqldb package
+  apt: pkg=python-mysqldb
+
+- name: python-mysqldb package brings in mysql-common
+  apt: pkg=mysql-common purge=yes state=absent
+
+- name: install percona xtradb packages
+  apt: pkg={{ item }} state=installed
+  with_items:
+  - percona-xtradb-cluster-galera-{{ xtradb.galera_version }}
+  - percona-xtradb-cluster-client-{{ xtradb.client_version }}
+  - percona-xtradb-cluster-server-{{ xtradb.server_version }}
+  - percona-xtrabackup
+
+- name: configure my.cnf
+  template: src=etc/my.cnf dest=/etc/my.cnf mode=0644
+  notify:
+    - restart mysql server
+
+- name: create mysql/conf.d directory
+  file: state=directory path=/etc/mysql/conf.d mode=0644
+
+- meta: flush_handlers
+
+- name: start mysql server
+  service: name=mysql state=started
+
+- name: set mysql root password
+  mysql_user: name=root password={{mysql.root_password}}
+
+- name: install root .my.cnf defaults file
+  template: src=root/.my.cnf dest=/root/.my.cnf owner=root group=root mode=0600
+
+- name: are we already already bootstrapped
+  shell: mysql -e "SHOW VARIABLES LIKE 'wsrep_on'" | grep 'ON'
+  register: already_bootstrapped
+  ignore_errors: True
+
+- name: create state snapshot transfer user from anywhere
+  mysql_user: name={{ xtradb.sst_auth_user }} host={{ item }} password={{ xtradb.sst_auth_password }} priv='*.*:RELOAD,LOCK TABLES,REPLICATION CLIENT'
+  with_items:
+    - '%'
+    - 'localhost'
+  when: percona.replication
+
+- name: stop all of the mysql processes before we boostrap any replication
+  service: name=mysql state=stopped
+  when: percona.replication and not already_bootstrapped.rc == 0
+
+- name: register replication databases
+  command: echo {% for host in groups['db'] %}{% if not loop.last %}{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }},{% else %}{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}{% endif %}{% endfor %}
+  register: percona_replication_nodes
+  when: percona.replication
+
+- name: configure bootstrap replication
+  template: src=etc/mysql/conf.d/replication.cnf dest=/etc/mysql/conf.d/replication.cnf mode=0644
+  when: percona.replication
+
+- name: bootstrap the primary node
+  command: /etc/init.d/mysql bootstrap-pxc
+  when: should_bootstrap_as_primary and not already_bootstrapped.rc == 0
+
+- name: bootstrap any secondary nodes
+  service: name=mysql state=started
+  when: not should_bootstrap_as_primary and not already_bootstrapped.rc == 0
