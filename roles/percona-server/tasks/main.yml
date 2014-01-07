@@ -37,12 +37,6 @@
   register: already_bootstrapped
   ignore_errors: True
 
-- name: register primary node status
-  command: test "{{ ansible_eth0.ipv4.address }}" == "{{ primary_node_ip }}"
-  register: should_bootstrap_as_primary
-  when: percona.replication
-  ignore_errors: True
-
 - name: create state snapshot transfer user from anywhere
   mysql_user: name={{ xtradb.sst_auth_user }} host={{ item }} password={{ xtradb.sst_auth_password }} priv='*.*:RELOAD,LOCK TABLES,REPLICATION CLIENT'
   with_items:
@@ -65,8 +59,8 @@
 
 - name: bootstrap the primary node
   command: /etc/init.d/mysql bootstrap-pxc
-  when: should_bootstrap_as_primary.rc == 0 and not already_bootstrapped.rc == 0
+  when: should_bootstrap_as_primary and not already_bootstrapped.rc == 0
 
 - name: bootstrap any secondary nodes
   service: name=mysql state=started
-  when: not should_bootstrap_as_primary.rc == 0 and not already_bootstrapped.rc == 0
+  when: not should_bootstrap_as_primary and not already_bootstrapped.rc == 0

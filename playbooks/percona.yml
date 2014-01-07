@@ -1,12 +1,21 @@
 ---
-- name: install percona on primary
+- name: install common percona components and gather facts
   hosts: db
-  vars:
-    # this is fucking braindead beyond belief. here I am circumventing host groupings.
-    # I have quite literally tried to do this many, many other ways without success.
-    primary_node_ip: "{{ hostvars[groups['db'][0]]['ansible_eth0']['ipv4']['address'] }}"
   roles:
     - percona-common
+
+- name: install percona on primary
+  hosts: db[0]
+  vars:
+    should_bootstrap_as_primary: True
+  roles:
+    - percona-server
+
+- name: install percona on secondaries
+  hosts: db:!db[0]
+  vars:
+    should_bootstrap_as_primary: False
+  roles:
     - percona-server
 
 - name: install percona arbiter
