@@ -9,8 +9,30 @@
   roles:
     - rabbitmq
 
-- name: percona setup
-  include: playbooks/percona.yml
+- name: install common percona components and gather facts
+  hosts: db
+  roles:
+    - percona-common
+
+- name: install percona on primary
+  hosts: db[0]
+  vars:
+    should_bootstrap_as_primary: True
+  roles:
+    - percona-server
+
+- name: install percona on secondaries
+  hosts: db:!db[0]
+  vars:
+    should_bootstrap_as_primary: False
+  roles:
+    - percona-server
+
+- name: install percona arbiter
+  hosts: db_arbiter
+  roles:
+    - percona-common
+    - percona-arbiter
 
 - name: nova code and config
   hosts: controller:db:compute
