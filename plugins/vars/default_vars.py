@@ -21,6 +21,7 @@ from ansible.constants import DEFAULTS, get_config, load_config_file
 from ansible.inventory.vars_plugins.group_vars import VarsModule \
     as GroupVarsModule
 
+
 def deep_update_dict(d, u):
     for k, v in u.iteritems():
         if isinstance(v, collections.Mapping):
@@ -30,6 +31,7 @@ def deep_update_dict(d, u):
             d[k] = u[k]
     return d
 
+
 class VarsModule(GroupVarsModule):
 
     def init(self, inventory):
@@ -38,7 +40,7 @@ class VarsModule(GroupVarsModule):
     def _get_defaults(self):
         p = load_config_file()
         defaults_file = get_config(p, DEFAULTS, 'var_defaults_file',
-            'ANSIBLE_VAR_DEFAULTS_FILE', None)
+                                   'ANSIBLE_VAR_DEFAULTS_FILE', None)
         if defaults_file:
             return yaml.load(open(defaults_file))
 
