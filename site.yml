@@ -34,8 +34,8 @@
     - percona-common
     - percona-arbiter
 
-- name: configure percona backups on secondary
-  hosts: db[1]
+- name: configure percona backups on primary
+  hosts: db[0]
   roles:
     - percona-backup
 
