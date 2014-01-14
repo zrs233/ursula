@@ -34,6 +34,11 @@
     - percona-common
     - percona-arbiter
 
+- name: configure percona backups on secondary
+  hosts: db[1]
+  roles:
+    - percona-backup
+
 - name: nova code and config
   hosts: controller:db:compute
   vars_files:
