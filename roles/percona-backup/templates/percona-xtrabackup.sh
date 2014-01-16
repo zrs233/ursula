@@ -38,7 +38,7 @@ backup_list=($(/bin/ls -urt $backup_root_dir | /bin/grep -E '[0-9]{4}-[0-9]{2}-[
 $backup_script --user=root --stream=tar $backup_root_dir | $gzip - > $backup_root_dir`/bin/date +"%Y-%m-%d_%H-%M-%S"`.tar.gz || (/bin/echo "failed to create db archive at: `/bin/date`" | mail $email -s "Pecona backup failed")
 
 # clean up: delete any archives that exceed the $backup_retention_num
-if [ "${#backup_list[@]}" -ge "$backup_retention_num" ]; then
+if [ "${backup_list[@]}" -ge "$backup_retention_num" ]; then
 
   # this should always be true, but let's be paranoid and ensure 100% that the $backup_list
   # index value isn't empty, which would result in deleting the entire $backup_root_dir...
