@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'antsy'
+
+args = Antsy.args
+bridge = args[:bridge]
+port = args[:port]
+
+Antsy.fail! 'must provide bridge name' unless bridge and bridge =~ /\w+/
+Antsy.fail! 'must provide port name'   unless port   and port =~ /\w+/
+Antsy.fail! 'ovs-vsctl is not present'   unless system 'which ovs-vsctl'
+
+out = `ovs-vsctl list-ifaces #{bridge}`
+Antsy.fail! "ovs-vsctl list-ifaces failed: #{out}" unless $?.to_i == 0
+Antsy.no_change! if out =~ Regexp.new(port)
+
+out = `ovs-vsctl add-port #{bridge} #{port}`
+if $?.to_i == 0
+  Antsy.changed!
+else
+  Antsy.fail! "ovs-vsctl add-port #{bridge} #{port} failed: #{out}"
+end
