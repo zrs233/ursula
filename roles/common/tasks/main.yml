@@ -39,3 +39,10 @@
 - name: drop an motd with ursula metadata
   action: template src=etc/motd.tail dest=/etc/motd.tail mode=0644
   changed_when: False
+
+- name: determine screen blanking magic
+  shell: TERM=linux setterm -blank 0
+  register: disable_screen_blanking_magic
+
+- name: disable screen blanking
+  lineinfile: dest=/etc/issue regexp="^{{ disable_screen_blanking_magic.stdout }}" line="{{ disable_screen_blanking_magic.stdout }}"
