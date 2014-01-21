@@ -6,7 +6,7 @@
 
 # django 1.6 currently gets installed, and does not work.
 - name: force django-1.5
-  shell: /opt/stack/horizon/.venv/bin/pip install Django==1.5.5
+  pip: name=Django version=1.5.5 chdir=/opt/stack/horizon virtualenv=/opt/stack/horizon/.venv
   notify:
     - restart apache
 
