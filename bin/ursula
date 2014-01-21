@@ -9,6 +9,8 @@ usage() {
 
 ENV=$1
 PLAYBOOK=$2
+shift; shift
+EXTRA_ANSIBLE_ARGS="$*"
 PREDEPLOY_PLAYBOOK=${ENV}/playbooks/predeploy.yml
 POSTDEPLOY_PLAYBOOK=${ENV}/playbooks/postdeploy.yml
 HOSTS=${ENV}/hosts
@@ -24,10 +26,8 @@ fi
 
 for pbook in ${PREDEPLOY_PLAYBOOK} ${PLAYBOOK} ${POSTDEPLOY_PLAYBOOK}; do
   if [ -f ${pbook} ]; then
-    $(ansible_command \
-      ${HOSTS} \
-      "root" \
-      ${pbook})
+    command=$(ansible_command ${HOSTS} "root" ${pbook})
+    $command $EXTRA_ANSIBLE_ARGS
 
     if [ "$?" != "0" ]; then
       echo "Run failed on playbook ${pbook}"
