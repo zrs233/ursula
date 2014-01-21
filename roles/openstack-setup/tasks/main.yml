@@ -5,5 +5,3 @@
   when: openstack_setup.add_images == True or openstack_setup.add_images is undefined
 - include: networks.yml
   when: openstack_setup.add_networks == True or openstack_setup.add_networks is undefined
-- include: cinder.yml
-  when: openstack_setup.add_cinder == True or openstack_setup.add_cinder is undefined
