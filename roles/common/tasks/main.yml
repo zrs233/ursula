@@ -35,6 +35,13 @@
 - include: networking.yml
 - include: system_tools.yml
 
+- name: determine screen blanking magic
+  shell: TERM=linux setterm -blank 0
+  register: disable_screen_blanking_magic
+  changed_when: False
+- name: disable screen blanking
+  lineinfile: dest=/etc/issue regexp="^{{ disable_screen_blanking_magic.stdout }}" line="{{ disable_screen_blanking_magic.stdout }}"
+
 # run this last so we only update if run was successful
 - name: drop an motd with ursula metadata
   action: template src=etc/motd.tail dest=/etc/motd.tail mode=0644
