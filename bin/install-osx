@@ -17,7 +17,11 @@ pip_pkgs() {
 uname | grep Darwin || die "this is not osx."
 
 which pip >/dev/null || install_pip
-pip_pkgs python-keyczar pyzmq pyasn1 pycrypto # for fireball mode
-sudo pip install -U git+https://github.com/ansible/ansible.git@devel
+
+# not needed right now b/c python-keyczar is not being found and
+# we are using ssh for transport - SC
+# pip_pkgs python-keyczar pyzmq pyasn1 pycrypto # for fireball mode
+
+sudo pip install -U git+https://github.com/ansible/ansible.git@v1.4.4
 
 echo -e "\nall set!\n"
