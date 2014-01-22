@@ -20,3 +20,6 @@
 
 - name: disable default apache site
   shell: a2dissite default
+
+- name: compress horizon assets
+  command: sudo -u www-data tools/with_venv.sh ./manage.py compress chdir=/opt/stack/horizon/

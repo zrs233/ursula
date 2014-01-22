@@ -7,6 +7,8 @@ from openstack_dashboard import exceptions
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
+COMPRESS_OFFLINE = True
+
 ALLOWED_HOSTS = ['*']
 
 # Set SSL proxy settings:
