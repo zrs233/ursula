@@ -16,6 +16,10 @@ POSTDEPLOY_PLAYBOOK=${ENV}/playbooks/postdeploy.yml
 HOSTS=${ENV}/hosts
 SSH_CONFIG=${ENV}/ssh_config
 
+if [ -e "${ENV}/../defaults.yml" ]; then
+  export ANSIBLE_VAR_DEFAULTS_FILE="${ENV}/../defaults.yml"
+fi
+
 if [ -e ${SSH_CONFIG} ]; then
   export ANSIBLE_SSH_ARGS="${ANSIBLE_SSH_ARGS} -F ${SSH_CONFIG}"
 fi
