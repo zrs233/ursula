@@ -17,6 +17,7 @@
     repo={{ openstack.git_mirror}}/horizon.git dest=/opt/stack/horizon version={{ horizon.rev }}
   notify:
     - horizon venv
+    - compress horizon assets
     - restart apache
 
 - apt: pkg=apache2
