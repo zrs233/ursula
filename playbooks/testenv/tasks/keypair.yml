@@ -1,7 +1,18 @@
 ---
+- name: test for presence of local keypair
+  command: cat {{ testenv_keypair_path }}
+  register: testenv_keypair_local
+  ignore_errors: True
+  changed_when: False
+
+- name: delete remote keypair
+  local_action: nova_keypair name={{ testenv_keypair_name }} state=absent
+  when: testenv_keypair_local.rc != 0
+
 - name: create the keypair
   register: testenv_keypair
   local_action: nova_keypair name={{ testenv_keypair_name }} state=present
+
 - name: persist the keypair
   shell: OLD_UMASK=`umask`; umask 0077; echo "{{ testenv_keypair.key }}" > {{ testenv_keypair_path }}; umask ${OLD_UMASK}
   when: testenv_keypair.changed == True
