@@ -3,10 +3,10 @@
 :FORWARD ACCEPT [0:0]
 :OUTPUT ACCEPT [0:0]
 
--A INPUT -i br-ex -m tcp -p tcp --dport=22 -j ACCEPT
--A INPUT -i br-ex -p udp --dport 32768:61000 -j ACCEPT
--A INPUT -i br-ex -p tcp --dport 32768:61000 -j ACCEPT
--A INPUT -i br-ex -p icmp -j ACCEPT
+-A INPUT -i {{ ansible_default_ipv4['interface'] }} -m tcp -p tcp --dport=22 -j ACCEPT
+-A INPUT -i {{ ansible_default_ipv4['interface'] }} -p udp --dport 32768:61000 -j ACCEPT
+-A INPUT -i {{ ansible_default_ipv4['interface'] }} -p tcp --dport 32768:61000 -j ACCEPT
+-A INPUT -i {{ ansible_default_ipv4['interface'] }} -p icmp -j ACCEPT
 
 {% for tcp_port in [
     80,
@@ -20,10 +20,10 @@
     9797
   ]
 %}
--A INPUT -i br-ex -m tcp -p tcp --dport={{ tcp_port }} -j ACCEPT
+-A INPUT -i {{ ansible_default_ipv4['interface'] }} -m tcp -p tcp --dport={{ tcp_port }} -j ACCEPT
 {% endfor %}
 
--A INPUT -i br-ex -j DROP
+-A INPUT -i {{ ansible_default_ipv4['interface'] }} -j DROP
 
 
 COMMIT
