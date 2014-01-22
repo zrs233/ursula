@@ -4,16 +4,18 @@
   - ../vars/main.yml
   tasks:
     - name: add controller node to /etc/hosts
-      lineinfile: dest=/etc/hosts regexp='' insertafter=EOF line="127.0.0.1 {{ testenv_instance_names[0] }}"
+      lineinfile: dest=/etc/hosts regexp={{ testenv_instance_names[0] }} insertafter=EOF line="127.0.1.1 {{ testenv_instance_names[0] }}"
+
 - hosts: controller[1]
   vars_files:
   - ../vars/main.yml
   tasks:
     - name: add controller node to /etc/hosts
-      lineinfile: dest=/etc/hosts regexp='' insertafter=EOF line="127.0.0.1 {{ testenv_instance_names[1] }}"
+      lineinfile: dest=/etc/hosts regexp={{ testenv_instance_names[1] }} insertafter=EOF line="127.0.1.1 {{ testenv_instance_names[1] }}"
+
 - hosts: compute
   vars_files:
   - ../vars/main.yml
   tasks:
     - name: add compute node to /etc/hosts
-      lineinfile: dest=/etc/hosts regexp='' insertafter=EOF line="127.0.0.1 {{ testenv_instance_names[2] }}"
+      lineinfile: dest=/etc/hosts regexp={{ testenv_instance_names[2] }} insertafter=EOF line="127.0.1.1 {{ testenv_instance_names[2] }}"
