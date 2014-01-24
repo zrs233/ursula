@@ -3,4 +3,4 @@
   service: name=haproxy state=restarted
 
 - name: reload iptables
-  shell: iptables-restore < /etc/network/iptables-firewall
+  shell: iptables-restore --noflush < /etc/network/iptables-firewall
