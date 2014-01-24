@@ -24,3 +24,7 @@ die() {
 public_ip() {
   nova list | grep "$1" | awk '{print $13}'
 }
+
+private_ip() {
+  nova list | grep "$1" | awk '{print $12}' | awk -F= '{print $2}' | awk -F, '{print $1}'
+}
