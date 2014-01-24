@@ -1,0 +1,5 @@
+---
+swift_proxy:
+  ip: "{{ primary_ip }}"
+  port: 8080
+  workers: 10

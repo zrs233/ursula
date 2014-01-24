@@ -1,0 +1,15 @@
+---
+- name: swift-container service scripts
+  template: src=../../../roles/swift-common/templates/etc/init/swift-service.conf dest=/etc/init/swift-{{ item.service_name }}.conf mode=0644
+  with_items:
+    - { service_name: container-auditor, conf: container-server }
+    - { service_name: container, conf: container-server }
+    - { service_name: container-replicator, conf: container-server }
+    - { service_name: container-sync, conf: container-server }
+    - { service_name: container-updater, conf: container-server }
+
+- template: src=etc/swift/container-server.conf dest=/etc/swift/container-server.conf owner=root group=root mode=0644
+  notify: restart swift-container service
+
+- name: start swift-container service
+  service: name=swift-container state=started

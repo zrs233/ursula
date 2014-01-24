@@ -1,0 +1,8 @@
+---
+swift:
+  rev: 2f3526c559fe53ce904b735a81dee6de46127176
+  client:
+    rev: 20cd3402b2f74bc0a29de8402a2b4cfac3ad61b3
+  hash_path_prefix: a57b0dfd61b5fe3a
+  disks:
+    - sdb
