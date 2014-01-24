@@ -25,5 +25,6 @@
 
 -A INPUT -i {{ ansible_default_ipv4['interface'] }} -j DROP
 
+-A POSTROUTING -t mangle -p udp --dport bootpc -j CHECKSUM --checksum-fill
 
 COMMIT
