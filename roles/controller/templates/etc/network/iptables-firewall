@@ -42,5 +42,6 @@ COMMIT
 :OUTPUT ACCEPT [0:0]
 :POSTROUTING ACCEPT [0:0]
 
+-A POSTROUTING -o {{ ansible_default_ipv4['interface'] }} -s {{ undercloud_cidr }} ! -d {{ undercloud_cidr }} -j MASQUERADE
 
 COMMIT
