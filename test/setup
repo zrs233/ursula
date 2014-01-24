@@ -21,7 +21,7 @@ $(ansible_command \
   ${ROOT}/playbooks/testenv/tasks/create.yml)
 
 echo "building config"
-CONTROLLER_IP=$(public_ip test-controller-0)
+CONTROLLER_IP=$(private_ip test-controller-0)
 rm -rf ${ROOT}/envs/test/group_vars/
 rm -f ${ROOT}/envs/test/hosts
 mkdir -p ${ROOT}/envs/test/
