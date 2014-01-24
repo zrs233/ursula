@@ -19,3 +19,7 @@
   tasks:
     - name: add compute node to /etc/hosts
       lineinfile: dest=/etc/hosts regexp={{ testenv_instance_names[2] }} insertafter=EOF line="127.0.1.1 {{ testenv_instance_names[2] }}"
+
+- hosts: all
+  tasks:
+  - template: src=../templates/etc/resolv.conf dest=/etc/resolv.conf
