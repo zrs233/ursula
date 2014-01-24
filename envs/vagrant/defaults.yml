@@ -1,0 +1,239 @@
+---
+primary_interface: ansible_eth1
+primary_ip: "{{ hostvars[inventory_hostname][primary_interface]['ipv4']['address'] }}"
+
+fqdn: openstack.example.org
+undercloud_floating_ip: "{{ hostvars[groups['controller'][0]][primary_interface]['ipv4']['address'] }}"
+
+secrets:
+  admin_token:      asdf
+  db_password:      asdf
+  service_password: asdf
+  rabbit_password:  asdf
+  admin_password:   asdf
+  provider_admin_password:      ghij
+  metadata_proxy_shared_secret: asdf
+  horizon_secret_key:           asdf
+  glance_sync:      ADQ64XUQLUWH75M634RVBLP55RKPGGOWG
+
+endpoints:
+  main:     "{{ fqdn }}"
+  db:       "{{ undercloud_floating_ip }}"
+  keystone: "{{ fqdn }}"
+  rabbit:   "{{ undercloud_floating_ip }}"
+  nova:     "{{ fqdn }}"
+  glance:   "{{ fqdn }}"
+  neutron:  "{{ fqdn }}"
+  vnc:      "{{ fqdn }}"
+
+rabbitmq:
+  cluster: false
+etc_hosts:
+  - name: "{{ fqdn }}"
+    ip: "{{ undercloud_floating_ip }}"
+
+mysql:
+  root_password: asdf
+
+xtradb:
+  galera_version: 2.x
+  client_version: 5.5
+  server_version: 5.5
+  sst_auth_user: sst_admin
+
+client:
+  self_signed_cert: True
+
+monitoring:
+  sensu_package_version: 0.12.2-1
+  sensu_plugin_version: 0.1.7
+  rabbit:
+    host: "{{ hostvars[groups['controller'][0]]['ansible_eth0']['ipv4']['address'] }}"
+    port: 5672
+    user: openstack
+    pass: asdf
+  keepalive:
+    handler: email
+  scan_for_log_errors: true
+
+openstack:
+  pypi_mirror: http://pypi.openstack.org/openstack
+  git_mirror:  http://review.openstack.org/openstack
+
+nova:
+  libvirt_type: kvm
+
+cinder:
+  volume_file: /opt/stack/cinder-volumes
+  volume_file_size: 2G
+
+neutron:
+  physical_bridge: br-ex
+  physical_network: br-ex
+  tenant_network_type: vlan
+  bridge_mappings: physnet:br-eth1
+  enable_tunneling: False
+  network_vlan_ranges: ''
+  routers:
+    - name: default
+      tenant_name: admin
+  router_interfaces:
+    - router_name: default
+      subnet_name: internal
+      tenant_name: admin
+
+glance:
+  images:
+    - name: cirros
+      url: https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img
+    - name: ubuntu-12.04
+      url: http://cloud-images.ubuntu.com/precise/current/precise-server-cloudimg-amd64-disk1.img
+    - name: ubuntu-14.04
+      url: http://cloud-images.ubuntu.com/trusty/current/trusty-server-cloudimg-amd64-disk1.img
+
+keystone:
+  tenants:
+    - admin
+    - service
+
+  users:
+    - name: admin
+      password: "{{ secrets.admin_password }}"
+      tenant: admin
+    - name: provider_admin
+      password: "{{ secrets.provider_admin_password }}"
+      tenant: admin
+
+    - name: nova
+      password: "{{ secrets.service_password }}"
+      tenant: service
+    - name: glance
+      password: "{{ secrets.service_password }}"
+      tenant: service
+    - name: neutron
+      password: "{{ secrets.service_password }}"
+      tenant: service
+    - name: cinder
+      password: "{{ secrets.service_password }}"
+      tenant: service
+    - name: swift
+      password: "{{ secrets.service_password }}"
+      tenant: service
+
+  user_roles:
+    - user: admin
+      tenant: admin
+      role: admin
+    - user: provider_admin
+      tenant: admin
+      role: admin
+    - user: nova
+      tenant: service
+      role: service
+    - user: glance
+      tenant: service
+      role: service
+    - user: neutron
+      tenant: service
+      role: service
+    - user: cinder
+      tenant: service
+      role: service
+    - user: neutron
+      tenant: service
+      role: admin
+    - user: swift
+      tenant: service
+      role: admin
+
+  services:
+    - name: keystone
+      type: identity
+      description: 'Identity Service'
+      public_url: https://{{ endpoints.main }}:5001/v2.0
+      internal_url: https://{{ endpoints.main }}:5001/v2.0
+      admin_url: https://{{ endpoints.main }}:35358/v2.0
+    - name: nova
+      type: compute
+      description: 'Compute Service'
+      public_url: https://{{ endpoints.main }}:8777/v2/%(tenant_id)s
+      internal_url: https://{{ endpoints.main }}:8777/v2/%(tenant_id)s
+      admin_url: https://{{ endpoints.main }}:8777/v2/%(tenant_id)s
+    - name: glance
+      type: image
+      description: 'Image Service'
+      public_url: http://{{ endpoints.main }}:9292
+      internal_url: http://{{ endpoints.main }}:9292
+      admin_url: http://{{ endpoints.main }}:9292
+    - name: neutron
+      type: network
+      description: 'Network Service'
+      public_url: https://{{ endpoints.main }}:9797
+      internal_url: https://{{ endpoints.main }}:9797
+      admin_url: https://{{ endpoints.main }}:9797
+    - name: cinder
+      type: volume
+      description: 'Volume Service'
+      public_url: https://{{ endpoints.main }}:8778/v1/%(tenant_id)s
+      internal_url: https://{{ endpoints.main }}:8778/v1/%(tenant_id)s
+      admin_url: https://{{ endpoints.main }}:8778/v1/%(tenant_id)s
+    - name: swift
+      type: object-store
+      description: 'Object Storage Service'
+      public_url: https://{{ endpoints.swift }}:8090/v2/%(tenant_id)s
+      internal_url: https://{{ endpoints.swift }}:8090/v2/%(tenant_id)s
+      admin_url: https://{{ endpoints.swift }}:8090/v2/%(tenant_id)s
+
+
+ssl:
+  crt: |
+    -----BEGIN CERTIFICATE-----
+    MIIDrDCCApQCCQCs4G+6Zp5z9TANBgkqhkiG9w0BAQUFADCBlzELMAkGA1UEBhMC
+    VVMxCzAJBgNVBAgMAldBMRcwFQYDVQQKDA48Q09NUEFOWV9OQU1FPjEPMA0GA1UE
+    BwwGPENJVFk+MRcwFQYDVQQDDA4xNzMuMjQ3LjExMi4yMTEaMBgGA1UECwwRPERF
+    UEFSVE1FTlRfTkFNRT4xHDAaBgkqhkiG9w0BCQEWDTxBRE1JTl9FTUFJTD4wHhcN
+    MTMwODI3MDQ0NzU3WhcNMjMwODI1MDQ0NzU3WjCBlzELMAkGA1UEBhMCVVMxCzAJ
+    BgNVBAgMAldBMRcwFQYDVQQKDA48Q09NUEFOWV9OQU1FPjEPMA0GA1UEBwwGPENJ
+    VFk+MRcwFQYDVQQDDA4xNzMuMjQ3LjExMi4yMTEaMBgGA1UECwwRPERFUEFSVE1F
+    TlRfTkFNRT4xHDAaBgkqhkiG9w0BCQEWDTxBRE1JTl9FTUFJTD4wggEiMA0GCSqG
+    SIb3DQEBAQUAA4IBDwAwggEKAoIBAQC7v0SHl+h70udkhiGNxu/WAjRndwul+u3V
+    /Z7S6qpX3KOVWerlv9gBnzzZbtOgO///AOJL3LQ/+yYQSted6+muQVxJ8z3Y2xvO
+    3D03D84Ma0D1K5qVncknySfvUK0yzby/vpLwB6X0BbUW+nxNxLffR+OVp53+ryUI
+    kMiP+X+8i3ubu9EnufVJd8es9mTRpHf7fP98SYLFCq0PfXMoj5v429T6fMfCRudz
+    DAvKEY0KBIGlHN7iTOMaHFYmEUfwWS4VWGgP5U/wuUMn7Pb8XY8PVvWN/CrVMe1J
+    sxDMxUNp9jN4xna8ez7EGvIWGF8f2aGnDoYnpHaAt96ReGpHptITAgMBAAEwDQYJ
+    KoZIhvcNAQEFBQADggEBABPgVwjgA4tORmB/dgQgkXksUjEza02SkeHXB3uXnsJR
+    Y782vGuaeKkXWy1vFsKzHaLzPUvvkP+1gsRf/i6d2Tn3XHFOMo8f938GP1N3Bcjd
+    fSTtk+iUlNCshPZtyuUs+FI5D5KKj/3rTalUs3KEwTETnLvSP6iVWupq1rfgeAZF
+    jqWUsz4+/mfFyQqQ8p8yxe9OBxtyDzd0ldB7/Nv5eWpN+rqyWaABMF8OOM1v0bep
+    XWCTwigVQ/d3wgpREV1WG6SD3WzeZuFQlZRkanX7nLiLNwG0ABZFMXohG5mGp3dO
+    KawKIW8CEYzSgjlJ3L8klHgarDAnlsJ0NpyhqGKhxoA=
+    -----END CERTIFICATE-----
+  key: |
+    -----BEGIN RSA PRIVATE KEY-----
+    MIIEogIBAAKCAQEAu79Eh5foe9LnZIYhjcbv1gI0Z3cLpfrt1f2e0uqqV9yjlVnq
+    5b/YAZ882W7ToDv//wDiS9y0P/smEErXnevprkFcSfM92Nsbztw9Nw/ODGtA9Sua
+    lZ3JJ8kn71CtMs28v76S8Ael9AW1Fvp8TcS330fjlaed/q8lCJDIj/l/vIt7m7vR
+    J7n1SXfHrPZk0aR3+3z/fEmCxQqtD31zKI+b+NvU+nzHwkbncwwLyhGNCgSBpRze
+    4kzjGhxWJhFH8FkuFVhoD+VP8LlDJ+z2/F2PD1b1jfwq1THtSbMQzMVDafYzeMZ2
+    vHs+xBryFhhfH9mhpw6GJ6R2gLfekXhqR6bSEwIDAQABAoIBAGG726zKQ1fSHmqR
+    +H2ZhdheJXGG4yVwTscK09bwGeTLEsz4lfMrvwJ5Jm/55WiQU18n0qWzKpHz54ir
+    rTqkSG1R0P0eBqAQz5ULyUIUlCqa2qHGJR6lmMWBTayizsaXmx4l0s/o61bwcaiY
+    lITXVvCAt9R8AR9HhXvEAuQP+ZLoE0a3EXGQVFkVEywJxmZ9q/CTHciHsAIIk/H3
+    FCCzD21QotLTo0eMLvhRZJ/HOOvZrpzacJs3lV3oor1F8JMtcqzNjsQWjDtM6gl9
+    XTQkGAeR4fmEWrcVrsYnK/SyZIcwffJNAOFbS8qXj+IKAirpoYN7UXpT279Fek2u
+    vtLpreECgYEA+NbP6jLTCVGA2XWcp53fyCkNH+2RdO+cgPXE9gN8QY0Wr4GXk7rM
+    F2bc3NCo31Feqf8degE7E2Qm1XnkW+vEcwkMlKDFxQ0dvA/GLEcZkTaT6CoVozmi
+    dt+iR0U5t/DtsOWjc1Q/+EORaIO5NnmSgufFy0OYFOlVPSFPgcICYNUCgYEAwSZk
+    tltzaKQubUMrYJK8ahRq5y8cADGh/mXvyo5I/U+V12BqGE0efzZ5Gp15LoYNd244
+    rqTq6ECGOzP1lwlO5ru7yTdvYXRFu+7ik7V3SU68zCvvQy1XaP+tTQb44ZMb3IJt
+    GNmwFgsXq8bxuL7r/Zoedh0ROmXhhfNRi41pm0cCgYArrglxItrIl/X2Nh75jUzq
+    5cnYAOu3ixf9yyZ3yMTW/N0ukaD53aBVu0ipujbqfG4RiSazc+Pa04m9j1f2irxB
+    NSVwMYiFvnepu1seCp0CUIJGDp0dudA67aaevBgVocUXeDfo1rEj8zhjEDxCw7Rk
+    JisiMwtPIGZGBMLgFB42wQKBgGSHVRfMlU67VSatNSB4fvQ/WDynOk2nh4bfC2VD
+    lR2ylGya091+FgdkFLgTigT65HtqtLnBQDpNiw+5RXOs9pIE2AIshh4U5E6iUO9M
+    HZ/cCUvC+i7epIYTvOFAZb0SUgf9Ikcy1gFDGLjhPOJJDI7b7krPai4Y5L5RG/ok
+    Sfj1AoGABz3rHu7vgH1XNUrfU6XhP1qPinNCkOLrWhun8NcUZ3A21r1R2coavH9Z
+    Ol08q4TScRU4qf1//74yJwlo/+W1CtuiTwysibjgs4BQ8fWJUzgbKvXE3lxJ6D+h
+    QxSg02mn6ve0/jY/zcdCAY1gVOU6Z2MNtUYHBAEbbw+G/vXSVtY=
+    -----END RSA PRIVATE KEY-----
