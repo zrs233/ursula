@@ -38,9 +38,9 @@
   - name: rabbitmq has the rabbitmqadmin script installed
     shell: test -f /usr/local/bin/rabbitmqadmin
   - name: iptables defaults to dropping connections from the internet
-    shell: iptables-save | grep "-A INPUT -i br-ex -j DROP"
+    shell: iptables-save | egrep "^-A INPUT -i {{ ansible_default_ipv4['interface'] }} -j DROP"
   - name: iptables lets ssh in from outside
-    shell: iptables-save | grep "-A INPUT -i br-ex -m tcp -p tcp --dport=22 -j ACCEPT"
+    shell: iptables-save | egrep "^-A INPUT -i {{ ansible_default_ipv4['interface'] }} -p tcp -m tcp --dport 22 -j ACCEPT"
 
 - hosts: controller[0]
   tasks:
