@@ -1,0 +1,3 @@
+---
+- name: add cron job to clean up expired tokens
+  template: src=drop-expired-keystone-tokens.sh dest=/etc/cron.hourly/drop-expired-keystone-tokens.sh owner=root group=root mode=0755

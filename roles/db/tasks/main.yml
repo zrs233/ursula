@@ -37,3 +37,4 @@
     - cinder
 
 - include: sync.yml
+- include: keystone.yml
