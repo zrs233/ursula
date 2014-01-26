@@ -6,7 +6,7 @@
   changed_when: False
 
 - name: keystone user
-  user: name=keystone shell=/bin/false
+  user: name=keystone shell=/bin/false createhome=no
   when: keystone_user.rc == 0
 
 - name: keystone user

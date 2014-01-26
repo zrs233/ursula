@@ -6,7 +6,7 @@
   changed_when: False
 
 - name: cinder user
-  user: name=cinder shell=/bin/false
+  user: name=cinder shell=/bin/false createhome=no
   when: cinder_user.rc == 0
 
 - name: cinder user

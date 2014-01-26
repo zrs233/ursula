@@ -21,7 +21,7 @@
 #  shell: virsh net-destroy default
 
 # Ensure roles/nova-common/tasks/main.yml runs first, otherwise this will not be a system user
-- user: name=nova groups=libvirtd
+- user: name=nova groups=libvirtd system=yes createhome=no
 
 - file: dest=/var/lib/nova/instances state=directory owner=nova
 

@@ -6,7 +6,7 @@
   changed_when: False
 
 - name: glance user
-  user: name=glance shell=/bin/false
+  user: name=glance shell=/bin/false createhome=no
   when: glance_user.rc == 0
 
 - name: glance user
