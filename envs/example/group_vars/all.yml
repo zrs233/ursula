@@ -2,7 +2,7 @@
 stack_env: example
 
 controller_primary: &controller "{{ hostvars[groups['controller'][0]]['ansible_eth0']['ipv4']['address'] }}"
-undercloud_cidr: 192.0.2.0/24
+undercloud_cidr: 10.230.7.0/24
 
 secrets:
   admin_token:      asdf
