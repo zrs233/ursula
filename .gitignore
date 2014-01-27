@@ -1,2 +1,4 @@
 envs/test
 *.pyc
+*.vdi
+.vagrant
