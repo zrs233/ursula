@@ -5,7 +5,7 @@ testenv_instance_names:
   - test-compute-0
 testenv_keypair_name: int-test
 testenv_keypair_path: "{{ ansible_env.ROOT }}/envs/test/{{ testenv_keypair_name }}.pem"
-testenv_image_id: 014f8214-37b0-4920-b7ce-ec05edc253fb
+testenv_image_id: b268bebc-290e-42ed-9e52-b3cd704a0e5d
 testenv_security_groups: ursula
 testenv_security_groups_description: Rules for testing
 testenv_net_id: ba0fdd03-72b5-41eb-bb67-fef437fd6cb4
