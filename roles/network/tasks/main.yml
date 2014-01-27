@@ -7,6 +7,8 @@
 - name: Prevent dnsmasq from add itself to /etc/resolv.conf via resolvconf
   lineinfile: dest=/etc/default/dnsmasq regexp="^DNSMASQ_EXCEPT=" line="DNSMASQ_EXCEPT=lo"
 
+- command: resolvconf -d lo.dnsmasq
+
 - name: ovs ex bridge
   ovs_bridge: name=br-ex state=present
 
