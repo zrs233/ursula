@@ -1,7 +1,7 @@
 {
   "client": {
     "name": "{{ inventory_hostname }}-{{ stack_env }}",
-    "address": "{{ ansible_eth0["ipv4"]["address"] }}",
+    "address": "{{ primary_ip }}",
     "subscriptions": [
       "openstack"
     ],
@@ -21,7 +21,7 @@
       "private_key_file": "/etc/sensu/ssl/key.pem"
     }
     {% else %}
-    "vhost": "/sensu"    
+    "vhost": "/sensu"
     {% endif %}
   }
 }

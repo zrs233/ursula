@@ -6,7 +6,7 @@
 - name: add controllers to /etc/hosts
   lineinfile: >
     dest=/etc/hosts regexp='.*{{ hostvars[item]['ansible_hostname'] }}$'
-    line='{{ hostvars[item]["ansible_eth0"]["ipv4"]["address"] }} {{ hostvars[item]['ansible_hostname'] }}'
+    line='{{ hostvars[item][primary_interface]["ipv4"]["address"] }} {{ hostvars[item]['ansible_hostname'] }}'
   with_items: groups["controller"]
 
 - name: add erlang-solutions apt key
@@ -73,7 +73,7 @@
 - name: wait for rabbit to start
   wait_for: >
     port={{ rabbitmq.port }}
-    host={{ ansible_eth0["ipv4"]["address"] }}
+    host={{ rabbitmq.ip }}
     delay=2
 
 - name: set the HA mirror queues policy

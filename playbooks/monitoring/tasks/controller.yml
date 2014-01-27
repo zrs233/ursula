@@ -65,8 +65,8 @@
 
 # memcached
 
-- sensu_check: name=memcached-stats plugin=check-memcached-stats.rb args='--host={{ ansible_eth0["ipv4"]["address"] }}'
+- sensu_check: name=memcached-stats plugin=check-memcached-stats.rb args='--host={{ primary_ip }}'
   notify: restart sensu-client
 
-- sensu_check: name=memcached-graphite plugin=memcached-graphite.rb args='--host={{ ansible_eth0["ipv4"]["address"] }} --scheme=stats.{{ inventory_hostname  }}'
+- sensu_check: name=memcached-graphite plugin=memcached-graphite.rb args='--host={{ primary_ip }} --scheme=stats.{{ inventory_hostname  }}'
   notify: restart sensu-client

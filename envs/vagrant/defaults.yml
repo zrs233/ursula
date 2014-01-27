@@ -48,7 +48,7 @@ monitoring:
   sensu_package_version: 0.12.2-1
   sensu_plugin_version: 0.1.7
   rabbit:
-    host: "{{ hostvars[groups['controller'][0]]['ansible_eth0']['ipv4']['address'] }}"
+    host: "{{ hostvars[groups['controller'][0]][primary_interface]['ipv4']['address'] }}"
     port: 5672
     user: openstack
     pass: asdf

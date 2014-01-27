@@ -25,4 +25,4 @@ wsrep_sst_auth = "{{ xtradb.sst_auth_user }}:{{ xtradb.sst_auth_password }}"
 wsrep_cluster_name = mstack_db_cluster
 
 # This Node's address
-wsrep_node_address = {{ ansible_eth0['ipv4']['address'] }}
+wsrep_node_address = {{ primary_ip }}
