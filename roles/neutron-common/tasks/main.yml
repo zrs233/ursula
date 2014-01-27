@@ -6,7 +6,7 @@
   changed_when: False
 
 - name: neutron user
-  user: name=neutron shell=/bin/false
+  user: name=neutron shell=/bin/false createhome=no
   when: neutron_user.rc == 0
 
 - name: neutron user
