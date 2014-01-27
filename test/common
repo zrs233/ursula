@@ -1,4 +1,4 @@
-set -eu
+set -e
 
 [[ -f ~/.stackrc ]] && source ~/.stackrc
 source $(dirname $0)/../share/common
