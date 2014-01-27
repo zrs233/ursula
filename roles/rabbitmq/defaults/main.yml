@@ -3,7 +3,7 @@ rabbitmq:
   erlang_cookie: 6IMgelGs3Ygu
   user: openstack
   nodename: 'openstack@{{ ansible_hostname }}'
-  ip: '{{ ansible_eth0["ipv4"]["address"] }}'
+  ip: '0.0.0.0'
   port: 5672
   management_port: 15672
   admin_cli_url: 'http://localhost:15672/cli/rabbitmqadmin'
