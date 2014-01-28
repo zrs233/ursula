@@ -23,7 +23,7 @@
 -A INPUT -i {{ ansible_default_ipv4['interface'] }} -m tcp -p tcp --dport={{ tcp_port }} -j ACCEPT
 {% endfor %}
 
--A INPUT {{ undercloud_cidr }} -j ACCEPT
+-A INPUT -s {{ undercloud_cidr }} -j ACCEPT
 
 -A INPUT -i {{ ansible_default_ipv4['interface'] }} -j DROP
 
