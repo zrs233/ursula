@@ -10,7 +10,7 @@ etc_hosts:
     ip: "{{ undercloud_swift_floating_ip }}"
 
 endpoints:
-  swift: "{{ undercloud_swift_floating_ip }}"
+  swift: "{{ swift_fqdn }}"
 
 percona:
   replication: False
