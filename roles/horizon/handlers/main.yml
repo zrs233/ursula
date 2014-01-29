@@ -1,25 +1,9 @@
 ---
-- name: horizon venv
-  shell: cd /opt/stack/horizon && python tools/install_venv.py
-  notify:
-    - force django-1.5
+- include: venv.yml
 
-# django 1.6 currently gets installed, and does not work.
-- name: force django-1.5
-  pip: name=Django version=1.5.5 chdir=/opt/stack/horizon virtualenv=/opt/stack/horizon/.venv
-  notify:
-    - restart apache
-
-- name: disable apache status
-  shell: a2dismod status
-  notify:
-    - restart apache
+- name: compress horizon assets
+  command: sudo -u www-data tools/with_venv.sh ./manage.py compress chdir=/opt/stack/horizon/
 
 - name: restart apache
   service: name=apache2 state=restarted
 
-- name: disable default apache site
-  shell: a2dissite default
-
-- name: compress horizon assets
-  command: sudo -u www-data tools/with_venv.sh ./manage.py compress chdir=/opt/stack/horizon/
