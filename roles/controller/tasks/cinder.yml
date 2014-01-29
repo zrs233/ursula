@@ -10,3 +10,6 @@
 
 - name: cinder-scheduler is running
   service: name=cinder-scheduler state=started
+
+- name: Permit access to Cinder
+  command: ufw allow 8778/tcp

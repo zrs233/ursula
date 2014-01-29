@@ -10,3 +10,9 @@
 
 - name: glance-registry is running
   service: name=glance-registry state=started
+
+- name: Permit access to Glance
+  command: ufw allow 9292/tcp
+
+- name: Permit access to Glance (SSL)
+  command: ufw allow 9293/tcp

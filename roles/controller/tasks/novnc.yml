@@ -6,3 +6,6 @@
 - template: src=etc/init/nova-novncproxy.conf dest=/etc/init/nova-novncproxy.conf
 
 - service: name=nova-novncproxy state=started
+
+- name: Permit access to NoVNC
+  command: ufw allow 6080/tcp

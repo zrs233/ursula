@@ -89,3 +89,8 @@
 
 - service: name=apache2 state=started
 
+- name: Permit HTTP (redirect to HTTPS for Horizon)
+  command: ufw allow 80/tcp
+
+- name: Permit HTTPS (Horizon)
+  command: ufw allow 443/tcp

@@ -12,28 +12,3 @@
 
 - name: Enable UFW (after configuring SSH access)
   command: ufw --force enable
-
-- name: Permit HTTP (redirect to HTTPS for Horizon)
-  command: ufw allow 80/tcp
-- name: Permit HTTPS (Horizon)
-  command: ufw allow 443/tcp
-
-- name: Permit access to Keystone
-  command: ufw allow 5001/tcp
-
-- name: Permit access to NoVNC
-  command: ufw allow 6080/tcp
-
-- name: Permit access to Nova
-  command: ufw allow 8777/tcp
-
-- name: Permit access to Cinder
-  command: ufw allow 8778/tcp
-
-- name: Permit access to Glance
-  command: ufw allow 9292/tcp
-- name: Permit access to Glance (SSL)
-  command: ufw allow 9293/tcp
-
-- name: Permit access to Neutron
-  command: ufw allow 9797/tcp
