@@ -16,6 +16,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       controller_config.vm.box = "precise64"
       controller_config.vm.box_url = BOX_URL
       controller_config.vm.network :private_network, ip: "10.1.1.10#{i}", :netmask => "255.255.0.0"
+      controller_config.vm.provider "virtualbox" do | v |
+        v.memory = 1024
+      end
     end
   end
 
