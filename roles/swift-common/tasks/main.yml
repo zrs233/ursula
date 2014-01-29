@@ -41,3 +41,5 @@
 - lineinfile: dest=/etc/default/rsync regexp=^RSYNC_ENABLE line=RSYNC_ENABLE=true
   notify: restart rsync
 
+- name: configure dispersion tools
+  template: src=etc/swift/dispersion.conf dest=/etc/swift/dispersion.conf owner=root group=root mode=0644
