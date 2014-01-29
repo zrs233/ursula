@@ -9,19 +9,19 @@
 - name: setup account ring
   swift_ring: ring_type=account action=add builder_file=/etc/swift/account.builder zone=1 ip={{ hostvars[item[0]][primary_interface]['ipv4']['address'] }} port=6002 device_name={{ item[1] }}1 meta=test weight=1000
   with_nested:
-    - groups['swift_proxy']
+    - groups['swiftnode']
     - swift.disks
 
 - name: setup container ring
   swift_ring: ring_type=container action=add builder_file=/etc/swift/container.builder zone=1 ip={{ hostvars[item[0]][primary_interface]['ipv4']['address'] }} port=6001 device_name={{ item[1] }}1 meta=test weight=1000
   with_nested:
-    - groups['swift_proxy']
+    - groups['swiftnode']
     - swift.disks
 
 - name: setup object ring
   swift_ring: ring_type=object action=add builder_file=/etc/swift/object.builder zone=1 ip={{ hostvars[item[0]][primary_interface]['ipv4']['address'] }} port=6000 device_name={{ item[1] }}1 meta=test weight=1000
   with_nested:
-    - groups['swift_proxy']
+    - groups['swiftnode']
     - swift.disks
 
 - name: rebalance rings

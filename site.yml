@@ -48,7 +48,7 @@
     - nova-common
 
 - name: swift code and config
-  hosts: swift_proxy
+  hosts: swiftnode
   roles:
     - haproxy
     - memcached
