@@ -15,10 +15,8 @@
 
 - apt: pkg=python-numpy
 
-# Workaround issue with Ansible git module not working
-- file: dest=/opt/stack/nova state=absent
-
-- command: git clone --branch {{nova.rev}} --depth 20 {{ openstack.git_mirror }}/nova.git /opt/stack/nova
+- name: get nova source repo
+  git: repo={{ openstack.git_mirror }}/nova.git dest=/opt/stack/nova version={{ nova.rev }}
   notify:
     - pip install nova
     - nova rootwrap
