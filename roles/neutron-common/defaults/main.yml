@@ -5,3 +5,5 @@ neutron:
   dhcp_dns_servers:
     - 8.8.8.8
     - 8.8.4.4
+  service_plugins:
+    - neutron.services.loadbalancer.plugin.LoadBalancerPlugin
