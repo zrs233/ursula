@@ -1,13 +1,11 @@
 ---
 - apt: pkg={{ item }}
   with_items:
-    - python-dev
+    - apache2
     - libapache2-mod-wsgi
     - libxml2-dev
     - libxslt1-dev
-
-- name: purge nodejs and can be removed once purged everywhere
-  apt: pkg=nodejs purge=yes state=absent
+    - python-dev
 
 - name: lesscpy must be in apache PATH
   pip: name=lesscpy version=0.9j
@@ -16,27 +14,51 @@
   git: |
     repo={{ openstack.git_mirror}}/horizon.git dest=/opt/stack/horizon version={{ horizon.rev }}
   notify:
-    - horizon venv
+    - setup horizon venv
     - compress horizon assets
+
+- name: add python-memcached to horizon requirements
+  lineinfile: dest=/opt/stack/horizon/requirements.txt regexp=^python-memcached line=python-memcached
+  notify:
+    - setup horizon venv
+
+- name: disable apache status
+  command: a2dismod status
+  notify:
     - restart apache
 
-- apt: pkg=apache2
+- name: disable default apache site
+  command: a2dissite default
   notify:
-    - disable apache status
-    - disable default apache site
-
-- file: dest=/opt/stack/horizon/static state=directory owner=www-data
-- file: dest=/opt/stack/horizon/static/dashboard state=directory owner=www-data
+    - restart apache
 
 - template: src=etc/apache2/ports.conf dest=/etc/apache2/ports.conf
   notify:
     - restart apache
+
 - template: src=etc/apache2/httpd.conf dest=/etc/apache2/httpd.conf
   notify:
     - restart apache
-- template: src=etc/apache2/mods-available/alias.conf dest=/etc/apache2/mods-available/alias.conf
+
+- template: |
+   src=etc/apache2/mods-available/alias.conf
+   dest=/etc/apache2/mods-available/alias.conf
   notify:
     - restart apache
+
+# static asset directories
+- file: |
+    dest=/opt/stack/horizon/static
+    state=directory
+    owner=www-data
+    group=www-data
+    mode=0755
+- file: |
+    dest=/opt/stack/horizon/static/dashboard
+    state=directory
+    owner=www-data
+    group=www-data
+    mode=0755
 
 - template: |
     src=opt/stack/horizon/openstack_dashboard/local/local_settings.py
@@ -54,10 +76,6 @@
 - name: custom horizon favicon
   get_url: url={{ horizon.favicon_url }} dest=/opt/stack/horizon/openstack_dashboard/static/dashboard/img/favicon.ico force=yes
 
-- name: static asset directory
-  file: dest=/opt/stack/horizon/static state=directory owner=www-data group=www-data mode=0755
-- file: dest=/opt/stack/horizon/static/dashboard state=directory owner=www-data group=www-data mode=0755
-
 - name: put images and fonts where apache can find them
   file: |
     src=/opt/stack/horizon/openstack_dashboard/static/dashboard/{{ item }}
@@ -71,8 +89,3 @@
 
 - service: name=apache2 state=started
 
-- name: add python-memcached to venv
-  lineinfile: dest=/opt/stack/horizon/requirements.txt regexp=python-memcached line=python-memcached
-  notify:
-    - horizon venv
-    - restart apache
