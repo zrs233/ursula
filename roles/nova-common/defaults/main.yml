@@ -1,7 +1,7 @@
 ---
 nova:
   patches:
-  rev: stable/havana
+  rev: 6bf7e78a6dc
   compute_driver: nova.virt.libvirt.LibvirtDriver
   api_workers: 5
   metadata_api_workers: 5
