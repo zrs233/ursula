@@ -153,7 +153,7 @@ OPENSTACK_HYPERVISOR_FEATURES = {
 # services provided by quantum.  Currently only the load balancer service
 # is available.
 OPENSTACK_QUANTUM_NETWORK = {
-    'enable_lb': False
+    'enable_lb': True
 }
 
 # OPENSTACK_ENDPOINT_TYPE specifies the endpoint type to use for the endpoints

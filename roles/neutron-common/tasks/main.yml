@@ -24,6 +24,7 @@
 
 - file: dest=/etc/neutron state=directory
 - file: dest=/etc/neutron/plugins/openvswitch state=directory
+- file: dest=/etc/neutron/services/loadbalancer/haproxy state=directory
 - file: dest=/var/lib/neutron state=directory owner=neutron
 - file: dest=/var/cache/neutron state=directory mode=0700 owner=neutron group=neutron
 
@@ -45,5 +46,13 @@
   notify:
     - restart neutron services
 
+- template: |
+    src=etc/neutron/services/loadbalancer/haproxy/lbaas_agent.ini
+    dest=/etc/neutron/services/loadbalancer/haproxy/lbaas_agent.ini
+    mode=0644
+  notify:
+    - restart neutron services
+
 - name: neutron sudoer
   template: src=etc/sudoers.d/neutron dest=/etc/sudoers.d/neutron owner=root group=root mode=0440
+
