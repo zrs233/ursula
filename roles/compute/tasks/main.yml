@@ -7,7 +7,7 @@
   with_items:
     - libvirt-bin
     - python-libvirt
-    - kvm
+    - qemu-kvm
     - open-iscsi
 
 - name: ensure kvm is supported by cpu and enabled in bios

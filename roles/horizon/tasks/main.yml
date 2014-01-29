@@ -3,6 +3,7 @@
   with_items:
     - apache2
     - libapache2-mod-wsgi
+    - libssl-dev
     - libxml2-dev
     - libxslt1-dev
     - python-dev
@@ -28,7 +29,7 @@
     - restart apache
 
 - name: disable default apache site
-  command: a2dissite default
+  command: a2dissite 000-default
   notify:
     - restart apache
 
