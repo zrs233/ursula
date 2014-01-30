@@ -6,6 +6,9 @@
 
 - user: name=swift comment=swift shell=/bin/false system=yes home=/nonexistent createhome=no
 
+- name: install keystoneclient via pip
+  pip: name=python-keystoneclient
+
 - name: get swift source repo
   git: |
     repo={{ openstack.git_mirror }}/swift.git dest=/opt/stack/swift version={{ swift.rev }} depth=50
