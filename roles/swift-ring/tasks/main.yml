@@ -1,6 +1,6 @@
 ---
 - name: setup swift rings
-  swift_ring: ring_type={{ item }} action=create builder_file=/etc/swift/{{ item }}.builder part_power=18 replicas=3 min_part_hours=24
+  swift_ring: ring_type={{ item }} action=create builder_file=/etc/swift/{{ item }}.builder part_power={{ swift_ring.part_power }} replicas={{ swift_ring.replicas }} min_part_hours={{ swift_ring.min_part_hours }}
   with_items:
     - account
     - container
