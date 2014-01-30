@@ -4,18 +4,19 @@
 - file: dest=/etc/sensu/plugins state=directory owner=root
 - copy: src={{ item }} dest=/etc/sensu/plugins/{{ item }} mode=0755
   with_items:
-    - check-procs.rb
     - check-cpu.rb
     - check-disk.rb
-    - vmstat-metrics.rb
-    - load-metrics.rb
     - check-http.rb
     - check-log.rb
+    - check-memcached-stats.rb
     - check-os-api.rb
+    - check-procs.rb
     - check-rabbitmq-cluster.rb
     - check-rabbitmq-queues.rb
-    - check-memcached-stats.rb
+    - check-swift-dispersion.py
+    - load-metrics.rb
     - memcached-graphite.rb
+    - vmstat-metrics.rb
 
 - sensu_check: name=cpu  plugin=check-cpu.rb args='-w 80 -c 90'
   notify: restart sensu-client

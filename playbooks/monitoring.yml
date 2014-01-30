@@ -36,3 +36,11 @@
   - include: monitoring/tasks/network.yml
   handlers:
   - include: ../handlers/main.yml
+
+- name: Install swift checks
+  hosts: swiftnode
+  tasks:
+  - include: monitoring/tasks/swift.yml
+  handlers:
+  - include: ../handlers/main.yml
+
