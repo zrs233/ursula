@@ -28,22 +28,23 @@
   notify:
     - restart apache
 
+- template: src=etc/apache2/ports.conf dest=/etc/apache2/ports.conf
+  notify:
+    - restart apache
+
 - name: disable default apache site
   command: a2dissite 000-default
   notify:
     - restart apache
 
-- template: src=etc/apache2/ports.conf dest=/etc/apache2/ports.conf
-  notify:
-    - restart apache
-
-- template: src=etc/apache2/httpd.conf dest=/etc/apache2/httpd.conf
-  notify:
-    - restart apache
-
 - template: |
-   src=etc/apache2/mods-available/alias.conf
-   dest=/etc/apache2/mods-available/alias.conf
+    src=etc/apache2/sites-available/openstack_dashboard.conf
+    dest=/etc/apache2/sites-available/openstack_dashboard.conf
+  notify:
+    - restart apache
+
+- name: enable horizon apache site
+  command: a2ensite openstack_dashboard
   notify:
     - restart apache
 
