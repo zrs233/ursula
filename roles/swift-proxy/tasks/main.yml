@@ -1,0 +1,19 @@
+---
+- name: install memcached
+  apt: pkg=memcached
+
+- name: swift-proxy service script
+  template: src=../../../roles/swift-common/templates/etc/init/swift-service.conf dest=/etc/init/swift-{{ item.service_name }}.conf mode=0644
+  with_items:
+    - { service_name: proxy, conf: proxy-server }
+
+- name: configure swift-proxy
+  template: src=etc/swift/proxy-server.conf dest=/etc/swift/proxy-server.conf owner=root group=root mode=0644
+  notify: restart swift-proxy service
+
+- name: start swift-proxy service
+  service: name=swift-proxy state=started
+
+- name: configure haproxy
+  template: src=etc/haproxy/haproxy.cfg dest=/etc/haproxy/haproxy.cfg mode=0644
+  notify: restart haproxy

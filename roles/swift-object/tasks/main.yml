@@ -1,0 +1,22 @@
+---
+- name: install xfsprogs
+  apt: pkg=xfsprogs
+
+- name: swift-object service scripts
+  template: src=../../../roles/swift-common/templates/etc/init/swift-service.conf dest=/etc/init/swift-{{ item.service_name }}.conf mode=0644
+  with_items:
+    - { service_name: object-auditor, conf: object-server }
+    - { service_name: object, conf: object-server }
+    - { service_name: object-replicator, conf: object-server }
+    - { service_name: object-updater, conf: object-server }
+
+- template: src=etc/swift/object-server.conf dest=/etc/swift/object-server.conf owner=root group=root mode=0644
+  notify: restart swift-object service
+
+- name: start swift-object service
+  service: name=swift-object state=started
+
+- name: configure disks
+  swift_disk: dev={{ item }}
+  with_items:
+    "{{ swift.disks }}"

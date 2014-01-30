@@ -47,6 +47,18 @@
   roles:
     - nova-common
 
+- name: swift code and config
+  hosts: swiftnode
+  roles:
+    - haproxy
+    - memcached
+    - swift-common
+    - swift-object
+    - swift-account
+    - swift-container
+    - swift-ring
+    - swift-proxy
+
 - name: neutron code and config
   hosts: controller:db:compute:network
   vars_files:
