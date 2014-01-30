@@ -51,7 +51,10 @@ def swift_ring_add(module, builder_file, zone, ip, port, device_name, meta,
                              device_str, weight)
 
 
-def swift_ring_rebalance(module, builder_file, force=False):
+def swift_ring_rebalance(module, builder_file, ring_type, force=False):
+    if not force and os.path.exists("/etc/swift/%s.ring.gz" % ring_type):
+        return False
+
     return _run_ring_command(module, 'rebalance', builder_file, force)
 
 
@@ -99,6 +102,7 @@ def main():
     elif params['action'] == 'rebalance':
         changed = swift_ring_rebalance(module,
                                        params['builder_file'],
+                                       params['ring_type'],
                                        params['force'])
 
     module.exit_json(changed=changed)
