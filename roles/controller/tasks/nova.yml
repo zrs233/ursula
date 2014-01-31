@@ -16,3 +16,6 @@
     - nova-conductor
     - nova-consoleauth
     - nova-scheduler
+
+- name: Permit access to Nova API
+  command: ufw allow 8777/tcp

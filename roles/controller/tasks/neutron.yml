@@ -1,3 +1,6 @@
 ---
 - template: src=etc/init/neutron-server.conf dest=/etc/init/neutron-server.conf
 - service: name=neutron-server state=started
+
+- name: Permit access to Neutron
+  command: ufw allow 9797/tcp
