@@ -1,0 +1,14 @@
+---
+- name: swift-account service scripts
+  template: src=../../../roles/swift-common/templates/etc/init/swift-service.conf dest=/etc/init/swift-{{ item.service_name }}.conf mode=0644
+  with_items:
+    - { service_name: account-auditor, conf: account-server }
+    - { service_name: account, conf: account-server }
+    - { service_name: account-reaper, conf: account-server }
+    - { service_name: account-replicator, conf: account-server }
+
+- template: src=etc/swift/account-server.conf dest=/etc/swift/account-server.conf owner=root group=root mode=0644
+  notify: restart swift-account service
+
+- name: start swift-account service
+  service: name=swift-account state=started

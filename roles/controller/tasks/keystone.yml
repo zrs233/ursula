@@ -4,3 +4,6 @@
 
 - name: keystone is running
   service: name=keystone state=started
+
+- name: Permit access to Keystone
+  command: ufw allow 5001/tcp

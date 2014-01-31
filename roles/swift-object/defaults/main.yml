@@ -1,0 +1,5 @@
+---
+swift_object:
+  ip: "{{ primary_ip }}"
+  port: 6000
+  workers: 10

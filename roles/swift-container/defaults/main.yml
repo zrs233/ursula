@@ -1,0 +1,5 @@
+---
+swift_container:
+  ip: "{{ primary_ip }}"
+  port: 6001
+  workers: 10

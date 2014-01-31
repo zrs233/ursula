@@ -38,9 +38,9 @@
   - name: rabbitmq has the rabbitmqadmin script installed
     shell: test -f /usr/local/bin/rabbitmqadmin
   - name: iptables defaults to dropping connections from the internet
-    shell: iptables-save | egrep "^-A INPUT -i {{ ansible_default_ipv4['interface'] }} -j DROP"
+    shell: ufw status verbose | egrep '^Default. deny .incoming.'
   - name: iptables lets ssh in from outside
-    shell: iptables-save | egrep "^-A INPUT -i {{ ansible_default_ipv4['interface'] }} -p tcp -m tcp --dport 22 -j ACCEPT"
+    shell: ufw status verbose | egrep '^22/tcp                     ALLOW IN    Anywhere'
   - name: all backends are up in haproxy
     shell: curl -k -s -u admin:{{ secrets.admin_password }} https://127.0.0.1/haproxy_stats\;csv | awk '/DOWN/ {print;ec=1} END{exit ec}'
 

@@ -39,6 +39,7 @@ endpoints:
   glance:   *controller
   neutron:  *controller
   vnc:      *controller
+  cinder:   *controller
 
 mysql:
   root_password: asdf

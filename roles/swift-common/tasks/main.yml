@@ -1,0 +1,45 @@
+---
+- apt: pkg={{ item }}
+  with_items:
+    - python2.7-dev
+    - libffi-dev
+
+- user: name=swift comment=swift shell=/bin/false system=yes home=/nonexistent createhome=no
+
+- name: get swift source repo
+  git: |
+    repo={{ openstack.git_mirror }}/swift.git dest=/opt/stack/swift version={{ swift.rev }} depth=50
+
+- name: pip install swift services
+  shell: pip install -i {{ openstack.pypi_mirror }} /opt/stack/swift
+
+- name: get swift client source repo
+  git: |
+    repo={{ openstack.git_mirror }}/python-swiftclient.git dest=/opt/stack/python-swiftclient version={{ swift.client.rev }} depth=50
+
+- name: pip install swift client
+  shell: pip install -i {{ openstack.pypi_mirror }} /opt/stack/python-swiftclient
+
+- name: create swift configuration diectory
+  file: dest=/etc/swift state=directory owner=swift group=swift mode=0755
+
+- name: configure swift
+  template: src=etc/swift/swift.conf dest=/etc/swift/swift.conf owner=root group=root mode=0644
+
+- name: create swift cache directory
+  file: dest=/var/cache/swift state=directory owner=swift group=swift mode=0755
+
+- name: create swift node directory
+  file: dest=/srv/node state=directory owner=root group=root mode=0755
+
+- name: install rsync
+  apt: pkg=rsync
+
+- template: src=etc/rsyncd.conf dest=/etc/rsyncd.conf owner=root group=root mode=0644
+  notify: restart rsync
+
+- lineinfile: dest=/etc/default/rsync regexp=^RSYNC_ENABLE line=RSYNC_ENABLE=true
+  notify: restart rsync
+
+- name: configure dispersion tools
+  template: src=etc/swift/dispersion.conf dest=/etc/swift/dispersion.conf owner=root group=root mode=0644

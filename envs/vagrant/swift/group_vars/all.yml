@@ -1,4 +1,5 @@
 ---
+stack_env: swift_testing
 swift_fqdn: swift.example.org
 undercloud_swift_floating_ip: "{{ hostvars[groups['swiftnode'][0]][primary_interface]['ipv4']['address'] }}"
 
@@ -9,7 +10,7 @@ etc_hosts:
     ip: "{{ undercloud_swift_floating_ip }}"
 
 endpoints:
-  swift: "{{ undercloud_swift_floating_ip }}"
+  swift: "{{ swift_fqdn }}"
 
 percona:
   replication: False

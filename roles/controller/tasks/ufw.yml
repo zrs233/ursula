@@ -1,0 +1,14 @@
+---
+- apt: pkg=ufw
+
+- name: Permit SSH
+  command: ufw allow 22/tcp
+
+- name: Permit unrestricted access from remainder of cluster
+  command: ufw allow from {{ undercloud_cidr }}
+
+- name: Do not enforce forwarding rules with UFW
+  lineinfile: dest=/etc/default/ufw regexp="^DEFAULT_FORWARD_POLICY" line="DEFAULT_FORWARD_POLICY=\"ACCEPT\""
+
+- name: Enable UFW (after configuring SSH access)
+  command: ufw --force enable

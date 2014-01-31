@@ -1,33 +1,5 @@
-*filter
-:INPUT ACCEPT [0:0]
-:FORWARD ACCEPT [0:0]
-:OUTPUT ACCEPT [0:0]
-
--A INPUT -i {{ ansible_default_ipv4['interface'] }} -m tcp -p tcp --dport=22 -j ACCEPT
--A INPUT -i {{ ansible_default_ipv4['interface'] }} -p udp --dport 32768:61000 -j ACCEPT
--A INPUT -i {{ ansible_default_ipv4['interface'] }} -p tcp --dport 32768:61000 -j ACCEPT
--A INPUT -i {{ ansible_default_ipv4['interface'] }} -p icmp -j ACCEPT
-
-{% for tcp_port in [
-    80,
-    443,
-    5001,
-    6080,
-    8777,
-    8778,
-    9292,
-    9393,
-    9797
-  ]
-%}
--A INPUT -i {{ ansible_default_ipv4['interface'] }} -m tcp -p tcp --dport={{ tcp_port }} -j ACCEPT
-{% endfor %}
-
--A INPUT -s {{ undercloud_cidr }} -j ACCEPT
-
--A INPUT -i {{ ansible_default_ipv4['interface'] }} -j DROP
-
-COMMIT
+# NOTE we are only using this to manage the mangle table
+# The filter table is managed by ufw-framework and the NAT table is manged by /etc/network/interfaces
 *mangle
 :PREROUTING ACCEPT [0:0]
 :INPUT ACCEPT [0:0]
@@ -36,14 +8,5 @@ COMMIT
 :POSTROUTING ACCEPT [0:0]
 
 -A POSTROUTING -p udp --dport bootpc -j CHECKSUM --checksum-fill
-
-COMMIT
-*nat
-:PREROUTING ACCEPT [0:0]
-:INPUT ACCEPT [0:0]
-:OUTPUT ACCEPT [0:0]
-:POSTROUTING ACCEPT [0:0]
-
--A POSTROUTING -o {{ ansible_default_ipv4['interface'] }} -s {{ undercloud_cidr }} ! -d {{ undercloud_cidr }} -j MASQUERADE
 
 COMMIT
