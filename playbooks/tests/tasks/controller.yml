@@ -48,6 +48,14 @@
   tasks:
   - name: horizon config has memcached servers
     shell: egrep \'[0-9.]+:11211\',\'[0-9]+ /opt/stack/horizon/openstack_dashboard/local/local_settings.py
+  - name: keystone should include OpenStack services
+    shell: . /root/stackrc; keystone service-list | grep {{ item }}
+    with_items:
+    - keystone
+    - nova
+    - neutron
+    - glance
+    - cinder
   - name: cinder has a working api
     shell: . /root/stackrc; cinder list | grep ID
   - name: glance has the cirros image
