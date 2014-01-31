@@ -1,7 +1,13 @@
 ---
 - name: haproxy ppa - required to get a version new enough to support ssl
   apt_repository: repo='ppa:vbernat/haproxy-1.5' update_cache=yes
-- apt: pkg=haproxy=1.5~dev21-1ppa1~precise
+  when: ansible_distribution_version == "12.04"
+
+- name: haproxy ppa - required to get a version new enough to support ssl
+  apt_repository: repo='ppa:blueboxgroup/openstack' update_cache=yes
+  when: ansible_distribution_version != "12.04"
+
+- apt: pkg=haproxy
 
 - name: install ssl cert+key
   template: src=etc/haproxy/openstack.pem dest=/etc/haproxy/openstack.pem
