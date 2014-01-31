@@ -1,6 +1,7 @@
 set -e
 
-[[ -f ~/.stackrc ]] && source ~/.stackrc
+export STACK_RC=${STACK_RC:-~/.stackrc}
+[[ -f ${STACK_RC} ]] && source ${STACK_RC}
 source $(dirname $0)/../share/common
 
 export ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
