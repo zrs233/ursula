@@ -26,6 +26,7 @@ endpoints:
   glance:   "{{ fqdn }}"
   neutron:  "{{ fqdn }}"
   vnc:      "{{ fqdn }}"
+  cinder:   "{{ fqdn }}"
 
 rabbitmq:
   cluster: false
