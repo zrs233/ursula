@@ -39,7 +39,15 @@
 
 - template: |
     src=etc/apache2/sites-available/openstack_dashboard.conf
+    dest=/etc/apache2/sites-available/openstack_dashboard
+  when: ansible_distribution_version == "12.04"
+  notify:
+    - restart apache
+
+- template: |
+    src=etc/apache2/sites-available/openstack_dashboard.conf
     dest=/etc/apache2/sites-available/openstack_dashboard.conf
+  when: ansible_distribution_version != "12.04"
   notify:
     - restart apache
 
