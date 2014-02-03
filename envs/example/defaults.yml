@@ -1,8 +1,6 @@
 ---
 stack_env: example
 
-controller_primary: &controller "{{ hostvars[groups['controller'][0]][primary_interface]['ipv4']['address'] }}"
-
 primary_interface: 'ansible_eth0'
 primary_ip: "{{ hostvars[inventory_hostname][primary_interface]['ipv4']['address'] }}"
 undercloud_cidr: 10.230.7.0/24
@@ -10,20 +8,20 @@ undercloud_cidr: 10.230.7.0/24
 secrets:
   admin_token:      asdf
   db_password:      asdf
-  service_password: &service_password asdf
+  service_password: asdf
   rabbit_password:  asdf
-  admin_password:   &admin_password asdf
-  provider_admin_password:   &provider_admin_password ghij
+  admin_password:   asdf
+  provider_admin_password:      ghij
   metadata_proxy_shared_secret: asdf
   horizon_secret_key:           asdf
   glance_sync:      ADQ64XUQLUWH75M634RVBLP55RKPGGOWG
 
-fqdn: &fqdn openstack.example.com
-floating_ip: &floating_ip 173.247.112.252
+fqdn: openstack.example.com
+floating_ip: 173.247.112.252
 
 etc_hosts:
-  - name: *fqdn
-    ip: *floating_ip
+  - name: "{{ fqdn }}"
+    ip: "{{ floating_ip }}"
 
 rabbitmq:
   cluster: true
@@ -32,14 +30,14 @@ memcached:
   memory: 64
 
 endpoints:
-  main:     *controller
-  db:       *controller
-  keystone: *controller
-  nova:     *controller
-  glance:   *controller
-  neutron:  *controller
-  vnc:      *controller
-  cinder:   *controller
+  main:     "{{ fqdn }}"
+  db:       "{{ fqdn }}"
+  keystone: "{{ fqdn }}"
+  nova:     "{{ fqdn }}"
+  glance:   "{{ fqdn }}"
+  neutron:  "{{ fqdn }}"
+  vnc:      "{{ fqdn }}"
+  cinder:   "{{ fqdn }}"
 
 mysql:
   root_password: asdf
@@ -140,26 +138,26 @@ keystone:
 
   users:
     - name: admin
-      password: *admin_password
+      password: "{{ secrets.admin_password }}"
       tenant: admin
     - name: provider_admin
-      password: *provider_admin_password
+      password: "{{ secrets.provider_admin_password }}"
       tenant: admin
     - name: demo
       password: demopass
       tenant: demo
 
     - name: nova
-      password: *service_password
+      password: "{{ secrets.service_password }}"
       tenant: service
     - name: glance
-      password: *service_password
+      password: "{{ secrets.service_password }}"
       tenant: service
     - name: neutron
-      password: *service_password
+      password: "{{ secrets.service_password }}"
       tenant: service
     - name: cinder
-      password: *service_password
+      password: "{{ secrets.service_password }}"
       tenant: service
 
   user_roles:
