@@ -17,7 +17,7 @@ secrets:
   glance_sync:      ADQ64XUQLUWH75M634RVBLP55RKPGGOWG
 
 fqdn: openstack.example.com
-floating_ip: 173.247.112.252
+floating_ip: "{{ controller_primary }}"
 
 etc_hosts:
   - name: "{{ fqdn }}"

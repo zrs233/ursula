@@ -27,7 +27,8 @@ rm -f ${ROOT}/envs/test/hosts
 mkdir -p ${ROOT}/envs/test/
 cp -r ${ROOT}/envs/example/group_vars ${ROOT}/envs/test
 cp ${ROOT}/envs/example/hosts ${ROOT}/envs/test
-sed -i -e "s/^controller_primary: \&controller.*/controller_primary: \&controller ${CONTROLLER_IP}/" envs/test/group_vars/all.yml
+echo "---" > ${ROOT}/envs/test/group_vars/all.yml
+echo "controller_primary: ${CONTROLLER_IP}" >> ${ROOT}/envs/test/group_vars/all.yml
 
 echo "generating ssl cert for ${CONTROLLER_IP}"
 CERT_DIR=$(mktemp -d 2> /dev/null || mktemp -d -t 'setup')
