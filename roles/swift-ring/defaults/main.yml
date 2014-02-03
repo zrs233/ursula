@@ -1,0 +1,5 @@
+---
+swift_ring:
+  part_power: 16
+  replicas: 3
+  min_part_hours: 1
