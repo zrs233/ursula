@@ -29,19 +29,19 @@ cp -r ${ROOT}/envs/example/* ${ROOT}/envs/test
 echo "---" > ${ROOT}/envs/test/group_vars/all.yml
 echo "controller_primary: ${CONTROLLER_IP}" >> ${ROOT}/envs/test/group_vars/all.yml
 
-echo "generating ssl cert for ${CONTROLLER_IP}"
+echo "generating ssl cert for openstack.example.com"
 CERT_DIR=$(mktemp -d 2> /dev/null || mktemp -d -t 'setup')
 pushd ${CERT_DIR}
-${ROOT}/test/gen-cert ${CONTROLLER_IP}
+${ROOT}/test/gen-cert openstack.example.com
 cat >> ${ROOT}/envs/test/group_vars/all.yml <<eof
 ssl:
   crt: |
 eof
-cat ${CERT_DIR}/${CONTROLLER_IP}.crt | sed 's/^/    /' >> ${ROOT}/envs/test/group_vars/all.yml
+cat ${CERT_DIR}/openstack.example.com.crt | sed 's/^/    /' >> ${ROOT}/envs/test/group_vars/all.yml
 cat >> ${ROOT}/envs/test/group_vars/all.yml <<eof
   key: |
 eof
-cat ${CERT_DIR}/${CONTROLLER_IP}.key | sed 's/^/    /' >> ${ROOT}/envs/test/group_vars/all.yml
+cat ${CERT_DIR}/openstack.example.com.key | sed 's/^/    /' >> ${ROOT}/envs/test/group_vars/all.yml
 popd
 rm -rf ${CERT_DIR}
 
