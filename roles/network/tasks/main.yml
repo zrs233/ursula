@@ -3,6 +3,7 @@
   with_items:
     - dnsmasq
     - dnsmasq-utils
+    - ucarp
 
 - name: Prevent dnsmasq from add itself to /etc/resolv.conf via resolvconf
   lineinfile: dest=/etc/default/dnsmasq regexp="^DNSMASQ_EXCEPT=" line="DNSMASQ_EXCEPT=lo"
