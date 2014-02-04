@@ -16,7 +16,7 @@ SSH_ARGS=\
 ' -o UserKnownHostsFile=/dev/null'\
 " -i ${KEY_PATH}"
 export ANSIBLE_SSH_ARGS="${SSH_ARGS}"
-export ANSIBLE_VARS_PLUGINS="${ROOT}/plugins/vars"
+export ANSIBLE_VAR_DEFAULTS_FILE="${ROOT}/envs/test/defaults.yml"
 export IMAGE_ID=${IMAGE_ID:=014f8214-37b0-4920-b7ce-ec05edc253fb}
 
 die() {
