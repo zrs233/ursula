@@ -10,6 +10,7 @@ cat > ${ROOT}/envs/test/hosts <<eof
 [local]
 127.0.0.1
 eof
+cp ${ROOT}/envs/example/defaults.yml ${ROOT}/envs/test/defaults.yml
 
 echo "destroying: ${VMS}"
 ${ROOT}/test/cleanup
