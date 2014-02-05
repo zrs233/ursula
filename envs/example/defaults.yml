@@ -98,15 +98,17 @@ cinder:
 neutron:
   physical_bridge: br-ex
   physical_network: br-ex
-  tenant_network_type: gre
+  tenant_network_type: vxlan
   enable_tunneling: True
   network_vlan_ranges: ''
   bridge_mappings: ''
+  tunnel_types:
+    - vxlan
   networks:
     - name: internal
       shared: true
       external: false
-      network_type: gre
+      network_type: vxlan
       segmentation_id: 256
       provider_physical_network: ~
     - name: external
