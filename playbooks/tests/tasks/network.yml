@@ -3,8 +3,8 @@
   tasks:
   - name: neutron has an internal network
     shell: . /root/stackrc; neutron net-list | grep internal
-  - name: neutron has a network with network_type gre
-    shell: . /root/stackrc; neutron net-show internal | grep provider:network_type | grep gre
+  - name: neutron has a network with network_type vxlan
+    shell: . /root/stackrc; neutron net-show internal | grep provider:network_type | grep vxlan
   - name: neutron has a network with segmentation_id 256
     shell: . /root/stackrc; neutron net-show internal | grep provider:segmentation_id | grep 256
   - name: neutron has a network with router_external False
