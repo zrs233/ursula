@@ -109,12 +109,24 @@ neutron:
       network_type: gre
       segmentation_id: 256
       provider_physical_network: ~
+    - name: external
+      shared: true
+      external: false
+      network_type: local
+      segmentation_id: ~
+      provider_physical_network: ~
   subnets:
     - name: internal
       network_name: internal
       cidr: 172.16.255.0/24
       enable_dhcp: "true"
       gateway_ip: 172.16.255.1
+      ip_version: 4
+    - name: external
+      network_name: external
+      cidr: 192.168.255.0/24
+      enable_dhcp: "false"
+      gateway_ip: 192.168.255.1
       ip_version: 4
   routers:
     - name: default
