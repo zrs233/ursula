@@ -64,3 +64,6 @@
     shell: . /root/stackrc; nova list | grep ID
   - name: m1.tiny flavor has been embiggened
     shell: mysql -e "select root_gb from nova.instance_types where name='m1.tiny';" | grep 10
+  - name: nova can boot an instance
+    shell: . /root/stackrc; INTERNAL_NET=`nova net-list | awk '/ internal / {print $2}'`; nova boot --flavor m1.tiny --image cirros --nic net-id=${INTERNAL_NET} --poll turtle-stack
+
