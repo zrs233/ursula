@@ -102,6 +102,8 @@ neutron:
   enable_tunneling: True
   network_vlan_ranges: ''
   bridge_mappings: ''
+  tunnel_types:
+    - gre
   networks:
     - name: internal
       shared: true
