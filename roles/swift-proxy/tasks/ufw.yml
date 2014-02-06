@@ -7,8 +7,6 @@
 
 - name: permit swift proxy from anywhere
   ufw_allow: to=8090/tcp
-  notify: enable ufw
 
 - name: permit internal access to anywhere
   ufw_allow: from={{ undercloud_cidr }}
-  notify: enable ufw
