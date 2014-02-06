@@ -23,3 +23,6 @@
 - hosts: all
   tasks:
   - apt: update_cache=yes upgrade=dist
+  - template: src=../templates/etc/network/interfaces dest=/etc/network/interfaces
+  - file: dest=/etc/network/interfaces.d state=directory owner=root group=root mode=0755
+  - template: src=../templates/etc/network/interfaces.d/eth0.cfg dest=/etc/network/interfaces.d/eth0.cfg
