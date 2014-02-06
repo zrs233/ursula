@@ -23,6 +23,17 @@
 - hosts: all
   tasks:
   - apt: update_cache=yes upgrade=dist
-  - template: src=../templates/etc/network/interfaces dest=/etc/network/interfaces
-  - file: dest=/etc/network/interfaces.d state=directory owner=root group=root mode=0755
-  - template: src=../templates/etc/network/interfaces.d/eth0.cfg dest=/etc/network/interfaces.d/eth0.cfg
+  - name: Ubuntu 14.04 style /etc/network/interfaces.d/ directory
+    file: dest=/etc/network/interfaces.d state=directory owner=root group=root mode=0755
+  - name: /etc/network/interfaces to support interfaces.d/
+    template: src=../templates/etc/network/interfaces dest=/etc/network/interfaces
+  - name: default interfaces.d/eth0.cfg
+    template: src=../templates/etc/network/interfaces.d/eth0.cfg dest=/etc/network/interfaces.d/eth0.cfg
+
+- hosts: controller
+  tasks:
+  - name: interfaces.d/eth0.cfg with NAT for floating IP pool
+    template: src=../templates/etc/network/interfaces.d/eth0-controllers.cfg dest=/etc/network/interfaces.d/eth0.cfg
+  - shell: ifdown eth0; ifup eth0
+  - name: interfaces.d/br-ex.cfg for floating IP pool
+    template: src=../templates/etc/network/interfaces.d/br-ex.cfg dest=/etc/network/interfaces.d/br-ex.cfg

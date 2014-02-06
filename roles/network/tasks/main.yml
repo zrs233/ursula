@@ -11,6 +11,8 @@
 
 - name: ovs ex bridge
   ovs_bridge: name=br-ex state=present
+  notify:
+    - ifup br-ex
 
 - template: src=etc/init/{{ item }}.conf dest=/etc/init/{{ item }}.conf
   with_items:
