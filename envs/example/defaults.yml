@@ -113,7 +113,7 @@ neutron:
       provider_physical_network: ~
     - name: external
       shared: true
-      external: false
+      external: true
       network_type: local
       segmentation_id: ~
       provider_physical_network: ~

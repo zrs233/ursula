@@ -23,6 +23,8 @@
     shell: . /root/stackrc; neutron subnet-show internal | grep gateway | grep gateway_ip
   - name: neutron has the default router
     shell: . /root/stackrc; neutron router-list | grep default
+  - name: neutron router can ping internet
+    shell: ROUTER_NS=$( ip netns show | grep qrouter- ); ip netns exec ${ROUTER_NS} ping -c 5 8.8.8.8
 
 - hosts: controller
   tasks:
