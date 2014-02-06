@@ -1,4 +1,6 @@
 ---
+- include: ufw.yml
+
 - name: install memcached
   apt: pkg=memcached
 
@@ -17,3 +19,5 @@
 - name: configure haproxy
   template: src=etc/haproxy/haproxy.cfg dest=/etc/haproxy/haproxy.cfg mode=0644
   notify: restart haproxy
+
+

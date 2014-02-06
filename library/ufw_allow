@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'antsy'
+
+args = Antsy.args
+to = args[:to] || 'Anywhere'
+from = args[:from] || 'Anywhere'
+
+Antsy.fail! "ufw is not present" unless system 'which ufw'
+
+if system "ufw status  | egrep '^#{to}\\s+ALLOW\\s+#{from}$'"
+  Antsy.no_change!
+else
+  add_cmd = "ufw allow"
+  add_cmd += " #{to}" unless to == 'Anywhere'
+  add_cmd += " from #{from}" unless from == 'Anywhere'
+  if system add_cmd
+    Antsy.changed!
+  else
+    Antsy.fail! "failed to add ufw rule with command: #{add_cmd}"
+  end
+end
