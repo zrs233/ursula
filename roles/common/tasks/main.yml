@@ -1,4 +1,8 @@
 ---
+- name: add an apt proxy
+  template: src=etc/apt/apt.conf.d/01proxy dest=/etc/apt/apt.conf.d/01proxy owner=root group=root mode=0644
+  when: common.apt_cache is defined
+
 - name: update apt index
   apt: update_cache=yes
 

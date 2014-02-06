@@ -239,3 +239,6 @@ ssl:
     Ol08q4TScRU4qf1//74yJwlo/+W1CtuiTwysibjgs4BQ8fWJUzgbKvXE3lxJ6D+h
     QxSg02mn6ve0/jY/zcdCAY1gVOU6Z2MNtUYHBAEbbw+G/vXSVtY=
     -----END RSA PRIVATE KEY-----
+
+common:
+  apt_cache: "http://ursula-cache.openstack.blueboxgrid.com:3142"
