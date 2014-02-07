@@ -29,3 +29,5 @@ if [ "${ACTION}" == "all" -o "${ACTION}" == "test" ]; then
     ${ROOT}/playbooks/tests/tasks/main.yml \
     "true")
 fi
+
+echo "test complete"
