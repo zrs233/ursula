@@ -11,5 +11,20 @@
 - template: src=etc/swift/container-server.conf dest=/etc/swift/container-server.conf owner=root group=root mode=0644
   notify: restart swift-container service
 
-- name: start swift-container service
-  service: name=swift-container state=started
+- name: start swift-container services
+  service: name={{ item }} state=started
+  with_items:
+    - swift-container-replicator
+    - swift-container-updater
+    - swift-container-auditor
+    - swift-container-sync
+    - swift-container-server
+
+- name: sensu container process checks
+  sensu_process_check: service={{ item }}
+  with_items:
+    - swift-container-replicator
+    - swift-container-updater
+    - swift-container-auditor
+    - swift-container-sync
+    - swift-container-server

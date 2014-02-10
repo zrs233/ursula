@@ -10,5 +10,18 @@
 - template: src=etc/swift/account-server.conf dest=/etc/swift/account-server.conf owner=root group=root mode=0644
   notify: restart swift-account service
 
-- name: start swift-account service
-  service: name=swift-account state=started
+- name: start swift-account services
+  service: name={{ item }} state=started
+  with_items:
+    - swift-account-auditor
+    - swift-account-replicator
+    - swift-account-reaper
+    - swift-account-server
+
+- name: sensu account process checks
+  sensu_process_check: service={{ item }}
+  with_items:
+    - swift-account-auditor
+    - swift-account-replicator
+    - swift-account-reaper
+    - swift-account-server

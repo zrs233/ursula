@@ -13,8 +13,19 @@
 - template: src=etc/swift/object-server.conf dest=/etc/swift/object-server.conf owner=root group=root mode=0644
   notify: restart swift-object service
 
-- name: start swift-object service
-  service: name=swift-object state=started
+- name: start swift-object services
+  service: name={{ item }} state=started
+  with_items:
+    - swift-object-replicator
+    - swift-object-updater
+    - swift-object-server
+
+- name: sensu object process checks
+  sensu_process_check: service={{ item }}
+  with_items:
+    - swift-object-replicator
+    - swift-object-updater
+    - swift-object-server
 
 - name: configure disks
   swift_disk: dev={{ item }}
