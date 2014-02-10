@@ -26,3 +26,6 @@
 
 - name: add swift-drive-audit to cron.hourly
   template: src=usr/local/bin/swift-drive-auditor dest=/usr/local/bin/swift-drive-auditor owner=root group=root mode=0755
+
+- name: sensu check for mounted drives
+  sensu_check: name=fstab-mounts plugin=check-fstab-mounts.rb args='-t xfs' interval=60
