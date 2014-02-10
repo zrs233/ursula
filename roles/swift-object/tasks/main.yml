@@ -20,3 +20,9 @@
   swift_disk: dev={{ item }}
   with_items:
     "{{ swift.disks }}"
+
+- name: configure swift-drive-audit
+  template: src=etc/swift/drive-audit.conf dest=/etc/swift/drive-audit.conf owner=root group=root mode=0755
+
+- name: add swift-drive-audit to cron.hourly
+  template: src=usr/local/bin/swift-drive-auditor dest=/usr/local/bin/swift-drive-auditor owner=root group=root mode=0755
