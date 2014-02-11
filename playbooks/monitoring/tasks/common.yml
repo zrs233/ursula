@@ -3,25 +3,15 @@
 
 - file: dest=/etc/sensu/plugins state=directory owner=root
 - copy: src={{ item }} dest=/etc/sensu/plugins/{{ item }} mode=0755
-  with_items:
-    - check-cpu.rb
-    - check-disk.rb
-    - check-http.rb
-    - check-log.rb
-    - check-memcached-stats.rb
-    - check-os-api.rb
-    - check-procs.rb
-    - check-rabbitmq-cluster.rb
-    - check-rabbitmq-queues.rb
-    - check-swift-dispersion.py
-    - load-metrics.rb
-    - memcached-graphite.rb
-    - vmstat-metrics.rb
+  with_fileglob: ../files/sensu_plugins/*
 
 - sensu_check: name=cpu  plugin=check-cpu.rb args='-w 80 -c 90'
   notify: restart sensu-client
 
 - sensu_check: name=disk plugin=check-disk.rb
+  notify: restart sensu-client
+
+- sensu_check: name=ntp-offset plugin=check-ntp.rb
   notify: restart sensu-client
 
 - sensu_metrics_check: name=vmstat-metrics plugin=vmstat-metrics.rb args='--scheme stats.{{ inventory_hostname  }}'
