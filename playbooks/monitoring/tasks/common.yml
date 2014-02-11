@@ -2,7 +2,7 @@
 - file: dest=/etc/sensu/conf.d/checks state=directory owner=root mode=0755
 
 - file: dest=/etc/sensu/plugins state=directory owner=root
-- copy: src={{ item }} dest=/etc/sensu/plugins/{{ item }} mode=0755
+- copy: src={{ item }} dest=/etc/sensu/plugins mode=0755
   with_fileglob: ../files/sensu_plugins/*
 
 - sensu_check: name=cpu  plugin=check-cpu.rb args='-w 80 -c 90'
