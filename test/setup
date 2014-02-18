@@ -61,9 +61,12 @@ $(public_ip "test-controller-1")
 
 [compute]
 $(public_ip "test-compute-0")
+$(public_ip "test-controller-0")
+$(public_ip "test-controller-1")
 
 [network]
 $(public_ip "test-controller-0")
+$(public_ip "test-controller-1")
 eof
 
 echo "copying files"
