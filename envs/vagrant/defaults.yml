@@ -75,6 +75,8 @@ neutron:
   tenant_network_type: vlan
   bridge_mappings: physnet:br-eth1
   enable_tunneling: False
+  tunnel_types:
+    - vxlan
   network_vlan_ranges: ''
   routers:
     - name: default
