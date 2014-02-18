@@ -1,0 +1,7 @@
+---
+common:
+  hwraid:
+    enabled: True
+    clients:
+      - tw-cli
+      - megacli
