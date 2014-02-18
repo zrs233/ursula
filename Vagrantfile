@@ -40,6 +40,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       swiftnode_config.vm.box = "precise64"
       swiftnode_config.vm.box_url = BOX_URL
       swiftnode_config.vm.network :private_network, ip: "10.1.1.13#{i}", :netmask => "255.255.0.0"
+      swiftnode_config.vm.provider "virtualbox" do | v |
+        v.memory = 768
+      end
     end
   end
 end
