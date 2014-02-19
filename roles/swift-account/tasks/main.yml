@@ -16,12 +16,4 @@
     - swift-account-auditor
     - swift-account-replicator
     - swift-account-reaper
-    - swift-account-server
-
-- name: sensu account process checks
-  sensu_process_check: service={{ item }}
-  with_items:
-    - swift-account-auditor
-    - swift-account-replicator
-    - swift-account-reaper
-    - swift-account-server
+    - swift-account

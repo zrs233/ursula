@@ -18,13 +18,4 @@
     - swift-container-updater
     - swift-container-auditor
     - swift-container-sync
-    - swift-container-server
-
-- name: sensu container process checks
-  sensu_process_check: service={{ item }}
-  with_items:
-    - swift-container-replicator
-    - swift-container-updater
-    - swift-container-auditor
-    - swift-container-sync
-    - swift-container-server
+    - swift-container

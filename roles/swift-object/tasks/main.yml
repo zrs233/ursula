@@ -18,25 +18,14 @@
   with_items:
     - swift-object-replicator
     - swift-object-updater
-    - swift-object-server
-
-- name: sensu object process checks
-  sensu_process_check: service={{ item }}
-  with_items:
-    - swift-object-replicator
-    - swift-object-updater
-    - swift-object-server
+    - swift-object
 
 - name: configure disks
   swift_disk: dev={{ item }}
-  with_items:
-    "{{ swift.disks }}"
+  with_items: swift.disks
 
 - name: configure swift-drive-audit
   template: src=etc/swift/drive-audit.conf dest=/etc/swift/drive-audit.conf owner=root group=root mode=0755
 
 - name: add swift-drive-audit to cron.hourly
   template: src=usr/local/bin/swift-drive-auditor dest=/usr/local/bin/swift-drive-auditor owner=root group=root mode=0755
-
-- name: sensu check for mounted drives
-  sensu_check: name=fstab-mounts plugin=check-fstab-mounts.rb args='-t xfs' interval=60

@@ -43,4 +43,3 @@
   - include: monitoring/tasks/swift.yml
   handlers:
   - include: ../handlers/main.yml
-

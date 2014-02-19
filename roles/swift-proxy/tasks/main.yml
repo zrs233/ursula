@@ -19,10 +19,3 @@
 - name: configure haproxy
   template: src=etc/haproxy/haproxy.cfg dest=/etc/haproxy/haproxy.cfg mode=0644
   notify: restart haproxy
-
-- name: sensu proxy process checks
-  sensu_process_check: service={{ item }}
-  with_items:
-    - swift-proxy
-    - haproxy
-    - memcached
