@@ -1,0 +1,2 @@
+swiftops ALL= NOPASSWD: /usr/local/bin/swifttool
+swiftops ALL= NOPASSWD: /usr/bin/lshw

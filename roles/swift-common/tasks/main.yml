@@ -4,7 +4,34 @@
     - python2.7-dev
     - libffi-dev
 
-- user: name=swift comment=swift shell=/bin/false system=yes home=/nonexistent createhome=no
+- name: create swift user
+  user: name=swift comment=swift shell=/bin/false system=yes home=/nonexistent
+
+# swiftops requires a shell and a home in order to build/distribute rings
+- name: create swiftops user
+  user: name=swiftops comment=swiftops shell=/bin/bash system=yes home=/home/swiftops
+
+- name: create swiftops .ssh directory
+  file: dest=/home/swiftops/.ssh state=directory owner=swiftops group=swiftops mode=0755
+
+- name: drop a swiftops public key
+  template: src=home/swiftops/.ssh/id_rsa dest=/home/swiftops/.ssh/id_rsa owner=swiftops group=swiftops mode=0600
+
+- name: drop a swiftops private key
+  template: src=home/swiftops/.ssh/id_rsa.pub dest=/home/swiftops/.ssh/id_rsa.pub owner=swiftops group=swiftops mode=0600
+
+- name: setup swiftops authorized hosts
+  file: src=/home/swiftops/.ssh/id_rsa.pub dest=/home/swiftops/.ssh/authorized_keys state=link
+
+- name: setup swiftops sudoers
+  template: src=etc/sudoers.d/swiftops dest=/etc/sudoers.d/swiftops owner=root group=root mode=0400
+
+- name: get swifttool repo
+  git: |
+    repo=https://github.com/blueboxgroup/swifttool.git dest=/opt/stack/swifttool depth=50
+
+- name: pip install swifttool
+  shell: pip install /opt/stack/swifttool
 
 - name: install keystoneclient via pip
   pip: name=python-keystoneclient
@@ -24,7 +51,7 @@
   shell: pip install -i {{ openstack.pypi_mirror }} /opt/stack/python-swiftclient
 
 - name: create swift configuration diectory
-  file: dest=/etc/swift state=directory owner=swift group=swift mode=0755
+  file: dest=/etc/swift state=directory owner=swiftops group=swiftops mode=0755
 
 - name: configure swift
   template: src=etc/swift/swift.conf dest=/etc/swift/swift.conf owner=root group=root mode=0644

@@ -1,4 +1,5 @@
 ---
+ursula_env_path: "{{ lookup('env','URSULA_ENV') }}"
 primary_interface: ansible_eth1
 primary_ip: "{{ hostvars[inventory_hostname][primary_interface]['ipv4']['address'] }}"
 undercloud_cidr: '10.1.0.0/16'
@@ -75,6 +76,8 @@ neutron:
   tenant_network_type: vlan
   bridge_mappings: physnet:br-eth1
   enable_tunneling: False
+  tunnel_types:
+    - vxlan
   network_vlan_ranges: ''
   routers:
     - name: default
