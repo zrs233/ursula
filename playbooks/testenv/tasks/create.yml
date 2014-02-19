@@ -7,8 +7,7 @@
   tasks:
     - include: keypair.yml
     - name: create the security group and rules
-      local_action:
-        module: nova_group
+      nova_group:
         name: "{{ testenv_security_groups }}"
         description: "{{ testenv_security_groups_description }}"
         rules:
@@ -19,11 +18,16 @@
             state: "{{ item.state }}"
       with_items: testenv_security_group_rules
       register: testenv_security_group
+    - command: neutron security-group-rule-create --ethertype={{ item }} --remote-group-id={{ testenv_security_group.results[0].group_id }} {{ testenv_security_group.results[0].group_id }}
+      register: security_group_rule_create_result
+      failed_when: "security_group_rule_create_result.rc != 0 and 'Security group rule already exists.' not in security_group_rule_create_result.stderr"
+      changed_when: security_group_rule_create_result.rc == 0
+      with_items:
+      - IPv4
+      - IPv6
     - name: create {{ item }}
-      local_action:
-        module: nova_compute
+      nova_compute:
         name: "{{ item }}"
-        state: present
         image_id: "{{ testenv_image_id }}"
         key_name: "{{ testenv_keypair_name }}"
         security_groups: "{{ testenv_security_group.results[0].group_id }}"
