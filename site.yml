@@ -47,16 +47,24 @@
   roles:
     - nova-common
 
+- name: swift common code and config
+  hosts: swiftnode
+  roles:
+    - swift-common
+
+- name: swift bootstrap rings
+  hosts: swiftnode[0]
+  roles:
+    - swift-ring
+
 - name: swift code and config
   hosts: swiftnode
   roles:
     - haproxy
     - memcached
-    - swift-common
     - swift-object
     - swift-account
     - swift-container
-    - swift-ring
     - swift-proxy
 
 - name: neutron code and config

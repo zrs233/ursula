@@ -1,5 +1,3 @@
 ---
 swift_ring:
-  part_power: 16
-  replicas: 3
-  min_part_hours: 1
+  ring_definition_file: "{{ ursula_env_path }}/ring_definition.yml"
