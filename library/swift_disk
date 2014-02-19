@@ -19,7 +19,8 @@ if File.exists? part_path
 else
   system("bash -c \"echo -e 'n\np\n1\n\n\nw\n' | fdisk #{dev_path} > /dev/null\"") or Antsy.fail! "fdisk failed"
   system("mkfs.xfs -i size=512 #{part_path} >/dev/null") or Antsy.fail! "mkfs.xfs failed"
-  system("echo \"#{part_path} /srv/node/#{dev}1 xfs noatime,nodiratime,nobarrier,logbufs=8 0 0\" >> /etc/fstab") or Ansty.fail! "failed to update fstab"
+  fsuuid = `blkid -o value #{part_path} | head -n1`
+  system("echo \"UUID=#{fsuuid.strip!} /srv/node/#{dev}1 xfs noatime,nodiratime,nobarrier,logbufs=8 0 0\" >> /etc/fstab") or Ansty.fail! "failed to update fstab"
   system("mkdir -p /srv/node/#{dev}1") or Antsy.fail! "couldn't mkdir /srv/node/#{dev}1"
   system("mount /srv/node/#{dev}1") or Antsy.fail! "couldn't mount /srv/node/#{dev}1"
   system("chown swift:swift /srv/node/#{dev}1") or Antsy.fail! "couldn't chown /srv/node/#{dev}1"
