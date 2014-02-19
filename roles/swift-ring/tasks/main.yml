@@ -6,8 +6,8 @@
 
 - name: drop our ring configuration
   copy: src={{ swift_ring.ring_definition_file }} dest=/etc/swift/ring_definition.yml owner=root group=root mode=644 backup=yes
-  when: not should_boostrap.rc == 1
+  when: not should_boostrap.rc == 0
 
 - name: setup swift rings
   command: sudo -u swiftops /usr/local/bin/swifttool -i /home/swiftops/.ssh/id_rsa bootstrap --config /etc/swift/ring_definition.yml --outdir /etc/swift
-  when: not should_boostrap.rc == 1
+  when: not should_boostrap.rc == 0
