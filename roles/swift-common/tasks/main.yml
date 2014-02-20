@@ -24,7 +24,7 @@
   file: src=/home/swiftops/.ssh/id_rsa.pub dest=/home/swiftops/.ssh/authorized_keys state=link
 
 - name: setup swiftops sudoers
-  template: src=etc/sudoers.d/swiftops dest=/etc/sudoers.d/swiftops owner=root group=root mode=0400
+  template: src=etc/sudoers.d/swiftops dest=/etc/sudoers.d/swiftops owner=root group=root mode=0440
 
 - name: get swifttool repo
   git: |
