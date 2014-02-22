@@ -46,7 +46,7 @@ class CheckCPU < Sensu::Plugin::Check::CLI
   end
 
 def top_process_on_whitelist?
-    config[:process_white_list].map {|cmd| system("ps axo cmd,pcpu k pcpu | tail -n 1 | grep #{cmd} 1>/dev/null") }.any?
+    config[:process_white_list].map {|cmd| system("ps axo cmd,pcpu,pmem k pmem,pcpu | tail -n 1 | grep #{cmd} 1>/dev/null") }.any?
 end
   
   def run
