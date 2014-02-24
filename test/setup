@@ -67,6 +67,8 @@ $(public_ip "test-controller-1")
 [network]
 $(public_ip "test-controller-0")
 $(public_ip "test-controller-1")
+
+[swiftnode]
 eof
 
 echo "copying files"
