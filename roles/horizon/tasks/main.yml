@@ -3,6 +3,7 @@
   with_items:
     - apache2
     - libapache2-mod-wsgi
+    - libffi-dev
     - libssl-dev
     - libxml2-dev
     - libxslt1-dev
