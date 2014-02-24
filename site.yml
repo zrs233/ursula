@@ -53,7 +53,7 @@
     - swift-common
 
 - name: swift bootstrap rings
-  hosts: swiftnode[0]
+  hosts: swiftnode_primary
   roles:
     - swift-ring
 
