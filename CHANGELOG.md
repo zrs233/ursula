@@ -9,7 +9,7 @@
 - backup mysql db to local disk
 - added vagrant support
 - use UFW to manage firewall rules
-- Ubuntu 14.0.4 undercloud support
+- Ubuntu 14.04 LTS undercloud support
 - HAProxy - prefer services on local controller
 - allow for cinder.volume_clear_size
 - reserve 4GB of RAM on controllers
