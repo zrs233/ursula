@@ -41,3 +41,5 @@
     version={{ client.cinderclient_rev }}
   notify:
     - pip install cinderclient
+
+- template: src=usr/local/bin/migrate_neutron_services dest=/usr/local/bin/migrate_neutron_services mode=0755
