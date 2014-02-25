@@ -1,5 +1,21 @@
 # Ursula Changelog
 
+## 0.8.0
+
+- Neutron LBaaS
+- Swift
+- initial VXLAN support
+- store keystone tokens in mysql
+- backup mysql db to local disk
+- added vagrant support
+- use UFW to manage firewall rules
+- Ubuntu 14.04 LTS undercloud support
+- HAProxy - prefer services on local controller
+- allow for cinder.volume_clear_size
+- reserve 4GB of RAM on controllers
+- fix broken memcached sensus checks
+- Monitor ntp offset
+
 ## 0.6.0
 
 - percona refactor 
