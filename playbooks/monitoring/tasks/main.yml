@@ -30,7 +30,7 @@
   template: dest=/etc/sensu/ssl/key.pem src=sensu-client-key.pem owner=root group=sensu mode=0640
   notify: restart sensu-client
 
-- lineinfile: dest=/etc/default/sensu regexp=^EMBEDDED_RUBY line=EMBEDDED_RUBY=true
+- lineinfile: dest=/etc/default/sensu regexp=^EMBEDDED_RUBY line=EMBEDDED_RUBY=false
   notify: restart sensu-client
 
 - name: sensu client config
