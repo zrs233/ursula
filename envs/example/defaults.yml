@@ -96,6 +96,7 @@ cinder:
       control_location: front-end
 
 neutron:
+  enable_lbaas: true
   physical_bridge: br-ex
   physical_network: br-ex
   tenant_network_type: vxlan
