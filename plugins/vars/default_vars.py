@@ -56,7 +56,7 @@ class VarsModule(GroupVarsModule):
         return group_vars
 
 
-def monkeypatch_get_variables(self, hostname):
+def monkeypatch_get_variables(self, hostname, vault_password=None):
     host = self.get_host(hostname)
     if host is None:
         raise errors.AnsibleError("host not found: %s" % hostname)
