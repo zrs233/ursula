@@ -36,7 +36,7 @@
 
 # haproxy
 
-- sensu_check: name=haproxy plugin=check-procs.rb args="-p haproxy -w 5 -c 10 -W 1 -C 1"
+- sensu_check: name=haproxy plugin=check-procs.rb args="-p 'haproxy.*-f /etc/haproxy/haproxy.cfg' -w 5 -c 10 -W 1 -C 1"
   notify: restart sensu-client
 
 # nova
