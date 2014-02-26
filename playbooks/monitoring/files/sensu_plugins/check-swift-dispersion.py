@@ -1,3 +1,4 @@
+#!/usr/bin/python
 #
 # Copyright 2014, Craig Tracey <craigtracey@gmail.com>
 #
