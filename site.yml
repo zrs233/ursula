@@ -67,6 +67,10 @@
     - swift-container
     - swift-proxy
 
+- hosts: network:compute
+  roles:
+    - openvswitch
+
 - name: neutron code and config
   hosts: controller:db:compute:network
   vars_files:
@@ -115,10 +119,6 @@
   roles:
     - compute
     - cinder-volume
-
-- hosts: network:compute
-  roles:
-    - openvswitch
 
 - name: openstack network services
   hosts: network
