@@ -24,6 +24,7 @@ etc_hosts:
     ip: "{{ floating_ip }}"
 
 rabbitmq:
+  user: openstack
   cluster: true
 
 memcached:
