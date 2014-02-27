@@ -28,8 +28,11 @@ endpoints:
   neutron:  "{{ fqdn }}"
   vnc:      "{{ fqdn }}"
   cinder:   "{{ fqdn }}"
+  heat:     "{{ fqdn }}"
+  heat-cfn: "{{ fqdn }}"
 
 rabbitmq:
+  user: openstack
   cluster: false
 etc_hosts:
   - name: "{{ fqdn }}"
@@ -124,6 +127,9 @@ keystone:
     - name: swift
       password: "{{ secrets.service_password }}"
       tenant: service
+    - name: heat
+      password: "{{ secrets.service_password }}"
+      tenant: service
 
   user_roles:
     - user: admin
@@ -148,6 +154,9 @@ keystone:
       tenant: service
       role: admin
     - user: swift
+      tenant: service
+      role: admin
+    - user: heat
       tenant: service
       role: admin
 
@@ -188,7 +197,18 @@ keystone:
       public_url: https://{{ endpoints.swift }}:8090/v2/%(tenant_id)s
       internal_url: https://{{ endpoints.swift }}:8090/v2/%(tenant_id)s
       admin_url: https://{{ endpoints.swift }}:8090/v2/%(tenant_id)s
-
+    - name: heat
+      type: orchestration
+      description: 'Heat Orchestration API'
+      public_url: https://{{ endpoints.main }}:8005/v1/%(tenant_id)s
+      internal_url: https://{{ endpoints.main }}:8005/v1/%(tenant_id)s
+      admin_url: https://{{ endpoints.main }}:8005/v1/%(tenant_id)s
+    - name: heat-cfn
+      type: cloudformation
+      description: 'Heat CloudFormation API'
+      public_url: https://{{ endpoints.main }}:8001/v1
+      internal_url: https://{{ endpoints.main }}:8001/v1
+      admin_url: https://{{ endpoints.main }}:8001/v1
 
 ssl:
   crt: |

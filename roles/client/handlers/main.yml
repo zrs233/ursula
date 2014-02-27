@@ -13,3 +13,6 @@
 
 - name: pip install cinderclient
   action: command pip install -i {{ openstack.pypi_mirror }} /opt/stack/python-cinderclient
+
+- name: pip install heatclient
+  action: command pip install -i {{ openstack.pypi_mirror }} /opt/stack/python-heatclient
