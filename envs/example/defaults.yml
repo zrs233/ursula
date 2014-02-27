@@ -38,6 +38,8 @@ endpoints:
   neutron:  "{{ fqdn }}"
   vnc:      "{{ fqdn }}"
   cinder:   "{{ fqdn }}"
+  heat:     "{{ fqdn }}"
+  heat-cfn: "{{ fqdn }}"
 
 mysql:
   root_password: asdf
@@ -173,6 +175,9 @@ keystone:
     - name: cinder
       password: "{{ secrets.service_password }}"
       tenant: service
+    - name: heat
+      password: "{{ secrets.service_password }}"
+      tenant: service
 
   user_roles:
     - user: admin
@@ -202,6 +207,9 @@ keystone:
     - user: neutron
       tenant: service
       role: admin
+    - user: heat
+      tenant: service
+      role: service
 
   services:
     - name: keystone
@@ -234,6 +242,18 @@ keystone:
       public_url: https://{{ endpoints.main }}:8778/v1/%(tenant_id)s
       internal_url: https://{{ endpoints.main }}:8778/v1/%(tenant_id)s
       admin_url: https://{{ endpoints.main }}:8778/v1/%(tenant_id)s
+    - name: heat
+      type: orchestration
+      description: 'Heat Orchestration API'
+      public_url: https://{{ endpoints.main }}:8005/v1/%(tenant_id)s
+      internal_url: https://{{ endpoints.main }}:8005/v1/%(tenant_id)s
+      admin_url: https://{{ endpoints.main }}:8005/v1/%(tenant_id)s
+    - name: heat-cfn
+      type: cloudformation
+      description: 'Heat CloudFormation API'
+      public_url: https://{{ endpoints.main }}:8001/v1
+      internal_url: https://{{ endpoints.main }}:8001/v1
+      admin_url: https://{{ endpoints.main }}:8001/v1
 
 ssl:
   crt: |

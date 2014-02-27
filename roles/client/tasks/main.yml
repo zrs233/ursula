@@ -41,3 +41,11 @@
     version={{ client.cinderclient_rev }}
   notify:
     - pip install cinderclient
+
+- name: heat-client
+  git: |
+    repo={{ openstack.git_mirror }}/python-heatclient.git
+    dest=/opt/stack/python-heatclient
+    version={{ client.heatclient_rev }}
+  notify:
+    - pip install heatclient
