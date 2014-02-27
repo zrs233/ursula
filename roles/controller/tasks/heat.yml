@@ -16,3 +16,16 @@
 
 - name: heat-engine is running
   service: name=heat-engine state=started
+
+- name: permit access to heat
+  command: ufw allow 8004/tcp
+
+- name: permit access to heat (SSL)
+  command: ufw allow 8005/tcp
+
+- name: permit access to heat-cfn
+  command: ufw allow 8000/tcp
+
+- name: permit access to heat-cfn (SSL)
+  command: ufw allow 8001/tcp
+
