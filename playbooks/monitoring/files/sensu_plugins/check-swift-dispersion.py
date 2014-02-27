@@ -35,12 +35,13 @@ class SwiftDispersionCheck(SensuPluginCheck):
 
     def run(self):
 
+        output = None
         try:
             output = check_output(['swift-dispersion-report', '-j'],
                                   stderr=STDOUT)
         except CalledProcessError as e:
             self.critical("Unable to run swift-dispersion-check: %s %s" %
-                          (e.msg, output))
+                          (e, output))
             return
 
         dispersion = json.loads(output)
