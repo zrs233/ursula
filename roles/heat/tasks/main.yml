@@ -5,9 +5,9 @@
 - name: get heat source repo
   git: |
     repo={{ openstack.git_mirror }}/heat.git dest=/opt/stack/heat depth=50 version={{ heat.rev }}
-
-- name: pip install heat services
-  shell: pip install -i {{ openstack.pypi_mirror }} /opt/stack/heat
+  notify:
+    - pip install heat
+- meta: flush_handlers
 
 - name: create heat config directory
   file: dest=/etc/heat state=directory
