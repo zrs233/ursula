@@ -1,0 +1,3 @@
+---
+- name: pip install heat
+  shell: pip install -i {{ openstack.pypi_mirror }} /opt/stack/heat
