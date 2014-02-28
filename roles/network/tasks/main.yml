@@ -18,7 +18,6 @@
 - template: src=etc/init/{{ item }}.conf dest=/etc/init/{{ item }}.conf
   with_items:
     - neutron-l3-agent
-    - neutron-lbaas-agent
     - neutron-dhcp-agent
     - neutron-metadata-agent
 
@@ -28,3 +27,8 @@
     - neutron-lbaas-agent
     - neutron-dhcp-agent
     - neutron-metadata-agent
+
+- template: src=etc/init/neutron-lbaas-agent.conf dest=/etc/init/neutron-lbaas-agent.conf
+  when: neutron.enable_lbaas
+- service: name=neutron-lbaas-agent state=started
+  when: neutron.enable_lbaas
