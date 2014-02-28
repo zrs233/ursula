@@ -44,10 +44,6 @@ class CheckCPU < Sensu::Plugin::Check::CLI
       return info.map{|i| i.to_f} if name.match(/^cpu$/)
     end
   end
-
-def top_process_on_whitelist?
-    config[:process_white_list].map {|cmd| system("ps axo cmd,pcpu,pmem k pmem,pcpu | tail -n 1 | grep #{cmd} 1>/dev/null") }.any?
-end
   
   def run
     metrics = [:user, :nice, :system, :idle, :iowait, :irq, :softirq, :steal, :guest]
@@ -87,9 +83,23 @@ end
 
     message msg
 
-    critical if checked_usage > config[:crit] unless top_process_on_whitelist?
-    warning if checked_usage > config[:warn] unless top_process_on_whitelist?
+    unless process_in_white_list?(get_top_process_by_cpu_mem)
+      critical if checked_usage > config[:crit]
+      warning if checked_usage > config[:warn]
+    end
+    
     ok
   end
 
+  def process_in_white_list?(process)
+    config[:process_white_list].any? do |p|
+      process.include?(p)
+    end
+  end
+
+  def get_top_process_by_cpu_mem
+    `ps axo pcpu,pmem,cmd k pmem,pcpu | tail -n 1`.chomp
+  end
+
 end
+
