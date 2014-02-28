@@ -1,3 +1,7 @@
 ---
 heat:
+<<<<<<< Updated upstream
   rev: 371bbdea47dce1c7ccea9b55dc769d48c38a4167
+=======
+  rev: 0007c2d671c811bf01bdfac60357d8dd855b5cb5
+>>>>>>> Stashed changes
