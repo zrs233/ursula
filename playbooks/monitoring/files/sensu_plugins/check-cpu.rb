@@ -83,8 +83,12 @@ class CheckCPU < Sensu::Plugin::Check::CLI
 
     message msg
 
-    unless process_in_white_list?(get_top_process_by_cpu_mem)
-      critical if checked_usage > config[:crit]
+    if checked_usage > config[:crit] || checked_usage > config[:warn]
+      top_process = get_top_process_by_cpu_mem
+    end
+
+    unless process_in_white_list?(top_process)
+      critical if checked_usage > config[:crit] 
       warning if checked_usage > config[:warn]
     end
     
