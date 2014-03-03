@@ -39,10 +39,40 @@
   roles:
     - percona-backup
 
+- name: memcached for keystone and horizon
+  hosts: controller
+  roles:
+    - memcached
+
+- name: keystone code and config
+  hosts: controller:db
+  roles:
+    - keystone-common
+
+- name: neutron code and config
+  hosts: controller:db:compute:network
+  vars_files:
+    - roles/rabbitmq/defaults/main.yml
+  roles:
+    - neutron-common
+
+- hosts: network:compute
+  roles:
+    - openvswitch
+
+- name: openstack network services
+  hosts: network
+  roles:
+    - network
+
+- name: start neutron-openvswitch-agent
+  hosts: network:compute
+  tasks:
+    - service: name=neutron-openvswitch-agent state=started
+
 - name: nova code and config
   hosts: controller:db:compute
   vars_files:
-    - roles/memcached/defaults/main.yml
     - roles/rabbitmq/defaults/main.yml
   roles:
     - nova-common
@@ -61,34 +91,15 @@
   hosts: swiftnode
   roles:
     - haproxy
-    - memcached
     - swift-object
     - swift-account
     - swift-container
     - swift-proxy
 
-- hosts: network:compute
-  roles:
-    - openvswitch
-
-- name: neutron code and config
-  hosts: controller:db:compute:network
-  vars_files:
-    - roles/rabbitmq/defaults/main.yml
-  roles:
-    - neutron-common
-
 - name: glance code and config
   hosts: controller:db
   roles:
     - glance-common
-
-- name: keystone code and config
-  hosts: controller:db
-  vars_files:
-    - roles/memcached/defaults/main.yml
-  roles:
-    - keystone-common
 
 - name: cinder code and config
   hosts: controller:db:compute
@@ -110,7 +121,6 @@
 - name: openstack controller services
   hosts: controller
   roles:
-    - memcached
     - horizon
     - haproxy
     - controller
@@ -120,14 +130,14 @@
     - compute
     - cinder-volume
 
-- name: openstack network services
-  hosts: network
-  roles:
-    - network
-
 - hosts: controller[0]
   roles:
     - openstack-setup
+
+- name: restart neutron-openvswitch-agent to ensure VXLAN mesh is configured
+  hosts: network:compute
+  tasks:
+    - service: name=neutron-openvswitch-agent state=restarted
 
 - name: Install monitoring
   include: playbooks/monitoring.yml

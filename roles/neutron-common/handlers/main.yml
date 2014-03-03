@@ -6,7 +6,7 @@
   command: rsync -avh /opt/stack/neutron/etc/neutron/rootwrap.d /etc/neutron
 
 - name: restart neutron services
-  restart_if_present: service={{ item }}
+  restart_if_running: service={{ item }}
   with_items:
     - neutron-server
     - neutron-dhcp-agent
