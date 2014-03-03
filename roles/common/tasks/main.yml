@@ -14,7 +14,7 @@
     - python-lxml
     - python-greenlet
     - python-openssl
-    - python-dev
+    - python2.7-dev
     - python-httplib2
     - python-software-properties
     - python-virtualenv
@@ -26,6 +26,10 @@
     - ipmitool
     - ntp
     - vlan
+    - libffi-dev
+    - libssl-dev
+    - libxml2-dev
+    - libxslt1-dev
 
 - name: set UTC timezone
   template: src=etc/timezone dest=/etc/timezone owner=root group=root mode=0644

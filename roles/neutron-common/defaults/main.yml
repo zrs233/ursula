@@ -2,8 +2,7 @@
 neutron:
   rev: b5c4152ac9958e
   api_workers: 3
+  agent_down_time: 20
   dhcp_dns_servers:
     - 8.8.8.8
     - 8.8.4.4
-  service_plugins:
-    - neutron.services.loadbalancer.plugin.LoadBalancerPlugin

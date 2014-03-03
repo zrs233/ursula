@@ -93,6 +93,11 @@
   roles:
     - cinder-common
 
+- name: heat code and config
+  hosts: controller
+  roles:
+    - heat
+
 - name: dbs, db users, db schema updates
   hosts: db[0]
   roles:

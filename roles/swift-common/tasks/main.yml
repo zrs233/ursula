@@ -1,9 +1,4 @@
 ---
-- apt: pkg={{ item }}
-  with_items:
-    - python2.7-dev
-    - libffi-dev
-
 - name: create swift user
   user: name=swift comment=swift shell=/bin/false system=yes home=/nonexistent
 
