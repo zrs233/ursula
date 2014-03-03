@@ -10,3 +10,8 @@
 - template: src=memcached.conf dest=/etc/memcached.conf mode=0644
   notify:
     - restart memcached
+
+- name: libsasl2-dev required by memcached gem
+  apt: pkg=libsasl2-dev
+- name: memcached gem for sensu check
+  gem: name=memcached state=latest user_install=no include_dependencies=yes

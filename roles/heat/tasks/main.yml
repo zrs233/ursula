@@ -1,0 +1,25 @@
+---
+- name: create heat user
+  user: name=heat comment=heat shell=/bin/false system=yes home=/nonexistent
+
+- name: get heat source repo
+  git: |
+    repo={{ openstack.git_mirror }}/heat.git dest=/opt/stack/heat depth=50 version={{ heat.rev }}
+  notify:
+    - pip install heat
+- meta: flush_handlers
+
+- name: create heat config directory
+  file: dest=/etc/heat state=directory
+
+- name: create heat environment.d directory
+  file: dest=/etc/heat/environment.d state=directory
+
+- name: heat config
+  template: src=etc/heat/heat.conf dest=/etc/heat/heat.conf mode=0644
+
+- name: heat policy config
+  template: src=etc/heat/policy.json dest=/etc/heat/policy.json mode=0644
+
+- name: heat paste config
+  template: src=etc/heat/api-paste.ini dest=/etc/heat/api-paste.ini mode=0644
