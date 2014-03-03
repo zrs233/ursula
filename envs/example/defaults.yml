@@ -70,7 +70,7 @@ monitoring:
 openstack:
   # TODO: pypi should use https, but fails currently.
   pypi_mirror: http://pypi.openstack.org/openstack
-  git_mirror:  https://review.openstack.org/openstack
+  git_mirror:  http://git-mirror.openstack.blueboxgrid.com
 
 client:
   self_signed_cert: true
