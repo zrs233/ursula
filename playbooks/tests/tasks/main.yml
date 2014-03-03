@@ -2,3 +2,4 @@
 - include: all.yml
 - include: controller.yml
 - include: network.yml
+- include: integration.yml

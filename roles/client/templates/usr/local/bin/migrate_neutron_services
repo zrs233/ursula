@@ -1,0 +1,63 @@
+#!/usr/bin/env python2.7
+
+import logging
+import os
+import sys
+from neutronclient.neutron import client
+
+src_node = sys.argv[1]
+dest_node = sys.argv[2]
+
+print "Moving services from %s to %s...\n" % (src_node, dest_node)
+
+#logging.basicConfig(level=logging.DEBUG)
+neutron = client.Client('2.0', username=os.environ['OS_USERNAME'],
+                               password=os.environ['OS_PASSWORD'],
+                               tenant_name=os.environ['OS_TENANT_NAME'],
+                               auth_url=os.environ['OS_AUTH_URL'],
+                   region_name='RegionOne',
+                               ca_cert=os.environ['OS_CACERT'])
+neutron.format = 'json'
+
+agents = neutron.list_agents()
+routers = neutron.list_routers()
+
+host_agents = {}
+
+for agent in agents['agents']:
+    if agent['host'] not in host_agents.keys():
+        host_agents[agent['host']] = {}
+
+    host_agents[agent['host']][agent['agent_type']] = agent['id']
+
+for router in routers['routers']:
+    hosting_agents = neutron.list_l3_agent_hosting_routers(router['id'])
+
+    for hosting_agent in hosting_agents['agents']:
+        if hosting_agent['host'] != src_node:
+            continue
+
+        if 'L3 agent' not in host_agents[dest_node].keys():
+            print "Can not move router %s to %s because no L3 agent exists there" % (router['id'], dest_node)
+            sys.exit(1)
+
+        neutron.remove_router_from_l3_agent(host_agents[src_node]['L3 agent'], router['id'])
+        neutron.add_router_to_l3_agent(host_agents[dest_node]['L3 agent'], {'router_id': router['id']})
+        print "Moved %s (%s) router" % (router['name'], router['id'])
+
+if 'DHCP agent' in host_agents[src_node].keys():
+    src_agent = host_agents[src_node]['DHCP agent']
+
+    if 'DHCP agent' not in host_agents[dest_node].keys():
+        print "Can not move DHCP to %s becasue no L3 agent exists there" % dest_node
+        sys.exit(1)
+
+    dest_agent = host_agents[dest_node]['DHCP agent']
+
+    networks = neutron.list_networks_on_dhcp_agent(src_agent)
+
+    for network in networks['networks']:
+        neutron.remove_network_from_dhcp_agent(src_agent, network['id'])
+        neutron.add_network_to_dhcp_agent(dest_agent, {'network_id': network['id']})
+        print "Moved DHCP for %s (%s) network" % (network['name'], network['id'])
+

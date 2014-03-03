@@ -30,6 +30,9 @@ rabbitmq:
 
 memcached:
   memory: 64
+  port: 11211
+  user: nobody
+  max_connections: 1024
 
 endpoints:
   main:     "{{ fqdn }}"
