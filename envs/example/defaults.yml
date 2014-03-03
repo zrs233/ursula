@@ -30,6 +30,9 @@ rabbitmq:
 
 memcached:
   memory: 64
+  port: 11211
+  user: nobody
+  max_connections: 1024
 
 endpoints:
   main:     "{{ fqdn }}"
@@ -70,7 +73,7 @@ monitoring:
 openstack:
   # TODO: pypi should use https, but fails currently.
   pypi_mirror: http://pypi.openstack.org/openstack
-  git_mirror:  https://review.openstack.org/openstack
+  git_mirror:  http://git-mirror.openstack.blueboxgrid.com
 
 client:
   self_signed_cert: true

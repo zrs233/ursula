@@ -36,3 +36,4 @@
   template: src=etc/keystone/policy.json dest=/etc/keystone/policy.json mode=0644
   notify:
     - restart keystone services
+

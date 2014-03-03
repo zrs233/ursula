@@ -33,14 +33,14 @@
 
 - name: get swift source repo
   git: |
-    repo={{ openstack.git_mirror }}/swift.git dest=/opt/stack/swift version={{ swift.rev }} depth=50
+    repo={{ openstack.git_mirror }}/swift.git dest=/opt/stack/swift version={{ swift.rev }}
 
 - name: pip install swift services
   shell: pip install -i {{ openstack.pypi_mirror }} /opt/stack/swift
 
 - name: get swift client source repo
   git: |
-    repo={{ openstack.git_mirror }}/python-swiftclient.git dest=/opt/stack/python-swiftclient version={{ swift.client.rev }} depth=50
+    repo={{ openstack.git_mirror }}/python-swiftclient.git dest=/opt/stack/python-swiftclient version={{ swift.client.rev }}
 
 - name: pip install swift client
   shell: pip install -i {{ openstack.pypi_mirror }} /opt/stack/python-swiftclient

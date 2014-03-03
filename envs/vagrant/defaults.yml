@@ -64,7 +64,7 @@ monitoring:
 
 openstack:
   pypi_mirror: http://pypi.openstack.org/openstack
-  git_mirror:  http://review.openstack.org/openstack
+  git_mirror:  http://git-mirror.openstack.blueboxgrid.com
 
 nova:
   libvirt_type: kvm
