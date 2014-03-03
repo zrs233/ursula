@@ -6,3 +6,4 @@ client:
   neutronclient_rev: 8aacb125df
   glanceclient_rev: cd11833cff
   cinderclient_rev: d21ed05b4e
+  heatclient_rev: 8503781c67

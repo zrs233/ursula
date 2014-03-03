@@ -63,7 +63,6 @@
       cacert=/opt/stack/ssl/openstack.crt
       {% endif -%}
   with_items: neutron.routers
-  when: [ True for net in neutron.subnets if net.external == True and net.external == "external" ]
 
 - name: neutron router interfaces
   action: |

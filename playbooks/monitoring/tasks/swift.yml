@@ -1,6 +1,6 @@
 ---
-- sensu_check: name=swift-dispersion-containers plugin=check-swift-dispersion args="-c 90 -d 95"
-- sensu_check: name=swift-dispersion-objects plugin=check-swift-dispersion args="-o 90 -n 95"
+- sensu_check: name=swift-dispersion-containers plugin=check-swift-dispersion.py args="-c 90 -d 95"
+- sensu_check: name=swift-dispersion-objects plugin=check-swift-dispersion.py args="-o 90 -n 95"
 
 - name: sensu account process checks
   sensu_process_check: service={{ item }}

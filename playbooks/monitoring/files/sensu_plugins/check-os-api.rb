@@ -26,6 +26,8 @@ class CheckOSApi < Sensu::Plugin::Check::CLI
       "glance index"
     when "keystone"
       "keystone endpoint-list"
+    when "heat"
+      "heat stack-list"
     end
 
     ". /root/stackrc; #{cmd}"

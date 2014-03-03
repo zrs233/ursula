@@ -23,6 +23,12 @@ class CheckCPU < Sensu::Plugin::Check::CLI
     :proc => proc {|a| a.to_f },
     :default => 1
 
+  option :process_white_list,
+    :short => '-p PROCESS_WHITE_LIST',
+    :long => '--process-white-list PROCESS_WHITE_LIST',
+    :proc => proc {|a| a.split(',') },
+    :default => []  
+
   [:user, :nice, :system, :idle, :iowait, :irq, :softirq, :steal, :guest].each do |metric|
     option metric,
       :long  => "--#{metric}",
@@ -38,7 +44,7 @@ class CheckCPU < Sensu::Plugin::Check::CLI
       return info.map{|i| i.to_f} if name.match(/^cpu$/)
     end
   end
-
+  
   def run
     metrics = [:user, :nice, :system, :idle, :iowait, :irq, :softirq, :steal, :guest]
 
@@ -77,9 +83,27 @@ class CheckCPU < Sensu::Plugin::Check::CLI
 
     message msg
 
-    critical if checked_usage > config[:crit]
-    warning if checked_usage > config[:warn]
+    if checked_usage > config[:crit] || checked_usage > config[:warn]
+      top_process = get_top_process_by_cpu_mem
+    end
+
+    unless process_in_white_list?(top_process)
+      critical if checked_usage > config[:crit] 
+      warning if checked_usage > config[:warn]
+    end
+    
     ok
   end
 
+  def process_in_white_list?(process)
+    config[:process_white_list].any? do |p|
+      process.include?(p)
+    end
+  end
+
+  def get_top_process_by_cpu_mem
+    `ps axo pcpu,pmem,cmd k pmem,pcpu | tail -n 1`.chomp
+  end
+
 end
+
