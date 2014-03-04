@@ -18,6 +18,11 @@
   notify:
     - restart mysql server
 
+- name: configure default character encoding
+  template: src=etc/mysql/conf.d/utf8.cnf dest=/etc/mysql/conf.d/utf8.cnf mode=0644
+  notify:
+    - restart mysql server
+
 - name: create mysql/conf.d directory
   file: state=directory path=/etc/mysql/conf.d mode=0644
 
