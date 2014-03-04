@@ -1,3 +1,4 @@
 ---
 heat:
+  enabled: True
   rev: 0007c2d671c811bf01bdfac60357d8dd855b5cb5

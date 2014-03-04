@@ -34,9 +34,16 @@ endpoints:
 rabbitmq:
   user: openstack
   cluster: false
+
 etc_hosts:
   - name: "{{ fqdn }}"
     ip: "{{ undercloud_floating_ip }}"
+
+memcached:
+  memory: 64
+  port: 11211
+  user: nobody
+  max_connections: 1024
 
 mysql:
   root_password: asdf
@@ -209,6 +216,9 @@ keystone:
       public_url: https://{{ endpoints.main }}:8001/v1
       internal_url: https://{{ endpoints.main }}:8001/v1
       admin_url: https://{{ endpoints.main }}:8001/v1
+
+heat:
+  enabled: False
 
 ssl:
   crt: |
