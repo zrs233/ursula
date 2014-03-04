@@ -1,6 +1,6 @@
 ---
 - name: create heat user
-  user: name=heat comment=heat shell=/bin/false system=yes home=/nonexistent
+  user: name=heat comment=heat shell=/bin/false system=yes home=/nonexistent createhome=no
 
 - name: get heat source repo
   git: |
