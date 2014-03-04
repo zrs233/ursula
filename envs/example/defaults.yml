@@ -153,6 +153,9 @@ glance:
       url: https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img
 
 keystone:
+
+  token_expiration_in_seconds: 86400
+
   tenants:
     - admin
     - service
