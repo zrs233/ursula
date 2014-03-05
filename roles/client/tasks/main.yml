@@ -49,5 +49,6 @@
     version={{ client.heatclient_rev }}
   notify:
     - pip install heatclient
+  when: heat.enabled
 
 - template: src=usr/local/bin/migrate_neutron_services dest=/usr/local/bin/migrate_neutron_services mode=0755

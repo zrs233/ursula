@@ -34,4 +34,4 @@
     region=RegionOne
     token={{ secrets.admin_token }}
   with_items: keystone.services
-  when: endpoints[item.name] is defined
+  when: endpoints[item.name] is defined and endpoints[item.name]

@@ -27,4 +27,4 @@
 - exit_status: echo 'select version from migrate_version' | mysql heat | egrep "^$(heat-manage db_version)$"
   register: heat_db_current
 - command: heat-manage db_sync
-  when: heat_db_current.status != 0
+  when: heat.enabled and heat_db_current.status != 0
