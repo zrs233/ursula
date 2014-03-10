@@ -3,3 +3,4 @@ sensu ALL= NOPASSWD: /etc/sensu/plugins/check-os-api.rb
 sensu ALL= NOPASSWD: /etc/sensu/plugins/percona-cluster-size.rb
 sensu ALL= NOPASSWD: /etc/sensu/plugins/check-rabbitmq-cluster.rb
 sensu ALL= NOPASSWD: /etc/sensu/plugins/check-rabbitmq-queues.rb
+sensu ALL= NOPASSWD: /etc/sensu/plugins/check_3ware_raid.py

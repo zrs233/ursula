@@ -12,24 +12,28 @@ name = args[:name]
 use_sudo = args[:use_sudo]
 auto_resolve = args[:auto_resolve] || AUTORESOLVE
 interval = args[:interval] || INTERVAL
+occurrences = args[:occurrences] or 2
 plugin = args[:plugin]
 plugin_args = args[:args] or ''
 
 plugin_path = "/etc/sensu/plugins/#{plugin}"
 check_path = "/etc/sensu/conf.d/checks/#{name}.json"
 
+command = args[:command]
+command = use_sudo ? "sudo #{plugin_path} #{plugin_args}" : "#{plugin_path} #{plugin_args}" unless command
+
 Antsy.fail! "argument 'name' is required" unless name and not name.empty?
-Antsy.fail! "argument 'plugin' is required" unless plugin and not plugin.empty?
+Antsy.fail! "argument 'plugin' or 'command' is required" unless command and not command.empty?
 
 check = {
   'checks' => {
     name => {
-      'command' => use_sudo ? "sudo #{plugin_path} #{plugin_args}" : "#{plugin_path} #{plugin_args}",
+      'command' => command,
       'standalone' => true,
       'handlers' => [ 'pagerduty' ],
       'interval' => interval,
       'notification' => "#{name} check failed",
-      'occurrences' => 2,
+      'occurrences' => occurrences,
       'auto_resolve' => auto_resolve
     }
   }
