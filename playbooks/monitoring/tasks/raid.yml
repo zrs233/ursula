@@ -1,0 +1,3 @@
+---
+- sensu_check: name=check-3ware-raid command="if lspci | grep RAID | grep -i 3ware >> /dev/null; then sudo /etc/sensu/plugins/check_3ware_raid.py -b /usr/sbin/tw-cli; fi;" interval=300 occurrences=1
+  notify: restart sensu-client
