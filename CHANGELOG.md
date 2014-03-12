@@ -1,5 +1,14 @@
 # Ursula Changelog
 
+# 0.8.5
+
+- correctly set vxlan tunnel to be disabled
+- raidset sensu check against 3ware cards
+- lbaas feature flag (off by default)
+- heat feature flag (off by default)
+- keystone tokens will expire in 24hours by default
+- use a git mirror
+
 ## 0.8.0
 
 - Neutron LBaaS
