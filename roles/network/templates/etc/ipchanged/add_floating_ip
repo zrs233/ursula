@@ -3,9 +3,9 @@
 . /root/stackrc
 
 {% for other_controller in groups['controller'] -%}
-  {% if other_controller != ansible_hostname %}
+  {% if other_controller != ansible_hostname -%}
 
 /usr/local/bin/migrate_neutron_services {{ other_controller }} {{ ansible_hostname }}
 
-  {% endif -}
+  {% endif -%}
 {% endfor -%}
