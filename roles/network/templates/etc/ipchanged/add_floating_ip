@@ -1,0 +1,9 @@
+#!/bin/bash
+
+. /root/stackrc
+
+{% for other_controller in [x for x in groups['controller'] if x != ansible_hostname ] -%}
+
+/usr/local/bin/migrate_neutron_services {{ other_controller }} {{ ansible_hostname }}
+
+{% endfor -%}

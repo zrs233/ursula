@@ -10,13 +10,19 @@ dest_node = sys.argv[2]
 
 print "Moving services from %s to %s...\n" % (src_node, dest_node)
 
+neutron_auth = {
+    'username':    os.environ['OS_USERNAME'],
+    'password':    os.environ['OS_PASSWORD'],
+    'tenant_name': os.environ['OS_TENANT_NAME'],
+    'auth_url':    os.environ['OS_AUTH_URL'],
+    'region_name': 'RegionOne',
+}
+
+if 'OS_CACERT' in os.environ.keys():
+    neutron_auth['ca_cert'] = os.environ['OS_CACERT']
+
 #logging.basicConfig(level=logging.DEBUG)
-neutron = client.Client('2.0', username=os.environ['OS_USERNAME'],
-                               password=os.environ['OS_PASSWORD'],
-                               tenant_name=os.environ['OS_TENANT_NAME'],
-                               auth_url=os.environ['OS_AUTH_URL'],
-                   region_name='RegionOne',
-                               ca_cert=os.environ['OS_CACERT'])
+neutron = client.Client('2.0', **neutron_auth)
 neutron.format = 'json'
 
 agents = neutron.list_agents()

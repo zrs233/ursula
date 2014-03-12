@@ -32,3 +32,9 @@
 
 - service: name=neutron-lbaas-agent state=started
   when: neutron.enable_lbaas
+
+- file: dest=/etc/ipchanged/{{ ansible_default_ipv4.interface }}/{{ floating_ip }} state=directory
+- template: src=etc/ipchanged/add_floating_ip dest=/etc/ipchanged/{{ ansible_default_ipv4.interface }}/{{ floating_ip }}/add mode=0755
+- template: src=usr/local/sbin/ipchanged dest=/usr/local/sbin/ipchanged mode=0755
+- template: src=etc/init/ipchanged dest=/etc/init/ipchanged.conf
+- service: name=ipchanged state=started
