@@ -12,9 +12,9 @@ name = args[:name]
 use_sudo = args[:use_sudo]
 auto_resolve = args[:auto_resolve] || AUTORESOLVE
 interval = args[:interval] || INTERVAL
-occurrences = args[:occurrences] or 2
+occurrences = args[:occurrences] || 2
 plugin = args[:plugin]
-plugin_args = args[:args] or ''
+plugin_args = args[:args] || ''
 
 plugin_path = "/etc/sensu/plugins/#{plugin}"
 check_path = "/etc/sensu/conf.d/checks/#{name}.json"
