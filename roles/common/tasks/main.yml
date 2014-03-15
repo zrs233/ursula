@@ -58,3 +58,6 @@
 - name: drop an motd with ursula metadata
   action: template src=etc/motd.tail dest=/etc/motd.tail mode=0644
   changed_when: False
+
+- include: ipmi.yml
+  when: common.ipmi.enabled

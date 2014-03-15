@@ -5,3 +5,5 @@ common:
     clients:
       - tw-cli
       - megacli
+  ipmi:
+    enabled: True

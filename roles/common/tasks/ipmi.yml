@@ -1,0 +1,10 @@
+---
+- name: install ipmitool
+  apt: pkg=ipmitool
+
+- name: load kernel ipmi modules
+  modprobe: name={{ item }} state=present
+  with_items:
+    - ipmi_devintf
+    - ipmi_si
+    - ipmi_msghandler
