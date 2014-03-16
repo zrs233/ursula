@@ -1,6 +1,7 @@
 ---
 - name: register whether we need to add the hwraid apt-key
   shell: /usr/bin/apt-key list | grep -i hwraid.le-vert.net > /dev/null 2>&1
+  ignore_errors: True
   register: has_key
 
 - name: add hwraid apt key
