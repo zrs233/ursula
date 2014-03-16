@@ -31,9 +31,9 @@ check = {
       'command' => command,
       'standalone' => true,
       'handlers' => [ 'pagerduty' ],
-      'interval' => interval,
+      'interval' => interval.to_i,
       'notification' => "#{name} check failed",
-      'occurrences' => occurrences,
+      'occurrences' => occurrences.to_i,
       'auto_resolve' => auto_resolve
     }
   }
