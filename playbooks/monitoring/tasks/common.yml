@@ -11,7 +11,7 @@
 - sensu_check: name=disk plugin=check-disk.rb
   notify: restart sensu-client
 
-- sensu_process_check: ntpd
+- sensu_process_check: service=ntpd
   notify: restart sensu-client
 
 - sensu_check: name=ntp-offset plugin=check-ntp.rb
