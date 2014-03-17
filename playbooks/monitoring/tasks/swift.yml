@@ -1,5 +1,9 @@
 ---
-- sensu_check: name=swift-dispersion-containers plugin=check-swift-dispersion.py args="-c 98 -d 99 -o 98 -n 99"
+
+- name: swift dispersion gate script
+  template: source=check-swift-dispersion.sh dest=/etc/sensu/plugins/check-swift-dispersion.sh mode=0755 owner=root group=root
+
+- sensu_check: name=swift-dispersion plugin=check-swift-dispersion.sh interval=600 occurrences=1
 
 - name: sensu account process checks
   sensu_process_check: service={{ item }}
