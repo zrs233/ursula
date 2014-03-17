@@ -15,7 +15,10 @@
 
 - name: get neutron source repo
   git: |
-    repo={{ openstack.git_mirror }}/neutron.git dest=/opt/stack/neutron version={{ neutron.rev }}
+    repo={{ openstack.git_mirror }}/neutron.git 
+    dest=/opt/stack/neutron 
+    version={{ neutron.rev }} 
+    update=no
 
 # Patch around neutron's Open vSwitch kernel module version detection
 # Problem is now that Open vSwitch is merged into mainline kernel

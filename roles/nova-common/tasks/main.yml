@@ -16,7 +16,11 @@
 - apt: pkg=python-numpy
 
 - name: get nova source repo
-  git: repo={{ openstack.git_mirror }}/nova.git dest=/opt/stack/nova version={{ nova.rev }}
+  git: | 
+    repo={{ openstack.git_mirror }}/nova.git 
+    dest=/opt/stack/nova 
+    version={{ nova.rev }} 
+    update=no
   notify:
     - pip install nova
     - nova rootwrap

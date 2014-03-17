@@ -1,7 +1,10 @@
 ---
 - name: novnc repo
   git: |
-    repo={{ controller.novnc_repo }} dest=/usr/share/novnc version={{ controller.novnc_rev }}
+    repo={{ controller.novnc_repo }} 
+    dest=/usr/share/novnc 
+    version={{ controller.novnc_rev }} 
+    update=no
 
 - template: src=etc/init/nova-novncproxy.conf dest=/etc/init/nova-novncproxy.conf
 
