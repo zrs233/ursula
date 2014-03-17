@@ -7,7 +7,7 @@
     repo={{ openstack.git_mirror }}/python-keystoneclient.git
     dest=/opt/stack/python-keystoneclient
     version={{ client.keystoneclient_rev }}
-  update: no
+    update=no
   notify:
     - pip install keystoneclient
 
@@ -16,7 +16,7 @@
     repo={{ openstack.git_mirror }}/python-glanceclient.git
     dest=/opt/stack/python-glanceclient
     version={{ client.glanceclient_rev }}
-  update: no
+    update=no
   notify:
     - pip install glanceclient
 
@@ -25,7 +25,7 @@
     repo={{ openstack.git_mirror }}/python-novaclient.git
     dest=/opt/stack/python-novaclient
     version={{ client.novaclient_rev }}
-  update: no
+    update=no
   notify:
     - pip install novaclient
 
@@ -34,7 +34,7 @@
     repo={{ openstack.git_mirror }}/python-neutronclient.git
     dest=/opt/stack/python-neutronclient
     version={{ client.neutronclient_rev }}
-  update: no
+    update=no
   notify:
     - pip install neutronclient
 
@@ -43,7 +43,7 @@
     repo={{ openstack.git_mirror }}/python-cinderclient.git
     dest=/opt/stack/python-cinderclient
     version={{ client.cinderclient_rev }}
-  update: no
+    update=no
   notify:
     - pip install cinderclient
 
@@ -52,7 +52,7 @@
     repo={{ openstack.git_mirror }}/python-heatclient.git
     dest=/opt/stack/python-heatclient
     version={{ client.heatclient_rev }}
-  update: no
+    update=no
   notify:
     - pip install heatclient
   when: heat.enabled

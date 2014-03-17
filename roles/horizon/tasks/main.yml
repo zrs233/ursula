@@ -9,8 +9,10 @@
 
 - name: get horizon source repo
   git: |
-    repo={{ openstack.git_mirror}}/horizon.git dest=/opt/stack/horizon version={{ horizon.rev }}
-  update: no
+    repo={{ openstack.git_mirror}}/horizon.git 
+    dest=/opt/stack/horizon 
+    version={{ horizon.rev }} 
+    update=no
   notify:
     - setup horizon venv
     - compress horizon assets
