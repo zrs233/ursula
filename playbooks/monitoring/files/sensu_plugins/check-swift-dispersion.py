@@ -16,6 +16,7 @@
 #
 
 import json
+import re
 
 from sensu_plugin import SensuPluginCheck
 from subprocess import check_output, CalledProcessError, STDOUT
@@ -39,6 +40,12 @@ class SwiftDispersionCheck(SensuPluginCheck):
         try:
             output = check_output(['swift-dispersion-report', '-j'],
                                   stderr=STDOUT)
+
+            # strip any ERRORs that come through
+            p = re.compile(r'(\{.*\})')
+            m = p.search(output)
+            output = m.group(1)
+
         except CalledProcessError as e:
             self.critical("Unable to run swift-dispersion-check: %s %s" %
                           (e, output))
