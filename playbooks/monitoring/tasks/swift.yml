@@ -1,7 +1,7 @@
 ---
 
 - name: swift dispersion gate script
-  template: source=check-swift-dispersion.sh dest=/etc/sensu/plugins/check-swift-dispersion.sh mode=0755 owner=root group=root
+  template: src=check-swift-dispersion.sh dest=/etc/sensu/plugins/check-swift-dispersion.sh mode=0755 owner=root group=root
 
 - sensu_check: name=swift-dispersion plugin=check-swift-dispersion.sh interval=600 occurrences=1
 
