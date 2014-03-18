@@ -2,7 +2,7 @@
 - hosts: controller[0]
   tasks:
   - name: migrate neutron services to test-controller-0
-    shell: . /root/stackrc; /usr/local/bin/migrate_neutron_services test-controller-1 test-controller-0
+    shell: . /root/stackrc; HOSTNAME=test-controller-0 /usr/local/bin/migrate_neutron_services
   - name: neutron agents are all alive
     shell: . /root/stackrc; neutron agent-list | awk '/ xxx / {print;ec=1} END{exit ec}'
   - name: neutron has an internal network
