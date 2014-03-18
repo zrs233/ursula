@@ -14,7 +14,7 @@
     repo={{ barbican.git_mirror }}/barbican.git
     dest=/opt/stack/barbican
     version={{ barbican.rev }}
-    update=no
+    update={{ git_update }}
   notify:
     - create barbican virtualenv
     - install barbican inside virtualenv
@@ -31,7 +31,7 @@
     repo={{ barbicanclient.git_mirror }}/python-barbicanclient.git
     dest=/opt/stack/python-barbicanclient
     version={{ barbicanclient.rev }}
-    update=no
+    update={{ git_update }}
   notify:
     - install barbicanclient
 - meta: flush_handlers
