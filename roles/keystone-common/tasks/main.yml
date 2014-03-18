@@ -21,7 +21,7 @@
     repo={{ openstack.git_mirror }}/keystone.git 
     dest=/opt/stack/keystone 
     version={{ keystone.rev }} 
-    update={{ git_update }}
+    update={{ openstack.git_update }}
   notify:
     - pip install keystone
     - restart keystone services

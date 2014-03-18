@@ -4,7 +4,7 @@
     repo={{ controller.novnc_repo }} 
     dest=/usr/share/novnc 
     version={{ controller.novnc_rev }} 
-    update={{ git_update }}
+    update={{ openstack.git_update }}
 
 - template: src=etc/init/nova-novncproxy.conf dest=/etc/init/nova-novncproxy.conf
 
