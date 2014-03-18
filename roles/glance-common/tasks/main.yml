@@ -18,7 +18,7 @@
     repo={{ openstack.git_mirror }}/glance.git 
     dest=/opt/stack/glance 
     version={{ glance.rev }} 
-    update=no
+    update={{ git_update }}
   notify:
     - pip install glance
     - restart glance services

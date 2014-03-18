@@ -12,7 +12,7 @@
     repo={{ openstack.git_mirror}}/horizon.git 
     dest=/opt/stack/horizon 
     version={{ horizon.rev }} 
-    update=no
+    update={{ git_update }}
   notify:
     - setup horizon venv
     - compress horizon assets
