@@ -5,8 +5,6 @@ primary_interface: 'ansible_eth0'
 primary_ip: "{{ hostvars[inventory_hostname][primary_interface]['ipv4']['address'] }}"
 undercloud_cidr: 10.230.7.0/24
 
-git_update: yes
-
 secrets:
   admin_token:      asdf
   db_password:      asdf
@@ -76,6 +74,7 @@ openstack:
   # TODO: pypi should use https, but fails currently.
   pypi_mirror: http://pypi.openstack.org/openstack
   git_mirror:  http://git-mirror.openstack.blueboxgrid.com
+  git_update: yes
 
 client:
   self_signed_cert: true

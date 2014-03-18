@@ -7,7 +7,7 @@
     repo={{ openstack.git_mirror }}/heat.git 
     dest=/opt/stack/heat 
     version={{ heat.rev }} 
-    update={{ git_update }}
+    update={{ openstack.git_update }}
   notify:
     - pip install heat
 - meta: flush_handlers
