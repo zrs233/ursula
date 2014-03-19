@@ -5,10 +5,9 @@ import os
 import sys
 from neutronclient.neutron import client
 
-src_node = sys.argv[1]
-dest_node = sys.argv[2]
+dest_node = os.environ['HOSTNAME']
 
-print "Moving services from %s to %s...\n" % (src_node, dest_node)
+print "Moving neutron services to %s...\n" % (dest_node)
 
 neutron_auth = {
     'username':    os.environ['OS_USERNAME'],
@@ -26,8 +25,8 @@ neutron = client.Client('2.0', **neutron_auth)
 neutron.format = 'json'
 
 agents = neutron.list_agents()
-routers = neutron.list_routers()
 
+# Build a dictionary: hostname => agent type (e.g. L3 agent) => agent id
 host_agents = {}
 
 for agent in agents['agents']:
@@ -36,34 +35,34 @@ for agent in agents['agents']:
 
     host_agents[agent['host']][agent['agent_type']] = agent['id']
 
-for router in routers['routers']:
-    hosting_agents = neutron.list_l3_agent_hosting_routers(router['id'])
 
-    for hosting_agent in hosting_agents['agents']:
-        if hosting_agent['host'] != src_node:
-            continue
+if dest_node in host_agents.keys() and 'L3 agent' in host_agents[dest_node].keys():
+    dest_l3_agent = host_agents[dest_node]['L3 agent']
+    routers = neutron.list_routers()
 
-        if 'L3 agent' not in host_agents[dest_node].keys():
-            print "Can not move router %s to %s because no L3 agent exists there" % (router['id'], dest_node)
-            sys.exit(1)
+    for router in routers['routers']:
+        hosting_agents = neutron.list_l3_agent_hosting_routers(router['id'])
 
-        neutron.remove_router_from_l3_agent(host_agents[src_node]['L3 agent'], router['id'])
-        neutron.add_router_to_l3_agent(host_agents[dest_node]['L3 agent'], {'router_id': router['id']})
-        print "Moved %s (%s) router" % (router['name'], router['id'])
+        for hosting_agent in hosting_agents['agents']:
+            if hosting_agent['host'] == dest_node:
+                continue
 
-if 'DHCP agent' in host_agents[src_node].keys():
-    src_agent = host_agents[src_node]['DHCP agent']
+            neutron.remove_router_from_l3_agent(hosting_agent['id'], router['id'])
+            neutron.add_router_to_l3_agent(dest_l3_agent, {'router_id': router['id']})
+            print "Moved %s (%s) router" % (router['name'], router['id'])
+else:
+    print "No L3 agent exists on %s" % (dest_node)
 
-    if 'DHCP agent' not in host_agents[dest_node].keys():
-        print "Can not move DHCP to %s becasue no L3 agent exists there" % dest_node
-        sys.exit(1)
 
-    dest_agent = host_agents[dest_node]['DHCP agent']
+if dest_node in host_agents.keys() and 'DHCP agent' in host_agents[dest_node].keys():
+    dest_dhcp_agent = host_agents[dest_node]['DHCP agent']
 
-    networks = neutron.list_networks_on_dhcp_agent(src_agent)
+    for src_agent in [ host_agents[host]['DHCP agent'] for host in host_agents.keys() if 'DHCP agent' in host_agents[host].keys() and host != dest_node ]:
+        networks = neutron.list_networks_on_dhcp_agent(src_agent)
 
-    for network in networks['networks']:
-        neutron.remove_network_from_dhcp_agent(src_agent, network['id'])
-        neutron.add_network_to_dhcp_agent(dest_agent, {'network_id': network['id']})
-        print "Moved DHCP for %s (%s) network" % (network['name'], network['id'])
-
+        for network in networks['networks']:
+            neutron.remove_network_from_dhcp_agent(src_agent, network['id'])
+            neutron.add_network_to_dhcp_agent(dest_dhcp_agent, {'network_id': network['id']})
+            print "Moved DHCP for %s (%s) network" % (network['name'], network['id'])
+else:
+    print "No DHCP agent exists on %s" % (dest_node)

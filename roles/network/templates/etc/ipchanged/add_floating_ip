@@ -2,10 +2,11 @@
 
 . /root/stackrc
 
-{% for other_controller in groups['controller'] -%}
-  {% if other_controller != ansible_hostname -%}
+# Wait up to 5 minutes for Neutron to recover from MySQL and HAProxy cutover
+TRIES=0
+until neutron agent-list || [ $(( TRIES++ )) -eq 10 ]; do
+  sleep 30
+done
 
-/usr/local/bin/migrate_neutron_services {{ other_controller }} {{ ansible_hostname }}
-
-  {% endif -%}
-{% endfor -%}
+export HOSTNAME=$( hostname )
+/usr/local/bin/migrate_neutron_services
