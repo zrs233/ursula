@@ -1,7 +1,7 @@
 # ucarp
 
 - name: ucarp failover alert
-  sensu_check: name=check-ucarp-failover plugin=check-log.rb use_sudo=true auto_resolve=false interval=20 args="-f /var/log/syslog -q 'ucarp.+[Ss]witching to state' --silent --occurences=1"
+  sensu_check: name=check-ucarp-failover plugin=check-log.rb use_sudo=true auto_resolve=false interval=20 occurrences=1 args="-f /var/log/syslog -q 'ucarp.+[Ss]witching to state' --silent"
   notify: restart sensu-client
 
 - sensu_check: name=check-ucarp-procs plugin=check-ucarp-procs.sh
