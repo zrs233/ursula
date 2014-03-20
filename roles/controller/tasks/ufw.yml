@@ -1,6 +1,9 @@
 ---
 - apt: pkg=ufw
 
+- name: permit ucarp (IP protocol 112)
+  lineinfile: dest=/etc/ufw/before.rules regexp="^-A ufw-before-input -p 112 -j ACCEPT" line="-A ufw-before-input -p 112 -j ACCEPT" insertafter="^-A ufw-before-input -p udp --sport 67 --dport 68 -j ACCEPT"
+
 - name: Permit SSH
   command: ufw allow 22/tcp
 
