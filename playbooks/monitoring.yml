@@ -43,3 +43,10 @@
   - include: monitoring/tasks/swift.yml
   handlers:
   - include: ../handlers/main.yml
+
+- name: Install ucarp checks
+  hosts: network:swiftnode
+  tasks:
+  - include: monitoring/tasks/ucarp.yml
+  handlers:
+  - include: ../handlers/main.yml
