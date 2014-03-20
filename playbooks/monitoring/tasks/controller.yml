@@ -76,8 +76,3 @@
 - sensu_check: name=memcached-graphite plugin=memcached-graphite.rb args='--host {{ primary_ip }} --scheme stats.{{ inventory_hostname  }}'
   notify: restart sensu-client
 
-# ucarp
-
-- name: ucarp failover alert
-  sensu_check: name=check-ucarp-failover plugin=check-log.rb use_sudo=true auto_resolve=false interval=20 args="-f /var/log/syslog -q 'ucarp.+[Ss]witching to state' --silent --occurences=1"  
-  notify: restart sensu-client
