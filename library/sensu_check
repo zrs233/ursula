@@ -4,13 +4,17 @@ require 'antsy'
 
 # defaults
 INTERVAL = 30
-AUTORESOLVE = true
 
 args = Antsy.args
 
 name = args[:name]
 use_sudo = args[:use_sudo]
-auto_resolve = args[:auto_resolve] || AUTORESOLVE
+
+auto_resolve = true
+if args[:auto_resolve] == 'false' || args[:auto_resolve] == false
+ auto_resolve = false
+end
+
 interval = args[:interval] || INTERVAL
 occurrences = args[:occurrences] || 2
 plugin = args[:plugin]
