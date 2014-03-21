@@ -9,6 +9,6 @@
   command: dpkg-reconfigure --frontend noninteractive tzdata
 
 - name: apply-sysctl
-  shell: "cat /etc/sysctl.d/*.conf /etc/sysctl.conf | sysctl -e -p -"
+  shell: "cat /etc/sysctl.conf /etc/sysctl.d/*.conf | sysctl -e -p -"
 
 - include: ssh.yml
