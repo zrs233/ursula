@@ -83,6 +83,14 @@
   notify:
     - apply-sysctl
 
+- lineinfile: create=yes dest=/etc/sysctl.d/60-tcp-tuning.conf regexp=^net\.ipv4\.udp_rmem_min line="net.ipv4.udp_rmem_min = 8192"
+  notify:
+    - apply-sysctl
+
+- lineinfile: create=yes dest=/etc/sysctl.d/60-tcp-tuning.conf regexp=^net\.ipv4\.udp_wmem_min line="net.ipv4.udp_wmem_min = 8192"
+  notify:
+    - apply-sysctl
+
 - lineinfile: create=yes dest=/etc/sysctl.d/60-tcp-tuning.conf regexp=^net\.core\.somaxconn line="net.core.somaxconn = 40960"
   notify:
     - apply-sysctl
