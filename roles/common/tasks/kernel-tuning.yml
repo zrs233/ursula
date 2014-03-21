@@ -1,20 +1,4 @@
 ---
-- lineinfile: create=yes dest=/etc/sysctl.d/60-kernel-tuning.conf regexp=^vm\.swappiness line="vm.swappiness = 10"
-  notify:
-    - apply-sysctl
-
-- lineinfile: create=yes dest=/etc/sysctl.d/60-kernel-tuning.conf regexp=^kernel\.shmmax line="kernel.shmmax = 68719476736"
-  notify:
-    - apply-sysctl
-
-- lineinfile: create=yes dest=/etc/sysctl.d/60-kernel-tuning.conf regexp=^kernel\.shmall line="kernel.shmall = 4294967296"
-  notify:
-    - apply-sysctl
-
-- lineinfile: create=yes dest=/etc/sysctl.d/60-kernel-tuning.conf regexp=^kernel\.msgmax line="kernel.msgmax = 65536"
-  notify:
-    - apply-sysctl
-
-- lineinfile: create=yes dest=/etc/sysctl.d/60-kernel-tuning.conf regexp=^kernel\.msgmnb line="kernel.msgmnb = 65536"
+- template: src=etc/sysctl.d/60-kernel-tuning.conf dest=/etc/sysctl.d/60-kernel-tuning.conf owner=root group=root mode=0644
   notify:
     - apply-sysctl

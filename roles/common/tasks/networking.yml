@@ -2,6 +2,16 @@
 - template: src=etc/network/interfaces dest=/etc/network/interfaces owner=root group=root mode=0644
   when: network_interfaces is defined
 
+- template: src=etc/sysctl.d/60-netfilter-tuning.conf dest=/etc/sysctl.d/60-netfilter-tuning.conf owner=root group=root mode=0644
+  notify:
+    - apply-sysctl
+
+- template: src=etc/sysctl.d/60-tcp-tuning.conf dest=/etc/sysctl.d/60-tcp-tuning.conf owner=root group=root mode=0644
+  notify:
+    - apply-sysctl
+
+- template: src=etc/modprobe.d/conntrack.conf dest=/etc/modprobe.d/conntrack.conf owner=root group=root mode=0644
+
 - lineinfile: dest=/etc/hosts regexp=^127.0.0.1 line="127.0.0.1 {{ ansible_fqdn }} {{ ansible_hostname }} localhost.localdomain localhost"
 
 - lineinfile: dest=/etc/hosts regexp=^{{ item.ip }} line="{{ item.ip }} {{ item.name }}"
@@ -14,109 +24,3 @@
 - lineinfile: dest=/etc/sysctl.d/10-ipv6-privacy.conf regexp=^net\.ipv6\.conf\.default\.use_tempaddr line="net.ipv6.conf.default.use_tempaddr = 0"
   notify:
     - apply-sysctl
-
-- lineinfile: create=yes dest=/etc/sysctl.d/60-netfilter-tuning.conf regexp=^net\.netfilter\.nf_conntrack_max line="net.netfilter.nf_conntrack_max = 1524288"
-  notify:
-    - apply-sysctl
-
-- lineinfile: create=yes dest=/etc/sysctl.d/60-netfilter-tuning.conf regexp=^net\.netfilter\.nf_conntrack_tcp_timeout_time_wait line="net.netfilter.nf_conntrack_tcp_timeout_time_wait = 5"
-  notify:
-    - apply-sysctl
-
-- lineinfile: create=yes dest=/etc/sysctl.d/60-netfilter-tuning.conf regexp=^net\.netfilter\.nf_conntrack_tcp_timeout_fin_wait line="net.netfilter.nf_conntrack_tcp_timeout_fin_wait = 5"
-  notify:
-    - apply-sysctl
-
-- lineinfile: create=yes dest=/etc/sysctl.d/60-tcp-tuning.conf regexp=^net\.ipv4\.tcp_max_tw_buckets line="net.ipv4.tcp_max_tw_buckets = 5000000"
-  notify:
-    - apply-sysctl
-
-- lineinfile: create=yes dest=/etc/sysctl.d/60-tcp-tuning.conf regexp=^net\.ipv4\.tcp_max_orphans line="net.ipv4.tcp_max_orphans = 5000000"
-  notify:
-    - apply-sysctl
-
-- lineinfile: create=yes dest=/etc/sysctl.d/60-tcp-tuning.conf regexp=^net\.ipv4\.tcp_max_syn_backlog line="net.ipv4.tcp_max_syn_backlog = 40960"
-  notify:
-    - apply-sysctl
-
-- lineinfile: create=yes dest=/etc/sysctl.d/60-tcp-tuning.conf regexp=^net\.ipv4\.tcp_keepalive_time line="net.ipv4.tcp_keepalive_time = 300"
-  notify:
-    - apply-sysctl
-
-- lineinfile: create=yes dest=/etc/sysctl.d/60-tcp-tuning.conf regexp=^net\.ipv4\.tcp_tw_reuse line="net.ipv4.tcp_tw_reuse = 1"
-  notify:
-    - apply-sysctl
-
-- lineinfile: create=yes dest=/etc/sysctl.d/60-tcp-tuning.conf regexp=^net\.ipv4\.tcp_timestamps line="net.ipv4.tcp_timestamps = 0"
-  notify:
-    - apply-sysctl
-
-- lineinfile: create=yes dest=/etc/sysctl.d/60-tcp-tuning.conf regexp=^net\.ipv4\.tcp_ecn line="net.ipv4.tcp_ecn = 0"
-  notify:
-    - apply-sysctl
-
-- lineinfile: create=yes dest=/etc/sysctl.d/60-tcp-tuning.conf regexp=^net\.ipv4\.tcp_sack line="net.ipv4.tcp_sack = 0"
-  notify:
-    - apply-sysctl
-
-- lineinfile: create=yes dest=/etc/sysctl.d/60-tcp-tuning.conf regexp=^net\.ipv4\.tcp_dsack line="net.ipv4.tcp_dsack = 0"
-  notify:
-    - apply-sysctl
-
-- lineinfile: create=yes dest=/etc/sysctl.d/60-tcp-tuning.conf regexp=^net\.ipv4\.tcp_synack_retries line="net.ipv4.tcp_synack_retries = 3"
-  notify:
-    - apply-sysctl
-
-- lineinfile: create=yes dest=/etc/sysctl.d/60-tcp-tuning.conf regexp=^net\.ipv4\.ip_local_port_range line="net.ipv4.ip_local_port_range = 1024 65000"
-  notify:
-    - apply-sysctl
-
-- lineinfile: create=yes dest=/etc/sysctl.d/60-tcp-tuning.conf regexp=^net\.ipv4\.tcp_fin_timeout line="net.ipv4.tcp_fin_timeout = 5"
-  notify:
-    - apply-sysctl
-
-- lineinfile: create=yes dest=/etc/sysctl.d/60-tcp-tuning.conf regexp=^net\.ipv4\.tcp_rmem line="net.ipv4.tcp_rmem = 16384 87380 16777216"
-  notify:
-    - apply-sysctl
-
-- lineinfile: create=yes dest=/etc/sysctl.d/60-tcp-tuning.conf regexp=^net\.ipv4\.tcp_wmem line="net.ipv4.tcp_wmem = 16384 87380 16777216"
-  notify:
-    - apply-sysctl
-
-- lineinfile: create=yes dest=/etc/sysctl.d/60-tcp-tuning.conf regexp=^net\.ipv4\.udp_rmem_min line="net.ipv4.udp_rmem_min = 8192"
-  notify:
-    - apply-sysctl
-
-- lineinfile: create=yes dest=/etc/sysctl.d/60-tcp-tuning.conf regexp=^net\.ipv4\.udp_wmem_min line="net.ipv4.udp_wmem_min = 8192"
-  notify:
-    - apply-sysctl
-
-- lineinfile: create=yes dest=/etc/sysctl.d/60-tcp-tuning.conf regexp=^net\.core\.somaxconn line="net.core.somaxconn = 40960"
-  notify:
-    - apply-sysctl
-
-- lineinfile: create=yes dest=/etc/sysctl.d/60-tcp-tuning.conf regexp=^net\.core\.netdev_max_backlog line="net.core.netdev_max_backlog = 40960"
-  notify:
-    - apply-sysctl
-
-- lineinfile: create=yes dest=/etc/sysctl.d/60-tcp-tuning.conf regexp=^net\.core\.rmem_max line="net.core.rmem_max = 16777216"
-  notify:
-    - apply-sysctl
-
-- lineinfile: create=yes dest=/etc/sysctl.d/60-tcp-tuning.conf regexp=^net\.core\.rmem_default line="net.core.rmem_default = 16777216"
-  notify:
-    - apply-sysctl
-
-- lineinfile: create=yes dest=/etc/sysctl.d/60-tcp-tuning.conf regexp=^net\.core\.wmem_max line="net.core.wmem_max = 16777216"
-  notify:
-    - apply-sysctl
-
-- lineinfile: create=yes dest=/etc/sysctl.d/60-tcp-tuning.conf regexp=^net\.core\.wmem_default line="net.core.wmem_default = 16777216"
-  notify:
-    - apply-sysctl
-
-- lineinfile: create=yes dest=/etc/sysctl.d/60-tcp-tuning.conf regexp=^net\.core\.optmem_max line="net.core.optmem_max = 40960"
-  notify:
-    - apply-sysctl
-
-- lineinfile: create=yes dest=/etc/modprobe.d/conntrack.conf regexp=^options\ nf_conntrack line="options nf_conntrack hashsize=190536"
