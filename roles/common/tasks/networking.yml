@@ -2,6 +2,16 @@
 - template: src=etc/network/interfaces dest=/etc/network/interfaces owner=root group=root mode=0644
   when: network_interfaces is defined
 
+- template: src=etc/sysctl.d/60-netfilter-tuning.conf dest=/etc/sysctl.d/60-netfilter-tuning.conf owner=root group=root mode=0644
+  notify:
+    - apply-sysctl
+
+- template: src=etc/sysctl.d/60-tcp-tuning.conf dest=/etc/sysctl.d/60-tcp-tuning.conf owner=root group=root mode=0644
+  notify:
+    - apply-sysctl
+
+- template: src=etc/modprobe.d/conntrack.conf dest=/etc/modprobe.d/conntrack.conf owner=root group=root mode=0644
+
 - lineinfile: dest=/etc/hosts regexp=^127.0.0.1 line="127.0.0.1 {{ ansible_fqdn }} {{ ansible_hostname }} localhost.localdomain localhost"
 
 - lineinfile: dest=/etc/hosts regexp=^{{ item.ip }} line="{{ item.ip }} {{ item.name }}"

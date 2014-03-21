@@ -42,6 +42,7 @@
 - include: ssl.yml
 - include: ssh.yml
 - include: networking.yml
+- include: kernel-tuning.yml
 - include: system_tools.yml
 
 - include: hwraid.yml
