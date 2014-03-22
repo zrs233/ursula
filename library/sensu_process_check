@@ -7,7 +7,7 @@ service=args[:service]
 
 Antsy.fail! "argument 'service' is required" unless service and not service.empty?
 
-check_fname = "/etc/sensu/conf.d/checks/#{service}-service.json"
+check_fname = "/etc/sensu/conf.d/checks/#{File.basename(service)}-service.json"
 
 check = {
   'checks' => {
