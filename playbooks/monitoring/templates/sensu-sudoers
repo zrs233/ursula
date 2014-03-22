@@ -5,3 +5,5 @@ sensu ALL= NOPASSWD: /etc/sensu/plugins/check-rabbitmq-cluster.rb
 sensu ALL= NOPASSWD: /etc/sensu/plugins/check-rabbitmq-queues.rb
 sensu ALL= NOPASSWD: /etc/sensu/plugins/check_3ware_raid.py
 sensu ALL= NOPASSWD: /etc/sensu/plugins/check_megaraid_sas.pl
+sensu ALL= NOPASSWD: /etc/sensu/plugins/check-swift-dispersion.py
+

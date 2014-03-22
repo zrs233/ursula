@@ -2,19 +2,23 @@
 require 'rubygems'
 require 'antsy'
 
+def set_arg_to_bool(var, default = true)
+  if var == 'false' || var == false
+    return false
+  elsif var == 'true' || var == true
+    return true
+  end
+  default
+end
+
 # defaults
 INTERVAL = 30
 
 args = Antsy.args
 
 name = args[:name]
-use_sudo = args[:use_sudo]
-
-auto_resolve = true
-if args[:auto_resolve] == 'false' || args[:auto_resolve] == false
- auto_resolve = false
-end
-
+use_sudo = set_arg_to_bool(args[:use_sudo], false)
+auto_resolve = set_arg_to_bool(args[:auto_resolve], true)
 interval = args[:interval] || INTERVAL
 occurrences = args[:occurrences] || 2
 plugin = args[:plugin]
