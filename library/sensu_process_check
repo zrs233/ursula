@@ -5,7 +5,8 @@ require 'antsy'
 args = Antsy.args
 service = args[:service]
 short_service_name = File.basename(service)
-
+warn_over=args[:warn_over] || 15
+crit_over=args[:crit_over] || 30
 
 Antsy.fail! "argument 'service' is required" unless service and not service.empty?
 
@@ -14,7 +15,7 @@ check_fname = "/etc/sensu/conf.d/checks/#{short_service_name}-service.json"
 check = {
   'checks' => {
     short_service_name => {
-      'command' => "/etc/sensu/plugins/check-procs.rb -p #{service} -w 15 -c 30 -W 1 -C 1",
+      'command' => "/etc/sensu/plugins/check-procs.rb -p #{service} -w #{warn_over} -c #{crit_over} -W 1 -C 1",
       'standalone' => true,
       'handlers' => [ 'pagerduty' ],
       'interval' => 30,
