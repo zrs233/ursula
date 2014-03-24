@@ -6,7 +6,7 @@
 - sensu_check: name=swift-dispersion plugin=check-swift-dispersion.sh interval=600 occurrences=1 use_sudo=true
 
 - name: sensu account process checks
-  sensu_process_check: service={{ item }}
+  sensu_process_check: service={{ item }} warn_over=30 crit_over=35
   with_items:
     - swift-account-auditor
     - swift-account-replicator
@@ -14,7 +14,7 @@
     - swift-account-server
 
 - name: sensu container process checks
-  sensu_process_check: service={{ item }}
+  sensu_process_check: service={{ item }} warn_over=30 crit_over=35
   with_items:
     - swift-container-replicator
     - swift-container-updater
@@ -23,7 +23,7 @@
     - swift-container-server
 
 - name: sensu object process checks
-  sensu_process_check: service={{ item }}
+  sensu_process_check: service={{ item }} warn_over=30 crit_over=35
   with_items:
     - swift-object-replicator
     - swift-object-updater
