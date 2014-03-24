@@ -1,5 +1,22 @@
 # Ursula Changelog
 
+# 0.9.0
+
+- sensu_process_check now accepts parameters for warn overs
+- sensu: monitor mylsqd on controllers
+- sensu: monitor ipchanged
+- kernel and tcp tuning
+- ucarp to provide Neutron and Swift HA
+- sensu_check: ensure occurences and interval are integers
+- sensu_process: ensure bools are bools with check json
+- swift fixups
+- swift-dispersion checks into one check
+- monitor that ntpd is running
+- increase ansible fork config option to 25
+- support neutron subnet allocation pools
+- configure neutron to use non-admin keystone port
+- ipmitool
+
 # 0.8.5
 
 - correctly set vxlan tunnel to be disabled
