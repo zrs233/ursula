@@ -20,8 +20,8 @@
     - python-virtualenv
     - python-mysqldb
 
-# the pip ansible library doesn't support `>=`, sho shell out instead
-- shell: pip install pip>=1.4.1
+- pip: name=pip version=1.4.1
+  when: ansible_distribution_version == "12.04"
 
 - apt: pkg={{ item }}
   with_items:
