@@ -6,9 +6,6 @@
 - name: update apt index
   apt: update_cache=yes
 
-# the pip ansible library doesn't support `>=`, sho shell out instead
-- shell: pip install pip>=1.4.1
-
 - name: python dependencies
   apt: pkg={{ item }}
   with_items:
@@ -22,6 +19,9 @@
     - python-software-properties
     - python-virtualenv
     - python-mysqldb
+
+# the pip ansible library doesn't support `>=`, sho shell out instead
+- shell: pip install pip>=1.4.1
 
 - apt: pkg={{ item }}
   with_items:
