@@ -10,8 +10,7 @@
   with_items: groups["controller"]
 
 - name: add erlang-solutions apt key
-  apt_key: >
-    url='http://binaries.erlang-solutions.com/debian/erlang_solutions.asc'
+  apt_key: id=A14F4FCA url='http://binaries.erlang-solutions.com/debian/erlang_solutions.asc'
 
 - name: add erlang-solutions apt repository
   apt_repository: >
@@ -22,8 +21,7 @@
   apt: pkg=esl-erlang
 
 - name: add rabbitmq apt key
-  apt_key: >
-    url='http://www.rabbitmq.com/rabbitmq-signing-key-public.asc'
+  apt_key: id=056E8E56 url='http://www.rabbitmq.com/rabbitmq-signing-key-public.asc'
 
 - name: add rabbitmq apt repository
   apt_repository: >
