@@ -23,9 +23,9 @@
 
 - name: get swifttool repo
   git: |
-    repo=https://github.com/blueboxgroup/swifttool.git 
-    dest=/opt/stack/swifttool 
-    depth=50 
+    repo=https://github.com/blueboxgroup/swifttool.git
+    dest=/opt/stack/swifttool
+    depth=50
     update={{ openstack.git_update }}
 
 - name: pip install swifttool
@@ -36,19 +36,24 @@
 
 - name: get swift source repo
   git: |
-    repo={{ openstack.git_mirror }}/swift.git 
-    dest=/opt/stack/swift 
-    version={{ swift.rev }} 
+    repo={{ openstack.git_mirror }}/swift.git
+    dest=/opt/stack/swift
+    version={{ swift.rev }}
     update={{ openstack.git_update }}
+  register: result
+  until: result.rc == 0
+  retries: 3
+  delay: 60
+
 
 - name: pip install swift services
   shell: pip install -i {{ openstack.pypi_mirror }} /opt/stack/swift
 
 - name: get swift client source repo
   git: |
-    repo={{ openstack.git_mirror }}/python-swiftclient.git 
-    dest=/opt/stack/python-swiftclient 
-    version={{ swift.client.rev }} 
+    repo={{ openstack.git_mirror }}/python-swiftclient.git
+    dest=/opt/stack/python-swiftclient
+    version={{ swift.client.rev }}
     update={{ openstack.git_update }}
 
 - name: pip install swift client
