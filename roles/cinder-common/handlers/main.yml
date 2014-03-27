@@ -2,7 +2,7 @@
 - name: pip install cinder
   command: pip install -i {{ openstack.pypi_mirror }} /opt/stack/cinder
   register: result
-  until: result.rc == 0
+  until: result|success
   retries: 3
   delay: 60
 

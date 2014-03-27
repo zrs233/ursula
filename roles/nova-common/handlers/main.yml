@@ -3,7 +3,7 @@
 - name: pip install nova
   shell: pip install -i {{ openstack.pypi_mirror }} /opt/stack/nova && update-ca-certificates
   register: result
-  until: result.rc == 0
+  until: result|success
   retries: 3
   delay: 60
 

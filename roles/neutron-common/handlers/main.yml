@@ -2,7 +2,7 @@
 - name: pip install neutron
   command: pip install -i {{ openstack.pypi_mirror }} /opt/stack/neutron
   register: result
-  until: result.rc == 0
+  until: result|success
   retries: 3
   delay: 60
 

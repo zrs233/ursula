@@ -2,7 +2,7 @@
 - name: pip install glance
   command: pip install -i {{ openstack.pypi_mirror }} /opt/stack/glance
   register: result
-  until: result.rc == 0
+  until: result|success
   retries: 3
   delay: 60
 

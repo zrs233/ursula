@@ -41,7 +41,7 @@
     version={{ swift.rev }}
     update={{ openstack.git_update }}
   register: result
-  until: result.rc == 0
+  until: result|success
   retries: 3
   delay: 60
 
