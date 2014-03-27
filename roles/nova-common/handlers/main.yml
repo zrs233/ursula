@@ -2,6 +2,10 @@
 # WTF? this pip install removes /etc/ssl/certs/ca-certificates.pem the first time it is run, so regenerate it here.
 - name: pip install nova
   shell: pip install -i {{ openstack.pypi_mirror }} /opt/stack/nova && update-ca-certificates
+  register: result
+  until: result.rc == 0
+  retries: 3
+  delay: 60
 
 - name: nova rootwrap
   command: rsync -avh /opt/stack/nova/etc/nova/rootwrap.d /etc/nova
