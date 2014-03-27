@@ -22,6 +22,11 @@
 
 - hosts: all
   tasks:
+  - name: add an apt proxy
+    template: src=../../roles/common/etc/apt/apt.conf.d/01proxy dest=/etc/apt/apt.conf.d/01proxy owner=root group=root mode=0644
+    when: common.apt_cache is defined
+  - name: Run a full dist-upgrade (we don't want to preform this each run on existing clusters)
+    apt: update_cache=yes upgrade=dist
   - name: Ubuntu 14.04 style /etc/network/interfaces.d/ directory
     file: dest=/etc/network/interfaces.d state=directory owner=root group=root mode=0755
   - name: /etc/network/interfaces to support interfaces.d/
