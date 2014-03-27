@@ -1,5 +1,5 @@
 ---
-- apt_key: url=http://repos.sensuapp.org/apt/pubkey.gpg state=present
+- apt_key: id=7580C77F url=http://repos.sensuapp.org/apt/pubkey.gpg
 
 # TODO: use ansible apt_repository module instead of adding a source manually
 #    https://bugs.launchpad.net/ubuntu/+source/software-properties/+bug/987264
