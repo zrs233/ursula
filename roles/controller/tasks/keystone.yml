@@ -5,5 +5,8 @@
 - name: keystone is running
   service: name=keystone state=started
 
-- name: Permit access to Keystone
+- name: Permit access to Keystone (SSL)
   command: ufw allow 5001/tcp
+
+- name: Permit access to Keystone Admin (SSL)
+  command: ufw allow 35358/tcp
