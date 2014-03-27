@@ -8,7 +8,7 @@
     - refresh CAs
 
 - file: dest=/opt/stack/ssl state=directory
-- template: src=openstack.crt dest=/opt/stack/ssl/openstack.crt mode=0645
+- template: src=openstack.crt dest=/opt/stack/ssl/openstack.crt mode=0644
 
 # ugly hack: some python http libs don't honor the system ca-certs, and ship with
 # their own list, instead.
