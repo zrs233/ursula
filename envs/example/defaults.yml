@@ -18,6 +18,7 @@ secrets:
 
 fqdn: openstack.example.com
 floating_ip: "{{ controller_primary }}"
+undercloud_floating_ip: "{{ hostvars[groups['controller'][0]][primary_interface]['ipv4']['address'] }}"
 
 etc_hosts:
   - name: "{{ fqdn }}"
@@ -36,7 +37,8 @@ memcached:
 
 endpoints:
   main:     "{{ fqdn }}"
-  db:       "{{ fqdn }}"
+  db:       "{{ undercloud_floating_ip }}"
+  rabbit:   "{{ undercloud_floating_ip }}"
   keystone: "{{ fqdn }}"
   nova:     "{{ fqdn }}"
   glance:   "{{ fqdn }}"
@@ -62,7 +64,7 @@ monitoring:
   sensu_package_version: 0.12.2-1
   sensu_plugin_version: 0.1.7
   rabbit:
-    host: "{{ hostvars[groups['controller'][0]][primary_interface]['ipv4']['address'] }}"
+    host: "{{ undercloud_floating_ip }}"
     port: 5672
     user: openstack
     pass: asdf
