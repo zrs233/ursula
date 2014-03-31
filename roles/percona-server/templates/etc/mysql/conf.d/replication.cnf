@@ -27,16 +27,13 @@ wsrep_cluster_name = mstack_db_cluster
 # This Node's address
 wsrep_node_address = {{ primary_ip }}
 
-
-# In order for Galera to work correctly binlog format should be ROW
-binlog_format = ROW
-
-# MyISAM storage engine has only experimental support
+# MyISAM storage engine replication has only experimental support in Galera
 default_storage_engine = InnoDB
 
+# README-wsrep indicates the follow three options are mandatory:
+# In order for Galera to work correctly binlog format should be ROW
+binlog_format = ROW
 # This changes how InnoDB autoincrement locks are managed and is a requirement for Galera
 innodb_autoinc_lock_mode = 2
-
-# This is a recommended tuning variable for performance
+# This is a recommended tuning variable for performance (required for parallel applying)
 innodb_locks_unsafe_for_binlog  = 1
-
