@@ -15,6 +15,12 @@
 
 - name: configure my.cnf
   template: src=etc/my.cnf dest=/etc/my.cnf mode=0644
+  when: ansible_distribution_version == "12.04"
+  notify:
+    - restart mysql server
+
+- name: bind to all interfaces
+  template: src=etc/mysql/conf.d/bind-inaddr-any.cnf dest=/etc/mysql/conf.d/bind-inaddr-any.cnf mode=0644
   notify:
     - restart mysql server
 
@@ -22,9 +28,6 @@
   template: src=etc/mysql/conf.d/utf8.cnf dest=/etc/mysql/conf.d/utf8.cnf mode=0644
   notify:
     - restart mysql server
-
-- name: create mysql/conf.d directory
-  file: state=directory path=/etc/mysql/conf.d mode=0644
 
 - meta: flush_handlers
 
