@@ -1,5 +1,15 @@
 # Ursula Changelog
 
+# 0.9.1
+
+- apt repositories: specify key id
+- barbican, cinder, glance, neutron, nova: use HTTPS to connect to Keystone
+- python: install pip 1.4.1
+- add retry logic to git clones and pip installs
+- mysql: move configuration to conf.d files
+- testenv: use apt-proxy for initial dist-upgrade
+- defaults: use internal floating IP for MySQL and RabbitMQ
+
 # 0.9.0
 
 - sensu_process_check now accepts parameters for warn overs
@@ -44,7 +54,7 @@
 
 ## 0.6.0
 
-- percona refactor 
+- percona refactor
 - iptables lockdown
 - install sensu certs to encrypt all sensu traffic
 
