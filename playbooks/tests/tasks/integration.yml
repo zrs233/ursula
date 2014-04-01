@@ -12,6 +12,6 @@
   - name: nova can associate floating IP with test instance
     shell: . /root/stackrc; FLOATING_IP=$( nova floating-ip-create external | awk '/ external / {print $2}' ); nova add-floating-ip turtle-stack ${FLOATING_IP}
   - name: test instance can ping Google
-    shell: . /root/stackrc; TURTLE_IP=$( nova list | awk '/turtle-stack/ {print $13}' ); sleep 30; ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cirros@${TURTLE_IP} ping -c 5 www.google.com
+    shell: . /root/stackrc; TURTLE_IP=$( nova list | awk '/turtle-stack/ {print $13}' ); sleep 60; ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cirros@${TURTLE_IP} ping -c 5 www.google.com
   - name: cleanup test instance, key-pair and security group
     shell: . /root/stackrc; nova delete turtle-stack && sleep 30 && nova secgroup-delete turtle-sec && nova keypair-delete turtle-key
