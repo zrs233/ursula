@@ -1,0 +1,3 @@
+{% for host in groups['compute'] %}
+{{ hostvars[host][primary_interface].ipv4.address }} {{ hostvars[host].ssh_hostkey.stdout }}
+{% endfor %}
