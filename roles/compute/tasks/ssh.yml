@@ -1,10 +1,10 @@
 ---
 - name: gather nova pubkeys
-  shell: cat /var/lib/nova/.ssh/id_rsa.pub
+  command: cat /var/lib/nova/.ssh/id_rsa.pub
   register: nova_pubkey
 
 - name: gather hostkeys
-  shell: cat /etc/ssh/ssh_host_rsa_key.pub
+  command: cat /etc/ssh/ssh_host_rsa_key.pub
   register: ssh_hostkey
 
 - name: nova authorized_keys
@@ -13,8 +13,8 @@
 - name: nova known_hosts
   template: src=var/lib/nova/ssh/known_hosts dest=/var/lib/nova/.ssh/known_hosts owner=nova group=nova mode=0600
 
-- template: src=var/lib/nova/ssh/verify-ssh dest=/var/lib/nova/.ssh/verify-ssh owner=nova group=nova mode=0755
+- template: src=var/lib/nova/bin/verify-ssh dest=/var/lib/nova/bin/verify-ssh owner=nova group=nova mode=0755
 
 - name: verify ssh among compute nodes
-  shell: /var/lib/nova/.ssh/verify-ssh
+  command: sudo -u nova -H /bin/sh -c /var/lib/nova/bin/verify-ssh
 

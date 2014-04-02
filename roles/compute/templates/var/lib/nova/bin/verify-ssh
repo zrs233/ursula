@@ -3,5 +3,5 @@ ips="{% for host in groups['compute'] -%}{{ hostvars[host][primary_interface]['i
 
 for ip in $ips; do
   echo testing ssh to $ip ...
-  sudo -u nova -H /bin/sh -c "ssh $ip uptime"
+  ssh $ip uptime
 done
