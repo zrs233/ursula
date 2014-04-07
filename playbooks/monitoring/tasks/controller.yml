@@ -5,6 +5,9 @@
   notify: restart sensu-client
 - sensu_process_check: service=cinder-scheduler
   notify: restart sensu-client
+- sensu_check: name=check-cinder-services plugin=check-cinder-services.sh use_sudo=true
+  notify: restart sensu-client
+
 
 # glance
 
@@ -34,6 +37,9 @@
 - sensu_process_check: service=neutron-server
   notify: restart sensu-client
 
+- sensu_check: name=check-neutron-agents plugin=check-neutron-agents.sh use_sudo=true
+  notify: restart sensu-client
+
 # heat
 
 - include: heat.yml
@@ -56,6 +62,9 @@
   notify: restart sensu-client
 
 - sensu_check: name=check-nova-api plugin=check-os-api.rb use_sudo=true args="--service nova"
+  notify: restart sensu-client
+
+- sensu_check: name=check-nova-services plutin=check-nova-services.sh use_sudo=true
   notify: restart sensu-client
 
 # rabbitmq
