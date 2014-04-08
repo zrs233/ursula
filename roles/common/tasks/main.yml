@@ -47,6 +47,7 @@
 - include: networking.yml
 - include: kernel-tuning.yml
 - include: system_tools.yml
+- include: security-patches.yml
 
 - include: hwraid.yml
   when: common.hwraid.enabled
