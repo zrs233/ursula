@@ -58,8 +58,7 @@ client:
   self_signed_cert: True
 
 monitoring:
-  sensu_package_version: 0.12.2-1
-  sensu_plugin_version: 0.1.7
+  sensu_package_version: 0.12.5-1
   rabbit:
     host: "{{ hostvars[groups['controller'][0]][primary_interface]['ipv4']['address'] }}"
     port: 5672

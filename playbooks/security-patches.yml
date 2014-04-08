@@ -1,0 +1,14 @@
+---
+- hosts: all
+  tasks:
+  - apt: update_cache=yes cache_valid_time=3600
+  - name: Patch CVE-2014-0160
+    apt: pkg={{ item }} state=latest
+    with_items:
+    - libssl1.0.0
+    - openssl
+    notify: restart haproxy
+  handlers:
+  - name: restart haproxy
+    shell: service haproxy status && service haproxy restart || true
+
