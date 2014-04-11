@@ -1,7 +1,13 @@
 #!/bin/bash
-grep ucarp-vip /etc/network/interfaces | awk '{print $2}' | while read ip; do
-  if ! ps -ef | grep '/usr/sbin/ucarp' | grep $ip >/dev/null; then
-    echo "no ucarp process is running for ip $ip"
-    exit 2
-  fi
+
+ifquery --list | \
+while read IFACE; do
+  ifquery ${IFACE} | \
+  awk '/^ucarp-vip:/ {print $2}' | \
+  while read VIP; do
+    if ! ps -ef | grep '/usr/sbin/ucarp' | grep ${VIP} >/dev/null; then
+      echo "no ucarp process is running for IP ${VIP}"
+      exit 2
+    fi
+  done
 done
