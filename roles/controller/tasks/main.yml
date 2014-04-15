@@ -1,6 +1,5 @@
 ---
 - include: iptables.yml
-- include: ufw.yml
 - include: haproxy.yml
 - include: keystone.yml
 - include: nova.yml
