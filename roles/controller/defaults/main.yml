@@ -2,3 +2,51 @@
 controller:
   novnc_repo: https://github.com/kanaka/noVNC.git
   novnc_rev: 292f6a5d
+haproxy_services:
+  -
+    - horizon
+    - 8080
+    - 443
+    - False
+  -
+    - keystone
+    - 5000
+    - 5001
+    - False
+  -
+    - keystone-admin
+    - 35357
+    - 35358
+    - False
+  -
+    - nova
+    - 8774
+    - 8777
+    - False
+  -
+    - neutron
+    - 9696
+    - 9797
+    - False
+  -
+    - cinder
+    - 8776
+    - 8778
+    - False
+  -
+    - glance
+    - 9292
+    - 9393
+    - True
+{% if heat.enable -%}
+  -
+    - heat
+    - 8004
+    - 8005
+    - False
+  -
+    - heat-cfn
+    - 8000
+    - 8001
+    - False
+{% endif -%}
