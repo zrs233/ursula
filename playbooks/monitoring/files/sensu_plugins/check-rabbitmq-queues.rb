@@ -12,11 +12,17 @@ require 'rubygems' if RUBY_VERSION < '1.9.0'
 require 'sensu-plugin/check/cli'
 
 class CheckRabbitCluster < Sensu::Plugin::Check::CLI
-  option  :expected,
-          :description => "Minimum number of messages in the queue before alerting",
-          :short => '-m NUMBER',
-          :long => '--min NUMBER',
+  option  :warning,
+          :description => "Minimum number of messages in the queue before alerting warning",
+          :short => '-w NUMBER',
+          :long => '--warn NUMBER',
           :default => 5
+
+  option  :critical,
+          :description => "Minimum number of messages in the queue before alerting critical",
+          :short => '-c NUMBER',
+          :long => '--crit NUMBER',
+          :default => 20
 
   option  :ignore,
           :description => "Comma-separated list of queues to ignore in our check",
@@ -46,8 +52,13 @@ class CheckRabbitCluster < Sensu::Plugin::Check::CLI
     end
 
     # Queue size checking
-    if count.to_i > 0 and count.to_i > config[:expected].to_i
-      critical "Queues not empty: #{count}"
+    queue_count = count.to_i
+    if queue_count > 0
+      if queue_count > config[:critical].to_i
+        critical "CRITICAL: Queues not empty: #{queue_count}"
+      elsif queue_count > config[:warning].to_i
+        warning "WARNING: Queues not empty: #{queue_count}"
+      end
     end
     ok
   end
