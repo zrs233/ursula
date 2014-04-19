@@ -3,7 +3,7 @@
 # Check Rabbitmq Queues
 # ===
 #
-# Purpose: to check the size of the rabbitmq queues.
+# Purpose: to check the size or number of rabbitmq queues.
 #
 # Released under the same terms as Sensu (the MIT license); see LICENSE
 # for details.
@@ -15,22 +15,39 @@ class CheckRabbitCluster < Sensu::Plugin::Check::CLI
   option  :warning,
           :description => "Minimum number of messages in the queue before alerting warning",
           :short => '-w NUMBER',
-          :long => '--warn NUMBER',
-          :default => 5
+          :long => '--warn NUMBER'
 
   option  :critical,
           :description => "Minimum number of messages in the queue before alerting critical",
           :short => '-c NUMBER',
-          :long => '--crit NUMBER',
-          :default => 20
+          :long => '--crit NUMBER'
 
   option  :ignore,
           :description => "Comma-separated list of queues to ignore in our check",
-          :short => '-i',
-          :long => '--ignore <queue>,<queue>...',
+          :short => '-i QUEUE,QUEUE,...',
+          :long => '--ignore QUEUE,QUEUE,...',
           :default => nil
 
+  option  :type,
+          :description => "Type of check to perform",
+          :short => '-t TYPE',
+          :long => '--type TYPE',
+          :valid => %w[length number],
+          :default => 'length'
+
+  def set_defaults
+    if config[:type] == 'length'
+      config[:warning] = 5 unless !config[:warning].nil?
+      config[:critical] = 20 unless !config[:critical].nil?
+    else
+      config[:warning] = 200 unless !config[:warning].nil?
+      config[:critical] = 400 unless !config[:critical].nil?
+    end
+  end
+
   def run
+
+    set_defaults
 
     ignored_queues = []
     ignored_queues = config[:ignore].split(',') unless config[:ignore] == nil
@@ -41,7 +58,12 @@ class CheckRabbitCluster < Sensu::Plugin::Check::CLI
       ignored += "-e #{queue} "
     end
 
-    cmd = "/usr/bin/timeout -s 9 1s /usr/sbin/rabbitmqctl list_queues -p / #{ignored}| awk '{sum += $2} END {print sum}'"
+    suffix = "awk '{sum += $2} END {print sum}'"
+    if config[:type] == 'number'
+      suffix = "wc -l"
+    end
+
+    cmd = "/usr/bin/timeout -s 9 1s /usr/sbin/rabbitmqctl list_queues -p / #{ignored}| #{suffix}"
     count = `#{cmd}`
 
     # Rabbit failure checking
