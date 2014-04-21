@@ -8,3 +8,4 @@
 - include: cinder.yml
 - include: novnc.yml
 - include: heat.yml
+  when: heat.enabled
