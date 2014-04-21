@@ -64,7 +64,7 @@
 - sensu_check: name=check-nova-api plugin=check-os-api.rb use_sudo=true args="--service nova"
   notify: restart sensu-client
 
-- sensu_check: name=check-nova-services plutin=check-nova-services.sh use_sudo=true
+- sensu_check: name=check-nova-services plugin=check-nova-services.sh use_sudo=true
   notify: restart sensu-client
 
 # rabbitmq
