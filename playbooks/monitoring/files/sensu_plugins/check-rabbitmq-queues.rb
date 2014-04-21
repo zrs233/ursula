@@ -18,8 +18,24 @@ class CheckRabbitCluster < Sensu::Plugin::Check::CLI
           :long => '--min NUMBER',
           :default => 5
 
+  option  :ignore,
+          :description => "Comma-separated list of queues to ignore in our check",
+          :short => '-i',
+          :long => '--ignore <queue>,<queue>...',
+          :default => nil
+
   def run
-    cmd = "/usr/bin/timeout -s 9 1s /usr/sbin/rabbitmqctl list_queues -p / | awk '{sum += $2} END {print sum}'"
+
+    ignored_queues = []
+    ignored_queues = config[:ignore].split(',') unless config[:ignore] == nil
+
+    ignored = ""
+    ignored = "| grep -v " unless ignored_queues == []
+    ignored_queues.each do |queue|
+      ignored += "-e #{queue} "
+    end
+
+    cmd = "/usr/bin/timeout -s 9 1s /usr/sbin/rabbitmqctl list_queues -p / #{ignored}| awk '{sum += $2} END {print sum}'"
     count = `#{cmd}`
 
     # Rabbit failure checking
@@ -30,12 +46,9 @@ class CheckRabbitCluster < Sensu::Plugin::Check::CLI
     end
 
     # Queue size checking
-    if count.to_i > 0
-      if count.to_i > config[:min].to_i
-        critical "Queues not empty: #{count}"
-      end
-    else
-      ok
+    if count.to_i > 0 and count.to_i > config[:expected].to_i
+      critical "Queues not empty: #{count}"
     end
+    ok
   end
 end

@@ -74,7 +74,7 @@
 - sensu_check: name=rabbitmq-cluster plugin=check-rabbitmq-cluster.rb use_sudo=true args="--expected 2"
   notify: restart sensu-client
   when: rabbitmq.cluster
-- sensu_check: name=rabbitmq-queues plugin=check-rabbitmq-queues.rb use_sudo=true
+- sensu_check: name=rabbitmq-queues plugin=check-rabbitmq-queues.rb use_sudo=true args="-i q-plugin"
   notify: restart sensu-client
 
 # memcached
