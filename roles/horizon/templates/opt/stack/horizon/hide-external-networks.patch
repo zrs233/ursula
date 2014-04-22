@@ -1,0 +1,25 @@
+From 25f2d901948bd70beb1a494bdf32aed5bfe71220 Mon Sep 17 00:00:00 2001
+From: Dustin Lundquist <dustin@null-ptr.net>
+Date: Tue, 22 Apr 2014 12:53:45 -0700
+Subject: [PATCH] Hide external networks from launch instance workflow
+
+---
+ .../dashboards/project/instances/workflows/create_instance.py           | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/openstack_dashboard/dashboards/project/instances/workflows/create_instance.py b/openstack_dashboard/dashboards/project/instances/workflows/create_instance.py
+index 322d45e..2d99b8c 100644
+--- a/openstack_dashboard/dashboards/project/instances/workflows/create_instance.py
++++ b/openstack_dashboard/dashboards/project/instances/workflows/create_instance.py
+@@ -588,7 +588,7 @@ class SetNetworkAction(workflows.Action):
+             networks = api.neutron.network_list_for_tenant(request, tenant_id)
+             for n in networks:
+                 n.set_id_as_name_if_empty()
+-            network_list = [(network.id, network.name) for network in networks]
++            network_list = [(network.id, network.name) for network in networks if network['router:external'] == False]
+         except Exception:
+             network_list = []
+             exceptions.handle(request,
+-- 
+1.9.1
+
