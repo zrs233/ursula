@@ -13,6 +13,12 @@
   - percona-xtradb-cluster-server-{{ xtradb.server_version }}
   - percona-xtrabackup
 
+# Workaround for 0.8.6 to 0.9.1 upgrade path
+- lineinfile: dest=/etc/mysql/conf.d/replication.cnf create=yes regexp="^default_storage_engine\s*=" line="default_storage_engine = InnoDB"
+- lineinfile: dest=/etc/mysql/conf.d/replication.cnf create=yes regexp="^binlog_format\s*=" line="binlog_format = ROW"
+- lineinfile: dest=/etc/mysql/conf.d/replication.cnf create=yes regexp="^innodb_autoinc_lock_mode\s*=" line="innodb_autoinc_lock_mode = 2"
+- lineinfile: dest=/etc/mysql/conf.d/replication.cnf create=yes regexp="^innodb_locks_unsafe_for_binlog\s*=" line="innodb_locks_unsafe_for_binlog = 1"
+
 - name: configure my.cnf
   template: src=etc/my.cnf dest=/etc/my.cnf mode=0644
   when: ansible_distribution_version == "12.04"

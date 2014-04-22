@@ -81,7 +81,7 @@ client:
   self_signed_cert: true
 
 nova:
-  libvirt_type: kvm
+  libvirt_type: qemu
   api_workers: 1
   metadata_api_workers: 1
 
