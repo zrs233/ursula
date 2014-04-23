@@ -25,13 +25,11 @@
   notify:
     - restart mysql server
 
-- name: bind to all interfaces
-  template: src=etc/mysql/conf.d/bind-inaddr-any.cnf dest=/etc/mysql/conf.d/bind-inaddr-any.cnf mode=0644
-  notify:
-    - restart mysql server
-
-- name: configure default character encoding
-  template: src=etc/mysql/conf.d/utf8.cnf dest=/etc/mysql/conf.d/utf8.cnf mode=0644
+- template: src=etc/mysql/conf.d/{{ item }} dest=/etc/mysql/conf.d/{{ item }} mode=0644
+  with_items:
+    - bind-inaddr-any.cnf
+    - tuning.cnf
+    - utf8.cnf
   notify:
     - restart mysql server
 
