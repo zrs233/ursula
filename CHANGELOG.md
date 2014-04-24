@@ -1,5 +1,18 @@
 # Ursula Changelog
 
+# 0.9.2
+
+- system: disable swap
+- system: update OpenSSL
+- system: enable UFW firewall on all nodes
+- haproxy: disable keepalives to fix Horizon issue
+- testenv: use QEMU rather than nested KVM
+- nova: setup SSH credentials for VM migrations
+- nova: enable CPU core filter in scheduler
+- keystone: only remove tokens over 24 hours old
+- heat: do not add startup script or haproxy config when disabled
+- mysql: increase maximum connections
+
 # 0.9.1
 
 - apt repositories: specify key id
