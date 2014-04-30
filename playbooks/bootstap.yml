@@ -1,0 +1,39 @@
+#
+# This playbook boot straps a new compute node with its network config
+#
+---
+- hosts: compute
+  tasks:
+  # Bail if run against existing compute nodes
+  - fail: msg="Node appears to already be bootstrapped"
+    when: ansible_br_int is defined
+
+  # Blue Box Group OpenStack PPA for OVS 1.11
+  - apt_key: id=49DE63CB url='http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0xC37BA5F849DE63CB'
+    when: ansible_distribution_version == "12.04"
+  - apt_repository: repo='ppa:blueboxgroup/openstack' update_cache=yes
+    when: ansible_distribution_version == "12.04"
+
+  - apt: cache_valid_time=3600 update_cache=yes
+  - apt: pkg={{ item }}
+    with_items:
+    - vlan
+    - ucarp
+    - openvswitch-switch
+  - apt: upgrade=dist
+
+  # Populate network configuration
+  - copy: content="{{ network_interfaces }}" dest=/etc/network/interfaces force=yes owner=root group=root mode=0644
+    when: network_interfaces is defined
+  - copy: content="{{ item.contents }}" dest=/etc/network/interfaces.d/{{ item.filename }} force=yes owner=root group=root mode=0644
+    when: network_interfaces_d is defined
+    with_items: network_interfaces_d
+
+  # Create internal network OVS bridge (not using ovs-bridge library since Ruby may not yet be installed)
+  - command: ovs-vsctl --may-exist add-br br-eth0
+
+  # Add eth0 to OVS bridge which will break our SSH connection and reboot
+  # in one command
+  # Redirecting stdin and stdout to /dev/null because ovs-vsctl hangs on Ubuntu
+  # 12.04 when run via Ansible shell module
+  - shell: ovs-vsctl --may-exist add-port br-eth0 eth0 < /dev/null > /dev/null && reboot
