@@ -52,34 +52,38 @@ class CheckRabbitCluster < Sensu::Plugin::Check::CLI
     ignored_queues = []
     ignored_queues = config[:ignore].split(',') unless config[:ignore] == nil
 
-    ignored = ""
-    ignored = "| grep -v " unless ignored_queues == []
-    ignored_queues.each do |queue|
-      ignored += "-e #{queue} "
-    end
-
-    suffix = "awk '{sum += $2} END {print sum}'"
-    if config[:type] == 'number'
-      suffix = "wc -l"
-    end
-
-    cmd = "/usr/bin/timeout -s 9 1s /usr/sbin/rabbitmqctl list_queues -p / #{ignored}| #{suffix}"
-    count = `#{cmd}`
-
-    # Rabbit failure checking
-    if $?.exitstatus == 137
-      critical "Listing queues is timing out"
-    elsif $?.exitstatus > 0
-      critical "Error checking rabbit queues"
-    end
+    count = 0
+    cmd = "/usr/bin/timeout -s 9 1s /usr/sbin/rabbitmqctl list_queues -p /"
+    process = IO.popen(cmd) do |io|
+      while line = io.gets
+        line.chomp!
+	lineparts = line.split(/\s+/)
+	
+	if /^Listing queues/ =~ line || /^\.\.\.done/ =~ line || ignored_queues.include?(lineparts[0])
+	  next
+        end
+       	
+	if config[:type] == 'number'
+          count += 1
+        else
+	  count += lineparts[1].to_i
+        end
+      end
+      io.close
+      critical "Listing queues is timing out" if $?.to_i == 137
+      critical "Error checking rabbit queues" if $?.to_i > 0
+    end   
 
     # Queue size checking
     queue_count = count.to_i
+    msg = "Queues not empty"
+    msg = "Number of queues" if config[:type] == 'number'
+    
     if queue_count > 0
       if queue_count > config[:critical].to_i
-        critical "CRITICAL: Queues not empty: #{queue_count}"
+        critical "CRITICAL: #{msg}: #{queue_count}"
       elsif queue_count > config[:warning].to_i
-        warning "WARNING: Queues not empty: #{queue_count}"
+        warning "WARNING: #{msg}: #{queue_count}"
       end
     end
     ok
