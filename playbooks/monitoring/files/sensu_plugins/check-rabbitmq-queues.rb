@@ -57,28 +57,28 @@ class CheckRabbitCluster < Sensu::Plugin::Check::CLI
     process = IO.popen(cmd) do |io|
       while line = io.gets
         line.chomp!
-	lineparts = line.split(/\s+/)
-	
-	if /^Listing queues/ =~ line || /^\.\.\.done/ =~ line || ignored_queues.include?(lineparts[0])
-	  next
+        lineparts = line.split(/\s+/)
+
+        if /^Listing queues/ =~ line || /^\.\.\.done/ =~ line || ignored_queues.include?(lineparts[0])
+          next
         end
-       	
-	if config[:type] == 'number'
+
+        if config[:type] == 'number'
           count += 1
         else
-	  count += lineparts[1].to_i
+          count += lineparts[1].to_i
         end
       end
       io.close
       critical "Listing queues is timing out" if $?.to_i == 137
       critical "Error checking rabbit queues" if $?.to_i > 0
-    end   
+    end
 
     # Queue size checking
     queue_count = count.to_i
     msg = "Queues not empty"
     msg = "Number of queues" if config[:type] == 'number'
-    
+
     if queue_count > 0
       if queue_count > config[:critical].to_i
         critical "CRITICAL: #{msg}: #{queue_count}"
