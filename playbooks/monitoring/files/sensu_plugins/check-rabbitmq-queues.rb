@@ -69,10 +69,9 @@ class CheckRabbitCluster < Sensu::Plugin::Check::CLI
           count += lineparts[1].to_i
         end
       end
-      io.close
-      critical "Listing queues is timing out" if $?.to_i == 137
-      critical "Error checking rabbit queues" if $?.to_i > 0
     end
+    critical "Listing queues is timing out" if $?.to_i == 137
+    critical "Error checking rabbit queues" if $?.to_i > 0
 
     # Queue size checking
     queue_count = count.to_i
