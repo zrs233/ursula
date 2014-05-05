@@ -6,9 +6,8 @@ testenv_instance_names:
 testenv_keypair_name: int-test
 testenv_keypair_path: "{{ ansible_env.ROOT }}/envs/test/{{ testenv_keypair_name }}.pem"
 testenv_image_id: "{{ ansible_env.IMAGE_ID }}"
-testenv_security_groups: ursula
+testenv_net_id: "{{ ansible_env.NET_ID }}"
 testenv_security_groups_description: Rules for testing
-testenv_net_id: ba0fdd03-72b5-41eb-bb67-fef437fd6cb4
 testenv_security_groups: ursula
 testenv_security_group_rules:
   - { proto: 'tcp', port: 22, state: 'present' }     # SSH (Ansible)
