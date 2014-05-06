@@ -137,7 +137,7 @@ def test_all(verbosity, warn_true=False, no_summary=False, show_drives=False):
     if array_result != OK and not show_drives:
         return array_result, array_message
 
-    drive_result, drive_message = test_drives(verbosity, no_summary)
+    drive_result, drive_message = test_drives(verbosity, warn_true, no_summary)
 
     if drive_result > array_result:
         result = drive_result
@@ -232,7 +232,7 @@ def test_arrays(verbosity, warn_true=False, no_summary=False):
     return status, message
 
 
-def test_drives(verbosity, no_summary=False):
+def test_drives(verbosity, warn_true=False, no_summary=False):
     """Tests all the drives on the all the 3ware raid controllers
     on the local machine"""
 
@@ -261,6 +261,9 @@ def test_drives(verbosity, no_summary=False):
             drive_line = drive_line.split()
             state = drive_line[1]
             if state == "OK" or state == "NOT-PRESENT":
+                continue
+            if not warn_true and \
+                state in ('VERIFYING', 'REBUILDING', 'INITIALIZING'):
                 continue
             else:
                 drives_not_ok += 1
@@ -451,7 +454,7 @@ def main():
     if arrays_only:
         result, output = test_arrays(verbosity, warn_true, no_summary)
     elif drives_only:
-        result, output = test_drives(verbosity, no_summary)
+        result, output = test_drives(verbosity, warn_true, no_summary)
         end(result, output, True)
     else:
         result, output = test_all(verbosity, warn_true, no_summary, show_drives)
