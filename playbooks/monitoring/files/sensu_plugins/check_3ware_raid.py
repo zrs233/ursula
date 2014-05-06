@@ -262,7 +262,8 @@ def test_drives(verbosity, warn_true=False, no_summary=False):
             state = drive_line[1]
             if state == "OK" or state == "NOT-PRESENT":
                 continue
-            if not warn_true and state == "VERIFYING":
+            if not warn_true and \
+                state in ('VERIFYING', 'REBUILDING', 'INITIALIZING'):
                 continue
             else:
                 drives_not_ok += 1
