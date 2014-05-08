@@ -16,7 +16,6 @@
   apt_repository: >
     repo='deb http://packages.erlang-solutions.com/debian precise contrib'
     update_cache=yes
-    cache_valid_time=3600
 
 - name: install erlang-solutions erlang
   apt: pkg=esl-erlang
@@ -28,7 +27,6 @@
   apt_repository: >
     repo='deb http://www.rabbitmq.com/debian/ testing main'
     update_cache=yes
-    cache_valid_time=3600
 
 - name: install rabbitmq
   apt: pkg=rabbitmq-server
