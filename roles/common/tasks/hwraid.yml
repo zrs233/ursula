@@ -3,7 +3,7 @@
   apt_key: id=23B3D3B4 url=http://hwraid.le-vert.net/debian/hwraid.le-vert.net.gpg.key
 
 - name: add hwraid apt repository
-  apt_repository: repo='deb http://hwraid.le-vert.net/ubuntu precise main' state=present update_cache=yes
+  apt_repository: repo='deb http://hwraid.le-vert.net/ubuntu precise main' state=present update_cache=yes cache_valid_time=3600
 
 - name: install raid utilities
   apt: pkg={{ item }}

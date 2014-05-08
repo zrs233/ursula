@@ -1,5 +1,5 @@
 - name: add btsync ppa repository
-  apt_repository: repo='ppa:tuxpoldo/btsync' update_cache=yes
+  apt_repository: repo='ppa:tuxpoldo/btsync' update_cache=yes cache_valid_time=3600
 
 - name: install btsync
   apt: pkg=btsync
