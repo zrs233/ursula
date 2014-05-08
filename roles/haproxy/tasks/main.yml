@@ -1,10 +1,10 @@
 ---
 - name: haproxy ppa - required to get a version new enough to support ssl
-  apt_repository: repo='ppa:vbernat/haproxy-1.5' update_cache=yes cache_valid_time=3600
+  apt_repository: repo='ppa:vbernat/haproxy-1.5' update_cache=yes
   when: ansible_distribution_version == "12.04"
 
 - name: haproxy ppa - required to get a version new enough to support ssl
-  apt_repository: repo='ppa:blueboxgroup/openstack' update_cache=yes cache_valid_time=3600
+  apt_repository: repo='ppa:blueboxgroup/openstack' update_cache=yes
   when: ansible_distribution_version != "12.04"
 
 - apt: pkg=haproxy
