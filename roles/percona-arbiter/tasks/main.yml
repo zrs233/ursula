@@ -1,13 +1,15 @@
 ---
 # the arbiter node only needs the garbd daemon
-# (provided by galera pkg).
 - name: install percona galera package
   apt: pkg={{ item }} state=installed
   with_items:
     - percona-xtradb-cluster-galera-2.x
     - percona-xtradb-cluster-garbd-2.x
 
-#- service: name=garbd state=stopped enabled=false
+# Try to stop old garbd service
+- service: name=garbd state=stopped enabled=false
+  ignore_errors: yes
+
 - name: remove old garbd upstart script
   file: dest=/etc/init/garbd.conf state=absent
 
