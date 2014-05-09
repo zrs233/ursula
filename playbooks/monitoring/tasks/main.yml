@@ -8,7 +8,7 @@
   template: src=sensu.list dest=/etc/apt/sources.list.d/sensu.list owner=root group=root mode=0444
 - apt: update_cache=True cache_valid_time=3600
 
-- apt: pkg=sensu={{ monitoring.sensu_package_version }}
+- apt: pkg=sensu
 - gem: name=sensu-plugin user_install=no include_dependencies=yes state=latest
 
 - name: sensu sudoers
