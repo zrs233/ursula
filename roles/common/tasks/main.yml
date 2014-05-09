@@ -4,7 +4,7 @@
   when: common.apt_cache is defined
 
 - name: update apt index
-  apt: update_cache=yes
+  apt: update_cache=yes cache_valid_time=3600
 
 - name: python dependencies
   apt: pkg={{ item }}

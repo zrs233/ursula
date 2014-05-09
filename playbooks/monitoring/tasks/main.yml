@@ -6,7 +6,7 @@
 #- apt_repository: repo='deb http://repos.sensuapp.org/apt sensu main'
 - name: sensu apt source
   template: src=sensu.list dest=/etc/apt/sources.list.d/sensu.list owner=root group=root mode=0444
-- apt: update_cache=True
+- apt: update_cache=True cache_valid_time=3600
 
 - apt: pkg=sensu={{ monitoring.sensu_package_version }}
 - gem: name=sensu-plugin user_install=no include_dependencies=yes state=latest
