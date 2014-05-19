@@ -40,18 +40,6 @@
   until: result|success
   retries: 3
   delay: 60
-
-# Patch around neutron's Open vSwitch kernel module version detection
-# Problem is now that Open vSwitch is merged into mainline kernel
-# modinfo openvswitch no longer includes a version: field
-- name: create kms version detect patch
-  template: src=opt/stack/neutron/fix-ovs-klm-version-detection.patch
-            dest=/opt/stack/neutron/fix-ovs-klm-version-detection.patch
-            mode=0644
-
-- name: patch source code
-  shell: patch -p1 < fix-ovs-klm-version-detection.patch
-         chdir=/opt/stack/neutron
   notify:
     - pip install neutron
     - neutron rootwrap
