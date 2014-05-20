@@ -9,6 +9,15 @@
     - cinder
     - heat
 
+- name: remove anonymous users
+  mysql_user: |
+    name=''
+    host={{ item }}
+    state=absent
+  with_items:
+    - localhost
+    - "{{ ansible_hostname }}"
+
 - name: database users
   mysql_user: |
     name={{ item }}
@@ -24,13 +33,11 @@
     - cinder
     - heat
 
-- name: local database users
+- name: remove local database users (since absence of anonymous user will allow access as wildcard)
   mysql_user: |
     name={{ item }}
     host=localhost
-    password={{ secrets.db_password }}
-    priv={{ item }}.*:ALL
-    state=present
+    state=absent
   with_items:
     - keystone
     - glance
