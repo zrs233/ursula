@@ -1,10 +1,10 @@
 ---
 client:
   self_signed_cert: false
-  novaclient_rev: 516586a6b8
+  novaclient_rev: 3393cb9ff828bf49722617f60f437b1941acd2c7
   keystoneclient_rev: 876c2d6c2a
   keystonemiddleware_rev: 671285f4e6
-  neutronclient_rev: 8aacb125df
+  neutronclient_rev: d5558265cc97af3fc48eb71a99816a04cd17a0d8
   glanceclient_rev: cd11833cff
   cinderclient_rev: d21ed05b4e
   heatclient_rev: 8503781c67
