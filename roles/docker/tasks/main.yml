@@ -1,0 +1,13 @@
+---
+# ansible's 'apt_key' does not seem to support hkp keys at this time, so use 'command'
+- name: add docker repo key
+  command: apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 36A1D7869245C8950F966E92D8576A8BA88D21E9
+  when: docker.enabled
+
+- name: add docker repository
+  apt_repository: repo="{{ docker.mirror }}" update_cache=yes
+  when: docker.enabled
+
+- name: install docker
+  apt: pkg=lxc-docker
+  when: docker.enabled

@@ -3,9 +3,10 @@
   when: nova.enable_ssh|bool
 
 - include: libvirt.yml
+  when: nova.compute_driver == "nova.virt.libvirt.LibvirtDriver"
 
-- name: add nova to the libvirtd group
-  user: name=nova groups=libvirtd system=yes createhome=no
+- include: docker.yml
+  when: nova.compute_driver == "novadocker.virt.docker.DockerDriver"
 
 - name: nova instances directory
   file: dest=/var/lib/nova/instances state=directory owner=nova

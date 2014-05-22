@@ -1,0 +1,17 @@
+---
+
+- name: get novadocker source repo
+  git: |
+    repo={{ novadocker.repo }}
+    dest={{ novadocker.dest }}
+    version={{ novadocker.rev }}
+    update={{ openstack.git_update }}
+  register: result
+  when: novadocker.enabled
+  until: result|success
+  retries: 3
+  delay: 60
+  notify:
+    - pip install novadocker
+    - novadocker rootwrap
+    - restart nova compute for novadocker

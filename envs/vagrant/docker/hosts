@@ -1,0 +1,10 @@
+[controller]
+controller1
+controller2
+
+[db]
+controller1
+controller2
+
+[compute]
+compute1

@@ -1,0 +1,9 @@
+---
+docker:
+  enabled: true
+novadocker:
+  enabled: true
+
+nova:
+  compute_driver: novadocker.virt.docker.DockerDriver
+
