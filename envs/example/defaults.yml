@@ -329,7 +329,6 @@ percona:
   replication: True
 
 common:
-  apt_cache: "http://ursula-cache.openstack.blueboxgrid.com:3142"
   ipmi:
     enabled: false
 
