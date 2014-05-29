@@ -1,5 +1,15 @@
 # Ursula Changelog
 
+# 0.9.3
+
+- system: avoid excessive apt updates
+- db: fix arbitrator for recent Percona packages
+- db: remove anonymous users
+- installation: bootstrap playbook
+- monitoring: improve RabbitMQ check
+- monitoring: improve RAID check
+- testenv: allow network to be specified
+
 # 0.9.2
 
 - system: disable swap
