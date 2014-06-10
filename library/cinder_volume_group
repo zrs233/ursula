@@ -44,9 +44,9 @@ else
       Antsy.fail! "can't create volume group" unless system <<-eof
         modprobe cryptoloop
         modprobe aes
-        losetup /dev/loop0 #{file}
-        echo -n #{pass} | cryptsetup luksFormat --key-file=- /dev/loop0
-        echo -n #{pass} | cryptsetup luksOpen --key-file=- /dev/loop0 #{vgname}
+        losetup /dev/loop0 #{file} && \
+        echo -n #{pass} | cryptsetup luksFormat --key-file=- /dev/loop0 && \
+        echo -n #{pass} | cryptsetup luksOpen --key-file=- /dev/loop0 #{vgname} && \
         vgcreate #{vgname} /dev/mapper/#{vgname}
       eof
     else
