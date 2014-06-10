@@ -25,27 +25,35 @@ if system "vgs #{vgname}"
   Antsy.no_change!
 else
   if file
+    Antsy.fail! "volume file #{file} already exists" if File.exist?(file)
     Antsy.fail! "can't create volume file"  unless system "truncate -s #{size} #{file}"
+
+    Antsy.fail! "#{file} is already a LUKS volume" if system <<-eof
+      hd -n 512 /opt/stack/cinder-volumes | grep LUKS
+    eof
+
+    File.open '/etc/init/losetup.conf', 'w' do |f|
+      f.write <<-eof.gsub /^\s+/, ""
+        start on filesystem
+        task
+        exec losetup /dev/loop0 #{file}
+      eof
+    end
+
     if pass
       Antsy.fail! "can't create volume group" unless system <<-eof
         modprobe cryptoloop
         modprobe aes
         losetup /dev/loop0 #{file}
         echo -n #{pass} | cryptsetup luksFormat --key-file=- /dev/loop0
-        echo -n #{pass} | cryptsetup luksOpen --key-file=- /dev/loop0 cinder-volumes
-        vgcreate #{vgname} /dev/mapper/cinder-volumes
+        echo -n #{pass} | cryptsetup luksOpen --key-file=- /dev/loop0 #{vgname}
+        vgcreate #{vgname} /dev/mapper/#{vgname}
       eof
     else
       Antsy.fail! "can't setup loop device"   unless system "losetup /dev/loop0 #{file}"
       Antsy.fail! "can't create volume group" unless system "vgcreate #{vgname} /dev/loop0"
-      File.open '/etc/init/losetup.conf', 'w' do |f|
-        f.write <<-eof.gsub /^\s+/, ""
-          start on filesystem
-          task
-          exec losetup /dev/loop0 #{file}
-        eof
-      end
     end
+
     Antsy.changed!
   else
     Antsy.fail! 'TODO: device-backed volume groups are untested (see library/cinder_volume_group)'
