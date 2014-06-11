@@ -5,13 +5,17 @@ source $(dirname $0)/../share/common
 install_pip() {
   which brew >/dev/null || \
     die "this script requires a homebrew installation to proceed.  http://mxcl.github.io/homebrew/"
-  brew install python
+  brew install python --with-brewed-openssl
 }
 
 pip_pkgs() {
   for pkg in $*; do
     pip freeze | grep ${pkg} || pip install ${pkg}
   done
+}
+
+virtualenv() {
+  sudo pip install virtualenv
 }
 
 uname | grep Darwin || die "this is not osx."
@@ -22,6 +26,6 @@ which pip >/dev/null || install_pip
 # we are using ssh for transport - SC
 # pip_pkgs python-keyczar pyzmq pyasn1 pycrypto # for fireball mode
 
-sudo pip install -U git+https://github.com/ansible/ansible.git@v1.4.4
+sudo pip install ansible
 
 echo -e "\nall set!\n"
