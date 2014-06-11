@@ -21,42 +21,73 @@ Antsy.fail! 'must provide either file+size or device' unless ((file and size) or
 Antsy.fail! 'file and device are mutually exclusive' if (file and device)
 Antsy.fail! 'passphrase is supported only for file-backed vgs' if (not file and pass)
 
+changed = false
+
+def is_luks?(device_or_file)
+  system <<-eof
+    hd -n 16384 #{device_or_file} | grep LUKS
+  eof
+end
+
+def is_lvm_pv?(device)
+  system <<-eof
+    hd -n 16384 #{device} | grep LVM2
+  eof
+end
+
 if system "vgs #{vgname}"
   Antsy.no_change!
 else
   if file
     Antsy.fail! "volume file #{file} already exists" if File.exist?(file)
-    Antsy.fail! "can't create volume file"  unless system "truncate -s #{size} #{file}"
+    Antsy.fail! "can't create volume file"  unless system "umask 0077 && truncate -s #{size} #{file}"
 
-    Antsy.fail! "#{file} is already a LUKS volume" if system <<-eof
-      hd -n 512 /opt/stack/cinder-volumes | grep LUKS
-    eof
+    Antsy.fail! "#{file} is already a LUKS volume" if is_luks?(file)
 
     File.open '/etc/init/losetup.conf', 'w' do |f|
       f.write <<-eof.gsub /^\s+/, ""
         start on filesystem
         task
-        exec losetup /dev/loop0 #{file}
+        exec losetup #{device} #{file}
       eof
     end
+    Antsy.fail! "can't setup loop device"  unless system "losetup #{device} #{file}"
 
-    if pass
+    device = '/dev/loop0'
+    changed |= true
+  end
+
+  if pass
+    if is_luks?(device)
+      # Try to open the LUKS volume
+      Antsy.fail! "can't unlock LUKS volume" unless system <<-eof
+        echo -n #{pass} | cryptsetup luksOpen --key-file=- #{device} #{vgname}
+      eof
+
+      device = "/dev/mapper/#{vgname}"
+      changed |= true
+    else
+      Antsy.fail! "#{device} is a LVM physical volume" if is_lvm_pv?(device)
       Antsy.fail! "can't create volume group" unless system <<-eof
         modprobe cryptoloop
         modprobe aes
-        losetup /dev/loop0 #{file} && \
-        echo -n #{pass} | cryptsetup luksFormat --key-file=- /dev/loop0 && \
-        echo -n #{pass} | cryptsetup luksOpen --key-file=- /dev/loop0 #{vgname} && \
-        vgcreate #{vgname} /dev/mapper/#{vgname}
+        echo -n #{pass} | cryptsetup luksFormat --key-file=- #{device} && \
+        echo -n #{pass} | cryptsetup luksOpen --key-file=- #{device} #{vgname}
       eof
-    else
-      Antsy.fail! "can't setup loop device"   unless system "losetup /dev/loop0 #{file}"
-      Antsy.fail! "can't create volume group" unless system "vgcreate #{vgname} /dev/loop0"
-    end
 
-    Antsy.changed!
-  else
-    Antsy.fail! 'TODO: device-backed volume groups are untested (see library/cinder_volume_group)'
-    system "vgcreate #{vgname} #{device}" ? Antsy.changed! : Antsy.fail!('volume group creation failed')
+      device = "/dev/mapper/#{vgname}"
+      changed |= true
   end
+
+  Antsy.fail! "#{device} is a LUKS volume" if is_luks?(device)
+
+  unless system "vgs #{vgname}" || is_lvm_pv?(device)
+    Antsy.fail!('volume group creation failed') unless system "vgcreate #{vgname} #{device}"
+
+    changed |= true
+  end
+
+
+  Antsy.fail! "Unable to setup #{vgname}" unless system "vgs #{vgname}"
+  Antsy.changed! if changed
 end
