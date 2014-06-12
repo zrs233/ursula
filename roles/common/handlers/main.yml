@@ -6,7 +6,7 @@
   service: name=rsyslog state=restarted
 
 - name: restart haproxy
-  service: name=haproxy state=restarted
+  restart_if_present: name=haproxy
 
 - name: update timezone
   command: dpkg-reconfigure --frontend noninteractive tzdata
