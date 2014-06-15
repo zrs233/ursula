@@ -25,7 +25,7 @@ fi
 
 vagrant up --no-provision ${BOXES}
 
-TEMPFILE=`mktemp`
+TEMPFILE=`mktemp 2>/dev/null || mktemp -t 'ursula-fifo'`
 for I in ${BOXES}; do
     vagrant ssh-config $I >> ${TEMPFILE}
 done
