@@ -5,20 +5,7 @@
 - name: python-mysqldb package brings in mysql-common
   apt: pkg=mysql-common purge=yes state=absent
 
-- name: install percona xtradb packages
-  apt: pkg={{ item }} state=installed
-  with_items:
-  - percona-xtradb-cluster-galera-{{ xtradb.galera_version }}
-  - percona-xtradb-cluster-client-{{ xtradb.client_version }}
-  - percona-xtradb-cluster-server-{{ xtradb.server_version }}
-  - percona-xtrabackup
-
-# Workaround for 0.8.6 to 0.9.1 upgrade path
-- lineinfile: dest=/etc/mysql/conf.d/replication.cnf create=yes regexp="^\[mysqld\]" line="[mysqld]" insertbefore=BOF
-- lineinfile: dest=/etc/mysql/conf.d/replication.cnf create=yes regexp="^default_storage_engine\s*=" line="default_storage_engine = InnoDB"
-- lineinfile: dest=/etc/mysql/conf.d/replication.cnf create=yes regexp="^binlog_format\s*=" line="binlog_format = ROW"
-- lineinfile: dest=/etc/mysql/conf.d/replication.cnf create=yes regexp="^innodb_autoinc_lock_mode\s*=" line="innodb_autoinc_lock_mode = 2"
-- lineinfile: dest=/etc/mysql/conf.d/replication.cnf create=yes regexp="^innodb_locks_unsafe_for_binlog\s*=" line="innodb_locks_unsafe_for_binlog = 1"
+- file: path=/etc/mysql/conf.d state=directory
 
 - name: configure my.cnf
   template: src=etc/my.cnf dest=/etc/my.cnf mode=0644
@@ -39,6 +26,21 @@
     - utf8.cnf
   notify:
     - restart mysql server
+
+- name: install percona xtradb packages
+  apt: pkg={{ item }} state=installed
+  with_items:
+  - percona-xtradb-cluster-galera-{{ xtradb.galera_version }}
+  - percona-xtradb-cluster-client-{{ xtradb.client_version }}
+  - percona-xtradb-cluster-server-{{ xtradb.server_version }}
+  - percona-xtrabackup
+
+# Workaround for 0.8.6 to 0.9.1 upgrade path
+- lineinfile: dest=/etc/mysql/conf.d/replication.cnf create=yes regexp="^\[mysqld\]" line="[mysqld]" insertbefore=BOF
+- lineinfile: dest=/etc/mysql/conf.d/replication.cnf create=yes regexp="^default_storage_engine\s*=" line="default_storage_engine = InnoDB"
+- lineinfile: dest=/etc/mysql/conf.d/replication.cnf create=yes regexp="^binlog_format\s*=" line="binlog_format = ROW"
+- lineinfile: dest=/etc/mysql/conf.d/replication.cnf create=yes regexp="^innodb_autoinc_lock_mode\s*=" line="innodb_autoinc_lock_mode = 2"
+- lineinfile: dest=/etc/mysql/conf.d/replication.cnf create=yes regexp="^innodb_locks_unsafe_for_binlog\s*=" line="innodb_locks_unsafe_for_binlog = 1"
 
 - meta: flush_handlers
 
