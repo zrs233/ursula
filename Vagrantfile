@@ -15,9 +15,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.define "controller#{i}" do |controller_config|
       controller_config.vm.box = "precise64"
       controller_config.vm.box_url = BOX_URL
+      controller_config.vm.hostname = "controller#{i}"
       controller_config.vm.network :private_network, ip: "10.1.1.10#{i}", :netmask => "255.255.0.0"
       controller_config.vm.provider "virtualbox" do | v |
-        v.memory = 1024
+	v.memory = 1536
       end
     end
   end
@@ -26,6 +27,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.define "compute#{i}" do |compute_config|
       compute_config.vm.box = "precise64"
       compute_config.vm.box_url = BOX_URL
+      compute_config.vm.hostname = "compute#{i}"
       compute_config.vm.network :private_network, ip: "10.1.1.11#{i}", :netmask => "255.255.0.0"
     end
   end
@@ -39,6 +41,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       end
       swiftnode_config.vm.box = "precise64"
       swiftnode_config.vm.box_url = BOX_URL
+      swiftnode_config.vm.hostname = "swift#{i}"
       swiftnode_config.vm.network :private_network, ip: "10.1.1.13#{i}", :netmask => "255.255.0.0"
       swiftnode_config.vm.provider "virtualbox" do | v |
         v.memory = 768
