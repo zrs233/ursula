@@ -5,9 +5,11 @@
 # FIXME(cmt): for whatever reason the PPA doesnt like the signature on openvswitch-datapath-dkms
 - apt: pkg=openvswitch-datapath-dkms force=yes
 
-- apt: pkg=openvswitch-switch
-- apt: pkg=vlan
-- apt: pkg=bridge-utils
+- apt: pkg={{ item }}
+  with_items:
+    - openvswitch-switch
+    - vlan
+    - bridge-utils
 
 - name: ovs int bridge
   ovs_bridge: name=br-int state=present
