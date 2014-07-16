@@ -6,3 +6,4 @@ swift:
   hash_path_prefix: a57b0dfd61b5fe3a
   disks:
     - sdb
+  allow_versions: False
