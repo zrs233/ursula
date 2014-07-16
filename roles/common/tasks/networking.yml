@@ -6,6 +6,9 @@
   when: network_interfaces_d is defined
   with_items: network_interfaces_d
 
+- template: src=etc/hosts dest=/etc/hosts owner=root group=root mode=0644 backup=yes
+
+
 - template: src=etc/sysctl.d/60-netfilter-tuning.conf dest=/etc/sysctl.d/60-netfilter-tuning.conf owner=root group=root mode=0644
   notify:
     - apply-sysctl
@@ -14,14 +17,6 @@
   notify:
     - apply-sysctl
 
-- template: src=etc/modprobe.d/conntrack.conf dest=/etc/modprobe.d/conntrack.conf owner=root group=root mode=0644
-
-- lineinfile: dest=/etc/hosts regexp='^127\.0\.0\.1\s' line="127.0.0.1 localhost.localdomain localhost" insertbefore=BOF
-- lineinfile: dest=/etc/hosts regexp='^127\.0\.1\.1\s' line="127.0.1.1 {{ ansible_fqdn }} {{ ansible_hostname }}" insertafter='^127\.0\.0\.1\s'
-
-- lineinfile: dest=/etc/hosts regexp=^{{ item.ip }} line="{{ item.ip }} {{ item.name }}"
-  with_items: etc_hosts
-
 - lineinfile: dest=/etc/sysctl.d/10-ipv6-privacy.conf regexp=^net\.ipv6\.conf\.all\.use_tempaddr line="net.ipv6.conf.all.use_tempaddr = 0"
   notify:
     - apply-sysctl
@@ -29,3 +24,6 @@
 - lineinfile: dest=/etc/sysctl.d/10-ipv6-privacy.conf regexp=^net\.ipv6\.conf\.default\.use_tempaddr line="net.ipv6.conf.default.use_tempaddr = 0"
   notify:
     - apply-sysctl
+
+
+- template: src=etc/modprobe.d/conntrack.conf dest=/etc/modprobe.d/conntrack.conf owner=root group=root mode=0644
