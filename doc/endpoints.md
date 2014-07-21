@@ -23,7 +23,7 @@ rather than IP so the clients can validate the certificate. Rather than using
 split-horizon DNS or similar so the internal API clients connect to the
 internal floating IP, we went ahead and had the internal API clients connect
 the same public address as external clients. One disadvantage with this choice,
-is loose log visibility into which internal node the API request originated
+is lose log visibility into which internal node the API request originated
 from since we NAT the internal requests.
 
 
