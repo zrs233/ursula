@@ -12,6 +12,15 @@
     - qemu-kvm
     - open-iscsi
 
+- lineinfile: dest=/etc/libvirt/libvirtd.conf regexp="^listen_tcp\s*=" line="listen_tcp = 1"
+  notify: restart libvirt-bin
+- lineinfile: dest=/etc/libvirt/libvirtd.conf regexp="^listen_tls\s*=" line="listen_tls = 0"
+  notify: restart libvirt-bin
+- lineinfile: dest=/etc/libvirt/libvirtd.conf regexp="^auth_tcp\s*=" line="auth_tcp = \"none\""
+  notify: restart libvirt-bin
+- lineinfile: dest=/etc/default/libvirt-bin regexp="^libvirtd_opts" line="libvirtd_opts=\"-d -l\""
+  notify: restart libvirt-bin
+
 - name: ensure kvm is supported by cpu and enabled in bios
   command: kvm-ok
   when: "'{{ nova.libvirt_type }}' == 'kvm'"
