@@ -4,7 +4,8 @@ import logging
 import os
 import sys
 import time
-import neutronclient
+import neutronclient.neutron.client
+import neutronclient.common.exceptions
 
 dest_node = os.environ['HOSTNAME']
 
@@ -22,7 +23,7 @@ if 'OS_CACERT' in os.environ.keys():
     neutron_auth['ca_cert'] = os.environ['OS_CACERT']
 
 #logging.basicConfig(level=logging.DEBUG)
-neutron = neutronclient.neutron.Client('2.0', **neutron_auth)
+neutron = neutronclient.neutron.client.Client('2.0', **neutron_auth)
 neutron.format = 'json'
 
 
