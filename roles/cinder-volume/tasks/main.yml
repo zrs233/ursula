@@ -22,7 +22,8 @@
     {% endif %}
 
 - name: create cinder-volumes crypttab entry
-  crypttab: state=present target=cinder-volumes source=/opt/stack/cinder-volumes opts=luks,aes,noauto
+  crypttab: state=present target=cinder-volumes source={{ cinder.volume_file }} opts=luks,aes,noauto
+  when: cinder.passphrase
 
 - name: cinder-volume start script
   template: src=etc/init/cinder-volume.conf dest=/etc/init/cinder-volume.conf mode=0644
