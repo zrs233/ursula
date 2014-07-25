@@ -3,6 +3,11 @@
   roles:
     - common
 
+- name: Setup IPv6 Router Advertisements
+  hosts: controller
+  roles:
+    - ipv6ra
+
 - name: rabbitmq used by openstack
   hosts: controller
   serial: 1
