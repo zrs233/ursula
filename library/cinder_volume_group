@@ -44,6 +44,8 @@ else
 
     Antsy.fail! "#{file} is already a LUKS volume" if is_luks?(file)
 
+    device = '/dev/loop0'
+
     File.open '/etc/init/losetup.conf', 'w' do |f|
       f.write <<-eof.gsub /^\s+/, ""
         start on filesystem
@@ -53,7 +55,6 @@ else
     end
     Antsy.fail! "can't setup loop device"  unless system "losetup #{device} #{file}"
 
-    device = '/dev/loop0'
     changed |= true
   end
 
@@ -77,6 +78,7 @@ else
 
       device = "/dev/mapper/#{vgname}"
       changed |= true
+    end
   end
 
   Antsy.fail! "#{device} is a LUKS volume" if is_luks?(device)

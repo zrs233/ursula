@@ -17,13 +17,18 @@
   cinder_volume_group: >
     file={{ cinder.volume_file }}
     size={{ cinder.volume_file_size }}
-    {% if cinder.passphrase is defined %}
+  when: cinder.passphrase is not defined
+
+- name: cinder volume group
+  cinder_volume_group: >
+    file={{ cinder.volume_file }}
+    size={{ cinder.volume_file_size }}
     passphrase={{ cinder.passphrase }}
-    {% endif %}
+  when: cinder.passphrase is defined
 
 - name: create cinder-volumes crypttab entry
   crypttab: state=present target=cinder-volumes source={{ cinder.volume_file }} opts=luks,aes,noauto
-  when: cinder.passphrase
+  when: cinder.passphrase is defined
 
 - name: cinder-volume start script
   template: src=etc/init/cinder-volume.conf dest=/etc/init/cinder-volume.conf mode=0644
