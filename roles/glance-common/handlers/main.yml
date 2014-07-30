@@ -12,5 +12,12 @@
     - glance-api
     - glance-registry
 
-- name: restart btsync
-  action: service name=btsync state=restarted enabled=yes
+# Restarting rsync 3.0.9-1ubuntu1 on 12.04.4 was failing:
+#     bind () failed: Address already in use (address-family 2)
+# Adding retry logic to workaround
+- name: restart rsync
+  service: name=rsync state=restarted
+  register: result
+  until: result|success
+  retries: 3
+  delay: 10
