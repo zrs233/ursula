@@ -16,14 +16,15 @@ INTERVAL = 30
 
 args = Antsy.args
 
-name = args[:name]
-use_sudo = set_arg_to_bool(args[:use_sudo], false)
+name         = args[:name]
+use_sudo     = set_arg_to_bool(args[:use_sudo], false)
 auto_resolve = set_arg_to_bool(args[:auto_resolve], true)
-interval = args[:interval] || INTERVAL
-occurrences = args[:occurrences] || 2
-plugin = args[:plugin]
-plugin_args = args[:args] || ''
-prefix = args[:prefix] || ''
+handle       = set_arg_to_bool(args[:handle], true)
+interval     = args[:interval] || INTERVAL
+occurrences  = args[:occurrences] || 2
+plugin       = args[:plugin]
+plugin_args  = args[:args] || ''
+prefix       = args[:prefix] || ''
 
 plugin_path = "/etc/sensu/plugins/#{plugin}"
 check_path = "/etc/sensu/conf.d/checks/#{name}.json"
@@ -48,7 +49,8 @@ check = {
       'interval' => interval.to_i,
       'notification' => "#{name} check failed",
       'occurrences' => occurrences.to_i,
-      'auto_resolve' => auto_resolve
+      'auto_resolve' => auto_resolve,
+      'handle' => handle
     }
   }
 }
