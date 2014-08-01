@@ -29,8 +29,6 @@ class CheckOSApi < Sensu::Plugin::Check::CLI
     when "heat"
       "heat stack-list"
     end
-
-    ". /root/stackrc; #{cmd}"
   end
 
   def run

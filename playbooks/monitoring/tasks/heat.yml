@@ -5,6 +5,11 @@
   notify: restart sensu-client
 - sensu_process_check: service=heat-engine
   notify: restart sensu-client
-- sensu_check: name=check-heat-api plugin=check-os-api.rb use_sudo=true args="--service heat"
+- sensu_check: >
+    name=check-heat-api 
+    plugin=check-os-api.rb 
+    use_sudo=true 
+    args="--service heat"
+    prefix=". /root/stackrc;"
   notify: restart sensu-client
 
