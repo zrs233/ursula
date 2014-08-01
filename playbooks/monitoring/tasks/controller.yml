@@ -23,6 +23,14 @@
     prefix=". /root/stackrc;"
   notify: restart sensu-client
 
+- sensu_check: >
+    name=check-glance-store
+    plugin=check-glance-store.py
+    use_sudo=true 
+    prefix=". /root/stackrc; export GLANCE_IMAGE_DIR=/var/lib/glance/images;"
+    handle=false
+  notify: restart sensu-client
+
 # horizon
 
 - sensu_process_check: service=apache2
