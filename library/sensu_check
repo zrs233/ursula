@@ -23,12 +23,18 @@ interval = args[:interval] || INTERVAL
 occurrences = args[:occurrences] || 2
 plugin = args[:plugin]
 plugin_args = args[:args] || ''
+prefix = args[:prefix] || ''
 
 plugin_path = "/etc/sensu/plugins/#{plugin}"
 check_path = "/etc/sensu/conf.d/checks/#{name}.json"
 
-command = args[:command]
-command = use_sudo ? "sudo #{plugin_path} #{plugin_args}" : "#{plugin_path} #{plugin_args}" unless command
+# if command is not specified via args then generate it
+command = args[:command] || ''
+if command.empty?
+  command = "#{plugin_path} #{plugin_args}"
+  command = "#{prefix} #{command}" if !prefix.empty?
+  command = "sudo #{command}" if use_sudo
+end
 
 Antsy.fail! "argument 'name' is required" unless name and not name.empty?
 Antsy.fail! "argument 'plugin' or 'command' is required" unless command and not command.empty?
