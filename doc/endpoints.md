@@ -43,6 +43,8 @@ from since we NAT the internal requests.
 | Nova           | haproxy  | HTTP     | 8774  | controller internal IP |
 | Nova           | internal | HTTPS    | 8777  | external floating IP   |
 | Nova           | public   | HTTPS    | 8777  | external floating IP   |
+| Nova - noVNC   | internal | HTTP     | 6080  | controller internal IP |
+| Nova - noVNC   | public   | HTTPS    | 6081  | external floating IP   |
 | Neutron        | haproxy  | HTTP     | 9696  | controller internal IP |
 | Neutron        | internal | HTTPS    | 9797  | external floating IP   |
 | Neutron        | public   | HTTPS    | 9797  | external floating IP   |
