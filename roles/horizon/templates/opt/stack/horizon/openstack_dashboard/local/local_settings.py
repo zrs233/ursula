@@ -120,9 +120,14 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 #     ('http://cluster1.example.com:5000/v2.0', 'cluster1'),
 #     ('http://cluster2.example.com:5000/v2.0', 'cluster2'),
 # ]
+{% if horizon.keystone_api_version == 3 -%}
+AVAILABLE_REGIONS = [
+     ('https://{{ endpoints.main }}:5001/v3', 'RegionOne'),
+]
+{% endif -%}
 
 OPENSTACK_HOST = "{{ endpoints.main }}"
-OPENSTACK_KEYSTONE_URL = "https://%s:5001/v2.0" % OPENSTACK_HOST
+OPENSTACK_KEYSTONE_URL = "https://%s:5001/v{{horizon.keystone_api_version}}" % OPENSTACK_HOST
 OPENSTACK_KEYSTONE_DEFAULT_ROLE = "service"
 
 # Disable SSL certificate checks (useful for self-signed certificates):
