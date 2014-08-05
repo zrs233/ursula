@@ -1,41 +1,110 @@
 #!/usr/bin/env bash
 
-source $(dirname $0)/../share/common
+readonly ARGS="$@"
+# Determine what this script is called
+readonly PROGNAME=$(basename $0)
+# Determine where on disk this script lives and executes from
+# From: http://stackoverflow.com/a/246128
+readonly PROGDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source ${PROGDIR}/../share/common
 
 usage() {
-  echo "Usage: $0 <environment> <playbook>"
+  cat <<- USAGE
+	Usage: ${0} -e <environment> -p <playbook> -x "<extra ansible args>"
+USAGE
+
   exit -1
 }
 
-export URSULA_ENV=$PWD/$1
-PLAYBOOK=$2
-shift; shift
-EXTRA_ANSIBLE_ARGS="$*"
-PREDEPLOY_PLAYBOOK=${URSULA_ENV}/playbooks/predeploy.yml
-POSTDEPLOY_PLAYBOOK=${URSULA_ENV}/playbooks/postdeploy.yml
-HOSTS=${URSULA_ENV}/hosts
-SSH_CONFIG=${URSULA_ENV}/ssh_config
+process_opts() {
+  # Prefer the use of explicit shortopts
+  while getopts "he:p:x:" OPTION; do
+    case $OPTION in
+      h)
+        usage
+        ;;
+      e)
+        readonly URSULA_ENV=${PWD}/${OPTARG}
+	local URSULA_ENV_GETOPTS=true
+        ;;
+      p)
+        readonly PLAYBOOK=${OPTARG}
+	local PLAYBOOK_GETOPTS=true
+        ;;
+      x)
+        readonly EXTRA_ANSIBLE_ARGS=${OPTARG}
+	local EXTRA_ANSIBLE_ARGS_GETOPTS=true
+        ;;
+      :)
+        echo "Option -${OPTARG} requires an argument." >&2
+        usage
+        ;;
+      \?)
+        echo "Invalid option: -${OPTARG}" >&2
+        usage
+        ;;
+    esac
+  done
 
-if [ -e "${URSULA_ENV}/../defaults.yml" ]; then
-  export ANSIBLE_VAR_DEFAULTS_FILE="${URSULA_ENV}/../defaults.yml"
-fi
-
-if [ -e ${SSH_CONFIG} ]; then
-  export ANSIBLE_SSH_ARGS="${ANSIBLE_SSH_ARGS} -F ${SSH_CONFIG}"
-fi
-
-if [ -z ${URSULA_ENV} ] || [ -z ${PLAYBOOK} ]; then
-  usage
-fi
-
-for pbook in ${PREDEPLOY_PLAYBOOK} ${PLAYBOOK} ${POSTDEPLOY_PLAYBOOK}; do
-  if [ -f ${pbook} ]; then
-    command=$(ansible_command ${HOSTS} "root" ${pbook})
-    $command $EXTRA_ANSIBLE_ARGS
-
-    if [ "$?" != "0" ]; then
-      echo "Run failed on playbook ${pbook}"
-      exit -1
-    fi
+  # Backwards compatibility for positional arguments
+  if [ -z ${URSULA_ENV} ]; then
+    readonly URSULA_ENV=${PWD}/${@:$OPTIND:1}
   fi
-done
+  if [ -z ${PLAYBOOK} ]; then
+    readonly PLAYBOOK=${@:$OPTIND+1:1}
+    OPTIND=$((${OPTIND} + 2))
+  fi
+
+  # No opt or positional args were supplied
+  if [ -z ${URSULA_ENV} ] || [ -z ${PLAYBOOK} ]; then
+    usage
+  fi
+
+  # Mixed opt and positional args were supplied
+  if ([ ${URSULA_ENV_GETOPTS} ] && [ ! ${PLAYBOOK_GETOPTS} ]) || ([ ! ${URSULA_ENV_GETOPTS} ] && [ ${PLAYBOOK_GETOPTS} ]); then
+    echo "ERROR: Mixed short opts and positional args are not supported." >&2
+    usage
+  fi
+
+  # Ignore previously processed options and positional arguments
+  if [ -z "${EXTRA_ANSIBLE_ARGS}" ]; then
+    shift $((${OPTIND} - 1))
+    readonly EXTRA_ANSIBLE_ARGS="$*"
+  fi
+
+  export URSULA_ENV
+}
+
+set_vars() {
+  PREDEPLOY_PLAYBOOK=${URSULA_ENV}/playbooks/predeploy.yml
+  POSTDEPLOY_PLAYBOOK=${URSULA_ENV}/playbooks/postdeploy.yml
+  HOSTS=${URSULA_ENV}/hosts
+  SSH_CONFIG=${URSULA_ENV}/ssh_config
+
+  if [ -e "${URSULA_ENV}/../defaults.yml" ]; then
+    export ANSIBLE_VAR_DEFAULTS_FILE="${URSULA_ENV}/../defaults.yml"
+  fi
+
+  if [ -e ${SSH_CONFIG} ]; then
+    export ANSIBLE_SSH_ARGS="${ANSIBLE_SSH_ARGS} -F ${SSH_CONFIG}"
+  fi
+}
+
+main() {
+  for pbook in ${PREDEPLOY_PLAYBOOK} ${PLAYBOOK} ${POSTDEPLOY_PLAYBOOK}; do
+    if [ -f ${pbook} ]; then
+      command=$(ansible_command ${HOSTS} "root" ${pbook})
+echo      $command $EXTRA_ANSIBLE_ARGS
+
+      if [ "$?" != "0" ]; then
+        echo "Run failed on playbook ${pbook}"
+        exit -1
+      fi
+    fi
+  done
+}
+
+process_opts "$@"
+set_vars
+main
