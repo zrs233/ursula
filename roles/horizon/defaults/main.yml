@@ -3,3 +3,4 @@ horizon:
   rev: 19634d62f5a9b2c1aa9f867c247f46ed7f19ac07
   logo_url: https://s3.amazonaws.com/horizon-branding/bluebox.png
   favicon_url: https://s3.amazonaws.com/horizon-branding/bluebox.ico
+  keystone_api_version: 2.0
