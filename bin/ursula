@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 
-readonly PROGNAME=$(basename $0)
-readonly PROGDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 readonly ARGS="$@"
+# Determine what this script is called
+readonly PROGNAME=$(basename $0)
+# Determine where on disk this script lives and executes from
+# From: http://stackoverflow.com/a/246128
+readonly PROGDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 source ${PROGDIR}/../share/common
 
@@ -24,7 +27,7 @@ process_opts() {
       e)
         readonly URSULA_ENV=${PWD}/${OPTARG}
 	local URSULA_ENV_GETOPTS=true
-        ;;      
+        ;;
       p)
         readonly PLAYBOOK=${OPTARG}
 	local PLAYBOOK_GETOPTS=true
@@ -43,7 +46,7 @@ process_opts() {
         ;;
     esac
   done
-  
+
   # Backwards compatibility for positional arguments
   if [ -z ${URSULA_ENV} ]; then
     readonly URSULA_ENV=${PWD}/${@:$OPTIND:1}
@@ -52,7 +55,7 @@ process_opts() {
     readonly PLAYBOOK=${@:$OPTIND+1:1}
     OPTIND=$((${OPTIND} + 2))
   fi
-  
+
   # No opt or positional args were supplied
   if [ -z ${URSULA_ENV} ] || [ -z ${PLAYBOOK} ]; then
     usage
@@ -63,13 +66,13 @@ process_opts() {
     echo "ERROR: Mixed short opts and positional args are not supported." >&2
     usage
   fi
-  
+
   # Ignore previously processed options and positional arguments
   if [ -z "${EXTRA_ANSIBLE_ARGS}" ]; then
     shift $((${OPTIND} - 1))
     readonly EXTRA_ANSIBLE_ARGS="$*"
   fi
-   
+
   export URSULA_ENV
 }
 
@@ -78,11 +81,11 @@ set_vars() {
   POSTDEPLOY_PLAYBOOK=${URSULA_ENV}/playbooks/postdeploy.yml
   HOSTS=${URSULA_ENV}/hosts
   SSH_CONFIG=${URSULA_ENV}/ssh_config
-  
+
   if [ -e "${URSULA_ENV}/../defaults.yml" ]; then
     export ANSIBLE_VAR_DEFAULTS_FILE="${URSULA_ENV}/../defaults.yml"
   fi
-  
+
   if [ -e ${SSH_CONFIG} ]; then
     export ANSIBLE_SSH_ARGS="${ANSIBLE_SSH_ARGS} -F ${SSH_CONFIG}"
   fi
@@ -93,7 +96,7 @@ main() {
     if [ -f ${pbook} ]; then
       command=$(ansible_command ${HOSTS} "root" ${pbook})
 echo      $command $EXTRA_ANSIBLE_ARGS
-  
+
       if [ "$?" != "0" ]; then
         echo "Run failed on playbook ${pbook}"
         exit -1
