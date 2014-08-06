@@ -31,4 +31,4 @@
 
 - service: name=rsync state=started enabled=yes
 
-- template: src=etc/cron.d/glance-image-sync dest=/etc/cron.d/glance-image-sync mode=0644
+- template: src=etc/cron.d/glance-image-sync dest=/etc/cron.d/glance-image-sync mode=0640
