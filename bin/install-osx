@@ -4,7 +4,7 @@ source $(dirname $0)/../share/common
 
 install_pip() {
   which brew >/dev/null || \
-    die "this script requires a homebrew installation to proceed.  http://mxcl.github.io/homebrew/"
+    die "This script requires a homebrew installation to proceed.  http://mxcl.github.io/homebrew/"
   brew install python --with-brewed-openssl
 }
 
