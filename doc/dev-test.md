@@ -1,16 +1,12 @@
 # How to set up a dev/test environment
 
-This repo comes with scripts to automatically spin up a test environment on openstack vms.
+NOTE: Ursula comes setup for Vagrant to complete dev/test work within.  Please see the [Ursula Vagrant](https://github.com/blueboxgroup/ursula#vagrant) instructions for more details.
+
+Ursula also comes with scripts to automatically spin up a test environment inside of openstack vms (OpenStack on OpenStack).
 
 ## First-time workstation setup
 
-On your workstation, you'll need:
-
-  - the latest ansible:
-
-```bash
-    $ pip install git+https://github.com/ansible/ansible.git
-```
+After following the [installation instructions for ursula](https://github.com/blueboxgroup/ursula#installation), you'll need:
 
   - nova client:
 
@@ -18,7 +14,7 @@ On your workstation, you'll need:
     $ pip install git+https://github.com/openstack/python-novaclient.git
 ```
 
-  - openstack credentials in `$HOME/.stackrc`:
+  - openstack credentials in `$HOME/.stackrc` (t):
 
 ```bash
     $ cat $HOME/.stackrc
@@ -28,7 +24,6 @@ On your workstation, you'll need:
     export OS_AUTH_URL="https://openstack-example-domain.com:35357/v2.0/"
     export SERVICE_TYPE="compute"
 ```
-
 ## Spin up a new environment
 
 ```bash
