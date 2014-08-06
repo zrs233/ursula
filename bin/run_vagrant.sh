@@ -10,7 +10,7 @@ function get_vagrant_hosts {
 TYPE=$1
 
 if [ -z "${TYPE}" ]; then
-    echo "You must specify a type"
+    echo "You must specify a type: swift or standard"
     exit -1
 fi
 
