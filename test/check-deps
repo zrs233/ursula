@@ -5,6 +5,6 @@ source $(dirname $0)/common
 which nova >/dev/null || die "nova client must be present"
 
 which ansible-playbook >/dev/null || die "ansible-playbook must be present"
-ansible --version | grep "ansible 1.[456]" >/dev/null || die "ansible 1.4 or newer is required"
+ansible --version | grep "ansible 1.[456]" >/dev/null || die "ansible 1.4 - 1.6 is required"
 
 [ -e ${STACK_RC} ] || die "${STACK_RC} must be present"

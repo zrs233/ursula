@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
 readonly ARGS="$@"
+
 # Determine what this script is called
 readonly PROGNAME=$(basename $0)
+
 # Determine where on disk this script lives and executes from
 # From: http://stackoverflow.com/a/246128
 readonly PROGDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -11,7 +13,7 @@ source ${PROGDIR}/../share/common
 
 usage() {
   cat <<- USAGE
-	Usage: ${0} -e <environment> -p <playbook> -x "<extra ansible args>"
+    Usage: ${0} -e <environment> -p <playbook> -x "<extra ansible args>"
 USAGE
 
   exit -1
@@ -26,15 +28,15 @@ process_opts() {
         ;;
       e)
         readonly URSULA_ENV=${PWD}/${OPTARG}
-	local URSULA_ENV_GETOPTS=true
+        local URSULA_ENV_GETOPTS=true
         ;;
       p)
         readonly PLAYBOOK=${OPTARG}
-	local PLAYBOOK_GETOPTS=true
+        local PLAYBOOK_GETOPTS=true
         ;;
       x)
         readonly EXTRA_ANSIBLE_ARGS=${OPTARG}
-	local EXTRA_ANSIBLE_ARGS_GETOPTS=true
+        local EXTRA_ANSIBLE_ARGS_GETOPTS=true
         ;;
       :)
         echo "Option -${OPTARG} requires an argument." >&2
@@ -95,7 +97,7 @@ main() {
   for pbook in ${PREDEPLOY_PLAYBOOK} ${PLAYBOOK} ${POSTDEPLOY_PLAYBOOK}; do
     if [ -f ${pbook} ]; then
       command=$(ansible_command ${HOSTS} "root" ${pbook})
-echo      $command $EXTRA_ANSIBLE_ARGS
+      $command $EXTRA_ANSIBLE_ARGS
 
       if [ "$?" != "0" ]; then
         echo "Run failed on playbook ${pbook}"

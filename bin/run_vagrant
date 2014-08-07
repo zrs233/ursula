@@ -10,7 +10,7 @@ function get_vagrant_hosts {
 TYPE=$1
 
 if [ -z "${TYPE}" ]; then
-    echo "You must specify a type"
+    echo "You must specify a type: swift or standard"
     exit -1
 fi
 
@@ -25,9 +25,10 @@ fi
 
 vagrant up --no-provision ${BOXES}
 
+# Write the Vagrant SSH config to be used by ansible
 TEMPFILE=`mktemp 2>/dev/null || mktemp -t 'ursula-fifo'`
 for I in ${BOXES}; do
-    vagrant ssh-config $I >> ${TEMPFILE}
+    vagrant ssh-config ${I} >> ${TEMPFILE}
 done
 
 export ANSIBLE_SSH_ARGS="${ANSIBLE_SSH_ARGS} -F ${TEMPFILE}"

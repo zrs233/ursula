@@ -17,8 +17,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       controller_config.vm.box_url = BOX_URL
       controller_config.vm.hostname = "controller#{i}"
       controller_config.vm.network :private_network, ip: "10.1.1.10#{i}", :netmask => "255.255.0.0"
-      controller_config.vm.provider "virtualbox" do | v |
-	v.memory = 1536
+      controller_config.vm.provider "virtualbox" do |v|
+        v.memory = 1536
       end
     end
   end
@@ -35,7 +35,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   (1..NUM_SWIFT_NODES).each do |i|
     file_to_disk = "proxy#{i}.1.vdi"
     config.vm.define "swiftnode#{i}" do |swiftnode_config|
-      swiftnode_config.vm.provider "virtualbox" do | v |
+      swiftnode_config.vm.provider "virtualbox" do |v|
         v.customize ['createhd', '--filename', file_to_disk, '--size', 1024]
         v.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', file_to_disk]
       end
@@ -43,7 +43,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       swiftnode_config.vm.box_url = BOX_URL
       swiftnode_config.vm.hostname = "swift#{i}"
       swiftnode_config.vm.network :private_network, ip: "10.1.1.13#{i}", :netmask => "255.255.0.0"
-      swiftnode_config.vm.provider "virtualbox" do | v |
+      swiftnode_config.vm.provider "virtualbox" do |v|
         v.memory = 768
       end
     end

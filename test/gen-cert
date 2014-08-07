@@ -33,7 +33,7 @@ ST=WA
 O=Blue Box Group
 localityName=Seattle
 commonName=${DOMAIN}
-organizationalUnitName=heh. heh. 'unit'.
+organizationalUnitName=
 emailAddress=hostmaster@bluebox.net
 "
 
