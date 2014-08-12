@@ -3,6 +3,7 @@
 #
 ---
 - hosts: compute
+  serial: 10
   tasks:
   # Bail if run against existing compute nodes
   - fail: msg="Node appears to already be bootstrapped"
