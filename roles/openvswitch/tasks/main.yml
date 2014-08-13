@@ -3,7 +3,9 @@
 - apt_repository: repo='ppa:blueboxgroup/openstack' update_cache=yes
 
 # FIXME(cmt): for whatever reason the PPA doesnt like the signature on openvswitch-datapath-dkms
+# Linux 3.13 and later include the OVS datapath
 - apt: pkg=openvswitch-datapath-dkms force=yes
+  when: ansible_distribution_version == "12.04"
 
 - apt: pkg={{ item }}
   with_items:
