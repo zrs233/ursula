@@ -1,0 +1,28 @@
+---
+- name: rsyslog TLS dependency
+  apt: pkg=rsyslog-gnutls
+  notify:
+    - restart rsyslog
+  when: common.rsyslog.forward.tls.enabled
+
+- name: custom CA cert directory
+  file: dest=/usr/share/ca-certificates/rsyslog state=directory
+  when: common.rsyslog.forward.tls.enabled
+
+- name: (possibly self-signed) ssl cert
+  template: src=rsyslog-forward.crt dest=/usr/share/ca-certificates/rsyslog/forward.crt
+  notify:
+    - refresh CAs
+  when: common.rsyslog.forward.tls.enabled
+
+- lineinfile: >
+    dest=/etc/ca-certificates.conf
+    regexp=rsyslog/forward.crt
+    line=rsyslog/forward.crt
+  notify: refresh CAs
+
+- name: send logs to Syslog receiver
+  template: src=etc/rsyslog.d/forward.conf dest=/etc/rsyslog.d/forward.conf mode=0644
+  notify:
+    - restart rsyslog
+  when: common.rsyslog.forward.host is defined

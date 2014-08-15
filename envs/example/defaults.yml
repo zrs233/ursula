@@ -334,3 +334,4 @@ common:
 
 heat:
   enabled: True
+

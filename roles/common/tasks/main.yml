@@ -6,6 +6,8 @@
 - name: update apt index
   apt: update_cache=yes cache_valid_time=3600
 
+- include: logging.yml
+
 - name: python dependencies
   apt: pkg={{ item }}
   with_items:
