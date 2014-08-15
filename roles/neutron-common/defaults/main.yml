@@ -1,6 +1,6 @@
 ---
 neutron:
-  rev: b059dc0606568a5982aea4c2861ac21cf380792d
+  rev: b5c4152ac9958e
   api_workers: 3
   dhcp_dns_servers:
     - 8.8.8.8
