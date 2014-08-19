@@ -18,6 +18,16 @@
   - apt_repository: repo='ppa:blueboxgroup/openstack' update_cache=yes
     when: ansible_distribution_version == "12.04"
 
+  # Upgrade Kernel to 3.5.0 on Precise
+  # and install Open vSwitch datapath (in mainline kernel on more recent distributions)
+  - apt: pkg={{ item }}
+    with_items:
+    - linux-generic-lts-quantal
+    - linux-headers-generic-lts-quantal
+    - linux-image-generic-lts-quantal
+    - openvswitch-datapath-dkms
+    when: ansible_distribution_version == "12.04"
+
   - apt: cache_valid_time=3600 update_cache=yes
   - apt: pkg={{ item }}
     with_items:
@@ -25,14 +35,6 @@
     - ucarp
     - openvswitch-switch
   - apt: upgrade=dist
-
-  # Upgrade Kernel to 3.5.0 on Precise
-  - apt: pkg={{ item }}
-    with_items:
-    - linux-generic-lts-quantal
-    - linux-headers-generic-lts-quantal
-    - linux-image-generic-lts-quantal
-    when: ansible_distribution_version == "12.04"
 
   # Set Locale
   - name: Generate locales
