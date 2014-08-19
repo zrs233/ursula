@@ -4,6 +4,9 @@
 ---
 - hosts: compute
   serial: 10
+  vars:
+    locale: en_US.UTF-8
+    timezone: Etc/UTC
   tasks:
   # Bail if run against existing compute nodes
   - fail: msg="Node appears to already be bootstrapped"
@@ -22,6 +25,28 @@
     - ucarp
     - openvswitch-switch
   - apt: upgrade=dist
+
+  # Upgrade Kernel to 3.5.0 on Precise
+  - apt: pkg={{ item }}
+    with_items:
+    - linux-generic-lts-quantal
+    - linux-headers-generic-lts-quantal
+    - linux-image-generic-lts-quantal
+    when: ansible_distribution_version == "12.04"
+
+  # Set Locale
+  - name: Generate locales
+    command: /usr/sbin/locale-gen {{ locale }}
+  - name: set locale to {{ locale }}
+    command: /usr/sbin/update-locale LANG={{ locale }} LC_ALL={{ locale }}
+
+  # Set Time zone
+  - name: set /etc/localtime to {{ timezone }}
+    command: /bin/cp /usr/share/zoneinfo/{{ timezone }} /etc/localtime
+  - name: set /etc/timezone to {{ timezone }}
+    copy: content="{{ timezone }}" dest=/etc/timezone force=yes owner=root group=root mode=0644
+  - name: update tzdata
+    command: /usr/sbin/dpkg-reconfigure --frontend noninteractive tzdata
 
   # Populate network configuration
   - copy: content="{{ network_interfaces }}" dest=/etc/network/interfaces force=yes owner=root group=root mode=0644
