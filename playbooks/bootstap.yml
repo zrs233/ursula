@@ -65,3 +65,6 @@
   # Redirecting stdin and stdout to /dev/null because ovs-vsctl hangs on Ubuntu
   # 12.04 when run via Ansible shell module
   - shell: ovs-vsctl --may-exist add-port br-eth0 eth0 < /dev/null > /dev/null && reboot
+    async: 0
+    poll: 0
+    ignore_errors: true
