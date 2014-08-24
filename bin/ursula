@@ -107,6 +107,7 @@ main() {
   done
 }
 
+check_common_deps
 process_opts "$@"
 set_vars
 main
