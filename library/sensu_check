@@ -2,15 +2,6 @@
 require 'rubygems'
 require 'antsy'
 
-def set_arg_to_bool(var, default = true)
-  if var == 'false' || var == false
-    return false
-  elsif var == 'true' || var == true
-    return true
-  end
-  default
-end
-
 # defaults
 INTERVAL = 30
 
@@ -23,8 +14,32 @@ handle       = set_arg_to_bool(args[:handle], true)
 interval     = args[:interval] || INTERVAL
 occurrences  = args[:occurrences] || 2
 plugin       = args[:plugin]
-plugin_args  = args[:args] || ''
-prefix       = args[:prefix] || ''
+plugin_args  = args[:args]
+prefix       = args[:prefix]
+env_vars     = args[:env_vars]
+
+def set_arg_to_bool(var, default = true)
+  if var == 'false' || var == false
+    return false
+  elsif var == 'true' || var == true
+    return true
+  end
+  default
+end
+
+# parse_env_vars works around Ansible disallowing '='
+# in string arguments, instead environmental variables can be
+# passed in using comma separated string, with a colon supplanting
+# the equals sign
+# e.g. env_vars=PATH:/home/foo,SHELL:/bin/bash
+def parse_env_vars(env_vars)
+  output = []
+  vars = env_vars.split(',')
+  vars.each do |v|
+    output << v.gsub(':','=')
+  end
+  output.join(' ')
+end
 
 plugin_path = "/etc/sensu/plugins/#{plugin}"
 check_path = "/etc/sensu/conf.d/checks/#{name}.json"
@@ -33,6 +48,7 @@ check_path = "/etc/sensu/conf.d/checks/#{name}.json"
 command = args[:command] || ''
 if command.empty?
   command = "#{plugin_path} #{plugin_args}"
+  command = "#{parse_env_vars(env_vars)} #{command}" if !env_vars.empty?
   command = "#{prefix} #{command}" if !prefix.empty?
   command = "sudo #{command}" if use_sudo
 end
