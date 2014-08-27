@@ -29,7 +29,6 @@
     use_sudo=true 
     prefix=". /root/stackrc;"
     env_vars=GLANCE_IMAGE_DIR:/var/lib/glance/images
-    handle=false
   notify: restart sensu-client
 
 # horizon
