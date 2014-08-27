@@ -13,6 +13,7 @@
 
 - name: ovs ex bridge
   ovs_bridge: name=br-ex state=present
+  when: neutron.plugin == 'ovs'
   notify:
     - ifup br-ex
 
