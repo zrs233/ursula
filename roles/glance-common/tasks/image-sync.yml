@@ -1,20 +1,34 @@
-- name: add btsync ppa repository
-  apt_repository: repo='ppa:tuxpoldo/btsync' update_cache=yes
+- name: remove btsync ppa repository
+  apt_repository: repo='ppa:tuxpoldo/btsync' state=absent
 
-- name: install btsync
-  apt: pkg=btsync
+- name: stop btsync
+  service: name=btsync state=stopped enabled=false
+  ignore_errors: yes
 
-- name: remove default config
-  file: dest=/etc/btsync/debconf-default.conf state=absent
-  notify:
-    - restart btsync
+- name: remove btsync
+  apt: pkg=btsync state=absent
 
 - name: btsync config
-  template: >
-    src=etc/btsync/glance-cache.conf
-    dest=/etc/btsync/
-    owner=root
-    group=root
-    mode=0600
+  file: dest=/etc/btsync/glance-cache.conf state=absent
+
+- apt: pkg=rsync
+
+- lineinfile: dest=/etc/default/rsync regexp=^RSYNC_ENABLE line=RSYNC_ENABLE=true
   notify:
-    - restart btsync
+    - restart rsync
+
+- lineinfile: dest=/etc/default/rsync regexp=^RSYNC_NICE line=RSYNC_NICE=10
+  notify:
+    - restart rsync
+
+- lineinfile: dest=/etc/default/rsync regexp=^RSYNC_IONICE line=RSYNC_IONICE='-c3'
+  notify:
+    - restart rsync
+
+- template: src=etc/rsyncd.conf dest=/etc/rsyncd.conf mode=0644
+  notify:
+    - restart rsync
+
+- service: name=rsync state=started enabled=yes
+
+- template: src=etc/cron.d/glance-image-sync dest=/etc/cron.d/glance-image-sync mode=0640
