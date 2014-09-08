@@ -1,1 +1,1 @@
-{{ common.rsyslog.forward.tls.crt }}
+{{ common.rsyslog.forward.tls.ca_cert }}
