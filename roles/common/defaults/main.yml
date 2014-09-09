@@ -28,6 +28,8 @@ common:
         enabled: true
         authmode: x509/certvalid
         ca_cert: |
+          Blue Box Group CA certificate
+          Replace this with your root CA or server cert
           -----BEGIN CERTIFICATE-----
           MIIDyTCCArGgAwIBAgIBATANBgkqhkiG9w0BAQUFADBuMQswCQYDVQQGEwJVUzEL
           MAkGA1UECBMCV0ExFzAVBgNVBAoTDkJsdWUgQm94IEdyb3VwMRUwEwYDVQQDHgwA
