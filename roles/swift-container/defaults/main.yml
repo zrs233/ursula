@@ -3,3 +3,5 @@ swift_container:
   ip: "{{ primary_ip }}"
   port: 6001
   workers: 10
+swift:
+  allow_versions: False
