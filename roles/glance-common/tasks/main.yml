@@ -34,6 +34,7 @@
 - file: dest=/var/lib/glance state=directory owner=glance group=glance
 - file: dest=/var/lib/glance/images state=directory owner=glance group=glance
 - file: dest=/var/cache/glance state=directory mode=0700 owner=glance group=glance
+- file: dest=/var/log/glance state=directory mode=0755 owner=glance group=glance
 
 - name: glance config
   action: template src={{ item }} dest=/etc/glance mode=0644

@@ -1,0 +1,5 @@
+---
+- name: Install logging and dependencies
+  hosts: all
+  roles:
+    - ../roles/logging

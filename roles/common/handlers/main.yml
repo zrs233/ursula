@@ -1,15 +1,12 @@
 ---
+- name: update timezone
+  command: dpkg-reconfigure --frontend noninteractive tzdata
+
 - name: refresh CAs
   command: update-ca-certificates
 
-- name: restart rsyslog
-  service: name=rsyslog state=restarted
-
 - name: restart haproxy
   restart_if_present: service=haproxy
-
-- name: update timezone
-  command: dpkg-reconfigure --frontend noninteractive tzdata
 
 - name: apply-sysctl
   shell: "cat /etc/sysctl.conf /etc/sysctl.d/*.conf | sysctl -e -p -"

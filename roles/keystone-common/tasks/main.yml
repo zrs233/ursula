@@ -13,7 +13,7 @@
   user: name=keystone comment=keystone shell=/bin/false system=yes home=/nonexistent createhome=no
   when: keystone_user.rc != 0
 
-- name: WORKAROUND - keystone doesn't include babel in dependencies
+- name: WORKAROUND - keystone does not include babel in dependencies
   pip: name=babel
 
 - name: get keystone source repo
@@ -31,11 +31,18 @@
     - restart keystone services
 - meta: flush_handlers
 
-- name: /etc/keystone
-  file: dest=/etc/keystone state=directory
+- file: dest=/etc/keystone state=directory
+- file: dest=/var/log/keystone state=directory mode=0755 owner=keystone group=keystone
+- file: dest=/var/log/keystone/error.log state=touch mode=0755 owner=keystone group=keystone
+- file: dest=/var/log/keystone/access.log state=touch mode=0755 owner=keystone group=keystone
 
 - name: keystone.conf
   template: src=etc/keystone/keystone.conf dest=/etc/keystone/keystone.conf mode=0644
+  notify:
+    - restart keystone services
+
+- name: logging.conf
+  template: src=etc/keystone/logging.conf dest=/etc/keystone/logging.conf mode=0644
   notify:
     - restart keystone services
 

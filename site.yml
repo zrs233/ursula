@@ -3,6 +3,11 @@
   roles:
     - common
 
+- name: Install logging and dependencies
+  hosts: all
+  roles:
+    - logging
+
 - name: Setup IPv6 Router Advertisements
   hosts: controller
   roles:
