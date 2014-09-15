@@ -1,3 +1,5 @@
 ---
 cinder:
   rev: eedc8eda9bbb
+  enabled_backends: None
+  default_backend: None
