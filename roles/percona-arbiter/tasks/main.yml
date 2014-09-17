@@ -15,4 +15,7 @@
 
 - template: src=etc/default/garb dest=/etc/default/garb mode=0644
 
+# Workaround: percona-xtradb-cluster-garbd-2.x 2.11.2675.precise is missing an init script, so include the one from 188.precise
+- template: src=etc/init.d/percona-xtradb-cluster-garbd-2.x dest=/etc/init.d/percona-xtradb-cluster-garbd-2.x mode=0755
+
 - service: name=percona-xtradb-cluster-garbd-2.x state=started enabled=on
