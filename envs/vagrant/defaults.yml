@@ -70,7 +70,7 @@ monitoring:
   scan_for_log_errors: true
 
 openstack:
-  pypi_mirror: http://pypi.openstack.org/openstack
+  pypi_mirror: https://pypi.python.org/simple/
   git_mirror:  https://github.com/openstack
   git_update: yes
 
