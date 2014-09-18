@@ -2,51 +2,59 @@
 # Don't like how I have to register the handler
 # many times.
 
-- name: Install monitoring and common checks
+- name: install monitoring and common checks
   hosts: all
   tasks:
   - include: monitoring/tasks/main.yml
   handlers:
   - include: ../handlers/main.yml
 
-- name: Install compute checks
+- name: install compute checks
   hosts: compute
   tasks:
   - include: monitoring/tasks/compute.yml
   handlers:
   - include: ../handlers/main.yml
 
-- name: Install controller checks
+- name: install controller checks
   hosts: controller
   tasks:
   - include: monitoring/tasks/controller.yml
   handlers:
   - include: ../handlers/main.yml
 
-- name: Install database checks
+- name: install database checks
   hosts: db
   tasks:
   - include: monitoring/tasks/database.yml
   handlers:
   - include: ../handlers/main.yml
 
-- name: Install network checks
+- name: install network checks
   hosts: network
   tasks:
   - include: monitoring/tasks/network.yml
   handlers:
   - include: ../handlers/main.yml
 
-- name: Install swift checks
+- name: install swift checks
   hosts: swiftnode
   tasks:
   - include: monitoring/tasks/swift.yml
   handlers:
   - include: ../handlers/main.yml
 
-- name: Install ucarp checks
+- name: install ucarp checks
   hosts: network:swiftnode
   tasks:
   - include: monitoring/tasks/ucarp.yml
   handlers:
   - include: ../handlers/main.yml
+
+- name: install nimble checks
+  hosts: cinder_volume
+  tasks:
+    - include: monitoring/tasks/nimble.yml
+      when: cinder.san_type == 'nimble'
+  handlers:
+    - include: ../handlers/main.yml
