@@ -7,4 +7,4 @@ nova:
   metadata_api_workers: 5
   cpu_allocation_ratio: 1.0
   ram_allocation_ratio: 1.0
-  libvirt_cpu_model: Opteron_G3
+  libvirt_cpu_model: None
