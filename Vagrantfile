@@ -11,6 +11,7 @@ BOX_URL = ENV['URSULA_BOX_URL'] || 'http://files.vagrantup.com/precise64.box'
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
+  config.ssh.forward_agent = true
   (1..NUM_CONTROLLERS).each do |i|
     config.vm.define "controller#{i}" do |controller_config|
       controller_config.vm.box = "precise64"
