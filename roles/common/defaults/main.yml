@@ -11,19 +11,6 @@ common:
     forward:
       host: null
       port: 514
-      config:
-        ActionResumeInterval: 10
-        ActionQueueSize: 100000
-        ActionQueueDiscardMark: 97500
-        ActionQueueHighWaterMark: 80000
-        ActionQueueType: LinkedList
-        ActionQueueFileName: papertrailqueue
-        ActionQueueCheckpointInterval: 100
-        ActionQueueMaxDiskSpace: 2g
-        ActionResumeRetryCount: -1
-        ActionQueueSaveOnShutdown: on
-        ActionQueueTimeoutEnqueue: 10
-        ActionQueueDiscardSeverity: 0
       tls:
         enabled: true
         authmode: x509/certvalid
