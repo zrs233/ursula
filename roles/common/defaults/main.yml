@@ -14,7 +14,7 @@ common:
       tls:
         enabled: true
         authmode: x509/certvalid
-        ca_cert: |
+        crt: |
           -----BEGIN CERTIFICATE-----
           MIIDyTCCArGgAwIBAgIBATANBgkqhkiG9w0BAQUFADBuMQswCQYDVQQGEwJVUzEL
           MAkGA1UECBMCV0ExFzAVBgNVBAoTDkJsdWUgQm94IEdyb3VwMRUwEwYDVQQDHgwA
