@@ -25,4 +25,4 @@
   template: src=etc/rsyslog.d/forward.conf dest=/etc/rsyslog.d/forward.conf mode=0644
   notify:
     - restart rsyslog
-  when: common.rsyslog.forward.host is defined
+  when: common.rsyslog.forward.host
