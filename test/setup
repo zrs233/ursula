@@ -8,8 +8,7 @@ echo "writing initial inventory file"
 mkdir -p ${ROOT}/envs/test
 cat > ${ROOT}/envs/test/hosts <<eof
 [local]
-# Tell ansible to use the python in PATH instead of /usr/bin/python
-127.0.0.1 ansible_python_interpreter=python
+127.0.0.1
 eof
 cp ${ROOT}/envs/example/defaults.yml ${ROOT}/envs/test/defaults.yml
 
@@ -44,13 +43,6 @@ cat >> ${ROOT}/envs/test/group_vars/all.yml <<eof
   key: |
 eof
 cat ${CERT_DIR}/openstack.example.com.key | sed 's/^/    /' >> ${ROOT}/envs/test/group_vars/all.yml
-cat >> ${ROOT}/envs/test/group_vars/all.yml <<eof
-common:
-  rsyslog:
-    forward:
-      host: kibana.sea03.blueboxgrid.com
-      port: 1514
-eof
 popd
 rm -rf ${CERT_DIR}
 
