@@ -151,7 +151,7 @@ glance:
   api_workers: 1
   images:
     - name: cirros
-      url: http://download.cirros-cloud.net/0.3.2/cirros-0.3.2-x86_64-disk.img
+      url: http://download.cirros-cloud.net/0.3.3/cirros-0.3.3-x86_64-disk.img
 
 keystone:
 
