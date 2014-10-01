@@ -16,5 +16,3 @@
   - name: test instance can ping Google (due to 1450 MTU on VXLAN this doesn't work with recent version of SSH)
     shell: . /root/stackrc; TURTLE_IP=$( nova list | awk '/turtle-stack/ {print $13}' ); ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cirros@${TURTLE_IP} ping -c 5 www.google.com
     when: ansible_distribution_version == "12.04"
-  - name: cleanup test instance, key-pair and security group
-    shell: . /root/stackrc; nova delete turtle-stack && sleep 30 && nova secgroup-delete turtle-sec && nova keypair-delete turtle-key

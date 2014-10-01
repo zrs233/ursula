@@ -5,8 +5,8 @@ if [ $# -gt 0 ]; then
     ACTION=$1
 fi
 
-if [ "${ACTION}" != "all" -a "${ACTION}" != "test" -a "${ACTION}" != "deploy" ]; then
-  echo "Usage: run [test | deploy]"
+if [ "${ACTION}" != "all" -a "${ACTION}" != "test" -a "${ACTION}" != "deploy" -a "${ACTION}" != "cleanup" ]; then
+  echo "Usage: run [test | deploy | cleanup]"
   exit 1
 fi
 
@@ -20,6 +20,7 @@ if [ "${ACTION}" == "all" -o "${ACTION}" == "deploy" ]; then
     ${LOGIN_USER} \
     "site.yml" \
     "true")
+  echo -en "\a" > /dev/tty
 fi
 
 if [ "${ACTION}" == "all" -o "${ACTION}" == "test" ]; then
@@ -28,6 +29,16 @@ if [ "${ACTION}" == "all" -o "${ACTION}" == "test" ]; then
     ${LOGIN_USER} \
     ${ROOT}/playbooks/tests/tasks/main.yml \
     "true")
+  echo -en "\a" > /dev/tty
+fi
+
+if [ "${ACTION}" == "all" -o "${ACTION}" == "cleanup" ]; then
+  time $(ansible_command \
+    "envs/test/hosts" \
+    ${LOGIN_USER} \
+    ${ROOT}/playbooks/tests/tasks/cleanup.yml \
+    "true")
+  echo -en "\a" > /dev/tty
 fi
 
 echo "test complete"
