@@ -11,11 +11,11 @@
 - apt: pkg=ufw
 
 - name: Open IPv4 port for 514/udp
-  ufw: rule=allow proto=udp src=127.0.0.1 port=514
+  command: ufw allow proto udp from 127.0.0.1 port 514
   notify: enable ufw
 
 - name: Open IPv6 port for 514/udp
-  ufw: rule=allow proto=udp src=::1 port=514
+  command: ufw allow proto udp from ::1 port 514
   notify: enable ufw
 
 - name: send swift logs to local file
