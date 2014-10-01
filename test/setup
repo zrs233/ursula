@@ -83,5 +83,5 @@ $(ansible_command \
   ${ROOT}/playbooks/testenv/tasks/pre-deploy.yml \
   "true")
 
-echo -en "\a" > /dev/tty
+[[ -n $PS1 ]] && echo -en "\a" > /dev/tty
 echo "vms are up: ${VMS} !!"
