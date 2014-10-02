@@ -7,3 +7,4 @@ common:
       - megacli
   ipmi:
     enabled: True
+  python_extra_packages: []

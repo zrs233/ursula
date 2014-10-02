@@ -42,6 +42,7 @@
 - name: /opt/stack
   file: dest=/opt/stack state=directory
 
+- include: python.yml
 - include: ssl.yml
 - include: ssh.yml
 - include: networking.yml
