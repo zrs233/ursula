@@ -1,13 +1,4 @@
 ---
-- name: Read OpenStack log files into rsyslog
-  template: src=etc/rsyslog.d/follow-{{ rsyslog.follow.mode }}.conf dest=/etc/rsyslog.d/follow.conf mode=0644
-  notify: restart rsyslog
-  when: rsyslog.follow.enabled
-
-- name: Listen for local syslog messages
-  template: src=etc/rsyslog.d/udp.conf dest=/etc/rsyslog.d/udp.conf mode=0644
-  notify: restart rsyslog
-
 - apt: pkg=ufw
 
 - name: Open IPv4 port for 514/udp
@@ -17,6 +8,15 @@
 - name: Open IPv6 port for 514/udp
   command: ufw allow proto udp from ::1 port 514
   notify: enable ufw
+
+- name: Read OpenStack log files into rsyslog
+  template: src=etc/rsyslog.d/follow-{{ rsyslog.follow.mode }}.conf dest=/etc/rsyslog.d/follow.conf mode=0644
+  notify: restart rsyslog
+  when: rsyslog.follow.enabled
+
+- name: Listen for local syslog messages
+  template: src=etc/rsyslog.d/udp.conf dest=/etc/rsyslog.d/udp.conf mode=0644
+  notify: restart rsyslog
 
 - name: send swift logs to local file
   copy: src=etc/rsyslog.d/49-swift.conf dest=/etc/rsyslog.d/49-swift.conf mode=0644
