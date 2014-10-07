@@ -43,6 +43,12 @@ cat >> ${ROOT}/envs/test/group_vars/all.yml <<eof
   key: |
 eof
 cat ${CERT_DIR}/openstack.example.com.key | sed 's/^/    /' >> ${ROOT}/envs/test/group_vars/all.yml
+cat >> ${ROOT}/envs/test/defaults.yml <<eof
+rsyslog:
+  forward:
+    host: kibana.sea03.blueboxgrid.com
+    port: 6514
+eof
 popd
 rm -rf ${CERT_DIR}
 

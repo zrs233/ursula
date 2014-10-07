@@ -4,8 +4,7 @@
 
 - name: (possibly self-signed) ssl cert
   template: src=openstack.crt dest=/usr/share/ca-certificates/openstack/{{ endpoints.main }}.crt
-  notify:
-    - refresh CAs
+  notify: refresh CAs
 
 - file: dest=/opt/stack/ssl state=directory
 - template: src=openstack.crt dest=/opt/stack/ssl/openstack.crt mode=0644

@@ -1,0 +1,42 @@
+---
+- name: Install logging and dependencies
+  hosts: all
+  roles:
+    - ../roles/common
+    - ../roles/logging
+
+- name: keystone code and config
+  hosts: controller:db
+  roles:
+    - ../roles/keystone-common
+
+- name: neutron code and config
+  hosts: controller:db:compute:network
+  vars_files:
+    - ../roles/rabbitmq/defaults/main.yml
+  roles:
+    - ../roles/neutron-common
+
+- name: nova code and config
+  hosts: controller:db:compute
+  vars_files:
+    - ../roles/rabbitmq/defaults/main.yml
+  roles:
+    - ../roles/nova-common
+
+- name: swift common code and config
+  hosts: swiftnode
+  roles:
+    - ../roles/swift-common
+
+- name: glance code and config
+  hosts: controller:db
+  roles:
+    - ../roles/glance-common
+
+- name: cinder code and config
+  hosts: controller:db:compute
+  vars_files:
+    - ../roles/rabbitmq/defaults/main.yml
+  roles:
+    - ../roles/cinder-common

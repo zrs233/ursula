@@ -4,9 +4,9 @@
 
 - name: get heat source repo
   git: |
-    repo={{ openstack.git_mirror }}/heat.git 
-    dest=/opt/stack/heat 
-    version={{ heat.rev }} 
+    repo={{ openstack.git_mirror }}/heat.git
+    dest=/opt/stack/heat
+    version={{ heat.rev }}
     update={{ openstack.git_update }}
   notify:
     - pip install heat
@@ -17,6 +17,9 @@
 
 - name: create heat environment.d directory
   file: dest=/etc/heat/environment.d state=directory
+
+- name: create heat log directory
+  file: dest=/var/log/heat state=directory mode=0755 owner=heat
 
 - name: heat config
   template: src=etc/heat/heat.conf dest=/etc/heat/heat.conf mode=0644

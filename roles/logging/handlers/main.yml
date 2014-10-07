@@ -1,0 +1,9 @@
+---
+- name: refresh CAs
+  command: update-ca-certificates
+
+- name: restart rsyslog
+  service: name=rsyslog state=restarted
+
+- name: enable ufw
+  command: ufw --force enable
