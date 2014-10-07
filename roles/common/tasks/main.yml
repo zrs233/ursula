@@ -44,6 +44,8 @@
 
 - include: python.yml
 - include: ssl.yml
+  tags:
+    - ssl
 - include: ssh.yml
 - include: networking.yml
 - include: ufw.yml

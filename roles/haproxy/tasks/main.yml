@@ -15,5 +15,7 @@
 - name: install ssl cert+key
   template: src=etc/haproxy/openstack.pem dest=/etc/haproxy/openstack.pem
   notify: reload haproxy
+  tags:
+    - ssl
 
 - lineinfile: dest=/etc/default/haproxy regexp=^ENABLED= line=ENABLED=1
