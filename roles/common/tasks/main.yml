@@ -43,6 +43,8 @@
   file: dest=/opt/stack state=directory
 
 - include: ssl.yml
+  tags:
+    - ssl
 - include: ssh.yml
 - include: networking.yml
 - include: ufw.yml
