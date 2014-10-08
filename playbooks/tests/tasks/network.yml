@@ -3,6 +3,20 @@
   tasks:
   - name: migrate neutron services to test-controller-0
     shell: . /root/stackrc; HOSTNAME=test-controller-0 /usr/local/bin/migrate_neutron_services
+  - name: determine Neutron external interface name
+    action: neutron_network
+      name=external
+      login_tenant_name=admin
+      login_password={{ secrets.admin_password }}
+      {% if client.self_signed_cert -%}
+        cacert=/opt/stack/ssl/openstack.crt
+      {% endif -%}
+    register: result
+  - set_fact: neutron_external_interface=brq{{ result.id|truncate(length=11,killwords=true,end='') }}
+  - shell: sed -i.bak s/br-ex/{{ neutron_external_interface }}/g /etc/network/interfaces.d/br-ex.cfg
+    when: neutron.plugin == 'ml2'
+    notify: ifup br-ex
+  - meta: flush_handlers
   - name: neutron agents are all alive
     shell: . /root/stackrc; neutron agent-list | awk '/ xxx / {print;ec=1} END{exit ec}'
   - name: neutron has an internal network
@@ -29,6 +43,9 @@
     shell: . /root/stackrc; neutron router-list | grep default
   - name: neutron router can ping internet
     shell: ROUTER_NS=$( ip netns show | grep qrouter- ); ip netns exec ${ROUTER_NS} ping -c 5 8.8.8.8
+  handlers:
+  - name: ifup br-ex
+    command: ifup {{neutron_external_interface}}
 
 - hosts: controller
   tasks:
