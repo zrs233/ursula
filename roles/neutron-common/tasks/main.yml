@@ -43,8 +43,6 @@
 - file: dest=/etc/neutron state=directory
 - file: dest=/etc/neutron/plugins/ml2 state=directory
   when: neutron.plugin == 'ml2'
-- file: dest=/etc/neutron/plugins/linuxbridge state=directory
-  when: neutron.plugin == 'ml2'
 - file: dest=/etc/neutron/plugins/openvswitch state=directory
   when: neutron.plugin == 'ovs'
 - file: dest=/etc/neutron/services/loadbalancer/haproxy state=directory
@@ -66,14 +64,6 @@
 - template: |
     src=etc/neutron/plugins/ml2/ml2_plugin.ini
     dest=/etc/neutron/plugins/ml2/ml2_plugin.ini
-    mode=0644
-  when: neutron.plugin == 'ml2'
-  notify:
-    - restart neutron services
-
-- template: |
-    src=etc/neutron/plugins/linuxbridge/linuxbridge_conf.ini
-    dest=/etc/neutron/plugins/linuxbridge/linuxbridge_conf.ini
     mode=0644
   when: neutron.plugin == 'ml2'
   notify:
