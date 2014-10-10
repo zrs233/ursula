@@ -8,7 +8,8 @@ echo "writing initial inventory file"
 mkdir -p ${ROOT}/envs/test
 cat > ${ROOT}/envs/test/hosts <<eof
 [local]
-127.0.0.1
+# Tell ansible to use the python in PATH instead of /usr/bin/python
+127.0.0.1 ansible_python_interpreter=python
 eof
 cp ${ROOT}/envs/example/defaults.yml ${ROOT}/envs/test/defaults.yml
 
@@ -82,4 +83,5 @@ $(ansible_command \
   ${ROOT}/playbooks/testenv/tasks/pre-deploy.yml \
   "true")
 
+[[ -n $PS1 ]] && echo -en "\a" > /dev/tty
 echo "vms are up: ${VMS} !!"
