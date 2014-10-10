@@ -2,9 +2,6 @@
 - name: python-mysqldb package
   apt: pkg=python-mysqldb
 
-- name: python-mysqldb package brings in mysql-common
-  apt: pkg=mysql-common purge=yes state=absent
-
 - file: path=/etc/mysql/conf.d state=directory
 
 - name: configure my.cnf

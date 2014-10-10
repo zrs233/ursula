@@ -1,0 +1,6 @@
+---
+- name: percona apt repository key
+  apt_key: id=CD2EFD2A url=http://www.percona.com/redir/downloads/RPM-GPG-KEY-percona
+
+- name: percona apt repository
+  apt_repository: repo='deb http://repo.percona.com/apt precise main' update_cache=yes

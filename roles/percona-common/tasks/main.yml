@@ -2,8 +2,8 @@
 - name: install python-pycurl
   apt: pkg=python-pycurl
 
-- name: percona apt repository key
-  apt_key: id=CD2EFD2A url=http://www.percona.com/redir/downloads/RPM-GPG-KEY-percona
+- include: precise.yml
+  when: ansible_distribution_version == "12.04"
 
-- name: percona apt repository
-  apt_repository: repo='deb http://repo.percona.com/apt precise main' update_cache=yes
+- include: trusty.yml
+  when: ansible_distribution_version == "14.04"
