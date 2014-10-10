@@ -7,6 +7,8 @@
 
   - service: name=neutron-openvswitch-agent state=stopped enabled=no
 
+  - service: name=nova-compute state=stopped
+
 - hosts: network
   serial: 10
   tasks:
@@ -56,6 +58,16 @@
     - plugins/linuxbridge/linuxbridge_conf.ini
     - services/loadbalancer/haproxy/lbaas_agent.ini
 
+- hosts: controller:db:compute
+  serial: 10
+  vars_files:
+    - ../rabbitmq/defaults/main.yml
+  tasks:
+  - template: |
+      src=../roles/nova-common/templates/etc/nova/nova.conf
+      dest=/etc/nova/nova.conf
+      mode=0644
+
 - hosts: controller
   serial: 1
   tasks:
@@ -74,3 +86,7 @@
     - neutron-dhcp-agent
     - neutron-l3-agent
     - neutron-lbaas-agent
+
+- hosts: compute
+  serial: 10
+  - service: name=nova-compute state=started
