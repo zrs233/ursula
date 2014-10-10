@@ -1,5 +1,6 @@
 ---
 rabbitmq:
+  cluster: False
   erlang_cookie: 6IMgelGs3Ygu
   user: openstack
   nodename: 'openstack@{{ ansible_hostname }}'
