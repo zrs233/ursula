@@ -7,15 +7,24 @@
   apt_repository: repo='ppa:blueboxgroup/openstack' update_cache=yes
   when: ansible_distribution_version != "12.04"
 
-- apt: pkg=haproxy
+- name: install haproxy
+  apt: pkg=haproxy
 
-- name: create haproxy directory
+- name: create haproxy config directory
   file: dest=/etc/haproxy state=directory mode=0755
 
+- name: HAProxy defaults
+  template: src=etc/default/haproxy dest=/etc/default/haproxy
+  notify: restart haproxy
+
 - name: install ssl cert+key
-  template: src=etc/haproxy/openstack.pem dest=/etc/haproxy/openstack.pem
+  template: >
+    src=etc/haproxy/openstack.pem
+    dest=/etc/haproxy/openstack.pem
+    owner=haproxy
+    group=haproxy
+    mode=0600
   notify: reload haproxy
   tags:
     - ssl
 
-- lineinfile: dest=/etc/default/haproxy regexp=^ENABLED= line=ENABLED=1
