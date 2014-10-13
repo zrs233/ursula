@@ -112,11 +112,18 @@
     - glance-common
 
 - name: cinder code and config
-  hosts: controller:db:compute
-  vars_files:
+  hosts: controller:cinder_volume
+  vars_files:      
     - roles/rabbitmq/defaults/main.yml
-  roles:
+  roles:           
     - cinder-common
+
+- name: cinder-volume code and config
+  hosts: cinder_volume
+  vars_files:      
+    - roles/rabbitmq/defaults/main.yml
+  roles:           
+    - cinder-volume
 
 - name: heat code and config
   hosts: controller
@@ -143,7 +150,6 @@
 - hosts: compute
   roles:
     - compute
-    - cinder-volume
 
 - hosts: controller[0]
   roles:

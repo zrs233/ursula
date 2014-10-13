@@ -1,9 +1,9 @@
 ---
-- sensu_check: name=nimble-load plugin=nimble-check.py args='-w 5 -c 7 -n {{ cinder.san_ip }} load'
+- sensu_check: name=nimble-load plugin=nimble-check.py args='-w 5 -c 7 -n {{ sensu.nimble_san_ip }} load' use_sudo=true
   notify: restart sensu-client
 
-- sensu_check: name=nimble-raid plugin=nimble-check.py args='-n {{ cinder.san_ip }} raid'
+- sensu_check: name=nimble-raid plugin=nimble-check.py args='-n {{ sensu.nimble_san_ip }} raid' use_sudo=true
   notify: restart sensu-client
 
-- sensu_check: name=nimble-array-free plugin=nimble-check.py args='-c 90 -w 85 -n {{ cinder.san_ip }} array_free'
+- sensu_check: name=nimble-array-free plugin=nimble-check.py args='-c 90 -w 85 -n {{ sensu.nimble_san_ip }} array_free' use_sudo=true
   notify: restart sensu-client

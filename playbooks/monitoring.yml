@@ -16,6 +16,13 @@
   handlers:
   - include: ../handlers/main.yml
 
+- name: install cinder-volume checks
+  hosts: cinder_volume
+  tasks:
+  - include: monitoring/tasks/cinder-volume.yml
+  handlers:
+  - include: ../handlers/main.yml
+
 - name: install controller checks
   hosts: controller
   tasks:
@@ -52,9 +59,9 @@
   - include: ../handlers/main.yml
 
 - name: install nimble checks
-  hosts: cinder_volume
+  hosts: controller
   tasks:
     - include: monitoring/tasks/nimble.yml
-      when: cinder.san_type == 'nimble'
+      when: sensu.nimble_san_ip is defined 
   handlers:
     - include: ../handlers/main.yml
