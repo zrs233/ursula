@@ -8,3 +8,4 @@ common:
   ipmi:
     enabled: True
   python_extra_packages: []
+  ssh_private_keys: []
