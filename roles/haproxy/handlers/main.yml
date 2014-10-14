@@ -3,4 +3,4 @@
   service: name=haproxy state=reloaded enabled=yes
 
 - name: restart haproxy
-  service: name=haproxy state=restarted enabled=yes
+  restart_if_running: service=haproxy
