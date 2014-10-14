@@ -36,7 +36,13 @@
     shell: grep 8.8.8.8 /etc/dnsmasq.conf
   - name: neutron dnsmasq has 8.8.4.4 upstream resolver
     shell: grep 8.8.8.8 /etc/dnsmasq.conf
-  - name: neutron config has rabbit servers
+
+  - name: neutron config has rabbit server
+    shell: egrep "rabbit_host = [0-9.]+" /etc/neutron/neutron.conf
+    when: rabbitmq.cluster == false
+  - name: neutron config has rabbit cluster servers
     shell: egrep "rabbit_hosts = [0-9.]+:5672,[0-9.]+" /etc/neutron/neutron.conf
+    when: rabbitmq.cluster == true
+
   - name: iptables mangle rule in place to correct DHCP checksums
     shell: iptables -L -n -t mangle | egrep '^CHECKSUM\s+udp\s+--\s+0.0.0.0/0\s+0.0.0.0/0\s+udp dpt:68 CHECKSUM fill'

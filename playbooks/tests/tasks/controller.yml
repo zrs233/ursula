@@ -40,13 +40,15 @@
   - name: rabbitmq has a properly configured cluser
     shell: rabbitmqctl -q cluster_status | awk '/disc/,/\},/' | grep -c test-controller | grep 2
     when: rabbitmq.cluster == true
+  - name: rabbitmq has the management plugin enabled
+    shell: rabbitmq-plugins list | grep '\[E\] rabbitmq_management'
+    when: rabbitmq.cluster == true
+  - name: rabbitmq has the rabbitmqadmin script installed
+    shell: test -f /usr/local/bin/rabbitmqadmin
+    when: rabbitmq.cluster == true
 
   - name: rabbitmq has a default user with administrator tag
     shell: rabbitmqctl list_users | grep openstack | grep '\[administrator\]'
-  - name: rabbitmq has the management plugin enabled
-    shell: rabbitmq-plugins list | grep '\[E\] rabbitmq_management'
-  - name: rabbitmq has the rabbitmqadmin script installed
-    shell: test -f /usr/local/bin/rabbitmqadmin
 
   - name: iptables defaults to dropping connections from the internet
     shell: ufw status verbose | egrep '^Default. deny .incoming.'
