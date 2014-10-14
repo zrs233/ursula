@@ -10,7 +10,7 @@
   apt: pkg=haproxy
 
 # WORKAROUND: `service haproxy stop` fails due to incorrect `start-stop-daemon --pid`
-- template: src=etc/init.d/haproxy dest=/etc/init.d/haproxy mode=0644
+- template: src=etc/init.d/haproxy dest=/etc/init.d/haproxy mode=0755
 
 - name: install ssl cert+key
   template: >
