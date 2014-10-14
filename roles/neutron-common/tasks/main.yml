@@ -4,6 +4,9 @@
     - vlan
     - bridge-utils
 
+- name: 'Configure VXLAN to use IANA assigned port: 4789'
+  copy: content="options vxlan udp_port=4789" dest=/etc/modprobe.d/vxlan-port.conf owner=root group=root mode=0644
+
 - name: Check if neutron user exists
   action: shell getent passwd neutron
   register: neutron_user
