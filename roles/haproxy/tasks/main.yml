@@ -1,21 +1,16 @@
 ---
-- name: haproxy ppa - required to get a version new enough to support ssl
-  apt_repository: repo='ppa:vbernat/haproxy-1.5' update_cache=yes
-  when: ansible_distribution_version == "12.04"
+- name: HAProxy defaults
+  template: src=etc/default/haproxy dest=/etc/default/haproxy
+  notify: restart haproxy
 
 - name: haproxy ppa - required to get a version new enough to support ssl
-  apt_repository: repo='ppa:blueboxgroup/openstack' update_cache=yes
-  when: ansible_distribution_version != "12.04"
+  apt_repository: repo='ppa:vbernat/haproxy-1.5' update_cache=yes
 
 - name: install haproxy
   apt: pkg=haproxy
 
-- name: create haproxy config directory
-  file: dest=/etc/haproxy state=directory mode=0755
-
-- name: HAProxy defaults
-  template: src=etc/default/haproxy dest=/etc/default/haproxy
-  notify: restart haproxy
+# WORKAROUND: `service haproxy stop` fails due to incorrect `start-stop-daemon --pid`
+- template: src=etc/init.d/haproxy dest=/etc/init.d/haproxy mode=0755
 
 - name: install ssl cert+key
   template: >
@@ -27,4 +22,3 @@
   notify: reload haproxy
   tags:
     - ssl
-
