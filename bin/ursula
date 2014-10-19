@@ -13,15 +13,19 @@ source ${PROGDIR}/../share/common
 
 usage() {
   cat <<- USAGE
-    Usage: ${0} -e <environment> -p <playbook> -x "<extra ansible args>"
+    Usage: ${0} -e <environment> -p <playbook> -x "<extra ansible args> <flags>"
+      -f    forward ssh agent
+      -h    display this help message
 USAGE
 
   exit -1
 }
 
+URSULA_SSH_FORWARD=false
+
 process_opts() {
   # Prefer the use of explicit shortopts
-  while getopts "he:p:x:" OPTION; do
+  while getopts "hfe:p:x:" OPTION; do
     case $OPTION in
       h)
         usage
@@ -29,6 +33,9 @@ process_opts() {
       e)
         readonly URSULA_ENV=${PWD}/${OPTARG}
         local URSULA_ENV_GETOPTS=true
+        ;;
+      f)
+        readonly URSULA_SSH_FORWARD=true
         ;;
       p)
         readonly PLAYBOOK=${OPTARG}
@@ -83,7 +90,9 @@ set_vars() {
   POSTDEPLOY_PLAYBOOK=${URSULA_ENV}/playbooks/postdeploy.yml
   HOSTS=${URSULA_ENV}/hosts
   SSH_CONFIG=${URSULA_ENV}/ssh_config
-  ANSIBLE_SSH_ARGS="-o ForwardAgent=yes"
+  if [ ${URSULA_SSH_FORWARD} == true ]; then
+    ANSIBLE_SSH_ARGS="-o ForwardAgent=yes"
+  fi
 
   if [ -e "${URSULA_ENV}/../defaults.yml" ]; then
     export ANSIBLE_VAR_DEFAULTS_FILE="${URSULA_ENV}/../defaults.yml"
@@ -108,7 +117,6 @@ main() {
   done
 }
 
-check_common_deps
 process_opts "$@"
 set_vars
 main
