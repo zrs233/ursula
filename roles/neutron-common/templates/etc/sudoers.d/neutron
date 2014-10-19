@@ -1,3 +1,4 @@
 neutron ALL=(root) NOPASSWD: /usr/local/bin/neutron-rootwrap
 neutron ALL=(root) NOPASSWD: /usr/bin/ovs-vsctl
+neutron ALL=(root) NOPASSWD: /usr/bin/ovs-ofctl
 neutron ALL=(root) NOPASSWD: /sbin/ip
