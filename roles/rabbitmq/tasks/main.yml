@@ -1,29 +1,47 @@
 ---
-- name: setup rabbit clustering 
+- name: setup rabbit clustering
   include: cluster.yml
   when: rabbitmq.cluster
 
-# Backward compatibility with existing configurations. 
+# Backward compatibility with existing configurations.
 - name: install rabbitmq
   apt: pkg=rabbitmq-server
   when: not rabbitmq.cluster
 
 - name: remove default rabbit user
-  rabbitmq_user: user=guest
-                 {% if rabbitmq.cluster -%}
-                 node={{ rabbitmq.nodename }}
-                 {% endif -%}
-                 state=absent
+  rabbitmq_user: |
+    user=guest
+    state=absent
+  when: rabbitmq.cluster == False
+
+- name: remove default rabbit user clustered
+  rabbitmq_user: |
+    user=guest
+    state=absent
+    node=rabbitmq.nodename
+  when: rabbitmq.cluster
 
 - name: openstack rabbit user
-  rabbitmq_user: user={{ rabbitmq.user }}
-                 password={{ secrets.rabbit_password }}
-                 {% if rabbitmq.cluster -%}
-                 node={{ rabbitmq.nodename }}
-                 {% endif -%}
-                 vhost=/
-                 tags=administrator
-                 configure_priv=.*
-                 read_priv=.*
-                 write_priv=.*
-                 state=present
+  rabbitmq_user: |
+    user={{ rabbitmq.user }}
+    password={{ secrets.rabbit_password }}
+    vhost=/
+    tags=administrator
+    configure_priv=.*
+    read_priv=.*
+    write_priv=.*
+    state=present
+  when: rabbitmq.cluster == False
+
+- name: openstack rabbit user clustered
+  rabbitmq_user: |
+    user={{ rabbitmq.user }}
+    password={{ secrets.rabbit_password }}
+    node={{ rabbitmq.nodename }}
+    vhost=/
+    tags=administrator
+    configure_priv=.*
+    read_priv=.*
+    write_priv=.*
+    state=present
+  when: rabbitmq.cluster
