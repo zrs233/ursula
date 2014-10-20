@@ -4,7 +4,13 @@
 - sensu_process_check: service=nova-compute
   notify: restart sensu-client
 
+
+- sensu_process_check: service=neutron-linuxbridge-agent
+  when: neutron.plugin=='ml2'
+  notify: restart sensu-client
+
 # ovs
 
 - sensu_process_check: service=neutron-openvswitch-agent
+  when: neutron.plugin=='ovs'
   notify: restart sensu-client
