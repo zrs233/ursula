@@ -13,6 +13,7 @@ protocols {
         interface eth0 {
             vif eth0 {
                 disable: false
+                version: 3
             }
         }
         traceoptions {
