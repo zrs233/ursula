@@ -1,1 +1,7 @@
 ansible==1.4.4
+python-novaclient==2.19.0
+python-neutronclient==2.3.6
+python-keystoneclient
+python-glanceclient
+python-cinderclient
+oslo.utils

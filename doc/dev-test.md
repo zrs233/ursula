@@ -6,13 +6,14 @@ Ursula also comes with scripts to automatically spin up a test environment insid
 
 ## First-time workstation setup
 
-After following the [installation instructions for ursula](https://github.com/blueboxgroup/ursula#installation), you'll need:
+Confirm that you have followed the [installation instructions for ursula](https://github.com/blueboxgroup/ursula#installation), it should have installed the required packages:
 
-  - nova client:
-
-```bash
-    $ pip install git+https://github.com/openstack/python-novaclient.git
-```
+  - Ansible
+  - Nova client
+  - Keystone client
+  - Neutron client
+  - Glance client
+  - Cinder client
 
   - openstack credentials in `$HOME/.stackrc` (t):
 
