@@ -17,3 +17,4 @@
     - neutron-l3-agent
     - neutron-lbaas-agent
     - neutron-openvswitch-agent
+    - neutron-linuxbridge-agent

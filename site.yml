@@ -68,7 +68,7 @@
 
 - hosts: network:compute
   roles:
-    - openvswitch
+    - { role: openvswitch, when: neutron.plugin == 'ovs' }
 
 - name: openstack network services
   hosts: network
@@ -79,6 +79,7 @@
   hosts: network:compute
   tasks:
     - service: name=neutron-openvswitch-agent state=started
+      when: neutron.plugin == 'ovs'
 
 - name: nova code and config
   hosts: controller:db:compute
@@ -159,6 +160,7 @@
   hosts: network:compute
   tasks:
     - service: name=neutron-openvswitch-agent state=restarted
+      when: neutron.plugin == 'ovs'
 
 - name: Install monitoring
   include: playbooks/monitoring.yml

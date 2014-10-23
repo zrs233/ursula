@@ -21,10 +21,13 @@
       lineinfile: dest=/etc/hosts regexp={{ testenv_instance_names[2] }} insertafter=EOF line="127.0.1.1 {{ testenv_instance_names[2] }}"
 
 - hosts: all
+  serial: 10
   tasks:
   - name: add an apt proxy
     template: src=../../../roles/common/templates/etc/apt/apt.conf.d/01proxy dest=/etc/apt/apt.conf.d/01proxy owner=root group=root mode=0644
     when: common.apt_cache is defined
+  - name: Add BlueBox OpenStack PPA
+    apt_repository: repo='ppa:blueboxgroup/openstack'
   - name: Run a full dist-upgrade (we don't want to preform this each run on existing clusters)
     apt: update_cache=yes cache_valid_time=3600 upgrade=dist
   - name: Ubuntu 14.04 style /etc/network/interfaces.d/ directory
@@ -41,3 +44,22 @@
   - shell: ifdown eth0; ifup eth0
   - name: interfaces.d/br-ex.cfg for floating IP pool
     template: src=../templates/etc/network/interfaces.d/br-ex.cfg dest=/etc/network/interfaces.d/br-ex.cfg
+
+- hosts: network:compute
+  serial: 10
+  tasks:
+  - name: Upgrade kernel to support VXLAN
+    apt: pkg=linux-generic-lts-raring
+    when: neutron.plugin == 'ml2'
+    notify: restart machine
+  - meta: flush_handlers
+  - name: waiting for server to come back
+    local_action: wait_for host={{ inventory_hostname }} port=22 state=started
+    sudo: false
+  handlers:
+  - name: restart machine
+    command: shutdown -r now
+    async: 0
+    poll: 0
+    ignore_errors: true
+

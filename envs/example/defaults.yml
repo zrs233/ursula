@@ -104,6 +104,7 @@ cinder:
       control_location: front-end
 
 neutron:
+  plugin: ml2
   enable_lbaas: true
   physical_bridge: br-ex
   physical_network: br-ex
