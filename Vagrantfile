@@ -12,6 +12,24 @@ BOX_URL = ENV['URSULA_BOX_URL'] || 'http://files.vagrantup.com/precise64.box'
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.ssh.forward_agent = true
+
+  config.vm.define "workstation" do |workstation_config|
+    workstation_config.vm.box = "precise64"
+    workstation_config.vm.box_url = BOX_URL
+    workstation_config.vm.hostname = "workstation"
+    workstation_config.vm.provider "virtualbox" do |v|
+      v.memory = 1024
+    end
+    workstation_config.vm.provision :shell, :inline => <<-SCRIPT
+      sleep 5
+      /vagrant/bin/install-ubuntu
+      apt-get install -y curl vim wget
+    SCRIPT
+    if File.exist?("#{ENV['HOME']}/.stackrc")
+      config.vm.provision "file", source: "~/.stackrc", destination: "/home/vagrant/.stackrc"
+    end
+  end
+
   (1..NUM_CONTROLLERS).each do |i|
     config.vm.define "controller#{i}" do |controller_config|
       controller_config.vm.box = "precise64"
