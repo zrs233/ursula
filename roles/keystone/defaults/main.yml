@@ -1,6 +1,6 @@
 ---
 keystone:
-  rev: e6adb2f75a2cbee9
+  rev: 9aec35a9d4d154546f5c456cece6055de5c179f5
   token_expiration_in_seconds: 86400
 
   logs:

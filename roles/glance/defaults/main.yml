@@ -1,6 +1,6 @@
 ---
 glance:
-  rev: 252fe8572400c25c35
+  rev: fd4a8b9cab7c92b9f7a4a3077206f119789f3162
   api_workers: 5
   sync:
     enabled: true
