@@ -33,16 +33,9 @@
 
 - file: dest=/etc/keystone state=directory
 - file: dest=/var/log/keystone state=directory mode=0755 owner=keystone group=keystone
-- file: dest=/var/log/keystone/error.log state=touch mode=0755 owner=keystone group=keystone
-- file: dest=/var/log/keystone/access.log state=touch mode=0755 owner=keystone group=keystone
 
 - name: keystone.conf
   template: src=etc/keystone/keystone.conf dest=/etc/keystone/keystone.conf mode=0644
-  notify:
-    - restart keystone services
-
-- name: logging.conf
-  template: src=etc/keystone/logging.conf dest=/etc/keystone/logging.conf mode=0644
   notify:
     - restart keystone services
 
@@ -51,3 +44,5 @@
   notify:
     - restart keystone services
 
+- name: keystone services - start and enable
+  service: name=keystone state=started enabled=yes
