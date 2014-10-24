@@ -1,0 +1,10 @@
+- name: keystone logging.conf
+  file: dest=/etc/keystone/logging.conf state=absent
+- file: dest=/var/log/keystone/error.log state=absent
+- file: dest=/var/log/keystone/access.log state=absent
+
+- name: nova logging.conf
+  file: dest=/etc/nova/logging.conf state=absent
+
+- name: cinder logging.conf
+  file: dest=/etc/cinder/logging.conf state=absent

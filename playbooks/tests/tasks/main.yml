@@ -3,3 +3,5 @@
 - include: controller.yml
 - include: network.yml
 - include: integration.yml
+- include: logging.yml
+  when: rsyslog.follow.enabled

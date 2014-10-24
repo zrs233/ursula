@@ -1,0 +1,19 @@
+---
+- hosts: controller
+  vars_files:
+    - ../../../roles/logging/defaults/main.yml
+  tasks:
+    - name: Gather file stat info from log files
+      stat: path={{ item.value }} get_md5=no
+      register: logs_exist
+      with_dict: rsyslog.follow.logs
+    - name: Check log files exist
+      fail: msg="File {{ item.item.value }} is zero!"
+      when: item.stat.size is defined and item.stat.exists == False
+      with_items: logs_exist.results
+      ignore_errors: true
+    - name: Check log files non-zero
+      fail: msg="File {{ item.item.value }} is zero!"
+      when: item.stat.size is defined and item.stat.size == 0
+      with_items: logs_exist.results
+      ignore_errors: true
