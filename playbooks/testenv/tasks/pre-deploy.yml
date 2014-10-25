@@ -23,6 +23,11 @@
 - hosts: all
   serial: 10
   tasks:
+ # Set Locale
+  - name: Generate en_US locale
+    command: /usr/sbin/locale-gen en_US
+  - name: set locale to en_US
+    command: /usr/sbin/update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8  
   - name: add an apt proxy
     template: src=../../../roles/common/templates/etc/apt/apt.conf.d/01proxy dest=/etc/apt/apt.conf.d/01proxy owner=root group=root mode=0644
     when: common.apt_cache is defined
