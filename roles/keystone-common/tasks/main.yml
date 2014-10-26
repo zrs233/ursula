@@ -43,6 +43,3 @@
   template: src=etc/keystone/policy.json dest=/etc/keystone/policy.json mode=0644
   notify:
     - restart keystone services
-
-- name: keystone services - start and enable
-  service: name=keystone state=started enabled=yes
