@@ -148,6 +148,7 @@
     - role: neutron-control
       tags: ['openstack', 'neutron', 'control']
 
+
 - name: neutron core data plane
   hosts: compute:network
   roles:
@@ -197,6 +198,12 @@
       tags: ['openstack', 'heat', 'control']
       when: heat.enabled == True
 
+- name: ironic control plane
+  hosts: controller
+  roles:
+    - role: ironic-control
+      tags: ['openstack', 'ironic', 'control']
+      when: ironic.enabled == True
 
 # TBD
 #- name: barbican code and config

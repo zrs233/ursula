@@ -1,0 +1,21 @@
+---
+- name: install ironic controller services
+  upstart_service: |
+    name={{ item }}
+    user=ironic
+    cmd={{ ironic.virtualenv }}/bin/{{ item }}
+    config_dirs=/etc/ironic
+  with_items:
+    - ironic-api
+    - ironic-conductor
+
+- name: start ironic controller services
+  action: service name={{ item }} state=started
+  with_items:
+    - ironic-api
+    - ironic-conductor
+
+- name: permit access to ironic (SSL)
+  ufw: rule=allow port=6384 proto=tcp
+
+- meta: flush_handlers

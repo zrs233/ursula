@@ -47,6 +47,7 @@ endpoints:
   cinder:   "{{ fqdn }}"
   heat:     "{{ fqdn }}"
   heat-cfn: "{{ fqdn }}"
+  ironic: "{{ fqdn }}"
 
 mysql:
   root_password: asdf
@@ -172,7 +173,6 @@ keystone:
     - name: demo
       password: demopass
       tenant: demo
-
     - name: nova
       password: "{{ secrets.service_password }}"
       tenant: service
@@ -186,6 +186,9 @@ keystone:
       password: "{{ secrets.service_password }}"
       tenant: service
     - name: heat
+      password: "{{ secrets.service_password }}"
+      tenant: service
+    - name: ironic
       password: "{{ secrets.service_password }}"
       tenant: service
 
@@ -218,6 +221,9 @@ keystone:
       tenant: service
       role: admin
     - user: heat
+      tenant: service
+      role: service
+    - user: ironic
       tenant: service
       role: service
 
@@ -264,6 +270,12 @@ keystone:
       public_url: https://{{ endpoints.main }}:8001/v1
       internal_url: https://{{ endpoints.main }}:8001/v1
       admin_url: https://{{ endpoints.main }}:8001/v1
+    - name: ironic
+      type: baremetal
+      description: 'Ironic bare metal provisioning service'
+      public_url: https://{{ endpoints.main }}:6384
+      internal_url: https://{{ endpoints.main }}:6384
+      admin_url: https://{{ endpoints.main }}:6384
 
 ssl:
   crt: |
@@ -332,4 +344,7 @@ common:
     enabled: false
 
 heat:
+  enabled: False
+
+ironic:
   enabled: False
