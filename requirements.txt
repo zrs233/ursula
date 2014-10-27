@@ -5,3 +5,5 @@ python-keystoneclient
 python-glanceclient
 python-cinderclient
 oslo.utils
+tox
+pep8

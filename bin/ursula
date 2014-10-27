@@ -25,7 +25,7 @@ URSULA_SSH_FORWARD=false
 
 process_opts() {
   # Prefer the use of explicit shortopts
-  while getopts "hfe:p:x:" OPTION; do
+  while getopts "htfe:p:x:" OPTION; do
     case $OPTION in
       h)
         usage
@@ -40,6 +40,9 @@ process_opts() {
       p)
         readonly PLAYBOOK=${OPTARG}
         local PLAYBOOK_GETOPTS=true
+        ;;
+      t)
+        readonly TEST_ARGS='--syntax-check --list-tasks'
         ;;
       x)
         readonly EXTRA_ANSIBLE_ARGS=${OPTARG}
@@ -107,7 +110,7 @@ main() {
   for pbook in ${PREDEPLOY_PLAYBOOK} ${PLAYBOOK} ${POSTDEPLOY_PLAYBOOK}; do
     if [ -f ${pbook} ]; then
       command=$(ansible_command ${HOSTS} "root" ${pbook})
-      $command $EXTRA_ANSIBLE_ARGS
+      $command $EXTRA_ANSIBLE_ARGS $TEST_ARGS
 
       if [ "$?" != "0" ]; then
         echo "Run failed on playbook ${pbook}"
