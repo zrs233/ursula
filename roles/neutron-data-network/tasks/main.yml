@@ -40,7 +40,3 @@
 
 - name: install ipchanged
   include: ipchanged.yml
-
-- name: install neutron lbaas if enabled
-  include: neutron-lbaas.yml
-  when: neutron.enable_lbaas

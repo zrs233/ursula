@@ -15,6 +15,5 @@
     - neutron-server
     - neutron-dhcp-agent
     - neutron-l3-agent
-    - neutron-lbaas-agent
     - neutron-openvswitch-agent
     - neutron-linuxbridge-agent
