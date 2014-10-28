@@ -185,11 +185,11 @@
   roles:
     - role: heat
       tags: ['openstack', 'heat', 'control']
-      when: heat.enabled
+      when: heat.enabled == True
     - role: openstack-database
       database_name: heat
       tags: ['openstack', 'heat', 'control']
-      when: heat.enabled
+      when: heat.enabled == True
 
 
 # TBD
