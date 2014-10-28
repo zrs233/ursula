@@ -1,4 +1,4 @@
-ansible==1.4.4
+ansible==1.7.2
 python-novaclient==2.19.0
 python-neutronclient==2.3.6
 python-keystoneclient
