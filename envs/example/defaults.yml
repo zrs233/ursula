@@ -105,7 +105,6 @@ cinder:
 
 neutron:
   plugin: ml2
-  enable_lbaas: true
   physical_bridge: br-ex
   physical_network: br-ex
   tenant_network_type: vxlan
@@ -333,4 +332,4 @@ common:
     enabled: false
 
 heat:
-  enabled: True
+  enabled: False

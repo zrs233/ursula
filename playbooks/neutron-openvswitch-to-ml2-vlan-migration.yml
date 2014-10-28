@@ -16,7 +16,6 @@
     with_items:
     - neutron-dhcp-agent
     - neutron-l3-agent
-    - neutron-lbaas-agent
 
 - hosts: controller
   serial: 10
@@ -56,7 +55,6 @@
     - policy.json
     - plugins/ml2/ml2_plugin.ini
     - plugins/linuxbridge/linuxbridge_conf.ini
-    - services/loadbalancer/haproxy/lbaas_agent.ini
 
 - hosts: controller:db:compute
   serial: 10
@@ -85,7 +83,6 @@
     with_items:
     - neutron-dhcp-agent
     - neutron-l3-agent
-    - neutron-lbaas-agent
 
 - hosts: compute
   serial: 10

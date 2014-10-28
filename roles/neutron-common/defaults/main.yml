@@ -1,7 +1,6 @@
 ---
 neutron:
   rev: b5c4152ac9958e
-  enable_lbaas: False
   api_workers: 3
   agent_down_time: 20
   report_interval: 4
@@ -10,4 +9,3 @@ neutron:
     - 8.8.4.4
   service_plugins:
     - neutron.services.l3_router.l3_router_plugin.L3RouterPlugin
-    - neutron.services.loadbalancer.plugin.LoadBalancerPlugin
