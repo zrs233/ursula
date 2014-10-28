@@ -142,16 +142,16 @@
     - role: neutron-control
       tags: ['openstack', 'neutron', 'control']
 
-- name: neutron network data plane
-  hosts: network
-  roles:
-    - role: neutron-data-network
-      tags: ['openstack', 'neutron', 'data']
-
-- name: neutron compute data plane
+- name: neutron core data plane
   hosts: compute:network
   roles:
     - role: neutron-data
+      tags: ['openstack', 'neutron', 'data']
+
+- name: neutron network services data plane
+  hosts: network
+  roles:
+    - role: neutron-data-network
       tags: ['openstack', 'neutron', 'data']
 
 - name: horizon code and config

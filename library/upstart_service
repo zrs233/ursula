@@ -24,20 +24,13 @@ from hashlib import md5
 from jinja2 import Environment
 
 UPSTART_TEMPLATE = """
-{% if start_on -%}
 start on {{ start_on }}
-{% endif -%}
-{% if stop_on  -%}
 stop on {{ stop_on }}
-{% endif -%}
 
 {% if description -%}
 description {{ description }}
 
 {% endif -%}
-start on runlevel [{{ start_runlevels }}]
-stop on runlevel [{{ stop_runlevels }}]
-
 {% if prestart_script -%}
 pre-start script
     {{ prestart_script }}
@@ -47,7 +40,7 @@ end script
 respawn
 {% endif -%}
 
-exec start-stop-daemon --start --chuid {{ user }} --exec {{ cmd }} {{ conf_dirs }} {{ conf_files }}
+exec start-stop-daemon --start --chuid {{ user }} {{ pidfile }} --exec {{ cmd }} {{ conf_dirs }} {{ conf_files }}
 """
 
 def main():
@@ -61,13 +54,12 @@ def main():
             config_files=dict(default=None),
             description=dict(default=None),
             state=dict(default='present'),
-            start_runlevels=dict(default='2345'),
-            stop_runlevels=dict(default='!2345'),
-            start_on=dict(default=None),
-            stop_on=dict(default=None),
+            start_on=dict(default='runlevel [2345]'),
+            stop_on=dict(default='runlevel [!2345]'),
             prestart_script=dict(default=None),
             respawn=dict(default=True),
             path=dict(default=None),
+            pidfile=dict(default=None)
         )
     )
 
@@ -93,6 +85,10 @@ def main():
             else:
                 module.exit_json(changed=True, result="changed")
 
+        pidfile = ''
+        if module.params['pidfile'] and len(module.params['pidfile']):
+            pidfile = '--make-pidfile --pidfile %s' % module.params['pidfile']
+
         conf_dirs = ''
         if module.params['config_dirs']:
             conf_dirs = '-- '
@@ -106,6 +102,7 @@ def main():
                 conf_files += '--config-file %s ' % filename
 
         template_vars = module.params
+        template_vars['pidfile'] = pidfile
         template_vars['conf_dirs'] = conf_dirs
         template_vars['conf_files'] = conf_files
 
