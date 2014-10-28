@@ -5,7 +5,6 @@
 - hosts: compute
   serial: 10
   vars:
-    locale: en_US.UTF-8
     timezone: Etc/UTC
   tasks:
   # Bail if run against existing compute nodes
@@ -41,9 +40,9 @@
 
   # Set Locale
   - name: Generate locales
-    command: /usr/sbin/locale-gen {{ locale }}
-  - name: set locale to {{ locale }}
-    command: /usr/sbin/update-locale LANG={{ locale }} LC_ALL={{ locale }}
+    command: /usr/sbin/locale-gen en_US
+  - name: set locale to en_US.UTF-8
+    command: /usr/sbin/update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
 
   # Set Time zone
   - name: set /etc/localtime to {{ timezone }}
