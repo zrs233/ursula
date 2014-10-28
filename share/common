@@ -1,10 +1,6 @@
 set -e
 
 # Shared amongst test suite and ursula binaries
-check_common_deps() {
-  ansible --version | grep "ansible 1.[456]" >/dev/null || die "[Error] Ansible 1.4 - 1.6 is required."
-}
-
 ansible_command() {
   local inventory=$1
   local user=$2

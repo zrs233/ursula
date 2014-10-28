@@ -6,6 +6,4 @@ which nova >/dev/null || die "nova client must be present"
 
 which ansible-playbook >/dev/null || die "ansible-playbook must be present"
 
-check_common_deps
-
 [ -e ${STACK_RC} ] || die "${STACK_RC} must be present"

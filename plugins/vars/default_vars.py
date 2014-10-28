@@ -18,8 +18,6 @@ import collections
 import yaml
 
 from ansible.constants import DEFAULTS, get_config, load_config_file
-from ansible.inventory.vars_plugins.group_vars import VarsModule \
-    as GroupVarsModule
 
 import ansible.errors as errors
 import ansible.inventory as inventory
@@ -36,10 +34,11 @@ def deep_update_dict(d, u):
     return d
 
 
-class VarsModule(GroupVarsModule):
+class VarsModule(object):
 
-    def init(self, inventory):
-        super(VarsModule, self).__init__(inventory)
+    def __init__(self, inventory):
+        self.inventory = inventory
+        self.inventory_basedir = inventory.basedir()
 
     def _get_defaults(self):
         p = load_config_file()
@@ -48,28 +47,9 @@ class VarsModule(GroupVarsModule):
         if defaults_file:
             return yaml.load(open(defaults_file))
 
-    def run(self, host):
+    def run(self, host, vault_password=None):
         default_vars = self._get_defaults()
-        group_vars = super(VarsModule, self).run(host)
+        group_vars = host.get_variables()
         if default_vars:
             return deep_update_dict(default_vars, group_vars)
         return group_vars
-
-
-def monkeypatch_get_variables(self, hostname, vault_password=None):
-    host = self.get_host(hostname)
-    if host is None:
-        raise errors.AnsibleError("host not found: %s" % hostname)
-
-    vars = {}
-    vars_results = [ plugin.run(host) for plugin in self._vars_plugins ]
-    for updated in vars_results:
-        if updated is not None:
-            vars = utils.combine_vars(vars, updated)
-
-    vars = utils.combine_vars(vars, host.get_variables())
-    if self.parser is not None:
-        vars = utils.combine_vars(vars, self.parser.get_host_variables(host))
-    return vars
-
-inventory.Inventory._get_variables = monkeypatch_get_variables
