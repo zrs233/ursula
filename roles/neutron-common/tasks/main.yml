@@ -21,6 +21,14 @@
   user: name=neutron comment=neutron shell=/bin/false system=yes home=/nonexistent createhome=no
   when: neutron_user.rc != 0
 
+- name: neutron sudoer
+  template: |
+    src=etc/sudoers.d/neutron
+    dest=/etc/sudoers.d/neutron
+    owner=root
+    group=root
+    mode=0440
+
 - name: get neutron source repo
   git: |
     repo={{ openstack.git_mirror }}/neutron.git
@@ -58,23 +66,31 @@
 - fail: msg="Invalid Neutron plugin, must be either ml2 or ovs"
   when: neutron.plugin != 'ovs' and neutron.plugin != 'ml2'
 
+- file: dest=/etc/neutron/plugins/ml2 state=directory
+  when: neutron.plugin == 'ml2'
+
+- template: |
+    src=etc/neutron/plugins/ml2/ml2_plugin.ini
+    dest=/etc/neutron/plugins/ml2/ml2_plugin.ini
+    mode=0644
+  when: neutron.plugin == 'ml2'
+  notify:
+    - restart neutron services
+
+- file: dest=/etc/neutron/plugins/openvswitch state=directory
+  when: neutron.plugin == 'ovs'
+
+- template: |
+    src=etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini
+    dest=/etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini
+    mode=0644
+  when: neutron.plugin == 'ovs'
+  notify:
+    - restart neutron services
+
 - template: |
     src=etc/neutron/services/loadbalancer/haproxy/lbaas_agent.ini
     dest=/etc/neutron/services/loadbalancer/haproxy/lbaas_agent.ini
     mode=0644
   notify:
     - restart neutron services
-
-- template: src=etc/init/neutron-linuxbridge-agent.conf dest=/etc/init/neutron-linuxbridge-agent.conf
-  notify:
-    - restart neutron services
-
-- service: name=neutron-linuxbridge-agent state=started
-
-- name: neutron sudoer
-  template: |
-    src=etc/sudoers.d/neutron
-    dest=/etc/sudoers.d/neutron
-    owner=root
-    group=root
-    mode=0440
