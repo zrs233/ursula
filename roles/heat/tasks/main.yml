@@ -34,7 +34,7 @@
   upstart_service:
     name={{ item }}
     user=heat
-    command=/usr/local/bin/{{ item }}
+    cmd=/usr/local/bin/{{ item }}
   with_items:
     - heat-api
     - heat-api-cfn
