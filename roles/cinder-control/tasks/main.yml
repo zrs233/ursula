@@ -1,0 +1,19 @@
+---
+- name: install cinder controller services
+  upstart_service: |
+    name={{ item }}
+    user=cinder
+    cmd=/usr/local/bin/{{ item }}
+    config_dirs=/etc/cinder
+  with_items:
+    - cinder-api
+    - cinder-scheduler
+
+- name: start nova controller services
+  action: service name={{ item }} state=started
+  with_items:
+    - nova-api
+    - nova-scheduler
+
+- name: Permit access to Cinder
+  command: ufw allow 8778/tcp

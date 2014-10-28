@@ -19,6 +19,7 @@
     - python-software-properties
     - python-virtualenv
     - python-mysqldb
+    - python-jinja2
 
 - pip: name=pip version=1.4.1
   when: ansible_distribution_version == "12.04"

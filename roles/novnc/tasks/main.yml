@@ -1,0 +1,22 @@
+---
+- name: novnc repo
+  git: |
+    repo={{ controller.novnc_repo }}
+    dest=/usr/share/novnc
+    version={{ controller.novnc_rev }}
+    update={{ openstack.git_update }}
+
+- name: install novnc service
+  upstart_service: |
+    name=nova-compute
+    user=nova
+    cmd=/usr/local/bin/nova-compute
+    config_dirs=/etc/nova
+
+
+- template: src=etc/init/nova-novncproxy.conf dest=/etc/init/nova-novncproxy.conf
+
+- service: name=nova-novncproxy state=started
+
+- name: Permit access to NoVNC
+  command: ufw allow 6081/tcp

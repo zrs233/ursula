@@ -278,6 +278,6 @@ def main():
             _delete_network(module, network_id, neutron)
             module.exit_json(changed = True, result = "Deleted")
 
-# this is magic, see lib/ansible/module.params['common.py
-from ansible.module_utils.basic import *
+# this is magic, see lib/ansible/module_common.py
+#<<INCLUDE_ANSIBLE_MODULE_COMMON>>
 main()

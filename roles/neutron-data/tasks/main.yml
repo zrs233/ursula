@@ -1,0 +1,35 @@
+---
+- file: dest=/etc/neutron/plugins/ml2 state=directory
+  when: neutron.plugin == 'ml2'
+- file: dest=/etc/neutron/plugins/openvswitch state=directory
+  when: neutron.plugin == 'ovs'
+
+- template: |
+    src=etc/neutron/plugins/ml2/ml2_plugin.ini
+    dest=/etc/neutron/plugins/ml2/ml2_plugin.ini
+    mode=0644
+  when: neutron.plugin == 'ml2'
+  notify:
+    - restart neutron services
+
+- template: |
+    src=etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini
+    dest=/etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini
+    mode=0644
+  when: neutron.plugin == 'ovs'
+  notify:
+    - restart neutron services
+
+- name: install neutron-openvswitch-agent service
+  upstart_service: |
+    name=neutron-openvswitch-agent
+    user=neutron
+    cmd=/usr/local/bin/neutron-openvswitch-agent
+    config_dirs=/etc/neutron
+    config_files=/etc/neutron/neutron.conf,/etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini
+    prestart_script=/usr/local/bin/neutron-ovs-cleanup
+  when: neutron.plugin == 'ovs'
+
+- name: start neutron-openvswitch-agent
+  service: name=neutron-openvswitch-agent state=started
+  when: neutron.plugin == 'ovs'

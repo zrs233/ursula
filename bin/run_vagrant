@@ -31,6 +31,7 @@ for I in ${BOXES}; do
     vagrant ssh-config ${I} >> ${TEMPFILE}
 done
 
+shift
 export ANSIBLE_SSH_ARGS="${ANSIBLE_SSH_ARGS} -F ${TEMPFILE}"
-./bin/ursula envs/vagrant/${TYPE} site.yml -s -u vagrant
+time ./bin/ursula envs/vagrant/${TYPE} site.yml -s -u vagrant $@
 rm ${TEMPFILE}

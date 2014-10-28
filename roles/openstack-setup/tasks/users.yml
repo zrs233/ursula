@@ -1,11 +1,10 @@
 ---
 - name: keystone tenants
-  keystone_user: >
+  keystone_user: |
     tenant={{ item }}
     tenant_description="{{ item }} tenant"
     token={{ secrets.admin_token }}
   with_items: keystone.tenants
-
 
 - name: keystone users
   keystone_user: >

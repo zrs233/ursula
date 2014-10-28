@@ -1,6 +1,0 @@
----
-- name: barbican start script
-  template: src=etc/init/barbican-api.conf dest=/etc/init/barbican-api.conf mode=0644
-
-- name: barbican is running
-  service: name=barbican-api state=started

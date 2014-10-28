@@ -1,0 +1,68 @@
+---
+- name: Check if glance user exists
+  action: shell getent passwd glance
+  register: glance_user
+  ignore_errors: True
+  changed_when: False
+
+- name: glance user
+  user: name=glance shell=/bin/false createhome=no
+  when: glance_user.rc == 0
+
+- name: glance user
+  user: name=glance comment=glance shell=/bin/false system=yes home=/nonexistent createhome=no
+  when: glance_user.rc != 0
+
+- name: get glance source repo
+  git: |
+    repo={{ openstack.git_mirror }}/glance.git
+    dest=/opt/stack/glance
+    version={{ glance.rev }}
+    update={{ openstack.git_update }}
+  register: result
+  until: result|success
+  retries: 3
+  delay: 60
+  notify:
+    - pip install glance
+    - restart glance services
+- meta: flush_handlers
+
+- name: /etc/glance
+  file: dest=/etc/glance state=directory
+
+- file: dest=/var/lib/glance state=directory owner=glance group=glance
+- file: dest=/var/lib/glance/images state=directory owner=glance group=glance
+- file: dest=/var/cache/glance state=directory mode=0700 owner=glance group=glance
+- file: dest=/var/log/glance state=directory mode=0755 owner=glance group=glance
+
+- name: install glance services
+  upstart_service: |
+    name={{ item }}
+    user=glance
+    cmd=/usr/local/bin/{{ item }}
+  with_items:
+    - glance-api
+    - glance-registry
+
+- name: start glance services
+  service: name={{ item }} state=started
+  with_items:
+    - glance-api
+    - glance-registry
+
+- name: glance config
+  action: template src={{ item }} dest=/etc/glance mode=0644
+  with_fileglob: ../templates/etc/glance/*
+  notify:
+    - restart glance services
+
+- name: permit access to glance
+  command: ufw allow {{ item }}/tcp
+  with_items:
+    - 9292
+    - 9293
+
+- name: setup glance image replication
+  include: image-sync.yml
+  when: glance.sync.enabled
