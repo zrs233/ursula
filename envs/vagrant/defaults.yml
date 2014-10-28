@@ -82,11 +82,10 @@ cinder:
   volume_file_size: 2G
 
 neutron:
-  plugin: ovs
+  plugin: ml2
   physical_bridge: br-ex
   physical_network: br-ex
   tenant_network_type: vlan
-  enable_lbaas: false
   enable_tunneling: False
   tunnel_types:
     - vxlan

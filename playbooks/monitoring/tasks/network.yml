@@ -6,8 +6,4 @@
     - neutron-metadata-agent
   notify: restart sensu-client
 
-- sensu_process_check: service=neutron-lbaas-agent
-  notify: restart sensu-client
-  when: neutron.enable_lbaas
-
 - sensu_process_check: service=/usr/local/sbin/ipchanged

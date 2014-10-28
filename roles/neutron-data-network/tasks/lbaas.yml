@@ -1,7 +1,0 @@
----
-- template: |
-    src=etc/neutron/services/loadbalancer/haproxy/lbaas_agent.ini
-    dest=/etc/neutron/services/loadbalancer/haproxy/lbaas_agent.ini
-    mode=0644
-  notify:
-    - restart neutron services

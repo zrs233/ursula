@@ -1,8 +1,0 @@
----
-- name: configure neutron-lbaas-agent
-  template: src=etc/init/neutron-lbaas-agent.conf dest=/etc/init/neutron-lbaas-agent.conf
-
-# SERVICE CREATE
-
-- name: start neutron-lbaas-agent
-  service: name=neutron-lbaas-agent state=started
