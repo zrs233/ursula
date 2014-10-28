@@ -1,86 +1,65 @@
 ---
 - name: neutron networks
-  action: |
-    neutron_network
-      name={{ item.name }}
-      provider_network_type={{ item.network_type }}
-      state=present
-      shared={{ item.shared }}
-      router_external={{ item.external }}
-      provider_segmentation_id={{ item.segmentation_id }}
-      provider_physical_network={{ item.provider_physical_network }}
-      auth_url=https://{{ endpoints.main }}:5001/v2.0/
-      login_tenant_name=admin
-      login_password={{ secrets.admin_password }}
-      {% if client.self_signed_cert -%}
-      cacert=/opt/stack/ssl/openstack.crt
-      {% endif -%}
+  neutron_network: |
+    name={{ item.name }}
+    provider_network_type={{ item.network_type }}
+    state=present
+    shared={{ item.shared }}
+    router_external={{ item.external }}
+    provider_segmentation_id={{ item.segmentation_id }}
+    provider_physical_network={{ item.provider_physical_network }}
+    auth_url=https://{{ endpoints.main }}:5001/v2.0/
+    login_tenant_name=admin
+    login_password={{ secrets.admin_password }}
+    cacert=/opt/stack/ssl/openstack.crt
   with_items: neutron.networks
 
 - name: neutron subnets
-  action: |
-    neutron_subnet
-      name={{ item.name }}
-      network_name={{ item.network_name }}
-      cidr={{ item.cidr }}
-      enable_dhcp={{ item.enable_dhcp }}
-      gateway_ip={{ item.gateway_ip }}
-      ip_version={{ item.ip_version }}
-      state=present
-      auth_url=https://{{ endpoints.main }}:5001/v2.0/
-      login_tenant_name=admin
-      login_password={{ secrets.admin_password }}
-      {% if item.allocation_pool_start is defined -%}
-      allocation_pool_start={{ item.allocation_pool_start }}
-      {% endif -%}
-      {% if item.allocation_pool_end is defined -%}
-      allocation_pool_end={{ item.allocation_pool_end }}
-      {% endif -%}
-      {% if client.self_signed_cert -%}
-      cacert=/opt/stack/ssl/openstack.crt
-      {% endif -%}
+  neutron_subnet: |
+    name={{ item.name }}
+    network_name={{ item.network_name }}
+    cidr={{ item.cidr }}
+    enable_dhcp={{ item.enable_dhcp }}
+    gateway_ip={{ item.gateway_ip }}
+    ip_version={{ item.ip_version }}
+    state=present
+    auth_url=https://{{ endpoints.main }}:5001/v2.0/
+    login_tenant_name=admin
+    login_password={{ secrets.admin_password }}
+    cacert=/opt/stack/ssl/openstack.crt
   with_items: neutron.subnets
 
 - name: neutron routers
-  action: |
-    neutron_router
-      state=present
-      name={{ item.name }}
-      tenant_name={{ item.tenant_name }}
-      admin_state_up=true
-      auth_url=https://{{ endpoints.main }}:5001/v2.0/
-      login_tenant_name=admin
-      login_password={{ secrets.admin_password }}
-      {% if client.self_signed_cert -%}
-      cacert=/opt/stack/ssl/openstack.crt
-      {% endif -%}
+  neutron_router: |
+    state=present
+    name={{ item.name }}
+    tenant_name={{ item.tenant_name }}
+    admin_state_up=true
+    auth_url=https://{{ endpoints.main }}:5001/v2.0/
+    login_tenant_name=admin
+    login_password={{ secrets.admin_password }}
+    cacert=/opt/stack/ssl/openstack.crt
   with_items: neutron.routers
 
 - name: neutron routers gateways
-  action: |
-    neutron_router_gateway
-      state=present
-      router_name={{ item.name }}
-      network_name=external
-      auth_url=https://{{ endpoints.main }}:5001/v2.0/
-      login_tenant_name=admin
-      login_password={{ secrets.admin_password }}
-      {% if client.self_signed_cert -%}
-      cacert=/opt/stack/ssl/openstack.crt
-      {% endif -%}
+  neutron_router_gateway: |
+    state=present
+    router_name={{ item.name }}
+    network_name=external
+    auth_url=https://{{ endpoints.main }}:5001/v2.0/
+    login_tenant_name=admin
+    login_password={{ secrets.admin_password }}
+    cacert=/opt/stack/ssl/openstack.crt
   with_items: neutron.routers
 
 - name: neutron router interfaces
-  action: |
-    neutron_router_interface
-      router_name={{ item.router_name }}
-      subnet_name={{ item.subnet_name }}
-      tenant_name={{ item.tenant_name }}
-      state=present
-      auth_url=https://{{ endpoints.main }}:5001/v2.0/
-      login_tenant_name=admin
-      login_password={{ secrets.admin_password }}
-      {% if client.self_signed_cert -%}
-      cacert=/opt/stack/ssl/openstack.crt
-      {% endif -%}
+  neutron_router_interface: |
+    router_name={{ item.router_name }}
+    subnet_name={{ item.subnet_name }}
+    tenant_name={{ item.tenant_name }}
+    state=present
+    auth_url=https://{{ endpoints.main }}:5001/v2.0/
+    login_tenant_name=admin
+    login_password={{ secrets.admin_password }}
+    cacert=/opt/stack/ssl/openstack.crt
   with_items: neutron.router_interfaces

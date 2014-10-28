@@ -1,0 +1,46 @@
+---
+- name: install neutron-data-network packages
+  apt: pkg={{ item }}
+  with_items:
+    - dnsmasq
+    - dnsmasq-utils
+    - iputils-arping
+    - ucarp
+
+- name: configure dnsmasq
+  include: dnsmasq.yml
+
+- name: ensure ovs br-ex bridge present
+  ovs_bridge: name=br-ex state=present
+  when: neutron.plugin == 'ovs'
+  notify:
+    - ifup br-ex
+
+- include: igmp-router.yml
+  when: neutron.plugin == 'ml2' and 'vxlan' in neutron.tunnel_types
+
+- name: install neutron-data-network services
+  upstart_service: |
+    name={{ item.name }}
+    user=neutron
+    cmd=/usr/local/bin/{{ item.name }}
+    config_dirs=/etc/neutron
+    config_files=/etc/neutron/neutron.conf,{{ item.config_files }}
+  with_items:
+    - { name: neutron-dhcp-agent, config_files: /etc/neutron/dhcp_agent.ini }
+    - { name: neutron-l3-agent, config_files: /etc/neutron/l3_agent.ini }
+    - { name: neutron-metadata-agent, config_files: /etc/neutron/metadata_agent.ini }
+
+- name: start neutron-data-network services
+  service: name={{ item }} state=started
+  with_items:
+    - neutron-l3-agent
+    - neutron-dhcp-agent
+    - neutron-metadata-agent
+
+- name: install ipchanged
+  include: ipchanged.yml
+
+- name: install neutron lbaas if enabled
+  include: neutron-lbaas.yml
+  when: neutron.enable_lbaas

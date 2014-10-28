@@ -82,3 +82,12 @@
 - name: bootstrap any secondary nodes
   service: name=mysql state=started
   when: not should_bootstrap_as_primary and not already_bootstrapped.rc == 0
+
+- name: remove anonymous users
+  mysql_user: |
+    name=''
+    host={{ item }}
+    state=absent
+  with_items:
+    - localhost
+    - "{{ ansible_hostname }}"

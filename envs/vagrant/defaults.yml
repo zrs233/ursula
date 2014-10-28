@@ -75,38 +75,61 @@ openstack:
   git_update: yes
 
 nova:
-  libvirt_type: kvm
+  libvirt_type: qemu
 
 cinder:
   volume_file: /opt/stack/cinder-volumes
   volume_file_size: 2G
 
 neutron:
+  plugin: ovs
   physical_bridge: br-ex
   physical_network: br-ex
   tenant_network_type: vlan
-  bridge_mappings: physnet:br-eth1
   enable_lbaas: false
   enable_tunneling: False
   tunnel_types:
     - vxlan
-  network_vlan_ranges: ''
+  network_vlan_ranges: physnet:1:1
+  bridge_mappings: physnet:br-eth0
   routers:
-    - name: default
-      tenant_name: admin
+   - name: default
+     tenant_name: admin
   router_interfaces:
-    - router_name: default
-      subnet_name: internal
-      tenant_name: admin
+   - router_name: default
+     subnet_name: internal
+     tenant_name: admin
+  networks:
+    - name: internal
+      shared: true
+      external: false
+      network_type: vlan
+      provider_physical_network: physnet
+      segmentation_id: 1
+    - name: external
+      shared: true
+      external: true
+      network_type: local
+      segmentation_id: ~
+      provider_physical_network: ~
+  subnets:
+    - name: internal
+      network_name: internal
+      cidr: 10.1.1.0/24
+      enable_dhcp: "true"
+      gateway_ip: 10.1.1.1
+      ip_version: 4
+    - name: external
+      network_name: external
+      cidr: 192.168.1.0/24
+      enable_dhcp: "false"
+      gateway_ip: 192.168.1.1
+      ip_version: 4
 
 glance:
   images:
     - name: cirros
       url: https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img
-    - name: ubuntu-12.04
-      url: http://cloud-images.ubuntu.com/precise/current/precise-server-cloudimg-amd64-disk1.img
-    - name: ubuntu-14.04
-      url: http://cloud-images.ubuntu.com/trusty/current/trusty-server-cloudimg-amd64-disk1.img
 
 keystone:
   tenants:
@@ -304,6 +327,5 @@ ssl:
     -----END RSA PRIVATE KEY-----
 
 common:
-  apt_cache: "http://ursula-cache.openstack.blueboxgrid.com:3142"
   ipmi:
     enabled: false

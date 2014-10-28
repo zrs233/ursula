@@ -1,6 +1,7 @@
 ---
 neutron:
   rev: b5c4152ac9958e
+  enable_lbaas: False
   api_workers: 3
   agent_down_time: 20
   report_interval: 4

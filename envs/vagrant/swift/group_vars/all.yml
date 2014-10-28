@@ -1,5 +1,5 @@
 ---
-stack_env: swift_testing
+stack_env: vagrant-swift
 swift_fqdn: swift.example.org
 undercloud_swift_floating_ip: "{{ hostvars[groups['swiftnode'][0]][primary_interface]['ipv4']['address'] }}"
 

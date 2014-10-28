@@ -1,0 +1,31 @@
+---
+# Ensure this file is written before kvm_intel or kvm_amd module is loaded
+- name: enable nested kvm
+  template: src=etc/modprobe.d/kvm-nested.conf dest=/etc/modprobe.d/kvm-nested.conf owner=root group=root mode=0644
+
+- name: install nova-compute packages
+  action: apt pkg={{ item }}
+  with_items:
+    - libvirt-bin
+    - python-libvirt
+    - qemu-kvm
+    - open-iscsi
+
+- lineinfile: dest=/etc/libvirt/libvirtd.conf regexp="^listen_tcp\s*=" line="listen_tcp = 1"
+  notify: restart libvirt-bin
+- lineinfile: dest=/etc/libvirt/libvirtd.conf regexp="^listen_tls\s*=" line="listen_tls = 0"
+  notify: restart libvirt-bin
+- lineinfile: dest=/etc/libvirt/libvirtd.conf regexp="^auth_tcp\s*=" line="auth_tcp = \"none\""
+  notify: restart libvirt-bin
+- lineinfile: dest=/etc/default/libvirt-bin regexp="^libvirtd_opts" line="libvirtd_opts=\"-d -l\""
+  notify: restart libvirt-bin
+
+- name: ensure kvm is supported by cpu and enabled in bios
+  command: kvm-ok
+  when: "'{{ nova.libvirt_type }}' == 'kvm'"
+  changed_when: False
+
+- name: shutdown default libvirt network is started
+  shell: ip addr show virbr0 && virsh net-destroy default || true
+- name: disable libvirt default network autostart
+  file: dest=/etc/libvirt/qemu/networks/autostart/default.xml state=absent

@@ -1,0 +1,17 @@
+---
+- file: dest=/var/cache/neutron owner=neutron state=directory
+- file: dest=/var/cache/neutron/api owner=neutron state=directory
+
+- name: install neutron-server service
+  upstart_service: |
+    name=neutron-server
+    user=neutron
+    cmd=/usr/local/bin/neutron-server
+    config_dirs=/etc/neutron
+    config_files=/etc/neutron/neutron.conf,/etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini{% if neutron.enable_lbaas %},/etc/neutron/services/loadbalancer/haproxy/lbaas_agent.ini{% endif %}{% if neutron.plugin == 'ml2' %},/etc/neutron/plugins/ml2/ml2_plugin.ini{% endif %}{% if neutron.plugin == 'ovs' %},/etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini{% endif %}
+
+- name: start neutron-server
+  action: service name=neutron-server state=started
+
+- name: Permit access to Neutron
+  command: ufw allow 9797/tcp

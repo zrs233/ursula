@@ -2,6 +2,10 @@
 controller1
 controller2
 
+[network]
+controller1
+controller2
+
 [db]
 controller1
 controller2
@@ -10,4 +14,7 @@ controller2
 compute1
 
 [compute]
+compute1
+
+[cinder_volume]
 compute1
