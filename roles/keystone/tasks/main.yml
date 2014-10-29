@@ -41,14 +41,14 @@
     cmd=/usr/local/bin/keystone-all
     config_dirs=/etc/keystone
 
-- name: start keystone
-  service: name=keystone state=started
-
 - name: configure keystone
   action: template src={{ item }} dest=/etc/keystone/ mode=0644
   with_fileglob: ../templates/etc/keystone/*
   notify:
     - restart keystone services
+
+- name: start keystone
+  service: name=keystone state=started
 
 - name: permit access to keystone
   command: ufw allow {{ item }}/tcp
