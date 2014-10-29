@@ -94,6 +94,12 @@
 
 
 # OPENSTACK SERVICES
+- name: openstack client tools
+  hosts: all
+  roles:
+    - role: client
+      tags: ['openstack', 'client']
+
 - name: keystone code and config
   hosts: controller
   roles:
@@ -198,12 +204,6 @@
 #  roles:
 #    - role: barbican
 #      tags: ['openstack', 'barbican', 'control']
-
-- name: openstack client tools
-  hosts: all
-  roles:
-    - role: client
-      tags: ['openstack', 'client']
 
 - hosts: controller[0]
   roles:
