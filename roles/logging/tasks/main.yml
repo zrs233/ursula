@@ -22,6 +22,10 @@
   template: src=etc/rsyslog.d/udp.conf dest=/etc/rsyslog.d/udp.conf mode=0644
   notify: restart rsyslog
 
+- name: send haproxy logs to local file
+  copy: src=etc/rsyslog.d/49-haproxy.conf dest=/etc/rsyslog.d/49-haproxy.conf mode=0644
+  notify: restart rsyslog
+
 - name: send swift logs to local file
   copy: src=etc/rsyslog.d/49-swift.conf dest=/etc/rsyslog.d/49-swift.conf mode=0644
   notify: restart rsyslog
