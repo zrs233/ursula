@@ -90,7 +90,7 @@ neutron:
   tunnel_types:
     - vxlan
   network_vlan_ranges: physnet:1:1
-  bridge_mappings: physnet:br-eth0
+  bridge_mappings: physnet:br-eth1
   routers:
    - name: default
      tenant_name: admin

@@ -37,6 +37,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       controller_config.vm.hostname = "controller#{i}"
       controller_config.vm.network :private_network, ip: "10.1.1.10#{i}", :netmask => "255.255.0.0"
       controller_config.vm.provider "virtualbox" do |v|
+        v.customize ["modifyvm", :id, "--nicpromisc2", "allow-all"]
         v.memory = 2048
       end
     end
@@ -49,6 +50,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       compute_config.vm.hostname = "compute#{i}"
       compute_config.vm.network :private_network, ip: "10.1.1.11#{i}", :netmask => "255.255.0.0"
       compute_config.vm.provider "virtualbox" do |v|
+        v.customize ["modifyvm", :id, "--nicpromisc2", "allow-all"]
         v.memory = 1536
       end
     end

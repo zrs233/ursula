@@ -2,6 +2,10 @@
 - name: Install XORP to provide IGMP router functionality
   apt: pkg=xorp
 
+- lineinfile: dest=/etc/init.d/xorp regexp="^\s+if start_xorp && running" line="        if start_xorp && sleep 20 && running ;  then"
+
+- lineinfile: dest=/etc/init.d/xorp regexp="^\s+restart_xorp" line="        restart_xorp && sleep 20"
+
 - name: configure xorp
   template: src=etc/xorp/config.boot dest=/etc/xorp/config.boot
   notify:
@@ -15,3 +19,4 @@
 
 - name: start and enable xorp service
   service: name=xorp state=started enabled=yes
+
