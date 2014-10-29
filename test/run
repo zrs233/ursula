@@ -14,17 +14,17 @@ source $(dirname $0)/common
 
 cd ${ROOT}
 
+if [ "${ACTION}" == "all" -o "${ACTION}" == "unit" ]; then
+  tox
+  [[ -n $PS1 ]] && echo -en "\a" > /dev/tty
+fi
+
 if [ "${ACTION}" == "all" -o "${ACTION}" == "deploy" ]; then
   time $(ansible_command \
     "envs/test/hosts" \
     ${LOGIN_USER} \
     "site.yml" \
     "true")
-  [[ -n $PS1 ]] && echo -en "\a" > /dev/tty
-fi
-
-if [ "${ACTION}" == "all" -o "${ACTION}" == "unit" ]; then
-  tox
   [[ -n $PS1 ]] && echo -en "\a" > /dev/tty
 fi
 
