@@ -31,18 +31,11 @@
   notify: restart rsyslog
 
 - name: custom CA cert directory
-  file: dest=/usr/share/ca-certificates/rsyslog state=directory mode=0755
+  file: dest=/usr/local/share/ca-certificates state=directory mode=0755
   when: rsyslog.forward.host and rsyslog.forward.tls.enabled
 
 - name: (possibly self-signed) ssl cert
-  template: src=rsyslog-forward.crt dest=/usr/share/ca-certificates/rsyslog/forward.crt mode=0644
-  notify: refresh CAs
-  when: rsyslog.forward.host and rsyslog.forward.tls.enabled
-
-- lineinfile: >
-    dest=/etc/ca-certificates.conf
-    regexp=rsyslog/forward.crt
-    line=rsyslog/forward.crt
+  template: src=rsyslog-forward.crt dest=/usr/local/share/ca-certificates/rsyslog-forward.crt mode=0644
   notify: refresh CAs
   when: rsyslog.forward.host and rsyslog.forward.tls.enabled
 
