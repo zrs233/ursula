@@ -1,6 +1,6 @@
 interfaces {
     restore-original-config-on-shutdown: false
-    interface eth0 {
+    interface {{ hostvars[inventory_hostname][primary_interface]['device'] }} {
         description: "Internal pNodes interface"
         disable: false
         default-system-config
@@ -10,8 +10,8 @@ interfaces {
 protocols {
     igmp {
         disable: false
-        interface eth0 {
-            vif eth0 {
+        interface {{ hostvars[inventory_hostname][primary_interface]['device'] }} {
+            vif {{ hostvars[inventory_hostname][primary_interface]['device'] }} {
                 disable: false
                 version: 3
             }
