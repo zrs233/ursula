@@ -9,11 +9,11 @@
     - cinder-api
     - cinder-scheduler
 
-- name: start nova controller services
+- name: start cinder controller services
   action: service name={{ item }} state=started
   with_items:
-    - nova-api
-    - nova-scheduler
+    - cinder-api
+    - cinder-scheduler
 
 - name: Permit access to Cinder
   command: ufw allow 8778/tcp
