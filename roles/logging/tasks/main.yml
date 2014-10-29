@@ -9,6 +9,10 @@
   command: ufw allow proto udp from ::1 port 514
   notify: enable ufw
 
+- name: Do not write OpenStack (local7) log files into /var/log/syslog
+  template: src=etc/rsyslog.d/50-default.conf dest=/etc/rsyslog.d/50-default.conf mode=0644
+  notify: restart rsyslog
+
 - name: Read OpenStack log files into rsyslog
   template: src=etc/rsyslog.d/follow-{{ rsyslog.follow.mode }}.conf dest=/etc/rsyslog.d/follow.conf mode=0644
   notify: restart rsyslog
