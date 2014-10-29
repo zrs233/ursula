@@ -1,0 +1,27 @@
+---
+- name: install neutron-openvswitch-agent service
+  upstart_service: |
+    name=neutron-openvswitch-agent
+    user=neutron
+    cmd=/usr/local/bin/neutron-openvswitch-agent
+    config_dirs=/etc/neutron
+    config_files=/etc/neutron/neutron.conf,/etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini
+    prestart_script=/usr/local/bin/neutron-ovs-cleanup
+  when: neutron.plugin == 'ovs'
+
+- name: start neutron-openvswitch-agent
+  service: name=neutron-openvswitch-agent state=started
+  when: neutron.plugin == 'ovs'
+
+- name: install neutron-linuxbridge-agent service
+  upstart_service: |
+    name=neutron-linuxbridge-agent
+    user=neutron
+    cmd=/usr/local/bin/neutron-linuxbridge-agent
+    config_dirs=/etc/neutron
+    config_files=/etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2_plugin.ini
+  when: neutron.plugin == 'ml2'
+
+- name: start neutron-linuxbridge-agent
+  service: name=neutron-linuxbridge-agent state=started
+  when: neutron.plugin == 'ml2'

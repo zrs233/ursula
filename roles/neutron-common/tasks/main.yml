@@ -7,7 +7,7 @@
 - name: 'Configure VXLAN to use IANA assigned port: 4789'
   copy: content="options vxlan udp_port=4789" dest=/etc/modprobe.d/vxlan-port.conf owner=root group=root mode=0644
 
-- name: Check if neutron user exists
+- name: check if neutron user exists
   action: shell getent passwd neutron
   register: neutron_user
   ignore_errors: True
@@ -20,6 +20,14 @@
 - name: neutron user
   user: name=neutron comment=neutron shell=/bin/false system=yes home=/nonexistent createhome=no
   when: neutron_user.rc != 0
+
+- name: neutron sudoer
+  template: |
+    src=etc/sudoers.d/neutron
+    dest=/etc/sudoers.d/neutron
+    owner=root
+    group=root
+    mode=0440
 
 - name: get neutron source repo
   git: |
@@ -44,10 +52,6 @@
 - meta: flush_handlers
 
 - file: dest=/etc/neutron state=directory
-- file: dest=/etc/neutron/plugins/ml2 state=directory
-  when: neutron.plugin == 'ml2'
-- file: dest=/etc/neutron/plugins/openvswitch state=directory
-  when: neutron.plugin == 'ovs'
 - file: dest=/etc/neutron/services/loadbalancer/haproxy state=directory
 - file: dest=/var/lib/neutron state=directory owner=neutron
 - file: dest=/var/cache/neutron state=directory mode=0700 owner=neutron group=neutron
@@ -59,10 +63,11 @@
   notify:
      - restart neutron services
 
-- name: neutron dnsmasq config
-  action: template src=etc/dnsmasq.conf dest=/etc/dnsmasq.conf mode=0644
-  notify:
-     - restart neutron services
+- fail: msg="Invalid Neutron plugin, must be either ml2 or ovs"
+  when: neutron.plugin != 'ovs' and neutron.plugin != 'ml2'
+
+- file: dest=/etc/neutron/plugins/ml2 state=directory
+  when: neutron.plugin == 'ml2'
 
 - template: |
     src=etc/neutron/plugins/ml2/ml2_plugin.ini
@@ -72,6 +77,9 @@
   notify:
     - restart neutron services
 
+- file: dest=/etc/neutron/plugins/openvswitch state=directory
+  when: neutron.plugin == 'ovs'
+
 - template: |
     src=etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini
     dest=/etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini
@@ -79,23 +87,3 @@
   when: neutron.plugin == 'ovs'
   notify:
     - restart neutron services
-
-- fail: msg="Invalid Neutron plugin, must be either ml2 or ovs"
-  when: neutron.plugin != 'ovs' and neutron.plugin != 'ml2'
-
-- template: |
-    src=etc/neutron/services/loadbalancer/haproxy/lbaas_agent.ini
-    dest=/etc/neutron/services/loadbalancer/haproxy/lbaas_agent.ini
-    mode=0644
-  notify:
-    - restart neutron services
-
-- template: src=etc/init/neutron-linuxbridge-agent.conf dest=/etc/init/neutron-linuxbridge-agent.conf
-  notify:
-    - restart neutron services
-
-- service: name=neutron-linuxbridge-agent state=started
-
-- name: neutron sudoer
-  template: src=etc/sudoers.d/neutron dest=/etc/sudoers.d/neutron owner=root group=root mode=0440
-

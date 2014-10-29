@@ -1,0 +1,10 @@
+---
+- name: prevent dnsmasq from add itself to /etc/resolv.conf via resolvconf
+  lineinfile: dest=/etc/default/dnsmasq regexp="^DNSMASQ_EXCEPT=" line="DNSMASQ_EXCEPT=lo"
+
+- command: resolvconf -d lo.dnsmasq
+
+- name: neutron dnsmasq config
+  action: template src=etc/dnsmasq.conf dest=/etc/dnsmasq.conf mode=0644
+  notify:
+     - restart neutron services

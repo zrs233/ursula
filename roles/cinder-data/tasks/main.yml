@@ -1,0 +1,12 @@
+---
+- name: install cinder-volume service
+  upstart_service: |
+    name=cinder-volume
+    user=cinder
+    cmd=/usr/local/bin/cinder-volume
+    config_dirs=/etc/cinder
+
+- name: start cinder-volume
+  service: |
+    name=cinder-volume
+    state=started

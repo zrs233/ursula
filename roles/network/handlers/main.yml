@@ -1,5 +1,0 @@
----
-- name: ifup br-ex
-  command: ifup br-ex
-  ignore_errors: True
-

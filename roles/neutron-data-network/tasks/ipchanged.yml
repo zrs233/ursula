@@ -1,0 +1,23 @@
+---
+- name: install ipchanged dependencies
+  apt: pkg=python-daemon
+
+- name: install ipchanged script
+  template: src=usr/local/sbin/ipchanged dest=/usr/local/sbin/ipchanged mode=0755
+
+- name: install ipchanged configuraion
+  template: src=etc/init/ipchanged.conf dest=/etc/init/ipchanged.conf mode=0644
+
+- file: dest=/etc/ipchanged/{{ ansible_default_ipv4.interface }}/{{ floating_ip }} state=directory
+- file: dest=/etc/ipchanged/{{ hostvars[inventory_hostname][primary_interface].device }}/{{ undercloud_floating_ip }} state=directory
+
+# Migrate Neutron services on external IP failover
+- name: configure neutron external services failover
+  template: src=etc/ipchanged/add_floating_ip dest=/etc/ipchanged/{{ ansible_default_ipv4.interface }}/{{ floating_ip }}/add mode=0755
+
+# Send gratuitous on internal floating IP failover
+- name: configure neutron internal services failover
+  template: src=etc/ipchanged/add_internal_floating_ip dest=/etc/ipchanged/{{ hostvars[inventory_hostname][primary_interface].device }}/{{ undercloud_floating_ip }}/add mode=0755
+
+- name: start ipchanged service
+  service: name=ipchanged state=started

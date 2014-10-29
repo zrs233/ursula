@@ -1,0 +1,7 @@
+---
+dependencies:
+  - role: nova-common
+  - role: openstack-database
+    database_name: nova
+    db_versions: 'db versions'
+    db_sync: 'db sync'

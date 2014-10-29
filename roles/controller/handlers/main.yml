@@ -1,6 +1,0 @@
----
-- name: reload haproxy
-  service: name=haproxy state=reloaded
-
-- name: reload iptables
-  shell: iptables-restore --noflush < /etc/network/iptables-firewall

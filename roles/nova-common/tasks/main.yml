@@ -1,11 +1,9 @@
 ---
-- name: 'if this task fails, you must run ursula/playbooks/fix-nova-user.yml because this environment has nova user with no homedir'
-  shell: '! grep nova /etc/passwd | grep nonexistent'
-
 - name: nova user
   user: name=nova comment=nova shell=/bin/sh system=yes home=/var/lib/nova createhome=yes generate_ssh_key=yes ssh_key_bits=4096
 
-- apt: pkg=python-numpy
+- name: nova packages
+  apt: pkg=python-numpy
 
 - name: get nova source repo
   git: |
@@ -35,4 +33,9 @@
     - restart nova services
 
 - name: nova sudoer
-  template: src=etc/sudoers.d/nova dest=/etc/sudoers.d/nova owner=root group=root mode=0440
+  template: |
+    src=etc/sudoers.d/nova
+    dest=/etc/sudoers.d/nova
+    owner=root
+    group=root
+    mode=0440

@@ -1,5 +1,5 @@
 ---
-- name: Check if cinder user exists
+- name: check if cinder user exists
   action: shell getent passwd cinder
   register: cinder_user
   ignore_errors: True
@@ -42,4 +42,9 @@
   notify: restart cinder services
 
 - name: cinder sudoer
-  template: src=etc/sudoers.d/cinder dest=/etc/sudoers.d/cinder owner=root group=root mode=0440
+  template: |
+    src=etc/sudoers.d/cinder
+    dest=/etc/sudoers.d/cinder
+    owner=root
+    group=root
+    mode=0440

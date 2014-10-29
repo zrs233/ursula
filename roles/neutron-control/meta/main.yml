@@ -1,0 +1,6 @@
+---
+dependencies:
+  - role: neutron-common
+  - role: openstack-database
+    database_name: neutron
+    database_sync: False
