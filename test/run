@@ -5,8 +5,10 @@ if [ $# -gt 0 ]; then
     ACTION=$1
 fi
 
+shift
+
 if [ "${ACTION}" != "all" -a "${ACTION}" != "test" -a "${ACTION}" != "deploy" -a "${ACTION}" != "cleanup" -a "${ACTION}" != 'unit' ]; then
-  echo "Usage: run [unit | test | deploy | cleanup]"
+  echo "Usage: run [unit | test | deploy | cleanup] [EXTRA ANSIBLE ARGS]"
   exit 1
 fi
 
@@ -18,7 +20,7 @@ if [ "${ACTION}" == "all" -o "${ACTION}" == "deploy" ]; then
   time $(ansible_command \
     "envs/test/hosts" \
     ${LOGIN_USER} \
-    "site.yml" \
+    "site.yml $@" \
     "true")
   [[ -n $PS1 ]] && echo -en "\a" > /dev/tty
 fi
@@ -32,7 +34,7 @@ if [ "${ACTION}" == "all" -o "${ACTION}" == "test" ]; then
   time $(ansible_command \
     "envs/test/hosts" \
     ${LOGIN_USER} \
-    ${ROOT}/playbooks/tests/tasks/main.yml \
+    ${ROOT}/playbooks/tests/tasks/main.yml  $@ \
     "true")
   [[ -n $PS1 ]] && echo -en "\a" > /dev/tty
 fi
