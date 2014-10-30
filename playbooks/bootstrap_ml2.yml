@@ -1,0 +1,61 @@
+#
+# This playbook boot straps a new compute node with its network config
+#
+---
+- hosts: compute
+  serial: 10
+  vars:
+    timezone: Etc/UTC
+  tasks:
+  
+  #
+  # TODO Bail if run against existing compute nodes
+  # 
+
+  - apt: pkg=python-pycurl
+    when: ansible_distribution_version == "12.04"
+
+  # Upgrade Kernel to 3.5.0 on Precise
+  # and install Open vSwitch datapath (in mainline kernel on more recent distributions)
+  - apt: pkg={{ item }}
+    with_items:
+    - linux-generic-lts-quantal
+    - linux-headers-generic-lts-quantal
+    - linux-image-generic-lts-quantal
+    when: ansible_distribution_version == "12.04"
+
+  - apt: cache_valid_time=3600 update_cache=yes
+  - apt: pkg={{ item }}
+    with_items:
+    - vlan
+    - ucarp
+  - apt: upgrade=dist
+
+  # Set Locale
+  - name: Generate locales
+    command: /usr/sbin/locale-gen en_US
+  - name: set locale to en_US.UTF-8
+    command: /usr/sbin/update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
+
+  # Set Time zone
+  - name: set /etc/localtime to {{ timezone }}
+    command: /bin/cp /usr/share/zoneinfo/{{ timezone }} /etc/localtime
+  - name: set /etc/timezone to {{ timezone }}
+    copy: content="{{ timezone }}" dest=/etc/timezone force=yes owner=root group=root mode=0644
+  - name: update tzdata
+    command: /usr/sbin/dpkg-reconfigure --frontend noninteractive tzdata
+
+  # Populate network configuration
+  - copy: content="{{ network_interfaces }}" dest=/etc/network/interfaces force=yes owner=root group=root mode=0644
+    when: network_interfaces is defined
+  - copy: content="{{ item.contents }}" dest=/etc/network/interfaces.d/{{ item.filename }} force=yes owner=root group=root mode=0644
+    when: network_interfaces_d is defined
+    with_items: network_interfaces_d
+
+  # booting with new networking config so we can't wait for restart 
+  - command: shutdown -r now
+    async: 0
+    poll: 0
+    ignore_errors: true
+
+
