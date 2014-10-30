@@ -1,4 +1,38 @@
 ---
+- apt: pkg={{ item }}
+  with_items:
+    - cryptsetup
+    - lvm2
+    - tgt
+    - nbd-client
+
+- file: dest=/etc/tgt/conf.d state=directory
+- template: src=etc/tgt/targets.conf dest=/etc/tgt/targets.conf mode=0644
+- template: src=etc/tgt/conf.d/cinder_tgt.conf dest=/etc/tgt/conf.d/cinder_tgt.conf mode=0644
+
+- service: name=tgt state=started
+
+# TODO: allow for device-backed VGs in addition to file-backed VGs
+- name: cinder volume group
+  cinder_volume_group: >
+    file={{ cinder.volume_file }}
+    size={{ cinder.volume_file_size }}
+  when: cinder.passphrase is not defined
+
+- name: cinder volume group
+  cinder_volume_group: >
+    file={{ cinder.volume_file }}
+    size={{ cinder.volume_file_size }}
+    passphrase={{ cinder.passphrase }}
+  when: cinder.passphrase is defined
+
+- name: iscsi start
+  service: name=open-iscsi state=started
+
+- name: create cinder-volumes crypttab entry
+  crypttab: state=present target=cinder-volumes source={{ cinder.volume_file }} opts=luks,aes,noauto
+  when: cinder.passphrase is defined
+
 - name: install cinder-volume service
   upstart_service: |
     name=cinder-volume
