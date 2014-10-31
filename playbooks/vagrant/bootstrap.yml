@@ -1,0 +1,62 @@
+#
+# This playbook boot straps a new compute node with its network config
+#
+---
+- hosts: all
+  serial: 10
+  vars:
+    timezone: Etc/UTC
+  tasks:
+  - apt: cache_valid_time=3600 update_cache=yes
+  # Set Locale
+  - name: Generate locales
+    command: /usr/sbin/locale-gen en_US
+  - name: set locale to en_US.UTF-8
+    command: /usr/sbin/update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
+
+  # Set Time zone
+  - name: set /etc/localtime to {{ timezone }}
+    command: /bin/cp /usr/share/zoneinfo/{{ timezone }} /etc/localtime
+  - name: set /etc/timezone to {{ timezone }}
+    copy: content="{{ timezone }}" dest=/etc/timezone force=yes owner=root group=root mode=0644
+  - name: update tzdata
+    command: /usr/sbin/dpkg-reconfigure --frontend noninteractive tzdata
+
+- hosts: openstack
+  tasks:
+  - apt: pkg=python-pycurl
+    when: ansible_distribution_version == "12.04"
+  - apt: pkg=bridge-utils
+  # Populate network configuration
+  - copy: content="{{ network_interfaces }}" dest=/etc/network/interfaces force=yes owner=root group=root mode=0644
+    when: network_interfaces is defined
+
+  # restart networking config
+  - command: /etc/init.d/networking restart
+    async: 0
+    poll: 0
+    ignore_errors: true
+
+  # Blue Box Group OpenStack PPA for OVS 1.11
+  - apt_key: id=49DE63CB url='http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0xC37BA5F849DE63CB'
+    when: ansible_distribution_version == "12.04"
+  - apt_repository: repo='ppa:blueboxgroup/openstack' update_cache=yes
+    when: ansible_distribution_version == "12.04"
+
+- hosts: workstation
+  tasks:
+  - apt: pkg={{ item }}
+    with_items:
+    - curl
+    - vim
+    - wget
+  - command: /vagrant/bin/install-ubuntu
+  - pip: requirements=/vagrant/requirements.txt
+
+- hosts: controller
+  tasks:
+  - apt: pkg={{ item }}
+    with_items:
+    - vlan
+    - ucarp
+

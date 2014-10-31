@@ -1,6 +1,4 @@
 ---
-- name: pip install keystoneclient
-  action: command pip install -i {{ openstack.pypi_mirror }} /opt/stack/python-keystoneclient
 
 - name: pip install glanceclient
   action: command pip install -i {{ openstack.pypi_mirror }} /opt/stack/python-glanceclient

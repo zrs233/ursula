@@ -15,3 +15,5 @@
 
 - name: start and enable xorp service
   service: name=xorp state=started enabled=yes
+  retries: 2
+  delay: 10

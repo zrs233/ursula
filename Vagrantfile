@@ -38,12 +38,20 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     workstation_config.vm.provider "virtualbox" do |v|
       v.memory = 1024
     end
-    workstation_config.vm.provision :shell, :inline => <<-SCRIPT
-      /vagrant/bin/install-ubuntu
-      apt-get install -y curl vim wget
-    SCRIPT
     if File.exist?("#{ENV['HOME']}/.stackrc")
       config.vm.provision "file", source: "~/.stackrc", destination: ".stackrc"
+    end
+  end
+
+  config.vm.define "allinone" do |allinone_config|
+    allinone_config.vm.box = "ursula-precise"
+    allinone_config.vm.box_url = BOX_URL
+    allinone_config.vm.hostname = "allinone"
+    allinone_config.vm.network :private_network, ip: "172.16.0.100", :netmask => "255.255.255.0"
+    allinone_config.vm.network :private_network, ip: "192.168.255.100", :netmask => "255.255.255.0"
+    allinone_config.vm.provider "virtualbox" do |v|
+      v.memory = 4096
+      v.customize ["modifyvm", :id, "--nicpromisc3", "allow-all"]
     end
   end
 
@@ -52,9 +60,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       controller_config.vm.box = "ursula-precise"
       controller_config.vm.box_url = BOX_URL
       controller_config.vm.hostname = "controller#{i}"
-      controller_config.vm.network :private_network, ip: "10.1.1.10#{i}", :netmask => "255.255.0.0"
+      controller_config.vm.network :private_network, ip: "172.16.0.10#{i}", :netmask => "255.255.255.0"
+      controller_config.vm.network :private_network, ip: "192.168.255.10#{i}", :netmask => "255.255.255.0"
       controller_config.vm.provider "virtualbox" do |v|
         v.memory = 2048
+        v.customize ["modifyvm", :id, "--nicpromisc3", "allow-all"]
       end
     end
   end
@@ -64,9 +74,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       compute_config.vm.box = "ursula-precise"
       compute_config.vm.box_url = BOX_URL
       compute_config.vm.hostname = "compute#{i}"
-      compute_config.vm.network :private_network, ip: "10.1.1.11#{i}", :netmask => "255.255.0.0"
+      compute_config.vm.network :private_network, ip: "172.16.0.11#{i}", :netmask => "255.255.255.0"
+      compute_config.vm.network :private_network, ip: "192.168.255.11#{i}", :netmask => "255.255.255.0"
       compute_config.vm.provider "virtualbox" do |v|
         v.memory = 1536
+        v.customize ["modifyvm", :id, "--nicpromisc3", "allow-all"]
       end
     end
   end
@@ -87,4 +99,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       end
     end
   end
+
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "playbooks/vagrant/bootstrap.yml"
+    ansible.sudo = true
+    ansible.groups = {
+      "controller" => ["controller1", "controller2", "allinone"],
+      "compute" => ["compute1", "allinone"],
+      "workstation" => ["workstation"],
+      "openstack:children" => ["controller", "compute", "allinone"],
+      "all_groups:children" => ["controller", "compute", "workstation"]
+    }
+  end
+
 end
