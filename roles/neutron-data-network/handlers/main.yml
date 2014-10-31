@@ -5,3 +5,4 @@
 
 - name: restart xorp
   service: name=xorp state=restarted sleep=10
+  ignore_errors: True

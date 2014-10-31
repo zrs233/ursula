@@ -1,0 +1,24 @@
+---
+network_interfaces: |
+  auto lo
+  iface lo inet loopback
+
+  auto eth0
+  iface eth0 inet dhcp
+
+  # Internal "nodes" network
+  auto eth1
+  iface eth1 inet static
+    address 172.16.0.111
+    netmask 255.255.255.0
+    mtu 9216
+
+  # External interface
+  auto eth2
+  iface eth2 inet static
+    address 192.168.255.111
+    netmask 255.255.255.0
+    gateway 192.168.255.1
+    mtu 1500
+    dns-search blueboxgrid.com
+    dns-nameservers 8.8.8.8

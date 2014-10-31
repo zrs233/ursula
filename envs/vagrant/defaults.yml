@@ -2,11 +2,10 @@
 ursula_env_path: "{{ lookup('env','URSULA_ENV') }}"
 primary_interface: ansible_eth1
 primary_ip: "{{ hostvars[inventory_hostname][primary_interface]['ipv4']['address'] }}"
-undercloud_cidr: '10.1.0.0/16'
+undercloud_cidr: '172.16.0.0/24'
 
 fqdn: openstack.example.org
 undercloud_floating_ip: "{{ hostvars[groups['controller'][0]][primary_interface]['ipv4']['address'] }}"
-
 secrets:
   admin_token:      asdf
   db_password:      asdf
@@ -85,26 +84,19 @@ neutron:
   plugin: ml2
   physical_bridge: br-ex
   physical_network: br-ex
-  tenant_network_type: vlan
-  enable_tunneling: False
+  tenant_network_type: vxlan
+  enable_tunneling: True
+  network_vlan_ranges: ''
+  bridge_mappings: physnet:eth2
   tunnel_types:
     - vxlan
-  network_vlan_ranges: physnet:1:1
-  bridge_mappings: physnet:br-eth0
-  routers:
-   - name: default
-     tenant_name: admin
-  router_interfaces:
-   - router_name: default
-     subnet_name: internal
-     tenant_name: admin
   networks:
     - name: internal
       shared: true
       external: false
-      network_type: vlan
+      network_type: vxlan
+      segmentation_id: 430
       provider_physical_network: physnet
-      segmentation_id: 1
     - name: external
       shared: true
       external: true
@@ -114,16 +106,23 @@ neutron:
   subnets:
     - name: internal
       network_name: internal
-      cidr: 10.1.1.0/24
+      cidr: 172.16.254.0/24
       enable_dhcp: "true"
-      gateway_ip: 10.1.1.1
+      gateway_ip: 172.16.254.1
       ip_version: 4
     - name: external
       network_name: external
-      cidr: 192.168.1.0/24
+      cidr: 192.168.254.0/24
       enable_dhcp: "false"
-      gateway_ip: 192.168.1.1
+      gateway_ip: 192.168.254.1
       ip_version: 4
+  routers:
+    - name: default
+      tenant_name: admin
+  router_interfaces:
+    - router_name: default
+      subnet_name: internal
+      tenant_name: admin
 
 glance:
   images:

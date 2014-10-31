@@ -12,3 +12,4 @@ nova:
   enable_ssh: False
   novnc_repo: https://github.com/kanaka/noVNC.git
   novnc_rev: 292f6a5d
+  scheduler_default_filters: AvailabilityZoneFilter,RamFilter,ComputeFilter,CoreFilter
