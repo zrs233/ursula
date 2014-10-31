@@ -1,5 +1,6 @@
 ---
 logs_to_scan:
-- nova-compute
-- cinder-volume
-- neutron-openvswitch-agent
+  cinder-volume: /var/log/cinder/cinder-volume.log
+  neutron-linuxbridge-agent: /var/log/neutron/neutron-linuxbridge-agent.log
+  neutron-openvswitch-agent: /var/log/neutron/neutron-openvswitch-agent.log
+  nova-compute: /var/log/nova/nova-compute.log

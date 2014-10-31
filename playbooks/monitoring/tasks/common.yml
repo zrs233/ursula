@@ -28,12 +28,12 @@
 
 - name: enable log scanning
   when: monitoring.scan_for_log_errors
-  sensu_check: name=check-log-{{ item }} plugin=check-log.rb use_sudo=true auto_resolve=false interval=60 args="-f /var/log/upstart/{{ item }}.log -q ERROR --silent"
-  with_items: logs_to_scan
+  sensu_check: name=check-log-{{ item.key }} plugin=check-log.rb use_sudo=true auto_resolve=false interval=60 args="-f {{ item.value }}.log -q ERROR --silent"
+  with_dict: logs_to_scan
   notify: restart sensu-client
 
 - name: disable log scanning
   when: monitoring.scan_for_log_errors == false
-  file: path=/etc/sensu/conf.d/checks/check-log-{{ item }}.json state=absent
-  with_items: logs_to_scan
+  file: path=/etc/sensu/conf.d/checks/check-log-{{ item.key }}.json state=absent
+  with_dict: logs_to_scan
   notify: restart sensu-client

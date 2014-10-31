@@ -6,7 +6,8 @@ rsyslog:
     logs:
       cinder-api: /var/log/cinder/cinder-api.log
       cinder-manage: /var/log/cinder/cinder-manage.log
-      cinder-schedule: /var/log/cinder/cinder-scheduler.log
+      cinder-scheduler: /var/log/cinder/cinder-scheduler.log
+      cinder-volume: /var/log/cinder/cinder-volume.log
       glance-api: /var/log/glance/glance-api.log
       glance-manage: /var/log/glance/glance-manage.log
       glance-registry: /var/log/glance/glance-registry.log
@@ -28,6 +29,7 @@ rsyslog:
       nova-consoleauth: /var/log/nova/nova-consoleauth.log
       nova-manage: /var/log/nova/nova-manage.log
       nova-scheduler: /var/log/nova/nova-scheduler.log
+      nova-novncproxy: /var/log/nova/nova-novncproxy.log
       tgt: /var/log/upstart/tgt.log
   forward:
     host: null

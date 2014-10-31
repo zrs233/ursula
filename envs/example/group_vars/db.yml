@@ -1,8 +1,7 @@
 ---
 logs_to_scan:
-- neutron-dhcp-agent
-- cinder-scheduler
-- keystone
-- nova-consoleauth
-- nova-cert
-- remote-syslog
+  cinder-scheduler: /var/log/cinder/cinder-scheduler.log
+  keystone-all: /var/log/keystone/keystone-all.log
+  neutron-dhcp-agent: /var/log/neutron/neutron-dhcp-agent.log
+  nova-cert: /var/log/nova/nova-cert.log
+  nova-consoleauth: /var/log/nova/nova-consoleauth.log

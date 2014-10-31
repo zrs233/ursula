@@ -1,17 +1,23 @@
 ---
 logs_to_scan:
-- cinder-api
-- cinder-scheduler
-- glance-registry
-- keystone
-- network-interface-br-tun
-- neutron-dhcp-agent
-- neutron-l3-agent
-- neutron-openvswitch-agent
-- neutron-server
-- nova-api
-- nova-cert
-- nova-conductor
-- nova-consoleauth
-- nova-novncproxy
-- nove-scheduler
+  cinder-api: /var/log/cinder/cinder-api.log
+  cinder-manage: /var/log/cinder/cinder-manage.log
+  cinder-scheduler: /var/log/cinder/cinder-scheduler.log
+  glance-api: /var/log/glance/glance-api.log
+  glance-manage: /var/log/glance/glance-manage.log
+  glance-registry: /var/log/glance/glance-registry.log
+  keystone-all: /var/log/keystone/keystone-all.log
+  keystone-manage: /var/log/keystone/keystone-manage.log
+  neutron-dhcp-agent: /var/log/neutron/neutron-dhcp-agent.log
+  neutron-l3-agent: /var/log/neutron/neutron-l3-agent.log
+  neutron-linuxbridge-agent: /var/log/neutron/neutron-linuxbridge-agent.log
+  neutron-metadata-agent: /var/log/neutron/neutron-metadata-agent.log
+  neutron-openvswitch-agent: /var/log/neutron/neutron-openvswitch-agent.log
+  neutron-server: /var/log/neutron/neutron-server.log
+  nova-api: /var/log/nova/nova-api.log
+  nova-cert: /var/log/nova/nova-cert.log
+  nova-conductor: /var/log/nova/nova-conductor.log
+  nova-consoleauth: /var/log/nova/nova-consoleauth.log
+  nova-manage: /var/log/nova/nova-manage.log
+  nova-scheduler: /var/log/nova/nova-scheduler.log
+  nova-novncproxy: /var/log/nova/nova-novncproxy.log
