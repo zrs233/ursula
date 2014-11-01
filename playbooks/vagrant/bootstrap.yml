@@ -22,6 +22,13 @@
   - name: update tzdata
     command: /usr/sbin/dpkg-reconfigure --frontend noninteractive tzdata
 
+- hosts: controller
+  tasks:
+  - apt: pkg={{ item }}
+    with_items:
+    - vlan
+    - ucarp
+
 - hosts: openstack
   tasks:
   - apt: pkg=python-pycurl
@@ -30,18 +37,17 @@
   # Populate network configuration
   - copy: content="{{ network_interfaces }}" dest=/etc/network/interfaces force=yes owner=root group=root mode=0644
     when: network_interfaces is defined
-
-  # restart networking config
-  - command: /etc/init.d/networking restart
+    notify: restart machine
+  - meta: flush_handlers
+  - name: waiting for server to come back
+    pause: minutes=1
+    sudo: false
+  handlers:
+  - name: restart machine
+    command: shutdown -r now
     async: 0
     poll: 0
     ignore_errors: true
-
-  # Blue Box Group OpenStack PPA for OVS 1.11
-  - apt_key: id=49DE63CB url='http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0xC37BA5F849DE63CB'
-    when: ansible_distribution_version == "12.04"
-  - apt_repository: repo='ppa:blueboxgroup/openstack' update_cache=yes
-    when: ansible_distribution_version == "12.04"
 
 - hosts: workstation
   tasks:
@@ -52,11 +58,3 @@
     - wget
   - command: /vagrant/bin/install-ubuntu
   - pip: requirements=/vagrant/requirements.txt
-
-- hosts: controller
-  tasks:
-  - apt: pkg={{ item }}
-    with_items:
-    - vlan
-    - ucarp
-

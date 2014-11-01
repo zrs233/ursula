@@ -10,10 +10,18 @@ function get_vagrant_hosts {
 TYPE=$1
 shift
 
-TAGS=${@:-"--skip-tags=horizon,swift,heat,cinder,logging,monitoring"}
+if [[ $1 == 'minimal']]; then
+  TAGS= "--skip-tags=horizon,heat,cinder,logging,monitoring"
+  shift
+fi
 
 if [ -z "${TYPE}" ]; then
-    echo "You must specify a type: swift or standard or allinone"
+    echo "Usage: run_vagrant TYPE [minimal]"
+    echo "Where type is one of the following:"
+    echo "- allinone ( single monolithic openstack server )"
+    echo "- standard ( two controllers and one compute )"
+    echo "- swift ( object storage )"
+    echo "minimal will skip the following tags: horizon,heat,cinder,logging,monitoring"
     exit -1
 fi
 
