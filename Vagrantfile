@@ -48,7 +48,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     allinone_config.vm.box_url = BOX_URL
     allinone_config.vm.hostname = "allinone"
     allinone_config.vm.network :private_network, ip: "172.16.0.100", :netmask => "255.255.255.0"
-    allinone_config.vm.network :private_network, ip: "192.168.255.100", :netmask => "255.255.255.0"
+    allinone_config.vm.network :private_network, ip: "192.168.254.100", :netmask => "255.255.255.0"
     allinone_config.vm.provider "virtualbox" do |v|
       v.memory = 4096
       v.customize ["modifyvm", :id, "--nicpromisc3", "allow-all"]
@@ -61,7 +61,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       controller_config.vm.box_url = BOX_URL
       controller_config.vm.hostname = "controller#{i}"
       controller_config.vm.network :private_network, ip: "172.16.0.10#{i}", :netmask => "255.255.255.0"
-      controller_config.vm.network :private_network, ip: "192.168.255.10#{i}", :netmask => "255.255.255.0"
+      controller_config.vm.network :private_network, ip: "192.168.254.10#{i}", :netmask => "255.255.255.0"
       controller_config.vm.provider "virtualbox" do |v|
         v.memory = 2048
         v.customize ["modifyvm", :id, "--nicpromisc3", "allow-all"]
@@ -75,7 +75,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       compute_config.vm.box_url = BOX_URL
       compute_config.vm.hostname = "compute#{i}"
       compute_config.vm.network :private_network, ip: "172.16.0.11#{i}", :netmask => "255.255.255.0"
-      compute_config.vm.network :private_network, ip: "192.168.255.11#{i}", :netmask => "255.255.255.0"
+      compute_config.vm.network :private_network, ip: "192.168.254.11#{i}", :netmask => "255.255.255.0"
       compute_config.vm.provider "virtualbox" do |v|
         v.memory = 1536
         v.customize ["modifyvm", :id, "--nicpromisc3", "allow-all"]
