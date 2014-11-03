@@ -11,12 +11,12 @@ network_interfaces: |
   iface eth1 inet static
     address 172.16.0.111
     netmask 255.255.255.0
-    mtu 9216
+    mtu 1500
 
   # External interface
   auto eth2
   iface eth2 inet static
-    address 192.168.254.111
+    address 192.168.255.111
     netmask 255.255.255.0
     mtu 1500
     dns-search blueboxgrid.com
