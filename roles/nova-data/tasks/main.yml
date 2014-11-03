@@ -9,8 +9,7 @@
 
 - file: dest=/var/lib/nova/instances state=directory owner=nova
 
-- name: "Nova requires the ndb module to insert files into qcow2 images"
-  copy: content="ndb" dest=/etc/modules-load.d/nbd.conf force=yes owner=root group=root mode=0644
+- lineinfile: dest=/etc/modules line="ndb"
 
 - modprobe: name=nbd state=present
 
