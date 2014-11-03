@@ -72,7 +72,7 @@
   - name: cinder has a working api
     shell: . /root/stackrc; cinder list | grep ID
   - name: glance has the cirros image
-    shell: . /root/stackrc; glance index | grep cirros
+    shell: . /root/stackrc; glance image-list | grep cirros
   - name: nova has a working api
     shell: . /root/stackrc; nova list | grep ID
   - name: m1.tiny flavor has been embiggened
