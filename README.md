@@ -28,12 +28,7 @@ Add your hosts to the inventory:
 
 # Getting Started
 
-Ursula comes bundled with Vagrant hooks to get started.  Once you've installed the pre-requesite software, you can get up and running with:
-
-```
-./bin/run_vagrant standard
-```
-This will launch 3 vagrant instances (2 controllers and 1 compute node), and immediately begin deployment.  As this is idempotent, it is safe to run this command multiple times in a row.
+Ursula comes bundled with Vagrant hooks to get started.  see [docs/vagrant.md](docs/vagrant.md) for using it.
 
 # Basic Usage
 

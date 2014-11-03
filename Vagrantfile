@@ -48,7 +48,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     allinone_config.vm.box_url = BOX_URL
     allinone_config.vm.hostname = "allinone"
     allinone_config.vm.network :private_network, ip: "172.16.0.100", :netmask => "255.255.255.0"
-    allinone_config.vm.network :private_network, ip: "192.168.254.100", :netmask => "255.255.255.0"
+    allinone_config.vm.network :private_network, ip: "192.168.255.100", :netmask => "255.255.255.0"
     allinone_config.vm.provider "virtualbox" do |v|
       v.memory = 4096
       v.customize ["modifyvm", :id, "--nicpromisc3", "allow-all"]

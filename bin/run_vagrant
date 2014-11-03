@@ -8,21 +8,17 @@ function get_vagrant_hosts {
 }
 
 TYPE=$1
-shift
 
-if [[ $1 == 'minimal']]; then
-  TAGS= "--skip-tags=horizon,heat,cinder,logging,monitoring"
-  shift
-fi
-
-if [ -z "${TYPE}" ]; then
+if [[ -z ${TYPE} ]]; then
     echo "Usage: run_vagrant TYPE [minimal]"
     echo "Where type is one of the following:"
     echo "- allinone ( single monolithic openstack server )"
     echo "- standard ( two controllers and one compute )"
     echo "- swift ( object storage )"
     echo "minimal will skip the following tags: horizon,heat,cinder,logging,monitoring"
-    exit -1
+    exit 1
+else
+    shift
 fi
 
 if [ "${TYPE}" == "swift" ]; then
@@ -45,5 +41,5 @@ for I in ${BOXES}; do
 done
 
 export ANSIBLE_SSH_ARGS="${ANSIBLE_SSH_ARGS} -F ${TEMPFILE}"
-time ./bin/ursula envs/vagrant/${TYPE} site.yml -s -u vagrant $TAGS
+time ./bin/ursula envs/vagrant/${TYPE} site.yml -s -u vagrant
 rm ${TEMPFILE}
