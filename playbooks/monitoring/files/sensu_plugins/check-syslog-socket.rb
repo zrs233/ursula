@@ -75,5 +75,13 @@ class CheckSyslogSocket < Sensu::Plugin::Check::CLI
     socket = Socket::new(Socket::AF_UNIX, Socket::SOCK_DGRAM, 0)
     socket.send(log_msg, 0, log_socket_address)
     socket.close
+  rescue Errno::ECONNREFUSED
+    critical "Connection refused to #{config[:log_socket]}"
+  rescue Errno::EACCES
+    critical "Permission denied to #{config[:log_socket]}"
+  rescue Errno::ENOENT, Errno::ENOTDIR
+    critical "Socket #{config[:log_socket]} doesn't exist"
+  rescue Exception => e
+    critical "Unexpected error: #{e.inspect}"
   end
 end
