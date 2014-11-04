@@ -45,6 +45,11 @@
   handlers:
   - name: restart machine
     command: shutdown -r now
+<<<<<<< HEAD
+  # restart networking config
+  - command: /etc/init.d/networking restart
+=======
+>>>>>>> defcaa9... internal neworking works
     async: 0
     poll: 0
     ignore_errors: true
