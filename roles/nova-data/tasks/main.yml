@@ -9,6 +9,10 @@
 
 - file: dest=/var/lib/nova/instances state=directory owner=nova
 
+- lineinfile: dest=/etc/modules line="ndb"
+
+- modprobe: name=nbd state=present
+
 - name: install nova-compute service
   upstart_service: |
     name=nova-compute
