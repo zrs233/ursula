@@ -35,22 +35,24 @@ class CheckSyslogSocket < Sensu::Plugin::Check::CLI
          :default => 1000
 
 
-  class WarningExceeded < StandardError
-  end
-
   class CriticalExceeded < StandardError
   end
 
   def run
-    Timeout::timeout(config[:crit] * 1e-3, CriticalExceeded) do
-      Timeout::timeout(config[:warn] * 1e-3, WarningExceeded) do
-        do_syslog_msg
-      end
+    time_start = Time.now
+
+    Timeout::timeout(config[:crit] / 1000.0, CriticalExceeded) do
+      do_syslog_msg
     end
 
-    ok "#{config[:log_socket]} accepted message"
-  rescue WarningExceeded
-    warning "#{config[:log_socket]} took longer than #{config[:warn]}ms to accept message"
+    duration = Time.now - time_start
+    duration_ms = duration * 1000
+
+    if duration_ms > config[:warn]
+        warning "#{config[:log_socket]} took #{duration_ms.round}ms to accept message"
+    else
+        ok "#{config[:log_socket]} tool #{duration_ms.round}ms to accept message"
+    end
   rescue CriticalExceeded
     critical "#{config[:log_socket]} took longer than #{config[:crit]}ms to accept message"
   end
