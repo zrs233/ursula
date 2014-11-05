@@ -23,6 +23,9 @@
 - sensu_metrics_check: name=load-metrics plugin=load-metrics.rb args='--scheme stats.{{ inventory_hostname  }}'
   notify: restart sensu-client
 
+- sensu_check: name=syslog-socket plugin=check-syslog-socket.rb
+  notify: restart sensu-client
+
 - name: log scanning caching dir
   file: path=/var/cache/check-log owner=sensu state=directory
 
