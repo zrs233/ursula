@@ -1,0 +1,5 @@
+---
+- user: name=logstash comment=logstash shell=/bin/false system=yes home=/nonexistent createhome=no
+- file: state=directory path=/opt/logstash-forwarder/pkg mode=0755 owner=logstash
+- get_url: url=http://apt.openstack.blueboxgrid.com/debs/logstash-forwarder_0.3.1_amd64.deb dest=/opt/logstash-forwarder/pkg/logstash-forwarder_0.3.1_amd64.deb mode=0644 owner=logstash sha256sum=6df34f82b04630643a88571b277f248e49f4de351123a95cb9c57773f3e576a9
+- apt: deb=/opt/logstash-forwarder/pkg/logstash-forwarder_0.3.1_amd64.deb
