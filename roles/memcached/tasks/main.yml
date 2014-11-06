@@ -1,17 +1,18 @@
 ---
-- apt: pkg={{ item }}
+- name: install memcached packages
+  apt: pkg={{ item }}
   with_items:
     - memcached
     - python-memcache
+    - libsasl2-dev
 
 - name: "remove /nonexistent inadvertently created by memcached package: see https://bugs.launchpad.net/ubuntu/+source/memcached/+bug/1255328/"
   file: dest=/nonexistent state=absent
 
-- template: src=memcached.conf dest=/etc/memcached.conf mode=0644
+- name: memcached configuration
+  template: src=memcached.conf dest=/etc/memcached.conf mode=0644
   notify:
     - restart memcached
 
-- name: libsasl2-dev required by memcached gem
-  apt: pkg=libsasl2-dev
 - name: memcached gem for sensu check
   gem: name=memcached state=latest user_install=no include_dependencies=yes
