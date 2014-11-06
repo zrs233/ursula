@@ -76,7 +76,10 @@
   when: rabbitmq.cluster
 - sensu_check: name=rabbitmq-queues plugin=check-rabbitmq-queues.rb use_sudo=true
   notify: restart sensu-client
-- sensu_check: name=rabbitmq-numqueues plugin=check-rabbitmq-queues.rb use_sudo=true args="-t number"
+
+- set_fact: cluster_node_count={{ groups['all'] | count }}
+
+- sensu_check: name=rabbitmq-numqueues plugin=check-rabbitmq-queues.rb use_sudo=true args="-t number -w {{ cluster_node_count|int * 50 }} -c {{ cluster_node_count|int * 100 }}"
   notify: restart sensu-client
 
 # memcached
