@@ -1,6 +1,6 @@
 ---
-- name: setup rabbit clustering
-  include: cluster.yml
+# Create the cluster if desired
+- include: cluster.yml
   when: rabbitmq.cluster
 
 # Backward compatibility with existing configurations.
@@ -9,39 +9,23 @@
   when: not rabbitmq.cluster
 
 - name: remove default rabbit user
-  rabbitmq_user: |
-    user=guest
-    state=absent
-  when: rabbitmq.cluster == False
+  rabbitmq_user: user=guest state=absent
+  when: not rabbitmq.cluster
 
 - name: remove default rabbit user clustered
-  rabbitmq_user: |
-    user=guest
-    state=absent
-    node=rabbitmq.nodename
+  rabbitmq_user: user=guest state=absent node=rabbitmq.nodename
   when: rabbitmq.cluster
 
 - name: openstack rabbit user
-  rabbitmq_user: |
-    user={{ rabbitmq.user }}
-    password={{ secrets.rabbit_password }}
-    vhost=/
-    tags=administrator
-    configure_priv=.*
-    read_priv=.*
-    write_priv=.*
-    state=present
-  when: rabbitmq.cluster == False
+  rabbitmq_user: user={{ rabbitmq.user }}
+                 password={{ secrets.rabbit_password }} vhost=/
+                 tags=administrator configure_priv=.* read_priv=.*
+                 write_priv=.* state=present
+  when: not rabbitmq.cluster
 
 - name: openstack rabbit user clustered
-  rabbitmq_user: |
-    user={{ rabbitmq.user }}
-    password={{ secrets.rabbit_password }}
-    node={{ rabbitmq.nodename }}
-    vhost=/
-    tags=administrator
-    configure_priv=.*
-    read_priv=.*
-    write_priv=.*
-    state=present
+  rabbitmq_user: user={{ rabbitmq.user }}
+                 password={{ secrets.rabbit_password }}
+                 node={{ rabbitmq.nodename }} vhost=/ tags=administrator
+                 configure_priv=.* read_priv=.* write_priv=.* state=present
   when: rabbitmq.cluster
