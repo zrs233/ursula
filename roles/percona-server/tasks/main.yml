@@ -2,7 +2,8 @@
 - name: python-mysqldb package
   apt: pkg=python-mysqldb
 
-- file: path=/etc/mysql/conf.d state=directory
+- name: create mysql config directory
+  file: path=/etc/mysql/conf.d state=directory
 
 - name: configure my.cnf
   template: src=etc/my.cnf dest=/etc/my.cnf mode=0644
@@ -16,7 +17,9 @@
   notify:
     - restart mysql server
 
-- template: src=etc/mysql/conf.d/{{ item }} dest=/etc/mysql/conf.d/{{ item }} mode=0644
+- name: install mysql config files
+  template: src=etc/mysql/conf.d/{{ item }} dest=/etc/mysql/conf.d/{{ item }}
+            mode=0644
   with_items:
     - bind-inaddr-any.cnf
     - tuning.cnf
@@ -33,11 +36,24 @@
   - percona-xtrabackup
 
 # Workaround for 0.8.6 to 0.9.1 upgrade path
-- lineinfile: dest=/etc/mysql/conf.d/replication.cnf create=yes regexp="^\[mysqld\]" line="[mysqld]" insertbefore=BOF
-- lineinfile: dest=/etc/mysql/conf.d/replication.cnf create=yes regexp="^default_storage_engine\s*=" line="default_storage_engine = InnoDB"
-- lineinfile: dest=/etc/mysql/conf.d/replication.cnf create=yes regexp="^binlog_format\s*=" line="binlog_format = ROW"
-- lineinfile: dest=/etc/mysql/conf.d/replication.cnf create=yes regexp="^innodb_autoinc_lock_mode\s*=" line="innodb_autoinc_lock_mode = 2"
-- lineinfile: dest=/etc/mysql/conf.d/replication.cnf create=yes regexp="^innodb_locks_unsafe_for_binlog\s*=" line="innodb_locks_unsafe_for_binlog = 1"
+- name: fix config header in replication.cnf
+  lineinfile: dest=/etc/mysql/conf.d/replication.cnf create=yes
+              regexp="^\[mysqld\]" line="[mysqld]" insertbefore=BOF
+
+- name: adjust various other lines in replication.cnf
+  lineinfile: dest=/etc/mysql/conf.d/replication.cnf create=yes
+              regexp="{{ item.value.regexp }}"
+              line="{{ item.value.line }}"
+  with_dict:
+    dse:
+      regexp: '^default_storage_engine\s*='
+      line: "default_storage_engine = InnoDB"
+    blf:
+      regexp: '^binlog_format\s*='
+      line: "binlog_format = ROW"
+    ilub:
+      regexp: '^innodb_locks_unsafe_for_binlog\s*='
+      line: "innodb_locks_unsafe_for_binlog = 1"
 
 - meta: flush_handlers
 
@@ -45,7 +61,7 @@
   service: name=mysql state=started
 
 - name: set mysql root password
-  mysql_user: name=root password={{mysql.root_password}}
+  mysql_user: name=root password={{ mysql.root_password }}
 
 - name: install root .my.cnf defaults file
   template: src=root/.my.cnf dest=/root/.my.cnf owner=root group=root mode=0600
@@ -53,10 +69,12 @@
 - name: are we already already bootstrapped
   shell: mysql -e "SHOW VARIABLES LIKE 'wsrep_on'" | grep 'ON'
   register: already_bootstrapped
-  ignore_errors: True
+  failed_when: False
 
 - name: create state snapshot transfer user from anywhere
-  mysql_user: name={{ xtradb.sst_auth_user }} host={{ item }} password={{ xtradb.sst_auth_password }} priv='*.*:RELOAD,LOCK TABLES,REPLICATION CLIENT'
+  mysql_user: name={{ xtradb.sst_auth_user }} host={{ item }}
+              password={{ xtradb.sst_auth_password }}
+              priv='*.*:RELOAD,LOCK TABLES,REPLICATION CLIENT'
   with_items:
     - '%'
     - 'localhost'
@@ -72,7 +90,8 @@
   when: percona.replication
 
 - name: configure bootstrap replication
-  template: src=etc/mysql/conf.d/replication.cnf dest=/etc/mysql/conf.d/replication.cnf mode=0644
+  template: src=etc/mysql/conf.d/replication.cnf
+            dest=/etc/mysql/conf.d/replication.cnf mode=0644
   when: percona.replication
 
 - name: bootstrap the primary node
@@ -84,10 +103,7 @@
   when: not should_bootstrap_as_primary and not already_bootstrapped.rc == 0
 
 - name: remove anonymous users
-  mysql_user: |
-    name=''
-    host={{ item }}
-    state=absent
+  mysql_user: name='' host={{ item }} state=absent
   with_items:
     - localhost
     - "{{ ansible_hostname }}"
