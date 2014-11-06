@@ -5,20 +5,16 @@
 
 - name: database users
   run_once: true
-  mysql_user: |
-    name={{ database_name }}
-    host=%
-    password={{ secrets.db_password }}
-    priv={{ database_name }}.*:ALL
-    state=present
+  mysql_user: name={{ database_name }} host=%
+              password={{ secrets.db_password }}
+              priv={{ database_name }}.*:ALL
+              state=present
 
 - name: remove local database users (since absence of anonymous user will allow access as wildcard)
   run_once: true
-  mysql_user: |
-    name={{ database_name }}
-    host=localhost
-    state=absent
+  mysql_user: name={{ database_name }} host=localhost state=absent
 
 - include: sync.yml
-  when: not database_sync is defined or database_sync == True
+  when: database_sync is not defined or database_sync|bool
+
 #- include: keystone.yml
