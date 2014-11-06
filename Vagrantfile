@@ -11,6 +11,24 @@ BOX_URL = ENV['URSULA_BOX_URL'] || 'http://apt.openstack.blueboxgrid.com/vagrant
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
+  if Vagrant.has_plugin?('vagrant-openstack-provider')
+    require 'vagrant-openstack-provider'
+    config.vm.provider :openstack do |os, override|
+      os.openstack_auth_url = "#{ENV['OS_AUTH_URL']}/tokens"
+      os.username           = ENV['OS_USERNAME']
+      os.password           = ENV['OS_PASSWORD']
+      os.tenant_name        = ENV['OS_TENANT_NAME']
+      os.flavor             = 'm1.small'
+      os.image              = 'ubuntu-14.04'
+      os.openstack_network_url = ENV['OS_NEUTRON_URL'] if ENV['OS_NEUTRON_URL']
+      os.networks           =  ['internal']
+      os.security_groups    = ['vagrant']
+      os.floating_ip_pool   = 'external'
+      override.vm.box       = 'openstack'
+      override.ssh.username = 'ubuntu'
+    end
+  end
+
   config.ssh.forward_agent = true
 
   config.vm.define "workstation" do |workstation_config|
@@ -21,12 +39,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       v.memory = 1024
     end
     workstation_config.vm.provision :shell, :inline => <<-SCRIPT
-      sleep 5
       /vagrant/bin/install-ubuntu
       apt-get install -y curl vim wget
     SCRIPT
     if File.exist?("#{ENV['HOME']}/.stackrc")
-      config.vm.provision "file", source: "~/.stackrc", destination: "/home/vagrant/.stackrc"
+      config.vm.provision "file", source: "~/.stackrc", destination: ".stackrc"
     end
   end
 
