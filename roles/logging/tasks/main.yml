@@ -1,5 +1,6 @@
 ---
-- apt: pkg=ufw
+- name: Add ufw package
+  apt: pkg=ufw
 
 - name: Open IPv4 port for 514/udp
   command: ufw allow proto udp from 127.0.0.1 port 514
