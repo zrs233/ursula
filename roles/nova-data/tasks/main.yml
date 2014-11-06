@@ -1,24 +1,24 @@
 ---
 - include: ssh.yml
-  when: nova.enable_ssh == True
+  when: nova.enable_ssh|bool
 
 - include: libvirt.yml
 
 - name: add nova to the libvirtd group
   user: name=nova groups=libvirtd system=yes createhome=no
 
-- file: dest=/var/lib/nova/instances state=directory owner=nova
+- name: nova instances directory
+  file: dest=/var/lib/nova/instances state=directory owner=nova
 
-- lineinfile: dest=/etc/modules line="nbd"
+- name: nbd module
+  lineinfile: dest=/etc/modules line="nbd"
 
-- modprobe: name=nbd state=present
+- name: probe nbd
+  modprobe: name=nbd state=present
 
 - name: install nova-compute service
-  upstart_service: |
-    name=nova-compute
-    user=nova
-    cmd=/usr/local/bin/nova-compute
-    config_dirs=/etc/nova
+  upstart_service: name=nova-compute user=nova cmd=/usr/local/bin/nova-compute
+                   config_dirs=/etc/nova
 
 - name: start nova-compute
   service: name=nova-compute state=started
