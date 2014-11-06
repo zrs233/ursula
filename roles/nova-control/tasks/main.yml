@@ -1,10 +1,8 @@
 ---
 - name: install nova controller services
-  upstart_service: |
-    name={{ item }}
-    user=nova
-    cmd=/usr/local/bin/{{ item }}
-    config_dirs=/etc/nova
+  upstart_service: name={{ item }} user=nova
+                   cmd=/usr/local/bin/{{ item }}
+                   config_dirs=/etc/nova
   with_items:
     - nova-api
     - nova-cert
@@ -13,7 +11,7 @@
     - nova-scheduler
 
 - name: start nova controller services
-  action: service name={{ item }} state=started
+  service: name={{ item }} state=started
   with_items:
     - nova-api
     - nova-cert
@@ -24,5 +22,4 @@
 - name: permit access to nova api
   command: ufw allow 8777/tcp
 
-- name: install novnc
-  include: novnc.yml
+- include: novnc.yml

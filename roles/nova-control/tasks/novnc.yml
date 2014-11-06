@@ -1,16 +1,13 @@
 ---
 - name: novnc repo
-  git: |
-    repo={{ nova.novnc_repo }}
-    dest=/usr/share/novnc
-    version={{ nova.novnc_rev }}
-    update={{ openstack.git_update }}
+  git: repo={{ nova.novnc_repo }}
+       dest=/usr/share/novnc
+       version={{ nova.novnc_rev }}
+       update={{ openstack.git_update }}
 
 - name: install nova-novncproxy service
-  upstart_service: |
-    name=nova-novncproxy
-    user=nova
-    cmd=/usr/local/bin/nova-novncproxy
+  upstart_service: name=nova-novncproxy user=nova
+                   cmd=/usr/local/bin/nova-novncproxy
 
 - name: start nova-novncproxy
   service: name=nova-novncproxy state=started
