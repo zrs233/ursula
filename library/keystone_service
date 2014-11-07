@@ -5,11 +5,74 @@ DOCUMENTATION = '''
 ---
 module: keystone_service
 short_description: Manage OpenStack Identity (keystone) service endpoints
-requirements: [ python-keystoneclinet ]
-examples:
-    - code: 'keystone_service: name=keystone type=identity description="Keystone Identity Service" publicurl=http://192.168.206.130:5000/v2.0 internalurl=http://192.168.206.130:5000/v2.0 adminurl=http://192.168.206.130:35357/v2.0'
-    - code: 'keystone_service: name=glance type=image description="Glance Identity Service" url=http://192.168.206.130:9292'
+options:
+  name:
+    description:
+        - name of service (e.g., keystone)
+    required: yes
+  type:
+    description:
+        - type of service (e.g., identity)
+    required: yes
+  description:
+    description:
+        - description of service (e.g., Identity Service)
+    required: yes
+  public_url:
+    description:
+        - public url of service.
+        - 'Alias: I(url)'
+        - 'Alias: I(publicurl)'
+    required: yes
+  internal_url:
+    description:
+        - internal url of service.
+        - 'Alias: I(internalurl)'
+    required: no
+    default: value of public_url
+  admin_url:
+    description:
+        - admin url of service.
+        - 'Alias: I(adminurl)'
+    required: no
+    default: value of public_url
+  insecure:
+    description:
+        - allow use of self-signed SSL certificates
+    required: no
+    choices: [ "yes", "no" ]
+  region:
+    description:
+        - region of service
+    required: yes
+  state:
+     description:
+        - Indicate desired state of the resource
+     choices: ['present', 'absent']
+     default: present
+
+
+
+requirements: [ python-keystoneclient ]
 author: Lorin Hochstein
+'''
+
+EXAMPLES = '''
+examples:
+keystone_service: >
+    name=keystone
+    type=identity
+    description="Keystone Identity Service"
+    publicurl=http://192.168.206.130:5000/v2.0
+    internalurl=http://192.168.206.130:5000/v2.0
+    adminurl=http://192.168.206.130:35357/v2.0
+
+keystone_service: >
+    name=glance
+    type=image
+    description="Glance Identity Service"
+    url=http://192.168.206.130:9292
+
 '''
 
 try:
@@ -22,15 +85,16 @@ else:
 import traceback
 
 
-def authenticate(endpoint, token, login_user, login_password):
+def authenticate(endpoint, token, login_user, login_password, tenant_name,
+                 insecure):
     """Return a keystone client object"""
 
     if token:
-        return client.Client(endpoint=endpoint, token=token)
+        return client.Client(endpoint=endpoint, token=token, insecure=insecure)
     else:
-        return client.Client(endpoint=endpoint, username=login_user,
-                             password=login_password)
-
+        return client.Client(auth_url=endpoint, username=login_user,
+                             password=login_password, tenant_name=tenant_name,
+                             insecure=insecure)
 
 def get_service(keystone, name):
     """ Retrieve a service by name """
@@ -186,21 +250,27 @@ def main():
             region=dict(required=True),
             state=dict(default='present', choices=['present', 'absent']),
             endpoint=dict(required=False,
-                          default="http://127.0.0.1:35357/v2.0"),
+                          default="http://127.0.0.1:35357/v2.0",
+                          aliases=['auth_url']),
             token=dict(required=False),
+            insecure=dict(required=False, default=False, choices=BOOLEANS),
+
             login_user=dict(required=False),
-            login_password=dict(required=False)
+            login_password=dict(required=False),
+            tenant_name=dict(required=False, aliases=['tenant'])
         ),
         supports_check_mode=True,
         mutually_exclusive=[['token', 'login_user'],
-                            ['token', 'login_password']]
+                            ['token', 'login_password'],
+                            ['token', 'tenant_name']]
     )
 
     endpoint = module.params['endpoint']
     token = module.params['token']
     login_user = module.params['login_user']
     login_password = module.params['login_password']
-
+    tenant_name = module.params['tenant_name']
+    insecure = module.boolean(module.params['insecure'])
     name = module.params['name']
     service_type = module.params['type']
     description = module.params['description']
@@ -214,7 +284,8 @@ def main():
     region = module.params['region']
     state = module.params['state']
 
-    keystone = authenticate(endpoint, token, login_user, login_password)
+    keystone = authenticate(endpoint, token, login_user, login_password,
+                            tenant_name, insecure)
     check_mode = module.check_mode
 
     try:

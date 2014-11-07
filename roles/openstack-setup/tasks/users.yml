@@ -7,7 +7,8 @@
                     internal_url={{ item.internal_url }}
                     admin_url={{ item.admin_url }}
                     region=RegionOne
-                    endpoint=https://{{ endpoints.main }}:5001/v2.0/
+                    auth_url=https://{{ endpoints.main }}:5001/v2.0/
+                    tenant_name=admin
                     login_user=admin
                     login_password={{ secrets.admin_password }}
   with_items: keystone.services
