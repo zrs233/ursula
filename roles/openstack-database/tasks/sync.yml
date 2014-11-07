@@ -1,7 +1,10 @@
 ---
-- exit_status: echo 'select version from migrate_version' | mysql {{ database_name }} | egrep "^$({{ database_name }}-manage {{ db_version|default('db_version') }})$"
+- name: discover db current status
+  exit_status: echo 'select version from migrate_version' | mysql {{ database_name }} | egrep "^$({{ database_name }}-manage {{ db_version|default('db_version') }})$"
   run_once: true
   register: db_current
-- command: "{{ database_name }}-manage {{ db_sync|default('db_sync') }}"
+
+- name: sync the db
+  command: "{{ database_name }}-manage {{ db_sync|default('db_sync') }}"
   run_once: true
   when: db_current.status != 0
