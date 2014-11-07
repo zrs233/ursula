@@ -1,11 +1,19 @@
 ---
 # IPv6 RA requires dnsmasq >= 2.64
-- apt_key: id=49DE63CB url='http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0xC37BA5F849DE63CB'
-- apt_repository: repo='ppa:blueboxgroup/openstack' update_cache=yes
+- name: Add apt-key for bbg/openstack ppa
+  apt_key: id=49DE63CB url='http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0xC37BA5F849DE63CB'
 
-- apt: pkg=dnsmasq state=latest
+- name: Add bbg/openstack ppa repo
+  apt_repository: repo='ppa:blueboxgroup/openstack' update_cache=yes
 
-- template: src=etc/dnsmasq.d/internal-ipv6-ra.conf dest=/etc/dnsmasq.d/internal-ipv6-ra.conf owner=root group=root mode=0644
+- name: Update dnsmasq to the ppa version
+  apt: pkg=dnsmasq state=latest
+
+- name: Configure dnsmasq
+  template: src=etc/dnsmasq.d/internal-ipv6-ra.conf
+            dest=/etc/dnsmasq.d/internal-ipv6-ra.conf owner=root group=root
+            mode=0644
   notify: restart-dnsmasq
 
-- service: name=dnsmasq state=started enabled=yes
+- name: Enable/start dnsmasq
+  service: name=dnsmasq state=started enabled=yes
