@@ -148,7 +148,6 @@
     - role: neutron-control
       tags: ['openstack', 'neutron', 'control']
 
-
 - name: neutron core data plane
   hosts: compute:network
   roles:

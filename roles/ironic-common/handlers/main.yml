@@ -1,12 +1,10 @@
 ---
 
-- name: pip install ironic deps
+- name: pip install ironic
   pip: name='{{ item }}' virtualenv='{{ ironic.virtualenv }}' extra_args='-i {{ openstack.pypi_mirror }}'
   with_items:
-   - MySQL-python
-
-- name: pip install ironic
-  pip: name='{{ ironic.path }}' virtualenv='{{ ironic.virtualenv }}' extra_args='-i {{ openstack.pypi_mirror }}'
+    - MySQL-python
+    - '{{ ironic.path }}'
 
 - name: pip install ironicclient
   pip: name='{{ ironic.client_path }}' virtualenv='{{ ironic.client_virtualenv }}' extra_args='-i {{ openstack.pypi_mirror }}'
