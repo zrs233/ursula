@@ -10,22 +10,17 @@
   apt: pkg=haproxy
 
 # WORKAROUND: `service haproxy stop` fails due to incorrect `start-stop-daemon --pid`
-- template: src=etc/init.d/haproxy dest=/etc/init.d/haproxy mode=0755
+- name: fix haproxy init script
+  template: src=etc/init.d/haproxy dest=/etc/init.d/haproxy mode=0755
 
 - name: install ssl cert+key
-  template: >
-    src=etc/haproxy/openstack.pem
-    dest=/etc/haproxy/openstack.pem
-    owner=haproxy
-    group=haproxy
-    mode=0600
+  template: src=etc/haproxy/openstack.pem dest=/etc/haproxy/openstack.pem
+            owner=haproxy group=haproxy mode=0600
   notify: reload haproxy
   tags:
     - ssl
 
 - name: haproxy config
-  template: |
-    src=etc/haproxy/haproxy_{{ haproxy_type }}.cfg
-    dest=/etc/haproxy/haproxy.cfg
-    mode=0644
+  template: src=etc/haproxy/haproxy_{{ haproxy_type }}.cfg
+            dest=/etc/haproxy/haproxy.cfg mode=0644
   notify: reload haproxy
