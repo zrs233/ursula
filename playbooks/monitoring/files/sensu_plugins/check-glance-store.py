@@ -32,22 +32,22 @@ auth_token = keystone.auth_token
 endpoint = keystone.service_catalog.url_for(service_type='image',
                                             endpoint_type='publicURL')
 
-#logging.basicConfig(level=logging.DEBUG)
+# logging.basicConfig(level=logging.DEBUG)
 glance = client.Client('1', endpoint=endpoint, token=auth_token)
 glance.format = 'json'
 
 # Fetch the list of files in store_directory matching the UUID regex
 uuid_re = re.compile(
-        r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
+    r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
 files = [(x, os.path.join(store_directory, x)) for x in
-            os.listdir(store_directory) if uuid_re.match(x)]
-files = [(x, os.path.getsize(p), datetime.fromtimestamp(os.path.getmtime(p),
-                                                        iso8601.Utc()))
-            for x, p in files if os.path.isfile(p)]
+         os.listdir(store_directory) if uuid_re.match(x)]
+files = [(x, os.path.getsize(p),
+          datetime.fromtimestamp(os.path.getmtime(p), iso8601.Utc()))
+         for x, p in files if os.path.isfile(p)]
 
 # Fetch the list of glance images
 glance_images = [(x.id, x.size, timeutils.parse_isotime(x.created_at))
-                    for x in glance.images.list() if x.status == 'active']
+                 for x in glance.images.list() if x.status == 'active']
 
 
 # Check all active images 1 hour or older are present
@@ -72,7 +72,7 @@ for image_file in files:
 for image in glance_images:
     for image_file in [x for x in files if x[0] == image[0]]:
         if image[1] != image_file[1]:
-            print "Glance image %s file size differs from file on disk" % image[0]
+            print "Glance image %s size differs from file on disk" % image[0]
             result = 2
 
 if result == 0:
