@@ -20,7 +20,7 @@
 - file: dest=/var/log/keystone state=directory mode=0755 owner=keystone group=keystone
 
 # setup keystone apache config
-include: apache.yml
+- include: apache.yml
 
 - name: get keystone source repo
   git: |
