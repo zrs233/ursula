@@ -17,18 +17,21 @@
   notify:
     - setup horizon venv
 
-- lineinfile: dest=/etc/apache2/ports.conf line="Listen 8080"
+- name: make sure apache knows about horizon ports
+  lineinfile: dest=/etc/apache2/ports.conf line="Listen 8080"
   notify:
     - restart apache
 
-- template: |
+- name: create dashboard virtualhost on precise
+  template: |
     src=etc/apache2/sites-available/openstack_dashboard.conf
     dest=/etc/apache2/sites-available/openstack_dashboard
   when: ansible_distribution_version == "12.04"
   notify:
     - restart apache
 
-- template: |
+- name: create dashboard virtualhost on other
+  template: |
     src=etc/apache2/sites-available/openstack_dashboard.conf
     dest=/etc/apache2/sites-available/openstack_dashboard.conf
   when: ansible_distribution_version != "12.04"
@@ -40,21 +43,19 @@
   notify:
     - restart apache
 
-# static asset directories
-- file: |
-    dest=/opt/stack/horizon/static
+- name: create static asset dirs
+  file: |
+    dest={{ item }}
     state=directory
     owner=www-data
     group=www-data
     mode=0755
-- file: |
-    dest=/opt/stack/horizon/static/dashboard
-    state=directory
-    owner=www-data
-    group=www-data
-    mode=0755
+  with_items:
+    - /opt/stack/horizon/static
+    - /opt/stack/horizon/static/dashboard
 
-- template: |
+- name: dashboard settings
+  template: |
     src=opt/stack/horizon/openstack_dashboard/local/local_settings.py
     dest=/opt/stack/horizon/openstack_dashboard/local/local_settings.py
     mode=0644
@@ -81,6 +82,7 @@
     - img
     - fonts
 
+- name: ensure apache is running
 - service: name=apache2 state=started
 
 - name: Permit HTTP (redirect to HTTPS for Horizon)

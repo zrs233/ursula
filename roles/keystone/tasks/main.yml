@@ -19,8 +19,8 @@
 - file: dest=/etc/keystone state=directory
 - file: dest=/var/log/keystone state=directory mode=0755 owner=keystone group=keystone
 
-- name: setup keystone apache config
-  include: apache.yml
+# setup keystone apache config
+include: apache.yml
 
 - name: get keystone source repo
   git: |
@@ -54,5 +54,3 @@
     owner=root
     group=root
     mode=0755
-
-- meta: flush_handlers
