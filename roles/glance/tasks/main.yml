@@ -58,7 +58,7 @@
     - restart glance services
 
 - name: permit access to glance
-  command: ufw allow {{ item }}/tcp
+  ufw: rule=allow to_port={{ item }} proto=tcp
   with_items:
     - 9292
     - 9293

@@ -20,4 +20,4 @@
   action: service name=neutron-server state=started
 
 - name: Permit access to Neutron
-  command: ufw allow 9797/tcp
+  ufw: rule=allow to_port=9797 proto=tcp

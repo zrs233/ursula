@@ -53,7 +53,7 @@
   service: name=keystone state=started
 
 - name: permit access to keystone
-  command: ufw allow {{ item }}/tcp
+  ufw: rule=allow to_port={{ item }} proto=tcp
   with_items:
     - 5001
     - 35358

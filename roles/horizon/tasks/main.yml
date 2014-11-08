@@ -9,9 +9,9 @@
 
 - name: get horizon source repo
   git: |
-    repo={{ openstack.git_mirror}}/horizon.git 
-    dest=/opt/stack/horizon 
-    version={{ horizon.rev }} 
+    repo={{ openstack.git_mirror}}/horizon.git
+    dest=/opt/stack/horizon
+    version={{ horizon.rev }}
     update={{ openstack.git_update }}
   notify:
     - setup horizon venv
@@ -98,8 +98,8 @@
 
 - service: name=apache2 state=started
 
-- name: Permit HTTP (redirect to HTTPS for Horizon)
-  command: ufw allow 80/tcp
-
-- name: Permit HTTPS (Horizon)
-  command: ufw allow 443/tcp
+- name: Permit HTTP and HTTPS
+  ufw: rule=allow to_port={{ item }} proto=tcp
+  with_items:
+  - 80
+  - 443

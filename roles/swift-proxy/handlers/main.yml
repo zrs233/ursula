@@ -4,6 +4,3 @@
 
 - name: restart haproxy
   service: name=haproxy state=restarted
-
-- name: enable ufw
-  command: ufw --force enable

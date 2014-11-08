@@ -1,5 +1,6 @@
 ---
-- include: ufw.yml
+- name: permit swift proxy from anywhere
+  ufw: rule=allow to_port=8090 proto=tcp
 
 - name: install memcached
   apt: pkg=memcached

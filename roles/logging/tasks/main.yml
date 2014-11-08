@@ -1,14 +1,9 @@
 ---
-- name: Add ufw package
-  apt: pkg=ufw
-
 - name: Open IPv4 port for 514/udp
-  command: ufw allow proto udp from 127.0.0.1 port 514
-  notify: enable ufw
-
-- name: Open IPv6 port for 514/udp
-  command: ufw allow proto udp from ::1 port 514
-  notify: enable ufw
+  ufw: rule=allow from_ip={{item}} to_port=514 proto=udp
+  with_items:
+  - 127.0.0.1
+  - ::1
 
 - name: Do not write OpenStack (local7) log files into /var/log/syslog
   template: src=etc/rsyslog.d/50-default.conf dest=/etc/rsyslog.d/50-default.conf mode=0644

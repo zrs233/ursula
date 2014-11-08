@@ -20,6 +20,6 @@
     - nova-scheduler
 
 - name: permit access to nova api
-  command: ufw allow 8777/tcp
+  ufw: rule=allow to_port=8777 proto=tcp
 
 - include: novnc.yml
