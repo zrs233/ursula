@@ -21,10 +21,7 @@ network_interfaces: |
   post-down ifconfig $IFACE down
     mtu 1500
     up sysctl net.ipv4.conf.$IFACE.forwarding=1
-<<<<<<< HEAD
     up iptables -t nat -A POSTROUTING -o $IFACE -s 192.168.255.0/24 ! -d 192.168.255.0/24 -j MASQUERADE
-=======
->>>>>>> 7770c1d... fixing external networks
 
   # routed external interface
   auto br-ex
@@ -32,7 +29,3 @@ network_interfaces: |
     address 192.168.255.100
     netmask 255.255.255.0
     up sysctl net.ipv4.conf.$IFACE.forwarding=1
-<<<<<<< HEAD
-
-=======
->>>>>>> 7770c1d... fixing external networks
