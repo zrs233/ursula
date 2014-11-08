@@ -11,4 +11,4 @@ sensu ALL= NOPASSWD: /etc/sensu/plugins/check-cinder-services.sh
 sensu ALL= NOPASSWD: /etc/sensu/plugins/check-neutron-agents.sh
 sensu ALL= NOPASSWD: /etc/sensu/plugins/check-ucarp-procs.sh
 sensu ALL= NOPASSWD: /etc/sensu/plugins/nimble-check.py
-sensu ALL= NOPASSWD: /etc/sensu/plugins/check_glance_store.py
+sensu ALL= NOPASSWD: /etc/sensu/plugins/check-glance-store.py
