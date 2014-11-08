@@ -2,6 +2,15 @@
 require 'rubygems'
 require 'antsy'
 
+def set_arg_to_bool(var, default = true)
+  if var == 'false' || var == false
+    return false
+  elsif var == 'true' || var == true
+    return true
+  end
+  default
+end
+
 # defaults
 INTERVAL = 30
 
@@ -17,15 +26,6 @@ plugin       = args[:plugin]
 plugin_args  = args[:args]
 prefix       = args[:prefix]
 env_vars     = args[:env_vars]
-
-def set_arg_to_bool(var, default = true)
-  if var == 'false' || var == false
-    return false
-  elsif var == 'true' || var == true
-    return true
-  end
-  default
-end
 
 # parse_env_vars works around Ansible disallowing '='
 # in string arguments, instead environmental variables can be
