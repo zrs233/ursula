@@ -1,0 +1,44 @@
+---
+- name: ensure apache listening on keystone ports
+  lineinfile: dest=/etc/apache2/ports.conf line="{{ item }}"
+  with_items:
+    - "Listen 5000"
+    - "Listen 35357"
+  notify:
+    - restart apache
+
+- name: set up keystone site on ubuntu 12.04
+  template: src=etc/apache2/sites-available/openstack_keystone.conf
+            dest=/etc/apache2/sites-available/openstack_keystone
+  when: ansible_distribution_version == "12.04"
+  notify:
+    - restart apache
+
+- name: set up keystone site on newer ubuntu
+  template: src=etc/apache2/sites-available/openstack_keystone.conf
+            dest=/etc/apache2/sites-available/openstack_keystone.conf
+  when: ansible_distribution_version != "12.04"
+  notify:
+    - restart apache
+
+- name: keystone cgi directory
+  file: dest=/var/www/cgi-bin/keystone state=directory mode=0755 owner=keystone group=nogroup
+
+- name: keystone cgi files
+  template: src=var/www/cgi-bin/keystone/keystone.py
+            dest=/var/www/cgi-bin/keystone/{{ item }}
+            owner=keystone group=nogroup mode=0750
+  with_items:
+    - admin
+    - main
+
+- name: enable keystone apache site
+  command: a2ensite openstack_keystone
+  notify:
+    - restart apache
+
+- name: configure keystone
+  action: template src={{ item }} dest=/etc/keystone/ mode=0644
+  with_fileglob: ../templates/etc/keystone/*
+  notify:
+    - restart apache

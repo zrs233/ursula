@@ -1,17 +1,12 @@
 ---
-- apt: pkg={{ item }}
-  with_items:
-    - apache2
-    - libapache2-mod-wsgi
-
 - name: lesscpy must be in apache PATH
   pip: name=lesscpy version=0.9j
 
 - name: get horizon source repo
   git: |
-    repo={{ openstack.git_mirror}}/horizon.git 
-    dest=/opt/stack/horizon 
-    version={{ horizon.rev }} 
+    repo={{ openstack.git_mirror}}/horizon.git
+    dest=/opt/stack/horizon
+    version={{ horizon.rev }}
     update={{ openstack.git_update }}
   notify:
     - setup horizon venv
@@ -22,17 +17,7 @@
   notify:
     - setup horizon venv
 
-- name: disable apache status
-  command: a2dismod status
-  notify:
-    - restart apache
-
-- template: src=etc/apache2/ports.conf dest=/etc/apache2/ports.conf
-  notify:
-    - restart apache
-
-- name: disable default apache site
-  command: a2dissite 000-default
+- lineinfile: dest=/etc/apache2/ports.conf line="Listen 8080"
   notify:
     - restart apache
 

@@ -16,6 +16,12 @@
 - name: WORKAROUND - keystone does not include babel in dependencies
   pip: name=babel
 
+- file: dest=/etc/keystone state=directory
+- file: dest=/var/log/keystone state=directory mode=0755 owner=keystone group=keystone
+
+- name: setup keystone apache config
+  include: apache.yml
+
 - name: get keystone source repo
   git: |
     repo={{ openstack.git_mirror }}/keystone.git
@@ -28,27 +34,12 @@
   delay: 60
   notify:
     - pip install keystone
-    - restart keystone services
+    - restart apache
+
 - meta: flush_handlers
 
-- file: dest=/etc/keystone state=directory
-- file: dest=/var/log/keystone state=directory mode=0755 owner=keystone group=keystone
-
-- name: install keystone service
-  upstart_service: |
-    name=keystone
-    user=keystone
-    cmd=/usr/local/bin/keystone-all
-    config_dirs=/etc/keystone
-
-- name: configure keystone
-  action: template src={{ item }} dest=/etc/keystone/ mode=0644
-  with_fileglob: ../templates/etc/keystone/*
-  notify:
-    - restart keystone services
-
-- name: start keystone
-  service: name=keystone state=started
+- name: start apache
+  service: name=apache2 state=started
 
 - name: permit access to keystone
   command: ufw allow {{ item }}/tcp
@@ -63,3 +54,5 @@
     owner=root
     group=root
     mode=0755
+
+- meta: flush_handlers

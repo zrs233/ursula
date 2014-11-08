@@ -1,0 +1,32 @@
+---
+- apt: pkg={{ item }}
+  with_items:
+    - apache2
+    - libapache2-mod-wsgi
+
+- name: disable apache status
+  command: a2dismod status
+  notify:
+    - restart apache
+
+- name: check if custom ports.conf
+  exit_status: grep '# This file is managed by Ansible' /etc/apache2/ports.conf
+  run_once: true
+  register: custom_apache_ports_file
+
+- name: create custom ports.conf file
+  template:
+    src=etc/apache2/ports.conf
+    dest=/etc/apache2/ports.conf
+    owner=root
+    group=root
+    mode=0644
+  when: custom_apache_ports_file.status != 0
+
+- name: disable default apache site
+  command: a2dissite 000-default
+  notify:
+    - restart apache
+
+- name: enable apache service
+  service: name=apache2 enabled=yes
