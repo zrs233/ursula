@@ -48,8 +48,8 @@ check_path = "/etc/sensu/conf.d/checks/#{name}.json"
 command = args[:command] || ''
 if command.empty?
   command = "#{plugin_path} #{plugin_args}"
-  command = "#{parse_env_vars(env_vars)} #{command}" if !env_vars.empty?
-  command = "#{prefix} #{command}" if !prefix.empty?
+  command = "#{parse_env_vars(env_vars)} #{command}" if env_vars
+  command = "#{prefix} #{command}" if prefix
   command = "sudo #{command}" if use_sudo
 end
 
