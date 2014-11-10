@@ -2,7 +2,7 @@
 - name: setup horizon venv
   command: python tools/install_venv.py chdir=/opt/stack/horizon/
   notify:
-    - restart apache
+    - reload apache
     - downgrade modules in horizon venv
 
 - name: downgrade modules in horizon venv

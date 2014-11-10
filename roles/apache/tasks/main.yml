@@ -5,15 +5,20 @@
     - apache2
     - libapache2-mod-wsgi
 
-- name: disable apache status
-  command: a2dismod status
+- name: enable apache modules
+  apache2_module: state=present name=wsgi
   notify:
-    - restart apache
+    - reload apache
+
+- name: disable apache status
+  apache2_module: state=absent name=status
+  notify:
+    - reload apache
 
 - name: disable default apache site
-  command: a2dissite 000-default
+  apache2_site: state=disabled name=000-default
   notify:
-    - restart apache
+    - reload apache
 
 - name: check if custom ports.conf
   exit_status: grep '# This file is managed by Ansible' /etc/apache2/ports.conf
@@ -26,7 +31,7 @@
             owner=root
             group=root
             mode=0644
-  when: custom_apache_ports_file.status|failure
+  when: custom_apache_ports_file.status != 0
 
 - name: enable apache service
   service: name=apache2 enabled=yes

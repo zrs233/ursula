@@ -22,6 +22,12 @@
 # setup keystone apache config
 - include: apache.yml
 
+- name: configure keystone
+  action: template src={{ item }} dest=/etc/keystone/ mode=0644
+  with_fileglob: ../templates/etc/keystone/*
+  notify:
+    - reload apache
+
 - name: get keystone source repo
   git: |
     repo={{ openstack.git_mirror }}/keystone.git

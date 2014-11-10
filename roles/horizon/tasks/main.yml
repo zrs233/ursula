@@ -20,7 +20,7 @@
 - name: make sure apache knows about horizon ports
   lineinfile: dest=/etc/apache2/ports.conf line="Listen 8080"
   notify:
-    - restart apache
+    - reload apache
 
 - name: create dashboard virtualhost on precise
   template: |
@@ -28,7 +28,7 @@
     dest=/etc/apache2/sites-available/openstack_dashboard
   when: ansible_distribution_version == "12.04"
   notify:
-    - restart apache
+    - reload apache
 
 - name: create dashboard virtualhost on other
   template: |
@@ -36,12 +36,12 @@
     dest=/etc/apache2/sites-available/openstack_dashboard.conf
   when: ansible_distribution_version != "12.04"
   notify:
-    - restart apache
+    - reload apache
 
 - name: enable horizon apache site
-  command: a2ensite openstack_dashboard
+  apache2_site: state=enabled name=openstack_dashboard
   notify:
-    - restart apache
+    - reload apache
 
 - name: create static asset dirs
   file: |
@@ -60,7 +60,7 @@
     dest=/opt/stack/horizon/openstack_dashboard/local/local_settings.py
     mode=0644
   notify:
-    - restart apache
+    - reload apache
 
 - name: custom horizon logo
   get_url: url={{ horizon.logo_url }} dest=/opt/stack/horizon/openstack_dashboard/static/dashboard/img/logo.png mode=0644 force=yes
