@@ -6,41 +6,45 @@
     - tgt
     - nbd-client
 
-- file: dest=/etc/tgt/conf.d state=directory
-- template: src=etc/tgt/targets.conf dest=/etc/tgt/targets.conf mode=0644
-- template: src=etc/tgt/conf.d/cinder_tgt.conf dest=/etc/tgt/conf.d/cinder_tgt.conf mode=0644
+- name: iscsi target framework conf dir
+  file: dest=/etc/tgt/conf.d state=directory
+
+- name: tgt config files
+  template: src={{ item.value.src }} dest={{ item.value.dest }} mode=0644
+  with_dict:
+    targets:
+      src: etc/tgt/targets.conf
+      dest: /etc/tgt/targets.conf
+    cinder_tgt:
+      src: etc/tgt/conf.d/cinder_tgt.conf
+      dest: /etc/tgt/conf.d/cinder_tgt.conf
 
 - service: name=tgt state=started
 
 # TODO: allow for device-backed VGs in addition to file-backed VGs
 - name: cinder volume group
-  cinder_volume_group: >
-    file={{ cinder.volume_file }}
-    size={{ cinder.volume_file_size }}
+  cinder_volume_group: file={{ cinder.volume_file }}
+                       size={{ cinder.volume_file_size }}
   when: cinder.passphrase is not defined
 
 - name: cinder volume group
-  cinder_volume_group: >
-    file={{ cinder.volume_file }}
-    size={{ cinder.volume_file_size }}
-    passphrase={{ cinder.passphrase }}
+  cinder_volume_group: file={{ cinder.volume_file }}
+                       size={{ cinder.volume_file_size }}
+                       passphrase={{ cinder.passphrase }}
   when: cinder.passphrase is defined
 
 - name: iscsi start
   service: name=open-iscsi state=started
 
 - name: create cinder-volumes crypttab entry
-  crypttab: state=present target=cinder-volumes source={{ cinder.volume_file }} opts=luks,aes,noauto
+  crypttab: state=present target=cinder-volumes source={{ cinder.volume_file }}
+            opts=luks,aes,noauto
   when: cinder.passphrase is defined
 
 - name: install cinder-volume service
-  upstart_service: |
-    name=cinder-volume
-    user=cinder
-    cmd=/usr/local/bin/cinder-volume
-    config_dirs=/etc/cinder
+  upstart_service: name=cinder-volume user=cinder
+                   cmd=/usr/local/bin/cinder-volume
+                   config_dirs=/etc/cinder
 
 - name: start cinder-volume
-  service: |
-    name=cinder-volume
-    state=started
+  service: name=cinder-volume state=started
