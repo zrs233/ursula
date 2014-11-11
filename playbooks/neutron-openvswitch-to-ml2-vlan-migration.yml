@@ -2,17 +2,21 @@
 - hosts: compute:network
   serial: 10
   tasks:
-  - fail: msg="Stack not configured for ML2, please update group_vars/all.yml"
+  - name: Verify stack is configured for ML2
+    fail: msg="Stack not configured for ML2, please update group_vars/all.yml"
     when: neutron.plugin != 'ml2'
 
-  - service: name=neutron-openvswitch-agent state=stopped enabled=no
+  - name: Stop Neutron OVS agent
+    service: name=neutron-openvswitch-agent state=stopped enabled=no
 
-  - service: name=nova-compute state=stopped
+  - name: Stop Nova Compute agent
+    service: name=nova-compute state=stopped
 
 - hosts: network
   serial: 10
   tasks:
-  - service: name={{ item }} state=stopped
+  - name: Stop Neutron data agents
+    service: name={{ item }} state=stopped
     with_items:
     - neutron-dhcp-agent
     - neutron-l3-agent
@@ -20,70 +24,105 @@
 - hosts: controller
   serial: 10
   tasks:
-  - service: name=neutron-server state=stopped
+  - name: Stop Neutron server
+    service: name=neutron-server state=stopped
 
-- hosts: controller[0]
-  tasks:
-  - name: Backup Neutron Database
-    command: mysqldump --result-file=/opt/stack/neutron-pre-ml2-upgrade.sql neutron
+ - hosts: controller[0]
+   tasks:
+   - name: Backup Neutron Database
+     command: mysqldump --result-file=/opt/stack/neutron-pre-ml2-upgrade.sql neutron
 
-  - file: src=neutron-openvswitch-to-ml2-vlan-migration/files/migrate_to_ml2.py dest=/opt/stack/neutron/neutron/db/migration/migrate_to_ml2.py
+   - name: Install upgrade script
+     copy: src=neutron-openvswitch-to-ml2-vlan-migration/files/migrate_to_ml2.py
+           dest=/opt/stack/neutron/neutron/db/migration/migrate_to_ml2.py
 
-  - command: python -m neutron.db.migration.migrate_to_ml2 openvswitch_to_linuxbridge mysql://neutron:{{ secrets.db_password }}@{{ endpoints.db }}/neutron?charset=utf8
-    chdir: /opt/stack/neutron
+   - name: Upgrade Neutron Database
+     command: python -m neutron.db.migration.migrate_to_ml2 openvswitch_to_linuxbridge mysql://neutron:{{ secrets.db_password }}@{{ endpoints.db }}/neutron?charset=utf8
+     args:
+       chdir: /opt/stack/neutron
 
-  - name: Backup Migrated Neutron Database
-    command: mysqldump --result-file=/opt/stack/neutron-post-ml2-upgrade.sql neutron
+   - name: Backup Migrated Neutron Database
+     command: mysqldump --result-file=/opt/stack/neutron-post-ml2-upgrade.sql neutron
 
 - hosts: compute:network:controller
   serial: 10
+  vars_files:
+    - ../roles/neutron-common/defaults/main.yml
   tasks:
   # Configuration files from neutron-common role
-  - file: dest=/etc/neutron/plugins/ml2 state=directory
-  - file: dest=/etc/neutron/plugins/linuxbridge state=directory
-  - template: |
-      src=../roles/neutron-common/templates/etc/neutron/{{ item }}
-      dest=/etc/neutron/{{ item }}
-      mode=0644
+  - name: Neutron config directories
+    file: dest={{ item }} state=directory
     with_items:
-    - neutron.conf
-    - dhcp_agent.ini
-    - metadata_agent.ini
-    - api-paste.ini
-    - l3_agent.ini
-    - rootwrap.conf
-    - policy.json
-    - plugins/ml2/ml2_plugin.ini
-    - plugins/linuxbridge/linuxbridge_conf.ini
+      - /etc/neutron/plugins/ml2
+      - /etc/neutron/plugins/linuxbridge
+  - name: Upgrade Neutron Configs
+    template: src=../roles/neutron-common/templates/etc/neutron/{{ item }}
+              dest=/etc/neutron/{{ item }}
+              mode=0644
+    with_items:
+      - neutron.conf
+      - dhcp_agent.ini
+      - metadata_agent.ini
+      - api-paste.ini
+      - l3_agent.ini
+      - rootwrap.conf
+      - policy.json
+      - plugins/ml2/ml2_plugin.ini
 
 - hosts: controller:db:compute
   serial: 10
   vars_files:
-    - ../rabbitmq/defaults/main.yml
+    - ../roles/rabbitmq/defaults/main.yml
+    - ../roles/nova-common/defaults/main.yml
   tasks:
-  - template: |
-      src=../roles/nova-common/templates/etc/nova/nova.conf
-      dest=/etc/nova/nova.conf
-      mode=0644
+  - name: Upgrade Nova config
+    template: src=../roles/nova-common/templates/etc/nova/nova.conf
+              dest=/etc/nova/nova.conf
+              mode=0644
 
 - hosts: controller
   serial: 1
   tasks:
-  - service: name=neutron-server state=started
+  - name: Start Neutron Server
+    service: name=neutron-server state=started
 
 - hosts: compute:network
   serial: 10
   tasks:
-  - service: name=neutron-linuxbridge-agent state=started enabled=yes
+  - name: Install neutron-linuxbridge-agent service
+    upstart_service: name=neutron-linuxbridge-agent
+                     user=neutron
+                     cmd=/usr/local/bin/neutron-linuxbridge-agent
+                     config_dirs=/etc/neutron
+                     config_files=/etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2_plugin.ini
+
+  - name: Start neutron-linuxbridge-agent
+    service: name=neutron-linuxbridge-agent state=started enabled=yes
 
 - hosts: network
   serial: 10
   tasks:
-  - service: name={{ item }} state=started
+  - name: install neutron-data-network services
+    upstart_service: name={{ item.name }}
+                     user=neutron
+                     cmd=/usr/local/bin/{{ item.name }}
+                     pidfile="{{ item.pidfile|default('') }}"
+                     start_on="starting neutron-linuxbridge-agent"
+                     stop_on="stopping neutron-linuxbridge-agent"
+                     config_dirs=/etc/neutron
+                     config_files=/etc/neutron/neutron.conf,{{ item.config_files }}
     with_items:
-    - neutron-dhcp-agent
-    - neutron-l3-agent
+      - { name: neutron-dhcp-agent, config_files: /etc/neutron/dhcp_agent.ini }
+      - { name: neutron-l3-agent, config_files: /etc/neutron/l3_agent.ini, pidfile: /var/run/neutron-l3-agent.pid }
+      - { name: neutron-metadata-agent, config_files: /etc/neutron/metadata_agent.ini }
+  - name: Start Neutron data plane agents
+    service: name={{ item }} state=started
+    with_items:
+      - neutron-dhcp-agent
+      - neutron-l3-agent
 
 - hosts: compute
   serial: 10
-  - service: name=nova-compute state=started
+  tasks:
+  - name: Start Nova compute
+    service: name=nova-compute state=started
