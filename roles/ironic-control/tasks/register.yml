@@ -1,0 +1,36 @@
+---
+- name: ironic tenant
+  keystone_user: |
+    tenant=ironic
+    tenant_description="{{ item }} tenant"
+    token={{ secrets.admin_token }}
+  with_items: keystone.tenants
+
+- name: ironic user
+  keystone_user: >
+    user={{ item.name }}
+    password={{ item.password }}
+    tenant={{ item.tenant }}
+    token={{ secrets.admin_token }}
+  with_items: keystone.users
+
+- name: ironic role
+  keystone_user: >
+    role={{ item.role }}
+    user={{ item.user }}
+    tenant={{ item.tenant }}
+    token={{ secrets.admin_token }}
+  with_items: keystone.user_roles
+
+- name: ironic service
+  keystone_service: >
+    name={{ item.name }}
+    type={{ item.type }}
+    description='{{ item.description }}'
+    public_url={{ item.public_url }}
+    internal_url={{ item.internal_url }}
+    admin_url={{ item.admin_url }}
+    region=RegionOne
+    token={{ secrets.admin_token }}
+  with_items: keystone.services
+  when: endpoints[item.name] is defined and endpoints[item.name]

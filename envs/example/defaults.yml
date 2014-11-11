@@ -353,4 +353,4 @@ heat:
   enabled: False
 
 ironic:
-  enabled: False
+  enabled: True
