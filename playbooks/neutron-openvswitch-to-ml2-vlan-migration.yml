@@ -18,8 +18,9 @@
   - name: Stop Neutron data agents
     service: name={{ item }} state=stopped
     with_items:
-    - neutron-dhcp-agent
-    - neutron-l3-agent
+      - neutron-dhcp-agent
+      - neutron-l3-agent
+      - neutron-metadata-agent
 
 - hosts: controller
   serial: 10
@@ -38,8 +39,7 @@
 
    - name: Upgrade Neutron Database
      command: python -m neutron.db.migration.migrate_to_ml2 openvswitch_to_linuxbridge mysql://neutron:{{ secrets.db_password }}@{{ endpoints.db }}/neutron?charset=utf8
-     args:
-       chdir: /opt/stack/neutron
+              chdir=/opt/stack/neutron
 
    - name: Backup Migrated Neutron Database
      command: mysqldump --result-file=/opt/stack/neutron-post-ml2-upgrade.sql neutron
@@ -49,12 +49,12 @@
   vars_files:
     - ../roles/neutron-common/defaults/main.yml
   tasks:
-  # Configuration files from neutron-common role
   - name: Neutron config directories
     file: dest={{ item }} state=directory
     with_items:
       - /etc/neutron/plugins/ml2
       - /etc/neutron/plugins/linuxbridge
+
   - name: Upgrade Neutron Configs
     template: src=../roles/neutron-common/templates/etc/neutron/{{ item }}
               dest=/etc/neutron/{{ item }}
@@ -74,6 +74,7 @@
   vars_files:
     - ../roles/rabbitmq/defaults/main.yml
     - ../roles/nova-common/defaults/main.yml
+
   tasks:
   - name: Upgrade Nova config
     template: src=../roles/nova-common/templates/etc/nova/nova.conf
@@ -89,7 +90,7 @@
 - hosts: compute:network
   serial: 10
   tasks:
-  - name: Install neutron-linuxbridge-agent service
+  - name: Install new neutron-linuxbridge-agent service
     upstart_service: name=neutron-linuxbridge-agent
                      user=neutron
                      cmd=/usr/local/bin/neutron-linuxbridge-agent
@@ -102,7 +103,7 @@
 - hosts: network
   serial: 10
   tasks:
-  - name: install neutron-data-network services
+  - name: Update service dependencies for Neutron data-plane agents
     upstart_service: name={{ item.name }}
                      user=neutron
                      cmd=/usr/local/bin/{{ item.name }}
@@ -112,17 +113,23 @@
                      config_dirs=/etc/neutron
                      config_files=/etc/neutron/neutron.conf,{{ item.config_files }}
     with_items:
-      - { name: neutron-dhcp-agent, config_files: /etc/neutron/dhcp_agent.ini }
-      - { name: neutron-l3-agent, config_files: /etc/neutron/l3_agent.ini, pidfile: /var/run/neutron-l3-agent.pid }
-      - { name: neutron-metadata-agent, config_files: /etc/neutron/metadata_agent.ini }
-  - name: Start Neutron data plane agents
+      - name: neutron-dhcp-agent
+        config_files: /etc/neutron/dhcp_agent.ini
+      - name: neutron-l3-agent
+        config_files: /etc/neutron/l3_agent.ini
+        pidfile: /var/run/neutron-l3-agent.pid
+      - name: neutron-metadata-agent
+        config_files: /etc/neutron/metadata_agent.ini
+
+  - name: Start Neutron data-plane agents
     service: name={{ item }} state=started
     with_items:
       - neutron-dhcp-agent
       - neutron-l3-agent
+      - neutron-metadata-agent
 
 - hosts: compute
   serial: 10
   tasks:
-  - name: Start Nova compute
+  - name: Start Nova compute agent
     service: name=nova-compute state=started
