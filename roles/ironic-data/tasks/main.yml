@@ -1,0 +1,10 @@
+---
+- name: install nova-compute service
+  upstart_service: |
+    name=nova-compute
+    user=nova
+    cmd=/usr/local/bin/nova-compute
+    config_dirs=/etc/nova
+
+- name: start nova-compute
+  service: name=nova-compute state=started

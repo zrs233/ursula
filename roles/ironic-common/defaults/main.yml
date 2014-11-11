@@ -6,3 +6,7 @@ ironic:
   client_rev: 727800dcae54b333811c22f6f3420753d6fd4879
   client_virtualenv: /opt/stack/python-ironicclient
   client_path: /opt/stack/python-ironicclient/source
+  enabled_drivers:
+    - fake
+    - agent_ssh
+    - agent_ipmitool

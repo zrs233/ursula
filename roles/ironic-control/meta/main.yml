@@ -1,5 +1,6 @@
 ---
 dependencies:
+  - role: nova-control
   - role: ironic-common
   - role: openstack-database
     database_name: ironic
