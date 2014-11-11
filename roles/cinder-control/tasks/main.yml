@@ -16,4 +16,4 @@
     - cinder-scheduler
 
 - name: Permit access to Cinder
-  command: ufw allow 8778/tcp
+  ufw: rule=allow to_port=8778 proto=tcp

@@ -13,4 +13,4 @@
   service: name=nova-novncproxy state=started
 
 - name: Permit access to NoVNC
-  command: ufw allow 6081/tcp
+  ufw: rule=allow to_port=6081 proto=tcp
