@@ -116,6 +116,7 @@
       tags: ['openstack', 'glance', 'control']
     - role: openstack-database
       database_name: glance
+      db_sync: 'db sync'
       tags: ['openstack', 'glance', 'control']
 
 - name: nova control plane
