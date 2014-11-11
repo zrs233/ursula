@@ -1,5 +1,5 @@
 ---
-- name: Open IPv4 port for 514/udp
+- name: Allow local UDP syslog
   ufw: rule=allow from_ip={{item}} to_port=514 proto=udp
   with_items:
   - 127.0.0.1
