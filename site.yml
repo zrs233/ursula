@@ -109,6 +109,12 @@
       database_name: keystone
       tags: ['openstack', 'keystone', 'control']
 
+- name: keystone setup
+  hosts: controller[0]
+  roles:
+    - role: keystone-setup
+      tags: ['openstack', 'setup']
+
 - name: glance code and config
   hosts: controller
   roles:
