@@ -7,8 +7,7 @@
     - iputils-arping
     - ucarp
 
-- name: configure dnsmasq
-  include: dnsmasq.yml
+- include: dnsmasq.yml
 
 - name: ensure ovs br-ex bridge present
   ovs_bridge: name=br-ex state=present
@@ -19,27 +18,32 @@
 - include: igmp-router.yml
   when: neutron.plugin == 'ml2' and 'vxlan' in neutron.tunnel_types
 
-- set_fact: neutron_data_path_agent=neutron-openvswitch-agent
+- name: set ovs data path agent fact
+  set_fact: neutron_data_path_agent=neutron-openvswitch-agent
   when: neutron.plugin == 'ovs'
 
-- set_fact: neutron_data_path_agent=neutron-linuxbridge-agent
+- name: set ml2 data path agent fact
+  set_fact: neutron_data_path_agent=neutron-linuxbridge-agent
   when: neutron.plugin == 'ml2'
 
 # pidfile is a hack while we wait for 'default(omit)' in ansible 1.8
 - name: install neutron-data-network services
-  upstart_service: |
-    name={{ item.name }}
-    user=neutron
-    cmd=/usr/local/bin/{{ item.name }}
-    pidfile="{{ item.pidfile|default('') }}"
-    start_on="starting {{ neutron_data_path_agent }}"
-    stop_on="stopping {{ neutron_data_path_agent }}"
-    config_dirs=/etc/neutron
-    config_files=/etc/neutron/neutron.conf,{{ item.config_files }}
-  with_items:
-    - { name: neutron-dhcp-agent, config_files: /etc/neutron/dhcp_agent.ini }
-    - { name: neutron-l3-agent, config_files: /etc/neutron/l3_agent.ini, pidfile: /var/run/neutron-l3-agent.pid }
-    - { name: neutron-metadata-agent, config_files: /etc/neutron/metadata_agent.ini }
+  upstart_service: name={{ item.key }}
+                   user=neutron
+                   cmd=/usr/local/bin/{{ item.key }}
+                   pidfile="{{ item.value.pidfile|default('') }}"
+                   start_on="starting {{ neutron_data_path_agent }}"
+                   stop_on="stopping {{ neutron_data_path_agent }}"
+                   config_dirs=/etc/neutron
+                   config_files=/etc/neutron/neutron.conf,{{ item.value.config_files }}
+  with_dict:
+    neutron-dhcp-agent:
+      config_files: /etc/neutron/dhcp_agent.ini
+    neutron-l3-agent:
+      config_files: /etc/neutron/l3_agent.ini
+      pidfile: /var/run/enutron-l3-agent.pid
+    neutron-metadata-agent:
+      config_files: /etc/neutron/metadata_agent.ini
 
 - name: start neutron-data-network services
   service: name={{ item }} state=started
@@ -48,5 +52,4 @@
     - neutron-dhcp-agent
     - neutron-metadata-agent
 
-- name: install ipchanged
-  include: ipchanged.yml
+- include: ipchanged.yml

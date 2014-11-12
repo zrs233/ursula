@@ -1,20 +1,21 @@
 ---
-- file: dest=/var/cache/neutron owner=neutron state=directory
-- file: dest=/var/cache/neutron/api owner=neutron state=directory
+- name: neutron api cache dir
+  file: dest=/var/cache/neutron/api owner=neutron state=directory
 
-- set_fact: neutron_plugin_config=/etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini
+- name: set ml2 config path
+  set_fact: neutron_plugin_config=/etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini
   when: neutron.plugin == 'ovs'
 
-- set_fact: neutron_plugin_config=/etc/neutron/plugins/ml2/ml2_plugin.ini
+- name: set ovs config path
+  set_fact: neutron_plugin_config=/etc/neutron/plugins/ml2/ml2_plugin.ini
   when: neutron.plugin == 'ml2'
 
 - name: install neutron-server service
-  upstart_service: |
-    name=neutron-server
-    user=neutron
-    cmd=/usr/local/bin/neutron-server
-    config_dirs=/etc/neutron
-    config_files="/etc/neutron/neutron.conf,{{ neutron_plugin_config }}"
+  upstart_service: name=neutron-server
+                   user=neutron
+                   cmd=/usr/local/bin/neutron-server
+                   config_dirs=/etc/neutron
+                   config_files="/etc/neutron/neutron.conf,{{ neutron_plugin_config }}"
 
 - name: start neutron-server
   action: service name=neutron-server state=started

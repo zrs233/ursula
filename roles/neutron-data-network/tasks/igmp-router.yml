@@ -11,6 +11,7 @@
   lineinfile: dest=/etc/default/xorp regexp=^RUN= line=RUN=yes
   notify:
     - restart xorp
+
 - meta: flush_handlers
 
 - name: start and enable xorp service
