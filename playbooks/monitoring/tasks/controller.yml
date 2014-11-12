@@ -5,9 +5,9 @@
   notify: restart sensu-client
 - sensu_process_check: service=cinder-scheduler
   notify: restart sensu-client
-- sensu_check: name=check-cinder-services plugin=check-cinder-services.sh use_sudo=true
+- sensu_check: name=check-cinder-services plugin=check-cinder-services.sh
+               use_sudo=true
   notify: restart sensu-client
-
 
 # glance
 
@@ -15,21 +15,29 @@
   notify: restart sensu-client
 - sensu_process_check: service=glance-registry
   notify: restart sensu-client
-- sensu_check: name=check-glance-api plugin=check-os-api.rb use_sudo=true args="--service glance"
+- sensu_check: name=check-glance-api plugin=check-os-api.rb
+               args="--service glance" use_sudo=true prefix=". /root/stackrc;"
+  notify: restart sensu-client
+
+- sensu_check: name=check-glance-store plugin=check-glance-store.py
+               env_vars=GLANCE_IMAGE_DIR:/var/lib/glance/images
+               use_sudo=true prefix=". /root/stackrc;"
   notify: restart sensu-client
 
 # horizon
 
 - sensu_process_check: service=apache2
   notify: restart sensu-client
-- sensu_check: name=check-dashboard-clear-port-redirects plugin=check-http.rb args='-u http://localhost/ -r'
+- sensu_check: name=check-dashboard-clear-port-redirects plugin=check-http.rb
+               args='-u http://localhost/ -r'
   notify: restart sensu-client
 
 # keystone
 
 - sensu_process_check: service=keystone-all
   notify: restart sensu-client
-- sensu_check: name=check-keystone-api plugin=check-os-api.rb use_sudo=true args="--service keystone"
+- sensu_check: name=check-keystone-api plugin=check-os-api.rb
+               args="--service keystone" use_sudo=true prefix=". /root/stackrc;"
   notify: restart sensu-client
 
 # neutron
@@ -37,7 +45,8 @@
 - sensu_process_check: service=neutron-server
   notify: restart sensu-client
 
-- sensu_check: name=check-neutron-agents plugin=check-neutron-agents.sh use_sudo=true
+- sensu_check: name=check-neutron-agents plugin=check-neutron-agents.sh
+               use_sudo=true
   notify: restart sensu-client
 
 # heat
@@ -47,7 +56,8 @@
 
 # haproxy
 
-- sensu_check: name=haproxy plugin=check-procs.rb args="-p 'haproxy.*-f /etc/haproxy/haproxy.cfg' -w 5 -c 10 -W 1 -C 1"
+- sensu_check: name=haproxy plugin=check-procs.rb
+               args="-p 'haproxy.*-f /etc/haproxy/haproxy.cfg' -w 5 -c 10 -W 1 -C 1"
   notify: restart sensu-client
 
 # nova
@@ -61,32 +71,41 @@
     - nova-scheduler
   notify: restart sensu-client
 
-- sensu_check: name=check-nova-api plugin=check-os-api.rb use_sudo=true args="--service nova"
+- sensu_check: name=check-nova-api plugin=check-os-api.rb
+               args="--service nova" use_sudo=true prefix=". /root/stackrc;"
   notify: restart sensu-client
 
-- sensu_check: name=check-nova-services plugin=check-nova-services.sh use_sudo=true
+- sensu_check: name=check-nova-services plugin=check-nova-services.sh
+               use_sudo=true
   notify: restart sensu-client
 
 # rabbitmq
 
 - sensu_process_check: service=rabbitmq
   notify: restart sensu-client
-- sensu_check: name=rabbitmq-cluster plugin=check-rabbitmq-cluster.rb use_sudo=true args="--expected 2"
+- sensu_check: name=rabbitmq-cluster plugin=check-rabbitmq-cluster.rb
+               args="--expected 2" use_sudo=true
   notify: restart sensu-client
   when: rabbitmq.cluster
-- sensu_check: name=rabbitmq-queues plugin=check-rabbitmq-queues.rb use_sudo=true
+- sensu_check: name=rabbitmq-queues plugin=check-rabbitmq-queues.rb
+               use_sudo=true
   notify: restart sensu-client
 
 - set_fact: cluster_node_count={{ groups['all'] | count }}
 
-- sensu_check: name=rabbitmq-numqueues plugin=check-rabbitmq-queues.rb use_sudo=true args="-t number -w {{ cluster_node_count|int * 50 }} -c {{ cluster_node_count|int * 100 }}"
+- sensu_check: name=rabbitmq-numqueues plugin=check-rabbitmq-queues.rb
+               args="-t number -w {{ cluster_node_count|int * 50 }}
+                     -c {{ cluster_node_count|int * 100 }}"
+               use_sudo=true
   notify: restart sensu-client
 
 # memcached
 
-- sensu_check: name=memcached-stats plugin=check-memcached-stats.rb args='--host {{ primary_ip }}'
+- sensu_check: name=memcached-stats plugin=check-memcached-stats.rb
+               args='--host {{ primary_ip }}'
   notify: restart sensu-client
 
-- sensu_check: name=memcached-graphite plugin=memcached-graphite.rb args='--host {{ primary_ip }} --scheme stats.{{ inventory_hostname  }}'
+- sensu_check: name=memcached-graphite plugin=memcached-graphite.rb
+               args='--host {{ primary_ip }} --scheme stats.{{ inventory_hostname  }}'
   notify: restart sensu-client
 
