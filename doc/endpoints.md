@@ -57,4 +57,6 @@ from since we NAT the internal requests.
 | Heat CFN       | haproxy  | HTTP     | 8000  | controller internal IP |
 | Heat CFN       | internal | HTTPS    | 8001  | external floating IP   |
 | Heat CFN       | public   | HTTPS    | 8001  | external floating IP   |
-
+| Ironic-api       | haproxy  | HTTP     | 6385  | controller internal IP |
+| Ironic-api       | internal | HTTPS    | 6384  | external floating IP   |
+| Ironic-api       | public   | HTTPS    | 6384  | external floating IP   |

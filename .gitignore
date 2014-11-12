@@ -4,3 +4,4 @@ envs/test/group_vars/all.yml
 *.vdi
 .vagrant
 .tox
+build
