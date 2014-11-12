@@ -1,5 +1,6 @@
 ---
-- hosts: all
+- name: common role for all hosts
+  hosts: all
   roles:
     - role: common
       tags: ['common']
@@ -50,6 +51,7 @@
   roles:
     - role: percona-common
       tags: ['infra', 'percona']
+
     - role: percona-arbiter
       tags: ['infra', 'percona']
 
@@ -92,7 +94,6 @@
     - role: iptables
       tags: ['iptables', 'infra']
 
-
 # OPENSTACK SERVICES
 - name: openstack client tools
   hosts: all
@@ -105,6 +106,7 @@
   roles:
     - role: keystone
       tags: ['openstack', 'keystone', 'control']
+
     - role: openstack-database
       database_name: keystone
       tags: ['openstack', 'keystone', 'control']
@@ -120,6 +122,7 @@
   roles:
     - role: glance
       tags: ['openstack', 'glance', 'control']
+
     - role: openstack-database
       database_name: glance
       tags: ['openstack', 'glance', 'control']
@@ -177,12 +180,16 @@
   roles:
     - role: haproxy
       tags: ['openstack', 'swift', 'control']
+
     - role: swift-object
       tags: ['openstack', 'swift', 'data']
+
     - role: swift-account
       tags: ['openstack', 'swift', 'data']
+
     - role: swift-container
       tags: ['openstack', 'swift', 'data']
+
     - role: swift-proxy
       tags: ['openstack', 'swift', 'control']
 
@@ -198,6 +205,7 @@
     - role: heat
       tags: ['openstack', 'heat', 'control']
       when: heat.enabled == True
+
     - role: openstack-database
       database_name: heat
       tags: ['openstack', 'heat', 'control']
@@ -217,16 +225,17 @@
 #    - role: barbican
 #      tags: ['openstack', 'barbican', 'control']
 
-- hosts: controller[0]
+- name: openstack base setup
+  hosts: controller[0]
   roles:
     - role: 'openstack-setup'
       tags: ['openstack', 'setup']
 
-- name: restart neutron-openvswitch-agent to ensure VXLAN mesh is configured
+- name: extra neutron setup
   hosts: network:compute
   tasks:
-    - service: name=neutron-openvswitch-agent state=restarted
+    - name: restart neutron-openvswitch-agent to ensure VXLAN mesh is configured
+      service: name=neutron-openvswitch-agent state=restarted
       when: neutron.plugin == 'ovs'
 
-- name: install monitoring
-  include: playbooks/monitoring.yml tags=common,monitoring
+- include: playbooks/monitoring.yml tags=common,monitoring
