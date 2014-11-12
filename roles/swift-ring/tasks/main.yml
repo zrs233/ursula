@@ -1,13 +1,17 @@
 ---
 - name: register whether we need to boostrap rings
   shell: /usr/bin/test -f /etc/swift/account.ring.gz || /usr/bin/test -f /etc/swift/container.ring.gz || /usr/bin/test -f /etc/swift/object.ring.gz
-  ignore_errors: True
+  failed_when: False
   register: should_boostrap
 
 - name: drop our ring configuration
-  copy: src={{ swift_ring.ring_definition_file }} dest=/etc/swift/ring_definition.yml owner=root group=root mode=644 backup=yes
-  when: not should_boostrap.rc == 0
+  copy: src={{ swift_ring.ring_definition_file }} owner=root group=root
+        dest=/etc/swift/ring_definition.yml mode=644 backup=yes
+  when: not should_boostrap|success
 
 - name: setup swift rings
-  command: sudo -u swiftops /usr/local/bin/swifttool -i /home/swiftops/.ssh/id_rsa bootstrap --config /etc/swift/ring_definition.yml --outdir /etc/swift
-  when: not should_boostrap.rc == 0
+  command: /usr/local/bin/swifttool -i /home/swiftops/.ssh/id_rsa
+           bootstrap --config /etc/swift/ring_definition.yml --outdir /etc/swift
+  sudo: yes
+  sudo_user: swiftops
+  when: not should_boostrap|success
