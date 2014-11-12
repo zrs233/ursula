@@ -3,14 +3,17 @@
   apt: pkg=xfsprogs
 
 - name: swift-object service scripts
-  template: src=../../../roles/swift-common/templates/etc/init/swift-service.conf dest=/etc/init/swift-{{ item.service_name }}.conf mode=0644
-  with_items:
+  template: src=roles/swift-common/templates/etc/init/swift-service.conf
+            dest=/etc/init/swift-{{ item.service_name }}.conf mode=0644
+  with_dict:
     - { service_name: object-auditor, conf: object-server }
     - { service_name: object, conf: object-server }
     - { service_name: object-replicator, conf: object-server }
     - { service_name: object-updater, conf: object-server }
 
-- template: src=etc/swift/object-server.conf dest=/etc/swift/object-server.conf owner=root group=root mode=0644
+- name: object-server config
+  template: src=etc/swift/object-server.conf dest=/etc/swift/object-server.conf
+            owner=root group=root mode=0644
   notify: restart swift-object service
 
 - name: start swift-object services
@@ -25,7 +28,9 @@
   with_items: swift.disks
 
 - name: configure swift-drive-audit
-  template: src=etc/swift/drive-audit.conf dest=/etc/swift/drive-audit.conf owner=root group=root mode=0755
+  template: src=etc/swift/drive-audit.conf dest=/etc/swift/drive-audit.conf
+            owner=root group=root mode=0755
 
 - name: add swift-drive-audit to cron.hourly
-  template: src=usr/local/bin/swift-drive-auditor dest=/usr/local/bin/swift-drive-auditor owner=root group=root mode=0755
+  template: src=usr/local/bin/swift-drive-auditor mode=0755
+            dest=/usr/local/bin/swift-drive-auditor owner=root group=root
