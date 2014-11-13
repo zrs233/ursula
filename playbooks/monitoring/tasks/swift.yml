@@ -1,9 +1,11 @@
 ---
-
 - name: swift dispersion gate script
-  template: src=check-swift-dispersion.sh dest=/etc/sensu/plugins/check-swift-dispersion.sh mode=0755 owner=root group=root
+  template: src=check-swift-dispersion.sh mode=0755 owner=root group=root
+            dest=/etc/sensu/plugins/check-swift-dispersion.sh
 
-- sensu_check: name=swift-dispersion plugin=check-swift-dispersion.sh interval=600 occurrences=1 use_sudo=true
+- name: swift dispersion check
+  sensu_check: name=swift-dispersion plugin=check-swift-dispersion.sh interval=600
+               occurrences=1 use_sudo=true
 
 - name: sensu account process checks
   sensu_process_check: service={{ item }} warn_over=30 crit_over=35
@@ -38,4 +40,3 @@
 
 - name: sensu check for mounted drives
   sensu_check: name=fstab-mounts plugin=check-fstab-mounts.rb args='-t xfs' interval=60
-

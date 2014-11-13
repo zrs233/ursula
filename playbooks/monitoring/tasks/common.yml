@@ -1,29 +1,42 @@
 ---
-- file: dest=/etc/sensu/conf.d/checks state=directory owner=root mode=0755
+- name: sensu conf dir
+  file: dest=/etc/sensu/conf.d/checks state=directory owner=root mode=0755
 
-- file: dest=/etc/sensu/plugins state=directory owner=root
-- copy: src={{ item }} dest=/etc/sensu/plugins mode=0755
+- name: sensu plugins dir
+  file: dest=/etc/sensu/plugins state=directory owner=root
+
+- name: copy sensu plugins
+  copy: src={{ item }} dest=/etc/sensu/plugins mode=0755
   with_fileglob: ../files/sensu_plugins/*
 
-- sensu_check: name=cpu  plugin=check-cpu.rb args='-w 80 -c 90 -p kvm'
+- name: cpu check
+  sensu_check: name=cpu  plugin=check-cpu.rb args='-w 80 -c 90 -p kvm'
   notify: restart sensu-client
 
-- sensu_check: name=disk plugin=check-disk.rb
+- name: disk check
+  sensu_check: name=disk plugin=check-disk.rb
   notify: restart sensu-client
 
-- sensu_process_check: service=ntpd
+- name: ntpd check
+  sensu_process_check: service=ntpd
   notify: restart sensu-client
 
-- sensu_check: name=ntp-offset plugin=check-ntp.rb
+- name: ntp-offset check
+  sensu_check: name=ntp-offset plugin=check-ntp.rb
   notify: restart sensu-client
 
-- sensu_metrics_check: name=vmstat-metrics plugin=vmstat-metrics.rb args='--scheme stats.{{ inventory_hostname  }}'
+- name: vmstat metrics check
+  sensu_metrics_check: name=vmstat-metrics plugin=vmstat-metrics.rb
+                       args='--scheme stats.{{ inventory_hostname  }}'
   notify: restart sensu-client
 
-- sensu_metrics_check: name=load-metrics plugin=load-metrics.rb args='--scheme stats.{{ inventory_hostname  }}'
+- name: load metrics check
+  sensu_metrics_check: name=load-metrics plugin=load-metrics.rb
+                       args='--scheme stats.{{ inventory_hostname  }}'
   notify: restart sensu-client
 
-- sensu_check: name=syslog-socket plugin=check-syslog-socket.rb
+- name: syslog check
+  sensu_check: name=syslog-socket plugin=check-syslog-socket.rb
   notify: restart sensu-client
 
 - name: log scanning caching dir
@@ -31,12 +44,14 @@
 
 - name: enable log scanning
   when: monitoring.scan_for_log_errors
-  sensu_check: name=check-log-{{ item }} plugin=check-log.rb use_sudo=true auto_resolve=false interval=60 args="-f /var/log/upstart/{{ item }}.log -q ERROR --silent"
+  sensu_check: name=check-log-{{ item }} plugin=check-log.rb use_sudo=true
+               auto_resolve=false interval=60
+               args="-f /var/log/upstart/{{ item }}.log -q ERROR --silent"
   with_items: logs_to_scan
   notify: restart sensu-client
 
 - name: disable log scanning
-  when: monitoring.scan_for_log_errors == false
   file: path=/etc/sensu/conf.d/checks/check-log-{{ item }}.json state=absent
   with_items: logs_to_scan
   notify: restart sensu-client
+  when: monitoring.scan_for_log_errors == false

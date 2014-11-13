@@ -1,11 +1,17 @@
 ---
-- sensu_process_check: service=heat-api
-  notify: restart sensu-client
-- sensu_process_check: service=heat-api-cfn
-  notify: restart sensu-client
-- sensu_process_check: service=heat-engine
-  notify: restart sensu-client
-- sensu_check: name=check-heat-api plugin=check-os-api.rb
-    args="--service heat" use_sudo=true prefix=". /root/stackrc;"
+- name: heat-api process check
+  sensu_process_check: service=heat-api
   notify: restart sensu-client
 
+- name: heat-api-cfn process check
+  sensu_process_check: service=heat-api-cfn
+  notify: restart sensu-client
+
+- name: heat-engine process check
+  sensu_process_check: service=heat-engine
+  notify: restart sensu-client
+
+- name: heat-api check
+  sensu_check: name=check-heat-api plugin=check-os-api.rb
+               args="--service heat" use_sudo=true prefix=". /root/stackrc;"
+  notify: restart sensu-client

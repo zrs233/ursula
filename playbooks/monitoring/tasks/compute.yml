@@ -1,16 +1,17 @@
 ---
 # nova compute
-
-- sensu_process_check: service=nova-compute
+- name: compute process check
+  sensu_process_check: service=nova-compute
   notify: restart sensu-client
 
-
-- sensu_process_check: service=neutron-linuxbridge-agent
+- name: neutron linuxbridge agent check
+  sensu_process_check: service=neutron-linuxbridge-agent
+  notify: restart sensu-client
   when: neutron.plugin=='ml2'
-  notify: restart sensu-client
 
 # ovs
 
-- sensu_process_check: service=neutron-openvswitch-agent
-  when: neutron.plugin=='ovs'
+- name: neutron openvswitch agent check
+  sensu_process_check: service=neutron-openvswitch-agent
   notify: restart sensu-client
+  when: neutron.plugin=='ovs'
