@@ -16,42 +16,19 @@ INTERVAL = 30
 
 args = Antsy.args
 
-name         = args[:name]
-use_sudo     = set_arg_to_bool(args[:use_sudo], false)
+name = args[:name]
+use_sudo = set_arg_to_bool(args[:use_sudo], false)
 auto_resolve = set_arg_to_bool(args[:auto_resolve], true)
-handle       = set_arg_to_bool(args[:handle], true)
-interval     = args[:interval] || INTERVAL
-occurrences  = args[:occurrences] || 2
-plugin       = args[:plugin]
-plugin_args  = args[:args]
-prefix       = args[:prefix]
-env_vars     = args[:env_vars]
-
-# parse_env_vars works around Ansible disallowing '='
-# in string arguments, instead environmental variables can be
-# passed in using comma separated string, with a colon supplanting
-# the equals sign
-# e.g. env_vars=PATH:/home/foo,SHELL:/bin/bash
-def parse_env_vars(env_vars)
-  output = []
-  vars = env_vars.split(',')
-  vars.each do |v|
-    output << v.gsub(':','=')
-  end
-  output.join(' ')
-end
+interval = args[:interval] || INTERVAL
+occurrences = args[:occurrences] || 2
+plugin = args[:plugin]
+plugin_args = args[:args] || ''
 
 plugin_path = "/etc/sensu/plugins/#{plugin}"
 check_path = "/etc/sensu/conf.d/checks/#{name}.json"
 
-# if command is not specified via args then generate it
-command = args[:command] || ''
-if command.empty?
-  command = "#{plugin_path} #{plugin_args}"
-  command = "#{parse_env_vars(env_vars)} #{command}" if env_vars
-  command = "#{prefix} #{command}" if prefix
-  command = "sudo #{command}" if use_sudo
-end
+command = args[:command]
+command = use_sudo ? "sudo #{plugin_path} #{plugin_args}" : "#{plugin_path} #{plugin_args}" unless command
 
 Antsy.fail! "argument 'name' is required" unless name and not name.empty?
 Antsy.fail! "argument 'plugin' or 'command' is required" unless command and not command.empty?
@@ -65,8 +42,7 @@ check = {
       'interval' => interval.to_i,
       'notification' => "#{name} check failed",
       'occurrences' => occurrences.to_i,
-      'auto_resolve' => auto_resolve,
-      'handle' => handle
+      'auto_resolve' => auto_resolve
     }
   }
 }
