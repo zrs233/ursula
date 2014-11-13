@@ -10,6 +10,14 @@
   notify:
     - pip install keystoneclient
 
+- name: keystonemiddleware
+  git: repo={{ openstack.git_mirror }}/keystonemiddleware.git
+       dest=/opt/stack/keystonemiddleware
+       version={{ client.keystonemiddleware_rev }}
+       update={{ openstack.git_update }}
+  notify:
+    - pip install keystonemiddleware
+
 - name: glance-client
   git: repo={{ openstack.git_mirror }}/python-glanceclient.git
        dest=/opt/stack/python-glanceclient
