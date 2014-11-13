@@ -7,6 +7,18 @@
   notify:
     - reload apache
 
+- name: make keystone cgi executable
+  file: path={{ keystone.cgi_file }} state=touch mode=0755 owner=root group=keystone
+
+- name: create keystone cgi path
+  file: dest=/var/www/cgi-bin/keystone state=directory mode=0755 owner=root group=keystone
+
+- name: link keystone cgi file to apache cgi dir
+  file: src={{ keystone.cgi_file }} dest=/var/www/cgi-bin/keystone/{{ item }} state=link
+  with_items:
+    - admin
+    - main
+
 - name: set up keystone site on ubuntu 12.04
   template: src=etc/apache2/sites-available/openstack_keystone.conf
             dest=/etc/apache2/sites-available/openstack_keystone
@@ -21,18 +33,8 @@
   notify:
     - reload apache
 
-- name: keystone cgi directory
-  file: dest=/var/www/cgi-bin/keystone state=directory mode=0755 owner=keystone group=nogroup
-
-- name: keystone cgi files
-  template: src=var/www/cgi-bin/keystone/keystone.py
-            dest=/var/www/cgi-bin/keystone/{{ item }}
-            owner=keystone group=nogroup mode=0750
-  with_items:
-    - admin
-    - main
-
 - name: enable keystone apache site
   apache2_site: state=enabled name=openstack_keystone
   notify:
     - reload apache
+

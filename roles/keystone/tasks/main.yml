@@ -17,7 +17,7 @@
   pip: name=babel
 
 - file: dest=/etc/keystone state=directory
-- file: dest=/var/log/keystone state=directory mode=0755 owner=keystone group=keystone
+- file: dest=/var/log/keystone state=directory mode=0775 owner=keystone group=keystone
 
 # setup keystone apache config
 - include: apache.yml
