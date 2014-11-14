@@ -21,12 +21,17 @@
 
 - name: heat config
   template: src=etc/heat/heat.conf dest=/etc/heat/heat.conf mode=0644
+  notify:
+    - restart heat-api
+    - restart heat-api-cfn
+    - restart heat-engine
 
 - name: heat policy config
   template: src=etc/heat/policy.json dest=/etc/heat/policy.json mode=0644
 
 - name: heat paste config
   template: src=etc/heat/api-paste.ini dest=/etc/heat/api-paste.ini mode=0644
+  notify: restart heat-api
 
 - name: install heat services
   upstart_service: name={{ item }}
@@ -36,6 +41,8 @@
     - heat-api
     - heat-api-cfn
     - heat-engine
+
+- meta: flush_handlers
 
 - name: start heat services
   service: name={{ item }} state=started
