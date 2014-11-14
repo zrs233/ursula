@@ -9,7 +9,7 @@
 
     - name: stop nova services
       shell: ls /etc/init/{{ item }}.conf && service {{ item }} stop
-      ignore_errors: True
+      failed_when: False
       with_items:
         - nova-api
         - nova-consoleauth

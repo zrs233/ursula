@@ -69,4 +69,4 @@
   - shell: ovs-vsctl --may-exist add-port br-eth0 eth0 < /dev/null > /dev/null && reboot
     async: 0
     poll: 0
-    ignore_errors: true
+    failed_when: False
