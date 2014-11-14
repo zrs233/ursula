@@ -3,7 +3,7 @@
 
 - name: stop btsync
   service: name=btsync state=stopped enabled=false
-  ignore_errors: yes
+  failed_when: False
 
 - name: remove btsync
   apt: pkg=btsync state=absent
@@ -11,24 +11,35 @@
 - name: btsync config
   file: dest=/etc/btsync/glance-cache.conf state=absent
 
-- apt: pkg=rsync
+- name: install rsync
+  apt: pkg=rsync
 
-- lineinfile: dest=/etc/default/rsync regexp=^RSYNC_ENABLE line=RSYNC_ENABLE=true
+- name: rsync defaults
+  lineinfile: dest=/etc/default/rsync regexp={{ item.value.regexp }}
+              line={{ item.value.line }}
+  with_dict:
+    enable:
+      regexp: ^RSYNC_ENABLE
+      line: RSYNC_ENABLE=true
+    nice:
+      regexp: ^RSYNC_NICE
+      line: RSYNC_NICE=10
+    ionice:
+      regexp: ^RSYNC_IONICE
+      line: "RSYNC_IONICE='-c3'"
   notify:
     - restart rsync
 
-- lineinfile: dest=/etc/default/rsync regexp=^RSYNC_NICE line=RSYNC_NICE=10
+- name: configure rsync
+  template: src=etc/rsyncd.conf dest=/etc/rsyncd.conf mode=0644
   notify:
     - restart rsync
 
-- lineinfile: dest=/etc/default/rsync regexp=^RSYNC_IONICE line=RSYNC_IONICE='-c3'
-  notify:
-    - restart rsync
+- meta: flush_handlers
 
-- template: src=etc/rsyncd.conf dest=/etc/rsyncd.conf mode=0644
-  notify:
-    - restart rsync
+- name: start rsync
+  service: name=rsync state=started enabled=yes
 
-- service: name=rsync state=started enabled=yes
-
-- template: src=etc/cron.d/glance-image-sync dest=/etc/cron.d/glance-image-sync mode=0640
+- name: glance image sync cron
+  template: src=etc/cron.d/glance-image-sync dest=/etc/cron.d/glance-image-sync
+            mode=0640
