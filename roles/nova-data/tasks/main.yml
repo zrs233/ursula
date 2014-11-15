@@ -9,7 +9,7 @@
 
 - file: dest=/var/lib/nova/instances state=directory owner=nova
 
-- lineinfile: dest=/etc/modules line="ndb"
+- lineinfile: dest=/etc/modules line="nbd"
 
 - modprobe: name=nbd state=present
 
