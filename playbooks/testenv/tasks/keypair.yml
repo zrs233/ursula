@@ -2,7 +2,7 @@
 - name: test for presence of local keypair
   command: cat {{ testenv_keypair_path }}
   register: testenv_keypair_local
-  ignore_errors: True
+  failed_when: False
   changed_when: False
 
 - name: delete remote keypair
