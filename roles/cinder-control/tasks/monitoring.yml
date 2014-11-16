@@ -1,0 +1,16 @@
+---
+- name: cinder-api process check
+  sensu_process_check: service=cinder-api
+  notify: restart sensu-client
+
+- name: cinder-scheduler process check
+  sensu_process_check: service=cinder-scheduler
+  notify: restart sensu-client
+
+- name: cinder services check
+  sensu_check: name=check-cinder-services plugin=check-cinder-services.sh
+               use_sudo=true
+  notify: restart sensu-client
+
+- include: nimble-monitoring.yml
+  when: sensu.numble_san_ip is defined

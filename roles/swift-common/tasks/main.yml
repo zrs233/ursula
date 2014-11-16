@@ -82,3 +82,5 @@
 
 - name: configure dispersion tools
   template: src=etc/swift/dispersion.conf dest=/etc/swift/dispersion.conf owner=root group=root mode=0644
+
+- include: monitoring.yml tags=monitoring,common

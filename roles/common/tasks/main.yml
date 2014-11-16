@@ -72,3 +72,5 @@
 
 - include: ipmi.yml
   when: common.ipmi.enabled
+
+- include: monitoring.yml tags=monitoring,common

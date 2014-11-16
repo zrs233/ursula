@@ -24,3 +24,5 @@
   template: src=etc/haproxy/haproxy_{{ haproxy_type }}.cfg
             dest=/etc/haproxy/haproxy.cfg mode=0644
   notify: reload haproxy
+
+- include: monitoring.yml tags=monitoring,common

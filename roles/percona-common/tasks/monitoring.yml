@@ -1,0 +1,8 @@
+---
+- name: percona cluster size check
+  sensu_check: name=percona-cluster-size use_sudo=true
+               plugin=percona-cluster-size.rb
+               args="-d /root/.my.cnf --expected 3"
+
+- name: mysqld process check
+  sensu_process_check: service=/usr/sbin/mysqld

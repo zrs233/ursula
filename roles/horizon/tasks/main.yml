@@ -103,3 +103,5 @@
   with_items:
   - 80
   - 443
+
+- include: monitoring.yml tags=monitoring,common
