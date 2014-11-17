@@ -29,6 +29,7 @@ endpoints:
   cinder:   "{{ fqdn }}"
   heat:     "{{ fqdn }}"
   heat-cfn: "{{ fqdn }}"
+  ironic: "{{ fqdn }}"
   swift:    false
 
 rabbitmq:
@@ -139,7 +140,6 @@ keystone:
     - name: provider_admin
       password: "{{ secrets.provider_admin_password }}"
       tenant: admin
-
     - name: nova
       password: "{{ secrets.service_password }}"
       tenant: service
@@ -156,6 +156,9 @@ keystone:
       password: "{{ secrets.service_password }}"
       tenant: service
     - name: heat
+      password: "{{ secrets.service_password }}"
+      tenant: service
+    - name: ironic
       password: "{{ secrets.service_password }}"
       tenant: service
 
@@ -187,6 +190,9 @@ keystone:
     - user: heat
       tenant: service
       role: admin
+    - user: ironic
+      tenant: service
+      role: service
 
   services:
     - name: keystone
@@ -237,8 +243,17 @@ keystone:
       public_url: https://{{ endpoints.main }}:8001/v1
       internal_url: https://{{ endpoints.main }}:8001/v1
       admin_url: https://{{ endpoints.main }}:8001/v1
+    - name: ironic
+      type: baremetal
+      description: 'Ironic bare metal provisioning service'
+      public_url: https://{{ endpoints.main }}:6384
+      internal_url: https://{{ endpoints.main }}:6384
+      admin_url: https://{{ endpoints.main }}:6384
 
 heat:
+  enabled: False
+
+ironic:
   enabled: False
 
 ssl:
