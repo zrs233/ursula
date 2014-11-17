@@ -8,3 +8,4 @@
 
 - name: restart keystone services
   restart_if_present: service=keystone
+  when: restart|default('True')

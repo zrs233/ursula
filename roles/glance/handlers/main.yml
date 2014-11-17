@@ -8,6 +8,7 @@
 
 - name: restart glance services
   restart_if_present: service={{ item }}
+  when: restart|default('True')
   with_items:
     - glance-api
     - glance-registry
