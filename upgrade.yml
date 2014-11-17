@@ -1,0 +1,259 @@
+# Play for upgrading from one version of OpenStack to another.
+# Heavily flavored for Havana to Juno for now, but useful as a model for
+# future upgrades. NOT a rolling upgrade optimized for downtime.
+#
+# Assumes ml2 networking
+---
+- name: upgrade keystone
+  hosts: controller
+  tags: keystone
+
+  roles:
+    - role: keystone
+      restart: False
+
+    - role: stop-services
+      services:
+        - keystone
+
+    - role: openstack-database
+      database_name: keystone  
+
+  tasks:
+    - name: start keystone services
+      service: name=keystone state=started
+
+- name: upgrade glance
+  hosts: controller
+  tags: glance
+
+  roles:
+    - role: glance
+      restart: False
+
+    - role: stop-services
+      services:
+        - glance-api
+        - glance-registry
+
+    - role: openstack-database
+      database_name: glance
+
+  tasks:
+    - name: start glance services
+      service: name={{ item }} state=started
+      with_items:
+        - glance-registry
+        - glance-api
+
+# Cinder block
+- name: stage cinder data software
+  hosts: cinder_volume
+  tags:
+    - cinder
+    - cinder-volume
+
+  roles:
+    - role: cinder-data
+      restart: False
+
+- name: stage cinder control software and stop services
+  hosts: controller
+  tags:
+    - cinder
+    - cinder-control
+
+  roles:
+    - role: cinder-control
+      restart: False
+
+    - role: stop-services
+      services:
+        - cinder-api
+        - cinder-scheduler
+
+- name: stop cinder data services
+  hosts: cinder_volume
+  tags:
+    - cinder
+    - cinder-volume
+
+  roles:
+    - role: stop-services
+      services:
+        - cinder-volume
+
+- name: upgrade cinder control plane
+  hosts: controller
+  tags:
+    - cinder
+    - cinder-control
+
+  roles:
+    - role: openstack-database
+      database_name: cinder
+      db_versions: 'db versions'
+      db_sync: 'db sync'
+
+  tasks:
+    - name: start cinder control services
+      service: name={{ item }} state=started
+      with_items:
+        - cinder-scheduler
+        - cinder-api
+
+- name: start cinder data services
+  hosts: cinder_volume
+  tags:
+    - cinder
+    - cinder-volume
+
+  tasks:
+    - name: start cinder data services
+      service: name=cinder-volume state=started
+
+# Nova block
+- name: stage nova compute
+  hosts: compute
+  tags:
+    - nova
+    - nova-data
+
+  roles:
+    - role: nova-data
+      restart: False
+
+- name: stage nova control and stop services
+  hosts: controller
+  tags:
+    - nova
+    - nova-control
+
+  roles:
+    - role: nova-control
+      restart: False
+
+    - role: stop-services
+      services:
+        - nova-api
+        - nova-conductor
+        - nova-scheduler
+        - nova-cert
+        - nova-consoleauth
+        - nova-novncproxy
+
+- name: stop nova compute
+  hosts: compute
+  tags:
+    - nova
+    - nova-data
+
+  roles:
+    - role: stop-services
+      services:
+        - nova-compute
+
+- name: upgrade nova control plane
+  hosts: controller
+  tags:
+    - nova
+    - nova-control
+
+  roles:
+    - role: openstack-database
+      database_name: nova
+      db_versions: 'db versions'
+      db_sync: 'db sync'
+
+  tasks:
+    - name: start nova control services
+      service: name={{ item }} state=started
+      with_items:
+        - nova-api
+        - nova-conductor
+        - nova-scheduler
+        - nova-cert
+        - nova-consoleauth
+        - nova-novncproxy
+
+- name: start nova compute
+  hosts: compute
+  tags:
+    - nova
+    - nova-data
+
+  tasks:
+    - name: stop nova compute
+      service: name=nova-compute state=started
+
+# Neutron block
+- name: stage neutron core data
+  hosts: compute:network
+  tags:
+    - neutron
+    - neutron-data
+
+  roles:
+    - role: neutron-data
+      restart: False
+
+- name: stage neutron network
+  hosts: network
+  tags:
+    - neutron
+    - neutron-network
+
+  roles:
+    - role: neutron-data-network
+      restart: False
+
+- name: upgrade neutron control plane
+  hosts: controller
+  tags:
+    - neutron
+    - neutron-control
+
+  roles:
+    - role: neutron-control
+      restart: False
+
+    - role: stop-services
+      services: neutron-server
+
+  tasks:
+    - name: stamp neutron db to havana
+      debug: msg="neutron-db-manage --config-file /etc/neutron/neutron.conf
+                  --config-file /etc/neutron/plugins/ml2/ml2_conf.ini
+                  stamp havana"
+
+    - name: upgrade neutron db to icehouse
+      debug: msg="neutron-db-manage --config-file /etc/neutron/neutron.conf
+                  --config-file /etc/neutron/plugins/ml2/ml2_conf.ini
+                  upgrade icehouse"
+
+    - name: start neutron control services
+      service: name=neutron-server state=started
+
+- name: restart neutron data service
+  hosts: compute:network
+  tags:
+    - neutron
+    - neutron-data
+
+  tasks:
+    - name: restart neutron data service
+      service: name=neutron-linuxbridge-agent state=restarted
+
+- name: restart neutron data network services
+  hosts: network
+  tags:
+    - neutron
+    - neutron-network
+
+  tasks:
+    - name: restart neutron data network agent services
+      service: name={{ item }} state=restarted
+      with_items:
+        - neutron-l3-agent
+        - neutron-dhcp-agent
+        - neutron-metadata-agent

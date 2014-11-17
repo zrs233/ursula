@@ -11,6 +11,7 @@
 
 - name: restart cinder services
   restart_if_present: service={{ item }}
+  when: restart|default('True')
   with_items:
     - cinder-api
     - cinder-scheduler
