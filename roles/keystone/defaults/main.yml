@@ -2,4 +2,3 @@
 keystone:
   rev: e6adb2f75a2cbee9
   token_expiration_in_seconds: 86400
-  cgi_file: /opt/stack/keystone/httpd/keystone.py

@@ -13,6 +13,9 @@
   user: name=keystone comment=keystone shell=/bin/false system=yes home=/nonexistent createhome=no
   when: keystone_user.rc != 0
 
+# setup keystone apache site
+- include: apache.yml
+
 - name: WORKAROUND - keystone does not include babel in dependencies
   pip: name=babel
 
@@ -31,10 +34,12 @@
   delay: 60
   notify:
     - pip install keystone
-    - restart apache
 
-# setup keystone apache config
-- include: apache.yml
+- name: configure keystone
+  action: template src={{ item }} dest=/etc/keystone/ mode=0644
+  with_fileglob: ../templates/etc/keystone/*
+  notify:
+    - restart apache
 
 - meta: flush_handlers
 

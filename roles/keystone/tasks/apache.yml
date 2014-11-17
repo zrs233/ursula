@@ -7,14 +7,14 @@
   notify:
     - reload apache
 
-- name: make keystone cgi executable
-  file: path={{ keystone.cgi_file }} state=touch mode=0755 owner=root group=keystone
-
 - name: create keystone cgi path
-  file: dest=/var/www/cgi-bin/keystone state=directory mode=0755 owner=root group=keystone
+  file: dest=/var/www/cgi-bin/keystone state=directory
+        mode=0755 owner=root group=keystone
 
-- name: link keystone cgi file to apache cgi dir
-  file: src={{ keystone.cgi_file }} dest=/var/www/cgi-bin/keystone/{{ item }} state=link
+- name: copy keystone cgi file to apache cgi dir
+  copy: src=opt/stack/keystone/httpd/keystone.py
+        dest=/var/www/cgi-bin/keystone/{{ item }}
+        mode=0755 owner=root group=keystone
   with_items:
     - admin
     - main
