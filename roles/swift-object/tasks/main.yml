@@ -16,6 +16,8 @@
             owner=root group=root mode=0644
   notify: restart swift-object service
 
+- meta: flush_handlers
+
 - name: start swift-object services
   service: name={{ item }} state=started
   with_items:

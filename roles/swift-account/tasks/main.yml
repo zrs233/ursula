@@ -13,6 +13,8 @@
             dest=/etc/swift/account-server.conf owner=root group=root
   notify: restart swift-account service
 
+- meta: flush_handlers
+
 - name: start swift-account services
   service: name={{ item }} state=started
   with_items:
