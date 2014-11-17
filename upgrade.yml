@@ -80,7 +80,7 @@
         - keystone
 
     - role: openstack-database
-      database_name: keystone  
+      database_name: keystone
       force_sync: True
 
   tasks:
@@ -342,7 +342,7 @@
       when: heat.enabled
 
     - role: openstack-database
-      database_name: heat  
+      database_name: heat
       force_sync: True
       when: heat.enabled
 
