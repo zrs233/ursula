@@ -19,15 +19,6 @@
 - file: dest=/etc/keystone state=directory
 - file: dest=/var/log/keystone state=directory mode=0775 owner=keystone group=keystone
 
-# setup keystone apache config
-- include: apache.yml
-
-- name: configure keystone
-  action: template src={{ item }} dest=/etc/keystone/ mode=0644
-  with_fileglob: ../templates/etc/keystone/*
-  notify:
-    - reload apache
-
 - name: get keystone source repo
   git: |
     repo={{ openstack.git_mirror }}/keystone.git
@@ -41,6 +32,9 @@
   notify:
     - pip install keystone
     - restart apache
+
+# setup keystone apache config
+- include: apache.yml
 
 - meta: flush_handlers
 
