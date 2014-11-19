@@ -1,32 +1,44 @@
 ---
-- hosts: controller
+- name: test various things from the controller
+  hosts: controller
   tasks:
   - name: horizon is up
     shell: curl http://localhost:8080 | grep "Login - OpenStack Dashboard"
+
   - name: client stackrc has an os cacert env variable
     shell: grep OS_CACERT=/opt/stack/ssl/openstack.crt /root/stackrc
+
   - name: common timezone is utc
     shell: grep Etc/UTC /etc/timezone
+
   - name: common date command has utc
     shell: date | grep UTC
+
   - name: glance api has proper workers
     shell: grep 'workers = 1' /etc/glance/glance-api.conf
+
   - name: keystone config has memcached servers
     shell: egrep "servers = [0-9.]+:11211,[0-9.]+" /etc/keystone/keystone.conf
+
   - name: neutron dnsmasq has 8.8.8.8 upstream resolver
     shell: grep 8.8.8.8 /etc/dnsmasq.conf
+
   - name: neutron dnsmasq has 8.8.4.4 upstream resolver
     shell: grep 8.8.4.4 /etc/dnsmasq.conf
+
   - name: nova api has proper workers
     shell: grep 'osapi_compute_workers=1' /etc/nova/nova.conf
+
   - name: nova metadata api has proper workers
     shell: grep 'metadata_workers=1' /etc/nova/nova.conf
+
   - name: nova config has memcached servers
     shell: egrep memcached_servers=[0-9.]+:11211,[0-9.]+ /etc/nova/nova.conf
 
   - name: nova config has rabbit server
     shell: egrep "rabbit_host=[0-9.]+" /etc/nova/nova.conf
     when: rabbitmq.cluster == false
+
   - name: cinder config has rabbit server
     shell: egrep "rabbit_host = [0-9.]+" /etc/cinder/cinder.conf
     when: rabbitmq.cluster == false
@@ -34,15 +46,20 @@
   - name: nova config has rabbit cluster servers
     shell: egrep rabbit_hosts=[0-9.]+:5672,[0-9.]+ /etc/nova/nova.conf
     when: rabbitmq.cluster == true
+
   - name: cinder config has rabbit cluster servers
     shell: egrep "rabbit_hosts = [0-9.]+:5672,[0-9.]+" /etc/cinder/cinder.conf
     when: rabbitmq.cluster == true
+
   - name: rabbitmq has a properly configured cluser
-    shell: rabbitmqctl -q cluster_status | awk '/disc/,/\},/' | grep -c test-controller | grep 2
+    shell: rabbitmqctl -q cluster_status | awk '/disc/,/\},/' | grep -c
+           test-controller | grep 2
     when: rabbitmq.cluster == true
+
   - name: rabbitmq has the management plugin enabled
     shell: rabbitmq-plugins list | grep '\[E\] rabbitmq_management'
     when: rabbitmq.cluster == true
+
   - name: rabbitmq has the rabbitmqadmin script installed
     shell: test -f /usr/local/bin/rabbitmqadmin
     when: rabbitmq.cluster == true
@@ -52,28 +69,36 @@
 
   - name: iptables defaults to dropping connections from the internet
     shell: ufw status verbose | egrep '^Default. deny .incoming.'
+
   - name: iptables lets ssh in from outside
     shell: ufw status verbose | egrep '^22/tcp                     ALLOW IN    Anywhere'
+
   - name: all backends are up in haproxy
     shell: curl -k -s -u admin:{{ secrets.admin_password }} https://127.0.0.1/haproxy_stats\;csv | awk '/DOWN/ {print;ec=1} END{exit ec}'
 
-- hosts: controller[0]
+- name: tests on a single controller
+  hosts: controller[0]
   tasks:
   - name: horizon config has memcached servers
     shell: egrep \'[0-9.]+:11211\',\'[0-9]+ /opt/stack/horizon/openstack_dashboard/local/local_settings.py
+
   - name: keystone should include OpenStack services
     shell: . /root/stackrc; keystone service-list | grep {{ item }}
     with_items:
-    - keystone
-    - nova
-    - neutron
-    - glance
-    - cinder
+      - keystone
+      - nova
+      - neutron
+      - glance
+      - cinder
+
   - name: cinder has a working api
     shell: . /root/stackrc; cinder list | grep ID
+
   - name: glance has the cirros image
     shell: . /root/stackrc; glance image-list | grep cirros
+
   - name: nova has a working api
     shell: . /root/stackrc; nova list | grep ID
+
   - name: m1.tiny flavor has been embiggened
     shell: mysql -e "select root_gb from nova.instance_types where name='m1.tiny';" | grep 10
