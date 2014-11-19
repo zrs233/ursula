@@ -1,12 +1,15 @@
 ---
-- hosts: controller[0]
+- name: clean up the test stuff
+  hosts: controller[0]
   tasks:
   - name: cleanup test instance, key-pair and security group
     shell: . /root/stackrc; nova delete turtle-stack && sleep 30
     failed_when: False
+
   - name: cleanup test instance, key-pair and security group
     shell: . /root/stackrc; nova secgroup-delete turtle-sec
     failed_when: False
+
   - name: cleanup test instance, key-pair and security group
     shell: . /root/stackrc; nova keypair-delete turtle-key
     failed_when: False

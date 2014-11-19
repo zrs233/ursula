@@ -1,13 +1,18 @@
 ---
-- hosts: all
+- name: Test basic things on all hosts
+  hosts: all
   tasks:
   - name: IPv6 privacy extensions are disabled
     shell: grep 0 /proc/sys/net/ipv6/conf/all/use_tempaddr
+
   - name: SSH password authentication is disabled
     shell: grep 'PasswordAuthentication no' /etc/ssh/sshd_config
+
   - name: /nonexistant should not exist
     shell: test ! -e /nonexistent
+
   - name: Upstart should not report any failed services
     shell: dmesg | awk '/init. \w+ main process [0-9]+ terminated with status [0-9]+/ {print;ec=1} END{exit ec}'
+
   - name: Running 12.04.4 LTS or greater
     shell: bash -c '. /etc/os-release; echo -e "${VERSION}\n12.04.4" | sort -V | head -1 | egrep "^12.04.4"'
