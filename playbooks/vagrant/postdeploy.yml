@@ -1,0 +1,24 @@
+---
+- hosts: controller[0]
+  tasks:
+  - name: determine Neutron external interface name
+    action: neutron_network
+      name=external
+      login_tenant_name=admin
+      login_password={{ secrets.admin_password }}
+      {% if client.self_signed_cert -%}
+        cacert=/opt/stack/ssl/openstack.crt
+      {% endif -%}
+    register: result
+    notify: ifdown bridge
+  - set_fact: neutron_external_interface=brq{{ result.id|truncate(length=11,killwords=true,end='') }}
+  - shell: sed -i.bak s/br-ex/{{ neutron_external_interface }}/g /etc/network/interfaces
+    when: neutron.plugin == 'ml2'
+    notify: ifup bridge
+
+
+  handlers:
+  - name: ifdown bridge
+    command: ifdown br-ex
+  - name: ifup bridge
+    command: ifup {{neutron_external_interface}}

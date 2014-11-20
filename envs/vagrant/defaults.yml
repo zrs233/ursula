@@ -2,11 +2,10 @@
 ursula_env_path: "{{ lookup('env','URSULA_ENV') }}"
 primary_interface: ansible_eth1
 primary_ip: "{{ hostvars[inventory_hostname][primary_interface]['ipv4']['address'] }}"
-undercloud_cidr: '10.1.0.0/16'
+undercloud_cidr: '172.16.0.0/24'
 
 fqdn: openstack.example.org
 undercloud_floating_ip: "{{ hostvars[groups['controller'][0]][primary_interface]['ipv4']['address'] }}"
-
 secrets:
   admin_token:      asdf
   db_password:      asdf
@@ -30,6 +29,7 @@ endpoints:
   cinder:   "{{ fqdn }}"
   heat:     "{{ fqdn }}"
   heat-cfn: "{{ fqdn }}"
+  ironic: "{{ fqdn }}"
   swift:    false
 
 rabbitmq:
@@ -82,29 +82,20 @@ cinder:
   volume_file_size: 2G
 
 neutron:
+  network_vlan_ranges: physnet:432:432
   plugin: ml2
-  physical_bridge: br-ex
-  physical_network: br-ex
+  bridge_mappings: physnet:eth2
   tenant_network_type: vlan
-  enable_tunneling: False
+  enable_tunneling: True
   tunnel_types:
     - vxlan
-  network_vlan_ranges: physnet:1:1
-  bridge_mappings: physnet:br-eth0
-  routers:
-   - name: default
-     tenant_name: admin
-  router_interfaces:
-   - router_name: default
-     subnet_name: internal
-     tenant_name: admin
   networks:
     - name: internal
       shared: true
       external: false
       network_type: vlan
       provider_physical_network: physnet
-      segmentation_id: 1
+      segmentation_id: 432
     - name: external
       shared: true
       external: true
@@ -114,16 +105,23 @@ neutron:
   subnets:
     - name: internal
       network_name: internal
-      cidr: 10.1.1.0/24
+      cidr: 172.16.255.0/24
       enable_dhcp: "true"
-      gateway_ip: 10.1.1.1
+      gateway_ip: 172.16.255.1
       ip_version: 4
     - name: external
       network_name: external
-      cidr: 192.168.1.0/24
+      cidr: 192.168.255.0/24
       enable_dhcp: "false"
-      gateway_ip: 192.168.1.1
+      gateway_ip: 192.168.255.100
       ip_version: 4
+  routers:
+    - name: default
+      tenant_name: admin
+  router_interfaces:
+    - router_name: default
+      subnet_name: internal
+      tenant_name: admin
 
 glance:
   images:
@@ -142,7 +140,6 @@ keystone:
     - name: provider_admin
       password: "{{ secrets.provider_admin_password }}"
       tenant: admin
-
     - name: nova
       password: "{{ secrets.service_password }}"
       tenant: service
@@ -159,6 +156,9 @@ keystone:
       password: "{{ secrets.service_password }}"
       tenant: service
     - name: heat
+      password: "{{ secrets.service_password }}"
+      tenant: service
+    - name: ironic
       password: "{{ secrets.service_password }}"
       tenant: service
 
@@ -190,6 +190,9 @@ keystone:
     - user: heat
       tenant: service
       role: admin
+    - user: ironic
+      tenant: service
+      role: service
 
   services:
     - name: keystone
@@ -240,8 +243,17 @@ keystone:
       public_url: https://{{ endpoints.main }}:8001/v1
       internal_url: https://{{ endpoints.main }}:8001/v1
       admin_url: https://{{ endpoints.main }}:8001/v1
+    - name: ironic
+      type: baremetal
+      description: 'Ironic bare metal provisioning service'
+      public_url: https://{{ endpoints.main }}:6384
+      internal_url: https://{{ endpoints.main }}:6384
+      admin_url: https://{{ endpoints.main }}:6384
 
 heat:
+  enabled: False
+
+ironic:
   enabled: False
 
 ssl:
