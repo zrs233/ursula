@@ -28,6 +28,7 @@
   file: src=/etc/ssl/certs/ca-certificates.crt dest={{ item }} owner=root
         mode=0644 state=link force=yes
   with_items:
+    - /usr/share/pyshared/httplib2/cacerts.txt
     - /usr/local/lib/python2.7/dist-packages/httplib2/cacerts.txt
     - /usr/local/lib/python2.7/dist-packages/requests/cacert.pem
   when: ansible_distribution_version == "12.04"
@@ -40,3 +41,6 @@
   when: ansible_distribution_version != "12.04"
 
 - meta: flush_handlers
+
+- name: update ca certificates
+  command: update-ca-certificates
