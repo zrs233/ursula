@@ -32,7 +32,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.ssh.forward_agent = true
 
   config.vm.define "workstation" do |workstation_config|
-    workstation_config.vm.box = "precise64"
+    workstation_config.vm.box = "ursula-precise"
     workstation_config.vm.box_url = BOX_URL
     workstation_config.vm.hostname = "workstation"
     workstation_config.vm.provider "virtualbox" do |v|
