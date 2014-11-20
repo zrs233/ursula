@@ -157,6 +157,7 @@
   roles:
     - role: nova-data
       tags: ['openstack', 'nova', 'data']
+      when: ironic.enabled == False
 
 - name: cinder control plane
   gather_facts: force

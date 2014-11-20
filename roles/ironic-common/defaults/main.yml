@@ -2,10 +2,10 @@
 ironic:
   rev: 53171f75a64a26dcec91facbdec95b2ed7f74338
   virtualenv: /opt/stack/ironic
-  path: /opt/stack/ironic/source
-  client_rev: 727800dcae54b333811c22f6f3420753d6fd4879
+  path: /opt/stack/ironic
+  client_rev: e611ae5f206d846e72684ba16c345653232c45c3
   client_virtualenv: /opt/stack/python-ironicclient
-  client_path: /opt/stack/python-ironicclient/source
+  client_path: /opt/stack/python-ironicclient
   enabled_drivers:
     - fake
     - agent_ssh

@@ -2,7 +2,7 @@
 - name: install ironic controller services
   upstart_service: name={{ item }}
                    user=ironic
-                   cmd={{ ironic.virtualenv }}/bin/{{ item }}
+                   cmd=/usr/local/bin/{{ item }}
                    config_dirs=/etc/ironic
   with_items:
     - ironic-api

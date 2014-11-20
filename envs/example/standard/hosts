@@ -1,0 +1,15 @@
+[db]
+db.example.com
+db2.example.com
+
+[db_arbiter]
+bar.example.com
+
+[controller]
+foo.example.com
+
+[compute]
+bar.example.com
+
+[network]
+baz.example.com

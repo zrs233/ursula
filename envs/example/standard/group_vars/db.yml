@@ -1,0 +1,8 @@
+---
+logs_to_scan:
+- neutron-dhcp-agent
+- cinder-scheduler
+- keystone
+- nova-consoleauth
+- nova-cert
+- remote-syslog

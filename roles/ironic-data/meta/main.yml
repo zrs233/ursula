@@ -1,7 +1,7 @@
 ---
 dependencies:
   - role: ironic-common
-  - role: nova-common
+  - role: nova-data
     nova:
       compute_driver: nova.virt.ironic.IronicDriver
       firewall_driver: nova.virt.firewall.NoopFirewallDriver

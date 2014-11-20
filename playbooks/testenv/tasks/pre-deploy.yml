@@ -1,20 +1,9 @@
 ---
-- name: controller 0 hosts file
-  hosts: controller[0]
+- hosts: all
   vars_files:
   - ../vars/main.yml
   tasks:
-    - name: add controller node to /etc/hosts
-      lineinfile: dest=/etc/hosts regexp={{ testenv_instance_names[0] }}
-                  insertafter=EOF
-                  line="127.0.1.1 {{ testenv_instance_names[0] }}"
-
-- name: controller 1 hosts file
-  hosts: controller[1]
-  vars_files:
-  - ../vars/main.yml
-  tasks:
-    - name: add controller node to /etc/hosts
+    - name: add node node to /etc/hosts
       lineinfile: dest=/etc/hosts regexp={{ testenv_instance_names[1] }}
                   insertafter=EOF
                   line="127.0.1.1 {{ testenv_instance_names[1] }}"
@@ -25,9 +14,10 @@
   - ../vars/main.yml
   tasks:
     - name: add compute node to /etc/hosts
-      lineinfile: dest=/etc/hosts regexp={{ testenv_instance_names[2] }}
+      lineinfile: dest=/etc/hosts
+                  regexp={{ ansible_hostname }}
                   insertafter=EOF
-                  line="127.0.1.1 {{ testenv_instance_names[2] }}"
+                  line="127.0.1.1 {{ ansible_hostname }}"
 
 - name: tasks for all
   hosts: all

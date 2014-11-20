@@ -19,8 +19,6 @@
        update={{ openstack.git_update }}
   notify:
   - pip install ironic
-  - fix ironic certs
-  - create ironic symlinks
 
 - name: create ironic config directories
   file: dest={{ item }} state=directory owner=root group=ironic mode=0750
@@ -53,5 +51,3 @@
        update={{ openstack.git_update }}
   notify:
   - pip install ironicclient
-  - fix ironicclient certs
-  - create ironicclient symlinks
