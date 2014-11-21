@@ -33,7 +33,7 @@
     when: common.apt_cache is defined
   - name: Add BlueBox OpenStack PPA
     apt_repository: repo='ppa:blueboxgroup/openstack'
-  - name: Run a full dist-upgrade (we don't want to preform this each run on existing clusters)
+  - name: Run a full dist-upgrade (we don't want to perform this each run on existing clusters)
     apt: update_cache=yes cache_valid_time=3600 upgrade=dist
   - name: Ubuntu 14.04 style /etc/network/interfaces.d/ directory
     file: dest=/etc/network/interfaces.d state=directory owner=root group=root mode=0755
