@@ -6,6 +6,7 @@
   - ../vars/main.yml
   tasks:
     - include: keypair.yml
+
     - name: create the security group and rules
       nova_group:
         name: "{{ testenv_security_groups }}"
@@ -18,14 +19,19 @@
             state: "{{ item.state }}"
       with_items: testenv_security_group_rules
       register: testenv_security_group
-    - command: neutron security-group-rule-create --ethertype={{ item }} --remote-group-id={{ testenv_security_group.results[0].group_id }} {{ testenv_security_group.results[0].group_id }}
+
+    - name: create security group rules
+      command: neutron security-group-rule-create --ethertype={{ item }}
+               --remote-group-id={{ testenv_security_group.results[0].group_id }}
+               {{ testenv_security_group.results[0].group_id }}
       register: security_group_rule_create_result
-      failed_when: "security_group_rule_create_result.rc != 0 and 'Security group rule already exists.' not in security_group_rule_create_result.stderr"
+      failed_when: "security_group_rule_create_result.rc != 0 and '409' not in security_group_rule_create_result.stderr"
       changed_when: security_group_rule_create_result.rc == 0
       with_items:
       - IPv4
       - IPv6
-    - name: create {{ item }}
+
+    - name: create instances
       nova_compute:
         name: "{{ item }}"
         image_id: "{{ testenv_image_id }}"
@@ -36,10 +42,12 @@
         nics:
           - net-id: "{{ testenv_net_id }}"
       with_items: testenv_instance_names
-    - name: associate a floating IP to {{ item }}
+
+    - name: associate a floating IP to instances
       nova_fip: server={{ item }}
       with_items: testenv_instance_names
       register: testenv_floating_ips
-    - name: wait for {{ item }} to boot
+
+    - name: wait for instances to boot
       wait_for: port=22 delay=5 timeout=300 host={{ item.floating_ip }}
       with_items: testenv_floating_ips.results

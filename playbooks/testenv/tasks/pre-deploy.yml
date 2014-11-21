@@ -1,70 +1,101 @@
 ---
-- hosts: controller[0]
+- name: controller 0 hosts file
+  hosts: controller[0]
   vars_files:
   - ../vars/main.yml
   tasks:
     - name: add controller node to /etc/hosts
-      lineinfile: dest=/etc/hosts regexp={{ testenv_instance_names[0] }} insertafter=EOF line="127.0.1.1 {{ testenv_instance_names[0] }}"
+      lineinfile: dest=/etc/hosts regexp={{ testenv_instance_names[0] }}
+                  insertafter=EOF
+                  line="127.0.1.1 {{ testenv_instance_names[0] }}"
 
-- hosts: controller[1]
+- name: controller 1 hosts file
+  hosts: controller[1]
   vars_files:
   - ../vars/main.yml
   tasks:
     - name: add controller node to /etc/hosts
-      lineinfile: dest=/etc/hosts regexp={{ testenv_instance_names[1] }} insertafter=EOF line="127.0.1.1 {{ testenv_instance_names[1] }}"
+      lineinfile: dest=/etc/hosts regexp={{ testenv_instance_names[1] }}
+                  insertafter=EOF
+                  line="127.0.1.1 {{ testenv_instance_names[1] }}"
 
-- hosts: compute
+- name: compute hosts file
+  hosts: compute
   vars_files:
   - ../vars/main.yml
   tasks:
     - name: add compute node to /etc/hosts
-      lineinfile: dest=/etc/hosts regexp={{ testenv_instance_names[2] }} insertafter=EOF line="127.0.1.1 {{ testenv_instance_names[2] }}"
+      lineinfile: dest=/etc/hosts regexp={{ testenv_instance_names[2] }}
+                  insertafter=EOF
+                  line="127.0.1.1 {{ testenv_instance_names[2] }}"
 
-- hosts: all
+- name: tasks for all
+  hosts: all
   serial: 10
   tasks:
- # Set Locale
+  # Set Locale
   - name: Generate en_US locale
     command: /usr/sbin/locale-gen en_US
+
   - name: set locale to en_US
     command: /usr/sbin/update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
+
   - name: add an apt proxy
-    template: src=../../../roles/common/templates/etc/apt/apt.conf.d/01proxy dest=/etc/apt/apt.conf.d/01proxy owner=root group=root mode=0644
+    template: src=../../../roles/common/templates/etc/apt/apt.conf.d/01proxy
+              dest=/etc/apt/apt.conf.d/01proxy owner=root group=root mode=0644
     when: common.apt_cache is defined
+
   - name: Add BlueBox OpenStack PPA
     apt_repository: repo='ppa:blueboxgroup/openstack'
-  - name: Run a full dist-upgrade (we don't want to preform this each run on existing clusters)
-    apt: update_cache=yes cache_valid_time=3600 upgrade=dist
-  - name: Ubuntu 14.04 style /etc/network/interfaces.d/ directory
-    file: dest=/etc/network/interfaces.d state=directory owner=root group=root mode=0755
-  - name: /etc/network/interfaces to support interfaces.d/
-    template: src=../templates/etc/network/interfaces dest=/etc/network/interfaces
-  - name: default interfaces.d/eth0.cfg
-    template: src=../templates/etc/network/interfaces.d/eth0.cfg dest=/etc/network/interfaces.d/eth0.cfg
 
-- hosts: controller
+  # don't run this on existing clusters
+  - name: Run a full dist-upgrade
+    apt: update_cache=yes cache_valid_time=3600 upgrade=dist
+
+  - name: Ubuntu 14.04 style /etc/network/interfaces.d/ directory
+    file: dest=/etc/network/interfaces.d state=directory owner=root
+          group=root mode=0755
+
+  - name: /etc/network/interfaces to support interfaces.d/
+    template: src=../templates/etc/network/interfaces
+              dest=/etc/network/interfaces
+
+  - name: default interfaces.d/eth0.cfg
+    template: src=../templates/etc/network/interfaces.d/eth0.cfg
+              dest=/etc/network/interfaces.d/eth0.cfg
+
+- name: controller tasks
+  hosts: controller
   tasks:
   - name: interfaces.d/eth0.cfg with NAT for floating IP pool
-    template: src=../templates/etc/network/interfaces.d/eth0-controllers.cfg dest=/etc/network/interfaces.d/eth0.cfg
-  - shell: ifdown eth0; ifup eth0
-  - name: interfaces.d/br-ex.cfg for floating IP pool
-    template: src=../templates/etc/network/interfaces.d/br-ex.cfg dest=/etc/network/interfaces.d/br-ex.cfg
+    template: src=../templates/etc/network/interfaces.d/eth0-controllers.cfg
+              dest=/etc/network/interfaces.d/eth0.cfg
 
-- hosts: network:compute
+  - name: bounce eth0
+    shell: ifdown eth0; ifup eth0
+
+  - name: interfaces.d/br-ex.cfg for floating IP pool
+    template: src=../templates/etc/network/interfaces.d/br-ex.cfg
+              dest=/etc/network/interfaces.d/br-ex.cfg
+
+- name: compute and network tasks
+  hosts: network:compute
   serial: 10
   tasks:
   - name: Upgrade kernel to support VXLAN
     apt: pkg=linux-generic-lts-raring
     when: neutron.plugin == 'ml2'
     notify: restart machine
+
   - meta: flush_handlers
+
   - name: waiting for server to come back
     local_action: wait_for host={{ inventory_hostname }} port=22 state=started
     sudo: false
+
   handlers:
   - name: restart machine
     command: shutdown -r now
     async: 0
     poll: 0
     failed_when: False
-
