@@ -2,18 +2,21 @@
 - hosts: compute:network
   serial: 10
   tasks:
-  - fail: msg="Stack not configured for ML2, please update group_vars/all.yml"
+  - name: Check stack is configured for ML2
+    fail: msg="Stack not configured for ML2, please update group_vars/all.yml"
     when: neutron.plugin != 'ml2'
 
-  - service: name=neutron-linuxbridge-agent state=stopped
+  - name: Stop neutron-linuxbridge-agent
+    service: name=neutron-linuxbridge-agent state=stopped
 
-  - name: Disconnect any VLAN interfaces from Neutron bridges to creating a network loop
+  - name: Disconnect any VLAN interfaces from Neutron bridges to creating network loop
     shell: ip -d link show | perl -ne 'system("brctl", "delif", $2, $1) if /^\d+. (eth\d+\.\d+).*master (brq[0-9a-f]{8}-[0-9a-f]{2})/'
 
 - hosts: network
   serial: 10
   tasks:
-  - service: name={{ item }} state=stopped
+  - name: Stop Neutron data plane services
+    service: name={{ item }} state=stopped
     with_items:
       - neutron-dhcp-agent
       - neutron-l3-agent
@@ -21,7 +24,8 @@
 - hosts: controller
   serial: 10
   tasks:
-  - service: name=neutron-server state=stopped
+  - name: Stop Neutron server so we can modify its database
+    service: name=neutron-server state=stopped
 
 - hosts: controller[0]
   tasks:
@@ -29,7 +33,12 @@
     command: mysqldump --result-file=/opt/stack/neutron-pre-ml2-vxlan-migration.sql neutron
 
   - name: Convert VLAN networks to VXLAN
-    command: mysql neutron -e "UPDATE ml2_network_segments SET network_type='vxlan', physical_network=NULL WHERE network_type='vlan';UPDATE ml2_vxlan_allocations SET allocated=1 WHERE vxlan_vni IN (SELECT segmentation_id FROM ml2_network_segments WHERE network_type='vxlan');UPDATE ml2_vlan_allocations SET allocated=0 WHERE vlan_id IN (SELECT segmentation_id FROM ml2_network_segments WHERE network_type='vxlan');"
+    command: >
+        mysql neutron <<ENDMIGRATION
+            UPDATE ml2_network_segments SET network_type='vxlan', physical_network=NULL WHERE network_type='vlan';
+            UPDATE ml2_vxlan_allocations SET allocated=1 WHERE vxlan_vni IN (SELECT segmentation_id FROM ml2_network_segments WHERE network_type='vxlan');
+            UPDATE ml2_vlan_allocations SET allocated=0 WHERE vlan_id IN (SELECT segmentation_id FROM ml2_network_segments WHERE network_type='vxlan');
+        ENDMIGRATION
 
 - hosts: compute:network:controller
   serial: 10
@@ -53,17 +62,20 @@
 - hosts: controller
   serial: 1
   tasks:
-  - service: name=neutron-server state=started
+  - name: Start Neutron server
+    service: name=neutron-server state=started
 
 - hosts: compute:network
   serial: 10
   tasks:
-  - service: name=neutron-linuxbridge-agent state=started
+  - name: Start neutron-linuxbridge-agent
+    service: name=neutron-linuxbridge-agent state=started
 
 - hosts: network
   serial: 10
   tasks:
-  - service: name={{ item }} state=started
+  - name: Start Neutron data plane services
+    service: name={{ item }} state=started
     with_items:
       - neutron-dhcp-agent
       - neutron-l3-agent
