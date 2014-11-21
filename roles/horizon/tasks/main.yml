@@ -1,5 +1,6 @@
 ---
-- apt: pkg={{ item }}
+- name: install apache
+  apt: pkg={{ item }}
   with_items:
     - apache2
     - libapache2-mod-wsgi
@@ -28,7 +29,8 @@
   notify:
     - restart apache
 
-- template: src=etc/apache2/ports.conf
+- name: apache ports config
+  template: src=etc/apache2/ports.conf
             dest=/etc/apache2/ports.conf
   notify:
     - restart apache
@@ -38,13 +40,15 @@
   notify:
     - restart apache
 
-- template: src=etc/apache2/sites-available/openstack_dashboard.conf
+- name: openstack dashboard config (12.04)
+  template: src=etc/apache2/sites-available/openstack_dashboard.conf
             dest=/etc/apache2/sites-available/openstack_dashboard
   when: ansible_distribution_version == "12.04"
   notify:
     - restart apache
 
-- template: src=etc/apache2/sites-available/openstack_dashboard.conf
+- name: openstack dashboard config
+  template: src=etc/apache2/sites-available/openstack_dashboard.conf
             dest=/etc/apache2/sites-available/openstack_dashboard.conf
   when: ansible_distribution_version != "12.04"
   notify:
@@ -65,7 +69,8 @@
     - /opt/stack/horizon/static
     - /opt/stack/horizon/static/dashboard
 
-- template: src=opt/stack/horizon/openstack_dashboard/local/local_settings.py
+- name: horizon local settings
+  template: src=opt/stack/horizon/openstack_dashboard/local/local_settings.py
             dest=/opt/stack/horizon/openstack_dashboard/local/local_settings.py
             mode=0644
   notify:
@@ -96,7 +101,11 @@
     - img
     - fonts
 
-- service: name=apache2 state=started
+# flush before ensuring apache running, saves immediate restart
+- meta: flush_handlers
+
+- name: ensure apache started
+  service: name=apache2 state=started
 
 - name: Permit HTTP and HTTPS
   ufw: rule=allow to_port={{ item }} proto=tcp
