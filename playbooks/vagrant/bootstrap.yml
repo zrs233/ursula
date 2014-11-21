@@ -56,5 +56,6 @@
     - curl
     - vim
     - wget
+    - git
   - command: /vagrant/bin/install-ubuntu
   - pip: requirements=/vagrant/requirements.txt

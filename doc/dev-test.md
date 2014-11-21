@@ -65,3 +65,24 @@ You can save time on iterating by keeping your vms around for multiple ansible r
 ```bash
     $ ./test/cleanup     # delete vms
 ```
+
+## DockerDockerDockerDockerDockerDocker
+
+If you're feeling a little frisky you can deploy a test/dev environment straight from our docker images.
+This will run `test/deploy && test/run` from inside the container and use the stackrc file that you've mapped in:
+
+```
+$ docker run -ti -v /path/to/.stackrc:/root/.stackrc  bluebox/ursula
+writing initial inventory file
+destroying: test-controller-0 test-controller-1 test-compute-0
+
+PLAY [de-provision test instances] ********************************************
+Friday 21 November 2014  02:43:42 +0000 (0:00:00.021)       0:00:00.021 *******
+===============================================================================
+
+GATHERING FACTS ***************************************************************
+Friday 21 November 2014  02:43:42 +0000 (0:00:00.000)       0:00:00.021 *******
+ok: [127.0.0.1]
+...
+...
+```
