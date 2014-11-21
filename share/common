@@ -34,5 +34,5 @@ export ANSIBLE_FORCE_COLOR=yes
 export ANSIBLE_SSH_ARGS=\
 "${ANSIBLE_SSH_ARGS}"\
 ' -o ControlMaster=auto'\
-' -o ControlPath=~/.ssh/controlmasters/ursula-%l-%r@%h:%p'\
+' -o ControlPath=~/.ssh/controlmasters/u-%r@%h'\
 ' -o ControlPersist=300'
