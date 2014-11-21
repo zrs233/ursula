@@ -1,6 +1,0 @@
----
-# required libraries for ansible's 'fireball' 0mq mode.
-- apt: pkg=python-zmq
-- apt: pkg=python-pyasn1
-- apt: pkg=python-crypto
-- apt: pkg=python-keyczar

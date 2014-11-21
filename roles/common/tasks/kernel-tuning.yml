@@ -1,4 +1,7 @@
 ---
-- template: src=etc/sysctl.d/60-kernel-tuning.conf dest=/etc/sysctl.d/60-kernel-tuning.conf owner=root group=root mode=0644
+- name: tune the kernel
+  template: src=etc/sysctl.d/60-kernel-tuning.conf
+            dest=/etc/sysctl.d/60-kernel-tuning.conf owner=root group=root
+            mode=0644
   notify:
     - apply-sysctl

@@ -1,8 +1,12 @@
 ---
-- apt: pkg=ufw
+- name: install ufw
+  apt: pkg=ufw
 
 - name: permit ucarp (IP protocol 112)
-  lineinfile: dest=/etc/ufw/before.rules regexp="^-A ufw-before-input -p 112 -j ACCEPT" line="-A ufw-before-input -p 112 -j ACCEPT" insertafter="^-A ufw-before-input -p udp --sport 67 --dport 68 -j ACCEPT"
+  lineinfile: dest=/etc/ufw/before.rules
+              regexp="^-A ufw-before-input -p 112 -j ACCEPT"
+              line="-A ufw-before-input -p 112 -j ACCEPT"
+              insertafter="^-A ufw-before-input -p udp --sport 67 --dport 68 -j ACCEPT"
 
 - name: Permit SSH
   ufw: rule=allow to_port=22 proto=tcp
@@ -11,7 +15,8 @@
   ufw: rule=allow from_ip={{ undercloud_cidr }} proto=any
 
 - name: Do not enforce forwarding rules with UFW
-  lineinfile: dest=/etc/default/ufw regexp="^DEFAULT_FORWARD_POLICY" line="DEFAULT_FORWARD_POLICY=\"ACCEPT\""
+  lineinfile: dest=/etc/default/ufw regexp="^DEFAULT_FORWARD_POLICY"
+              line="DEFAULT_FORWARD_POLICY=\"ACCEPT\""
 
 - name: Enable UFW (after configuring SSH access)
   ufw: state=enabled

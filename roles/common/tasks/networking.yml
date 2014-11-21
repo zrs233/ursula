@@ -1,29 +1,48 @@
 ---
-- copy: content="{{ network_interfaces }}" dest=/etc/network/interfaces force=yes owner=root group=root mode=0644
+- name: network interfaces file
+  copy: content="{{ network_interfaces }}" dest=/etc/network/interfaces
+        force=yes owner=root group=root mode=0644
   when: network_interfaces is defined
 
-- copy: content="{{ item.contents }}" dest=/etc/network/interfaces.d/{{ item.filename }} force=yes owner=root group=root mode=0644
+- name: add the interfaces
+  copy: content="{{ item.contents }}"
+        dest=/etc/network/interfaces.d/{{ item.filename }}
+        force=yes owner=root group=root mode=0644
   when: network_interfaces_d is defined
   with_items: network_interfaces_d
 
-- template: src=etc/hosts dest=/etc/hosts owner=root group=root mode=0644 backup=yes
+- name: hosts file
+  template: src=etc/hosts dest=/etc/hosts owner=root group=root mode=0644
+            backup=yes
 
-
-- template: src=etc/sysctl.d/60-netfilter-tuning.conf dest=/etc/sysctl.d/60-netfilter-tuning.conf owner=root group=root mode=0644
+- name: netfilter tuning
+  template: src=etc/sysctl.d/60-netfilter-tuning.conf
+            dest=/etc/sysctl.d/60-netfilter-tuning.conf owner=root group=root
+            mode=0644
   notify:
     - apply-sysctl
 
-- template: src=etc/sysctl.d/60-tcp-tuning.conf dest=/etc/sysctl.d/60-tcp-tuning.conf owner=root group=root mode=0644
+- name: tcp tuning
+  template: src=etc/sysctl.d/60-tcp-tuning.conf
+            dest=/etc/sysctl.d/60-tcp-tuning.conf owner=root group=root
+            mode=0644
   notify:
     - apply-sysctl
 
-- lineinfile: dest=/etc/sysctl.d/10-ipv6-privacy.conf regexp=^net\.ipv6\.conf\.all\.use_tempaddr line="net.ipv6.conf.all.use_tempaddr = 0"
+- name: ipv6 privacy
+  lineinfile: dest=/etc/sysctl.d/10-ipv6-privacy.conf
+              regexp="{{ item.value.regex }}"
+              line="{{ item.value.line }}"
   notify:
     - apply-sysctl
+  with_dict:
+    alluse:
+      regex: '^net\.ipv6\.conf\.all\.use_tempaddr'
+      line: "net.ipv6.conf.all.use_tempaddr = 0"
+    defaultuse:
+      regex: '^net\.ipv6\.conf\.default\.use_tempaddr'
+      line: "net.ipv6.conf.default.use_tempaddr = 0"
 
-- lineinfile: dest=/etc/sysctl.d/10-ipv6-privacy.conf regexp=^net\.ipv6\.conf\.default\.use_tempaddr line="net.ipv6.conf.default.use_tempaddr = 0"
-  notify:
-    - apply-sysctl
-
-
-- template: src=etc/modprobe.d/conntrack.conf dest=/etc/modprobe.d/conntrack.conf owner=root group=root mode=0644
+- name: conntrack module
+  template: src=etc/modprobe.d/conntrack.conf
+            dest=/etc/modprobe.d/conntrack.conf owner=root group=root mode=0644

@@ -14,6 +14,3 @@ DEBIAN_FRONTEND=noninteractive apt-get install --yes python-pip python-dev libxm
 apt-get remove --yes ansible || echo "ok"
 
 pip install -r $BINDIR/../requirements.txt
-
-# required only for 'fireball' 0mq mode:
-DEBIAN_FRONTEND=noninteractive apt-get install --yes python-zmq python-pyasn1 python-crypto python-keyczar
