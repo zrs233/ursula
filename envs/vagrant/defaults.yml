@@ -82,26 +82,19 @@ cinder:
   volume_file_size: 2G
 
 neutron:
-  network_vlan_ranges: physnet:432:432
+  network_vlan_ranges: physnet
   plugin: ml2
   bridge_mappings: physnet:eth2
   tenant_network_type: vlan
-  enable_tunneling: True
-  tunnel_types:
-    - vxlan
+  enable_tunneling: False
+  tunnel_types: []
   networks:
     - name: internal
       shared: true
-      external: false
-      network_type: vlan
-      provider_physical_network: physnet
-      segmentation_id: 432
-    - name: external
-      shared: true
       external: true
-      network_type: local
+      network_type: flat
+      provider_physical_network: physnet
       segmentation_id: ~
-      provider_physical_network: ~
   subnets:
     - name: internal
       network_name: internal
@@ -109,19 +102,8 @@ neutron:
       enable_dhcp: "true"
       gateway_ip: 172.16.255.1
       ip_version: 4
-    - name: external
-      network_name: external
-      cidr: 192.168.255.0/24
-      enable_dhcp: "false"
-      gateway_ip: 192.168.255.100
-      ip_version: 4
-  routers:
-    - name: default
-      tenant_name: admin
-  router_interfaces:
-    - router_name: default
-      subnet_name: internal
-      tenant_name: admin
+  routers: []
+  router_interfaces: []
 
 glance:
   images:
