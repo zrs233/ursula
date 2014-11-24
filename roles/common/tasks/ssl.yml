@@ -3,26 +3,36 @@
   file: dest=/usr/local/share/ca-certificates state=directory
 
 - name: (possibly self-signed) ssl cert
-  template: src=openstack.crt dest=/usr/local/share/ca-certificates/{{ endpoints.main }}.crt
+  template: src=openstack.crt
+            dest=/usr/local/share/ca-certificates/{{ endpoints.main }}.crt
   notify: refresh CAs
 
-- file: dest=/opt/stack/ssl state=directory
-- template: src=openstack.crt dest=/opt/stack/ssl/openstack.crt mode=0644
+- name: ssl directory
+  file: dest=/opt/stack/ssl state=directory
+
+- name: openstack cert
+  template: src=openstack.crt dest=/opt/stack/ssl/openstack.crt mode=0644
 
 # ugly hack: some python http libs don't honor the system ca-certs, and ship with
 # their own list, instead.
 # pre-install these client libs, and force them to use the system cert list.
-- pip: name=httplib2 version=0.8
+- name: httplib2
+  pip: name=httplib2 version=0.8
   when: ansible_distribution_version == "12.04"
-- pip: name=requests version=1.2.3
+
+- name: requests
+  pip: name=requests version=1.2.3
   when: ansible_distribution_version == "12.04"
-- file: src=/etc/ssl/certs/ca-certificates.crt dest={{ item }} owner=root mode=0644 state=link force=yes
+
+- name: force our ssl cert for python libs
+  file: src=/etc/ssl/certs/ca-certificates.crt dest={{ item }} owner=root
+        mode=0644 state=link force=yes
   with_items:
     - /usr/local/lib/python2.7/dist-packages/httplib2/cacerts.txt
     - /usr/local/lib/python2.7/dist-packages/requests/cacert.pem
   when: ansible_distribution_version == "12.04"
 
-- name: use system httplib2 and request Python modules that already use system CA certs
+- name: httplib2 and request Python modules that already use system CA certs
   apt: pkg={{ item }}
   with_items:
     - python-httplib2

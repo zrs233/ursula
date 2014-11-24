@@ -1,6 +1,9 @@
 ---
-- apt: pkg=libruby1.8 purge=yes state=absent
-- apt: pkg={{ item }}
+- name: remove older libruby
+  apt: pkg=libruby1.8 purge=yes state=absent
+
+- name: install system tools
+  apt: pkg={{ item }}
   with_items:
     - ack-grep
     - build-essential

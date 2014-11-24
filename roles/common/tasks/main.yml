@@ -1,6 +1,7 @@
 ---
 - name: add an apt proxy
-  template: src=etc/apt/apt.conf.d/01proxy dest=/etc/apt/apt.conf.d/01proxy owner=root group=root mode=0644
+  template: src=etc/apt/apt.conf.d/01proxy dest=/etc/apt/apt.conf.d/01proxy
+            owner=root group=root mode=0644
   when: common.apt_cache is defined
 
 - name: update apt index
@@ -20,12 +21,6 @@
     - python-virtualenv
     - python-mysqldb
     - python-jinja2
-
-- pip: name=pip version=1.4.1
-  when: ansible_distribution_version == "12.04"
-
-- apt: pkg={{ item }}
-  with_items:
     - cryptsetup
     - ipmitool
     - ntp
@@ -34,6 +29,10 @@
     - libssl-dev
     - libxml2-dev
     - libxslt1-dev
+
+- name: update pip
+  pip: name=pip version=1.4.1
+  when: ansible_distribution_version == "12.04"
 
 - name: set UTC timezone
   template: src=etc/timezone dest=/etc/timezone owner=root group=root mode=0644
@@ -44,15 +43,21 @@
   file: dest=/opt/stack state=directory
 
 - include: python.yml
-- include: ssl.yml
-  tags:
-    - ssl
+
+- include: ssl.yml tags=ssl
+
 - include: ssh.yml
+
 - include: networking.yml
+
 - include: ufw.yml
+
 - include: kernel-tuning.yml
+
 - include: system-tools.yml
+
 - include: security-patches.yml
+
 - include: disable-swap.yml
 
 - include: hwraid.yml
@@ -62,6 +67,7 @@
   shell: TERM=linux setterm -blank 0
   register: disable_screen_blanking_magic
   changed_when: False
+
 - name: disable screen blanking
   lineinfile: dest=/etc/issue line="{{ disable_screen_blanking_magic.stdout }}"
 
