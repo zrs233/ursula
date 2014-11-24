@@ -3,4 +3,10 @@ dependencies:
   - role: neutron-common
   - role: openstack-database
     database_name: neutron
-    database_sync: False
+    db_version_col: version_num
+    db_version_table: alembic_version
+    db_sync_cmd: "neutron-db-manage --config-file /etc/neutron/neutron.conf
+                  --config-file /etc/neutron/plugins/ml2/ml2_plugin.ini"
+    db_version: current
+    db_sync: "upgrade head"
+

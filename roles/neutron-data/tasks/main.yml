@@ -1,4 +1,7 @@
 ---
+- name: install ipset
+  apt: name=ipset
+
 - name: install neutron-openvswitch-agent service
   upstart_service: name=neutron-openvswitch-agent
                    user=neutron

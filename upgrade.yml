@@ -227,12 +227,12 @@
   tasks:
     - name: stamp neutron db to havana
       debug: msg="neutron-db-manage --config-file /etc/neutron/neutron.conf
-                  --config-file /etc/neutron/plugins/ml2/ml2_conf.ini
+                  --config-file /etc/neutron/plugins/ml2/ml2_plugin.ini
                   stamp havana"
 
     - name: upgrade neutron db to icehouse
       debug: msg="neutron-db-manage --config-file /etc/neutron/neutron.conf
-                  --config-file /etc/neutron/plugins/ml2/ml2_conf.ini
+                  --config-file /etc/neutron/plugins/ml2/ml2_plugin.ini
                   upgrade icehouse"
 
     - name: start neutron control services
