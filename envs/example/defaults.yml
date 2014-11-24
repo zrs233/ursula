@@ -48,6 +48,8 @@ endpoints:
   heat:     "{{ fqdn }}"
   heat-cfn: "{{ fqdn }}"
   ironic: "{{ fqdn }}"
+  identity_uri: https://{{ fqdn }}:35358
+  auth_uri: https://{{ fqdn }}:5001/v2.0
 
 mysql:
   root_password: asdf

@@ -31,6 +31,8 @@ endpoints:
   heat-cfn: "{{ fqdn }}"
   ironic: "{{ fqdn }}"
   swift:    false
+  identity_uri: https://{{ fqdn }}:35358
+  auth_uri: https://{{ fqdn }}:5001/v2.0
 
 rabbitmq:
   user: openstack
