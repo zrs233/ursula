@@ -9,15 +9,28 @@ network_interfaces: |
   # Internal "nodes" network
   auto eth1
   iface eth1 inet static
-    address 172.16.0.111
+    address 172.16.0.100
     netmask 255.255.255.0
-    mtu 1500
+    up sysctl net.ipv4.conf.$IFACE.forwarding=1
 
-  # External interface
+  # Internal interface
   auto eth2
   iface eth2 inet static
-    address 192.168.255.111
+    address 172.16.255.100
     netmask 255.255.255.0
-    mtu 1500
-    dns-search blueboxgrid.com
-    dns-nameservers 8.8.8.8
+    up sysctl net.ipv4.conf.$IFACE.forwarding=1
+
+  # External interface
+  auto eth3
+  iface eth3 inet manual
+  pre-up ifconfig $IFACE up
+  post-down ifconfig $IFACE down
+    up sysctl net.ipv4.conf.$IFACE.forwarding=1
+    up iptables -t nat -A POSTROUTING -o $IFACE -s 192.168.255.0/24 ! -d 172.16.255.0/24 -j MASQUERADE
+
+  # routed external interface
+  auto br-ex
+  iface br-ex inet static
+    address 192.168.255.100
+    netmask 255.255.255.0
+    up sysctl net.ipv4.conf.$IFACE.forwarding=1

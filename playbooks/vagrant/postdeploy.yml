@@ -10,12 +10,13 @@
         cacert=/opt/stack/ssl/openstack.crt
       {% endif -%}
     register: result
+    failed_when: False
     notify: ifdown bridge
+
   - set_fact: neutron_external_interface=brq{{ result.id|truncate(length=11,killwords=true,end='') }}
   - shell: sed -i.bak s/br-ex/{{ neutron_external_interface }}/g /etc/network/interfaces
-    when: neutron.plugin == 'ml2'
+    when: neutron.plugin == 'ml2'  and result|failed
     notify: ifup bridge
-
 
   handlers:
   - name: ifdown bridge
