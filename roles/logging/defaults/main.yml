@@ -1,8 +1,6 @@
-rsyslog:
+bbclog:
   follow:
     enabled: true
-    mode: polling
-    poll_interval: 10
     logs:
       cinder-api: /var/log/cinder/cinder-api.log
       cinder-manage: /var/log/cinder/cinder-manage.log

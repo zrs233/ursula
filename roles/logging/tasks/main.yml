@@ -1,46 +1,45 @@
 ---
-- name: Allow local UDP syslog
+- name: allow local udp syslog
   ufw: rule=allow from_ip={{item}} to_port=514 proto=udp
   with_items:
   - 127.0.0.1
   - ::1
 
-- name: Do not write OpenStack (local7) log files into /var/log/syslog
-  template: src=etc/rsyslog.d/50-default.conf dest=/etc/rsyslog.d/50-default.conf mode=0644
-  notify: restart rsyslog
+- name: bbclog config directory
+  file: dest=/etc/bbclog.d state=directory mode=0755
 
-- name: Read OpenStack log files into rsyslog
-  template: src=etc/rsyslog.d/follow-{{ rsyslog.follow.mode }}.conf dest=/etc/rsyslog.d/follow.conf mode=0644
-  notify: restart rsyslog
-  when: rsyslog.follow.enabled
+- name: use explicit bbclog config
+  template: src=etc/bbclog.conf dest=/etc/bbclog.conf mode=0644
+  notify: restart bbclog
 
-- name: Listen for local syslog messages
-  template: src=etc/rsyslog.d/udp.conf dest=/etc/rsyslog.d/udp.conf mode=0644
-  notify: restart rsyslog
+- name: "use bbclog {{ item }}"
+  template: src=etc/bbclog.d/{{ item }} dest=/etc/bbclog.d/{{ item }} mode=0644
+  notify: restart bbclog
+  with_items:
+    - 50-default.conf
+    - 49-haproxy.conf
+    - 49-swift.conf
 
-- name: send haproxy logs to local file
-  copy: src=etc/rsyslog.d/49-haproxy.conf dest=/etc/rsyslog.d/49-haproxy.conf mode=0644
-  notify: restart rsyslog
+- name: read log files into bbclog
+  template: src=etc/bbclog.d/follow.conf dest=/etc/bbclog.d/follow.conf mode=0644
+  notify: restart bbclog
+  when: bbclog.follow.enabled
 
-- name: send swift logs to local file
-  copy: src=etc/rsyslog.d/49-swift.conf dest=/etc/rsyslog.d/49-swift.conf mode=0644
-  notify: restart rsyslog
-
-- name: custom CA cert directory
+- name: custom ca cert directory
   file: dest=/usr/local/share/ca-certificates state=directory mode=0755
-  when: rsyslog.forward.host and rsyslog.forward.tls.enabled
+  when: bbclog.forward.host and bbclog.forward.tls.enabled
 
 - name: (possibly self-signed) ssl cert
-  template: src=rsyslog-forward.crt dest=/usr/local/share/ca-certificates/rsyslog-forward.crt mode=0644
+  template: src=bbclog-forward.crt dest=/usr/local/share/ca-certificates/bbclog-forward.crt mode=0644
   notify: refresh CAs
-  when: rsyslog.forward.host and rsyslog.forward.tls.enabled
+  when: bbclog.forward.host and bbclog.forward.tls.enabled
 
-- name: rsyslog TLS dependency
-  apt: pkg=rsyslog-gnutls
-  notify: restart rsyslog
-  when: rsyslog.forward.host and rsyslog.forward.tls.enabled
+- name: bbclog tls dependency
+  apt: pkg=bbclog-gnutls
+  notify: restart bbclog
+  when: bbclog.forward.host and bbclog.forward.tls.enabled
 
-- name: send logs to Syslog receiver
-  template: src=etc/rsyslog.d/forward.conf dest=/etc/rsyslog.d/forward.conf mode=0644
-  notify: restart rsyslog
-  when: rsyslog.forward.host
+- name: send logs to syslog receiver
+  template: src=etc/bbclog.d/forward.conf dest=/etc/bbclog.d/forward.conf mode=0644
+  notify: restart bbclog
+  when: bbclog.forward.host

@@ -2,5 +2,5 @@
 - name: refresh CAs
   command: update-ca-certificates
 
-- name: restart rsyslog
-  service: name=rsyslog state=restarted
+- name: restart bbclog
+  service: name=bbclog state=restarted
