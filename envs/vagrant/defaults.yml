@@ -87,6 +87,7 @@ neutron:
   bridge_mappings: physnet:eth2
   tenant_network_type: vlan
   enable_tunneling: False
+  enable_flat_networks: True
   tunnel_types: []
   networks:
     - name: internal
