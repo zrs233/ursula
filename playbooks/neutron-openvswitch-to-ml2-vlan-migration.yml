@@ -35,10 +35,13 @@
   tasks:
   - name: Reconfigure Network
     shell: >
-        service networking stop
-        ovs-vsctl del-port br-eth0 eth0
-        perl -ni -e '$skip = 1 if /^auto eth0$/; $skip = 0 if $skip and /^\s*$/; s/br-eth0/eth0/g; s/^auto br-ex/allow-hotplug br-ex/; print unless $skip' /etc/network/interfaces
-        service networking start
+        ifdown eth0 && \
+        ifdown br-eth0 && \
+        ovs-vsctl del-port br-eth0 eth0 && \
+        perl -i.bak -ne '$skip = 1 if /^auto eth0$/; $skip = 0 if $skip and /^\s*$/; s/br-eth0/eth0/g; s/^auto br-ex/allow-hotplug br-ex/; print unless $skip' /etc/network/interfaces && \
+        ifup eth0 && \
+        /etc/init.d/networking restart
+    when: ansible_br_eth0
 
 - hosts: compute:network
   serial: 10
@@ -95,6 +98,7 @@
   vars_files:
     - ../roles/rabbitmq/defaults/main.yml
     - ../roles/nova-common/defaults/main.yml
+    - ../roles/neutron-common/defaults/main.yml
   tasks:
 
   - name: Neutron config directories
