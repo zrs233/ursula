@@ -1,8 +1,6 @@
 ---
-- hosts: compute:network:controller
+- hosts: controller
   serial: 10
-  vars_files:
-    - ../roles/neutron-common/defaults/main.yml
   tasks:
   - name: Verify stack is configured for ML2
     fail: msg="Stack not configured for ML2, please update group_vars/all.yml"
@@ -43,9 +41,6 @@
         /etc/init.d/networking restart
     when: ansible_br_eth0
 
-- hosts: compute:network
-  serial: 10
-  tasks:
   - name: Remove interface from OVS bridges
     shell: ovs-vsctl show | perl -ne '$bridge = $1 if /Bridge "?([\w-]+)"?/; system("ovs-vsctl", "del-port", $bridge, $1) if /Port "?([\w-]+)"?/;'
 
@@ -161,6 +156,10 @@
 
 - hosts: compute
   serial: 10
+  vars_files:
+    - ../roles/rabbitmq/defaults/main.yml
+    - ../roles/nova-common/defaults/main.yml
+    - ../roles/neutron-common/defaults/main.yml
   tasks:
   - name: Upgrade Nova config
     template: src=../roles/nova-common/templates/etc/nova/nova.conf
