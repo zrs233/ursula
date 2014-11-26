@@ -28,6 +28,12 @@
   - name: Unplug instance TAP interfaces from OVS qbr bridges
     shell: ip -d link show | perl -ne '/(tap[0-9a-f-]+).+master (qbr[0-9a-f-]+)/ && system("brctl", "delif", $2, $1)'
 
+  - name: Neutron log directory
+    file: name=/var/log/neutron state=directory owner=neutron group=neutron
+
+  - name: Nova log directory
+    file: name=/var/log/nova state=directory owner=nova group=nova
+
 - hosts: compute:network
   serial: 1
   tasks:
@@ -39,7 +45,7 @@
         perl -i.bak -ne '$skip = 1 if /^auto eth0$/; $skip = 0 if $skip and /^\s*$/; s/br-eth0/eth0/g; s/^auto br-ex/allow-hotplug br-ex/; print unless $skip' /etc/network/interfaces && \
         ifup eth0 && \
         /etc/init.d/networking restart
-    when: ansible_br_eth0
+    when: ansible_br_eth0 is defined
 
   - name: Remove interface from OVS bridges
     shell: ovs-vsctl show | perl -ne '$bridge = $1 if /Bridge "?([\w-]+)"?/; system("ovs-vsctl", "del-port", $bridge, $1) if /Port "?([\w-]+)"?/;'
@@ -49,6 +55,9 @@
 
   - name: Remove OVS veth devices
     shell: ip link show | perl -ne 'system("ip", "link", "delete", $1, "type", "veth") if /^\d+. (qvo[\w-]+)/'
+
+  - name: Remove OVS created brq bridges
+    shell: ip link show | perl -ne 'system("ip", "link", "delete", $1, "type", "bridge") if /^\d+. (qbr[\w-]+)/'
 
   - name: Disable Open vSwitch switch
     service: name=openvswitch-switch state=stopped enabled=no
@@ -81,12 +90,6 @@
 
   - name: Backup Migrated Neutron Database
     command: mysqldump --result-file=/opt/stack/neutron-post-ml2-upgrade.sql neutron
-
-- hosts: controller
-  serial: 1
-  tasks:
-  - name: Start Neutron Server
-    service: name=neutron-server state=started
 
 - hosts: compute:network
   serial: 10
@@ -125,6 +128,30 @@
 
   - name: Start neutron-linuxbridge-agent
     service: name=neutron-linuxbridge-agent state=started enabled=yes
+
+- hosts: controller
+  serial: 1
+  var_files:
+    - ../roles/client/defaults/main.yml
+  tasks:
+  - name: keystonemiddleware
+    git: repo={{ openstack.git_mirror }}/keystonemiddleware.git
+         dest=/opt/stack/keystonemiddleware
+         version={{ client.keystonemiddleware_rev }}
+         update={{ openstack.git_update }}
+
+  - name: pip install keystonemiddleware
+    action: command pip install -i {{ openstack.pypi_mirror }} /opt/stack/keystonemiddleware
+
+  - name: Update neutron-server service
+    upstart_service: name=neutron-server
+                     user=neutron
+                     cmd=/usr/local/bin/neutron-server
+                     config_dirs=/etc/neutron
+                     config_files="/etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2_plugin.ini"
+
+  - name: Start Neutron Server
+    service: name=neutron-server state=started
 
 - hosts: network
   serial: 10
