@@ -1,16 +1,12 @@
 ---
-- hosts: compute:network
+- hosts: compute:network:controller
   serial: 10
+  vars_files:
+    - ../roles/neutron-common/defaults/main.yml
   tasks:
   - name: Verify stack is configured for ML2
     fail: msg="Stack not configured for ML2, please update group_vars/all.yml"
     when: neutron.plugin != 'ml2'
-
-  - name: Stop Neutron OVS agent
-    service: name=neutron-openvswitch-agent state=stopped enabled=no
-
-  - name: Stop Nova Compute agent
-    service: name=nova-compute state=stopped
 
 - hosts: network
   serial: 10
@@ -22,33 +18,85 @@
       - neutron-l3-agent
       - neutron-metadata-agent
 
+- hosts: compute:network
+  serial: 10
+  tasks:
+  - name: Stop Neutron OVS agent
+    service: name=neutron-openvswitch-agent state=stopped enabled=no
+
+  - name: Stop Nova Compute agent
+    service: name=nova-compute state=stopped
+
+  - name: Unplug instance TAP interfaces from OVS qbr bridges
+    shell: ip -d link show | perl -ne '/(tap[0-9a-f-]+).+master (qbr[0-9a-f-]+)/ && system("brctl", "delif", $2, $1)'
+
+- hosts: compute:network
+  serial: 1
+  tasks:
+  - name: Reconfigure Network
+    shell: >
+        service networking stop
+        ovs-vsctl del-port br-eth0 eth0
+        perl -ni -e '$skip = 1 if /^auto eth0$/; $skip = 0 if $skip and /^\s*$/; s/br-eth0/eth0/g; s/^auto br-ex/allow-hotplug br-ex/; print unless $skip' /etc/network/interfaces
+        service networking start
+
+- hosts: compute:network
+  serial: 10
+  tasks:
+  - name: Remove interface from OVS bridges
+    shell: ovs-vsctl show | perl -ne '$bridge = $1 if /Bridge "?([\w-]+)"?/; system("ovs-vsctl", "del-port", $bridge, $1) if /Port "?([\w-]+)"?/;'
+
+  - name: Remove OVS bridges
+    shell: ovs-vsctl show | perl -ne 'system("ovs-vsctl", "del-br", $1) if /Bridge "?([\w-]+)"?/;'
+
+  - name: Remove OVS veth devices
+    shell: ip link show | perl -ne 'system("ip", "link", "delete", $1, "type", "veth") if /^\d+. (qvo[\w-]+)/'
+
+  - name: Disable Open vSwitch switch
+    service: name=openvswitch-switch state=stopped enabled=no
+
+  - name: Remove OVS packages
+    apt: name={{ item }} state=absent
+    with_items:
+      - openvswitch-switch
+      - openvswitch-common
+      - openvswitch-datapath-dkms
+
 - hosts: controller
   serial: 10
   tasks:
   - name: Stop Neutron server
     service: name=neutron-server state=stopped
 
- - hosts: controller[0]
-   tasks:
-   - name: Backup Neutron Database
-     command: mysqldump --result-file=/opt/stack/neutron-pre-ml2-upgrade.sql neutron
+- hosts: controller[0]
+  tasks:
+  - name: Backup Neutron Database
+    command: mysqldump --result-file=/opt/stack/neutron-pre-ml2-upgrade.sql neutron
 
-   - name: Install upgrade script
-     copy: src=neutron-openvswitch-to-ml2-vlan-migration/files/migrate_to_ml2.py
-           dest=/opt/stack/neutron/neutron/db/migration/migrate_to_ml2.py
+  - name: Install upgrade script
+    copy: src=neutron-openvswitch-to-ml2-vlan-migration/files/migrate_to_ml2.py
+          dest=/opt/stack/neutron/neutron/db/migration/migrate_to_ml2.py
 
-   - name: Upgrade Neutron Database
-     command: python -m neutron.db.migration.migrate_to_ml2 openvswitch_to_linuxbridge mysql://neutron:{{ secrets.db_password }}@{{ endpoints.db }}/neutron?charset=utf8
+  - name: Upgrade Neutron Database
+    command: python -m neutron.db.migration.migrate_to_ml2 openvswitch_to_linuxbridge mysql://neutron:{{ secrets.db_password }}@{{ endpoints.db }}/neutron?charset=utf8
               chdir=/opt/stack/neutron
 
-   - name: Backup Migrated Neutron Database
-     command: mysqldump --result-file=/opt/stack/neutron-post-ml2-upgrade.sql neutron
+  - name: Backup Migrated Neutron Database
+    command: mysqldump --result-file=/opt/stack/neutron-post-ml2-upgrade.sql neutron
 
-- hosts: compute:network:controller
+- hosts: controller
+  serial: 1
+  tasks:
+  - name: Start Neutron Server
+    service: name=neutron-server state=started
+
+- hosts: compute:network
   serial: 10
   vars_files:
-    - ../roles/neutron-common/defaults/main.yml
+    - ../roles/rabbitmq/defaults/main.yml
+    - ../roles/nova-common/defaults/main.yml
   tasks:
+
   - name: Neutron config directories
     file: dest={{ item }} state=directory
     with_items:
@@ -69,27 +117,6 @@
       - policy.json
       - plugins/ml2/ml2_plugin.ini
 
-- hosts: controller:db:compute
-  serial: 10
-  vars_files:
-    - ../roles/rabbitmq/defaults/main.yml
-    - ../roles/nova-common/defaults/main.yml
-
-  tasks:
-  - name: Upgrade Nova config
-    template: src=../roles/nova-common/templates/etc/nova/nova.conf
-              dest=/etc/nova/nova.conf
-              mode=0644
-
-- hosts: controller
-  serial: 1
-  tasks:
-  - name: Start Neutron Server
-    service: name=neutron-server state=started
-
-- hosts: compute:network
-  serial: 10
-  tasks:
   - name: Install new neutron-linuxbridge-agent service
     upstart_service: name=neutron-linuxbridge-agent
                      user=neutron
@@ -131,5 +158,10 @@
 - hosts: compute
   serial: 10
   tasks:
+  - name: Upgrade Nova config
+    template: src=../roles/nova-common/templates/etc/nova/nova.conf
+              dest=/etc/nova/nova.conf
+              mode=0644
+
   - name: Start Nova compute agent
     service: name=nova-compute state=started
