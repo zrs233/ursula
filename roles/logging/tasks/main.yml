@@ -9,7 +9,7 @@
   file: dest=/etc/bbclog.d state=directory mode=0755
 
 - name: bbclog spool directory
-  file: dest=/var/log/bbclog state=directory mode=0755
+  file: dest=/var/spool/bbclog state=directory mode=0755
 
 - name: use explicit bbclog config
   template: src=etc/bbclog.conf dest=/etc/bbclog.conf mode=0644
