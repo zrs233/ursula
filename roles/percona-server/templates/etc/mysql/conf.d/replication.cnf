@@ -18,7 +18,7 @@ wsrep_slave_threads = 4
 # tables and writing the information about the binlog, galera and slave information (same as the regular
 # XtraBackup backup).
 #
-wsrep_sst_method = xtrabackup
+wsrep_sst_method = xtrabackup-v2
 wsrep_sst_auth = "{{ xtradb.sst_auth_user }}:{{ xtradb.sst_auth_password }}"
 
 # Cluster name
