@@ -48,6 +48,9 @@
   tags:
     - ssl
 - include: ssh.yml
+- include: rsyslog.yml
+  tags:
+    - rsyslog
 - include: networking.yml
 - include: ufw.yml
 - include: kernel-tuning.yml

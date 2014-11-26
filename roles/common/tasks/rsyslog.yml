@@ -1,0 +1,6 @@
+---
+- name: use rsyslog v8 stable ppa
+  apt_repository: repo='ppa:adiscon/v8-stable' update_cache=yes
+
+- name: update rsyslog to v8 stable
+  apt: pkg=rsyslog state=latest

@@ -8,6 +8,9 @@
 - name: bbclog config directory
   file: dest=/etc/bbclog.d state=directory mode=0755
 
+- name: bbclog spool directory
+  file: dest=/var/log/bbclog state=directory mode=0755
+
 - name: use explicit bbclog config
   template: src=etc/bbclog.conf dest=/etc/bbclog.conf mode=0644
   notify: restart bbclog
@@ -43,3 +46,18 @@
   template: src=etc/bbclog.d/forward.conf dest=/etc/bbclog.d/forward.conf mode=0644
   notify: restart bbclog
   when: bbclog.forward.host
+
+- name: symlink rsyslogd to bbclogd
+  file: src=/usr/sbin/rsyslogd dest=/usr/local/sbin/bbclogd state=link
+
+- name: symlink bbclog upstart service
+  file: src=/lib/init/upstart-job dest=/etc/init.d/bbclog state=link
+
+- name: create bbclog upstart service
+  template: src=etc/init/bbclog.conf dest=/etc/init/bbclog.conf
+
+- meta: flush_handlers
+
+- name: ensure bbclog is running
+  service: name=bbclog state=started
+

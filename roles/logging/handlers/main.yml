@@ -4,3 +4,6 @@
 
 - name: restart bbclog
   service: name=bbclog state=restarted
+
+- name: restart rsyslog
+  service: name=rsyslog state=restarted
