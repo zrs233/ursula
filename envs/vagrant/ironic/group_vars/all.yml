@@ -20,4 +20,3 @@ ironic:
 neutron:
   dhcp_dns_servers:
     - 172.16.255.100
-
