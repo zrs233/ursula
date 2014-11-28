@@ -1,0 +1,15 @@
+---
+stack_env: vagrant-allinone
+floating_ip: 10.1.1.100
+
+xtradb:
+  sst_auth_password: asdf
+
+percona:
+  replication: False
+
+nova:
+  scheduler_default_filters: AvailabilityZoneFilter,ComputeFilter
+
+ironic:
+  enabled: True
