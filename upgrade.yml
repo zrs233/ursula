@@ -4,6 +4,19 @@
 #
 # Assumes ml2 networking
 ---
+- name: Upgrade percona cluster
+  hosts: db
+  tags: dbupgrade
+
+  tasks:
+    - name: check db version
+      command: mysql -V
+      changed_when: False
+      register: mysqlver
+
+    - include: upgrade-db-cluster.yml
+      when: not mysqlver.stdout|search('Distrib 5\.6')
+
 - name: upgrade keystone
   hosts: controller
   tags: keystone
