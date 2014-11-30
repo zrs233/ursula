@@ -230,26 +230,26 @@
     - neutron
     - neutron-control
 
-  roles:
-    - role: neutron-control
-      restart: False
+  pre_tasks:
+    - name: check db version
+      command: neutron-db-manage --config-file /etc/neutron/neutron.conf
+               --config-file /etc/neutron/plugins/ml2/ml2_plugin.ini
+               current
+      register: neutron_db_ver
+      run_once: True
 
+    - name: stamp neutron to havana
+      command: neutron-db-manage --config-file /etc/neutron/neutron.conf
+               --config-file /etc/neutron/plugins/ml2/ml2_plugin.ini
+               stamp havana
+      when: not neutron_db_ver.stdout|search('juno')
+      run_once: True
+
+  roles:
     - role: stop-services
       services: neutron-server
 
-  tasks:
-    - name: stamp neutron db to havana
-      debug: msg="neutron-db-manage --config-file /etc/neutron/neutron.conf
-                  --config-file /etc/neutron/plugins/ml2/ml2_plugin.ini
-                  stamp havana"
-
-    - name: upgrade neutron db to icehouse
-      debug: msg="neutron-db-manage --config-file /etc/neutron/neutron.conf
-                  --config-file /etc/neutron/plugins/ml2/ml2_plugin.ini
-                  upgrade icehouse"
-
-    - name: start neutron control services
-      service: name=neutron-server state=started
+    - role: neutron-control
 
 - name: restart neutron data service
   hosts: compute:network
