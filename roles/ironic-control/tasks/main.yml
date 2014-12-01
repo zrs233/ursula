@@ -1,4 +1,12 @@
 ---
+
+- name: create tftproot
+  file: path={{ ironic.tftp_root }}
+        state=directory
+        owner=ironic
+        group=ironic
+        mode=0755
+
 - name: install ironic controller services
   upstart_service: name={{ item }}
                    user=ironic
