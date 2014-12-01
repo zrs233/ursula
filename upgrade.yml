@@ -274,3 +274,33 @@
         - neutron-l3-agent
         - neutron-dhcp-agent
         - neutron-metadata-agent
+
+- name: upgrade heat
+  hosts: controller
+  tags: heat
+
+  roles:
+    - role: heat
+      restart: False
+      when: heat.enabled
+
+    - role: stop-services
+      services:
+        - heat
+        - heat-api-cfn
+        - heat-engine
+      when: heat.enabled
+
+    - role: openstack-database
+      database_name: heat  
+      force_sync: True
+      when: heat.enabled
+
+  tasks:
+    - name: start heat services
+      service: name={{ item }} state=started
+      with_items:
+        - heat-api
+        - heat-api-cfn
+        - heat-engine
+      when: heat.enabled
