@@ -7,4 +7,4 @@ python-cinderclient
 oslo.utils
 tox
 pep8
--e git://github.com/masteinhauser/ansible-lint.git@egg_info#egg=ansible-lint
+-e git://github.com/willthames/ansible-lint.git@9777f20aafd4be8706c9ce17005c981cb19a6a25#egg=ansible-lint
