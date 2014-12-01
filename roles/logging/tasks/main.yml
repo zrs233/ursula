@@ -11,6 +11,12 @@
 - name: bbclog spool directory
   file: dest=/var/spool/bbclog state=directory mode=0755
 
+- name: "create bbclog log files: {{ item }}"
+  copy: content=""  dest=/var/log/{{ item }} force=no mode=0644 owner=syslog group=adm
+  with_items:
+    - bbclog.log
+    - bbclog-stats.log
+
 - name: use explicit bbclog config
   template: src=etc/bbclog.conf dest=/etc/bbclog.conf mode=0644
   notify: restart bbclog
@@ -38,7 +44,7 @@
   when: bbclog.forward.host and bbclog.forward.tls.enabled
 
 - name: bbclog tls dependency
-  apt: pkg=bbclog-gnutls
+  apt: pkg=rsyslog-gnutls
   notify: restart bbclog
   when: bbclog.forward.host and bbclog.forward.tls.enabled
 
