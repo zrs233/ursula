@@ -304,3 +304,10 @@
         - heat-api-cfn
         - heat-engine
       when: heat.enabled
+
+- name: upgrade horizon
+  hosts: controller
+  tags: horizon
+
+  roles:
+    - role: horizon
