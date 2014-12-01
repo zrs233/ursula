@@ -40,7 +40,7 @@ end script
 respawn
 {% endif -%}
 
-exec start-stop-daemon --start --chuid {{ user }} {{ pidfile }} --exec {{ cmd }} {{ conf_dirs }} {{ conf_files }}
+exec start-stop-daemon --start --chuid {{ user }} {{ pidfile }} --exec {{ cmd }} {{ args }}
 """
 
 def main():
@@ -49,6 +49,7 @@ def main():
         argument_spec=dict(
             name=dict(default=None, required=True),
             cmd=dict(default=None, required=True),
+            args=dict(default=None),
             user=dict(default=None, required=True),
             config_dirs=dict(default=None),
             config_files=dict(default=None),
@@ -89,22 +90,24 @@ def main():
         if module.params['pidfile'] and len(module.params['pidfile']):
             pidfile = '--make-pidfile --pidfile %s' % module.params['pidfile']
 
-        conf_dirs = ''
-        if module.params['config_dirs']:
-            conf_dirs = '-- '
-            for directory in module.params['config_dirs'].split(','):
-                conf_dirs += '--config-dir %s ' % directory
+        args = ''
+        if module.params['args'] or module.params['config_dirs'] or \
+           module.params['config_files']:
+            args = '-- '
+            if module.params['args']:
+                args += module.params['args']
 
-        conf_files = ''
-        if module.params['config_files']:
-            conf_files = ''
-            for filename in module.params['config_files'].split(','):
-                conf_files += '--config-file %s ' % filename
+            if module.params['config_dirs']:
+                for directory in module.params['config_dirs'].split(','):
+                    args += '--config-dir %s ' % directory
+
+            if module.params['config_files']:
+                for filename in module.params['config_files'].split(','):
+                   args += '--config-file %s ' % filename
 
         template_vars = module.params
         template_vars['pidfile'] = pidfile
-        template_vars['conf_dirs'] = conf_dirs
-        template_vars['conf_files'] = conf_files
+        template_vars['args'] = args
 
         env = Environment().from_string(UPSTART_TEMPLATE)
         rendered_service = env.render(template_vars)
