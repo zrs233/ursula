@@ -1,9 +1,0 @@
----
-barbican:
-  git_mirror: https://github.com/stackforge
-  rev: 0905323ccdf4a5880e6db36bb4ab5997c54085d8
-  enabled_crypto_plugins: simple_crypto
-  additional_pips:
-barbicanclient:
-  git_mirror: https://github.com/cloudkeep
-  rev: eb0b49843ff12fddf483624db1c11d6677694251
