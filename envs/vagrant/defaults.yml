@@ -52,9 +52,9 @@ mysql:
   root_password: asdf
 
 xtradb:
-  galera_version: 2.x
-  client_version: 5.5
-  server_version: 5.5
+  galera_version: 3.x
+  client_version: 5.6
+  server_version: 5.6
   sst_auth_user: sst_admin
 
 client:

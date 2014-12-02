@@ -21,6 +21,15 @@
     provider_options:
       regexp: '^wsrep_provider_options\s*='
       line: 'wsrep_provider_options="socket.checksum=1"'
+    log_bin_v1:
+      regexp: '^log_bin_use_v1_row_events\s*='
+      line: 'log_bin_use_v1_row_events=1'
+    gtid:
+      regexp: '^gtid_mode\s*='
+      line: 'gtid_mode=0'
+    binlog:
+      regexp: '^binlog_checksum\s*='
+      line: 'binlog_checksum=None'
     wsrep_method:
       regexp: '^wsrep_sst_method\s*='
       line: "wsrep_sst_method = xtrabackup-v2"
@@ -31,22 +40,10 @@
 - name: run mysql_upgrade
   command: mysql_upgrade
 
-# stop services again so we can be ready for bootstrap
-- name: stop mysql again
-  service: name=mysql state=stopped
-
 - name: restore galera wsrep provider
   lineinfile: regexp='^wsrep_provider\s*='
               line="wsrep_provider = /usr/lib/libgalera_smm.so"
               dest=/etc/mysql/conf.d/replication.cnf
 
-- name: remove compat settings
-  lineinfile: regexp='^wsrep_provider_options\s*=' state=absent
-              dest=/etc/mysql/conf.d/replication.cnf
-
-- name: bootstrap cluster
-  command: /etc/init.d/mysql bootstrap-pxc
-  run_once: True
-
-- name: start remaining mysql services
-  service: name=mysql state=started
+- name: restart mysql to rejoin the cluster
+  service: name=mysql state=restarted

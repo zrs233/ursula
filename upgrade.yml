@@ -4,9 +4,10 @@
 #
 # Assumes ml2 networking
 ---
-- name: Upgrade percona cluster
+- name: upgrade percona cluster in compat mode
   hosts: db
   tags: dbupgrade
+  serial: 1
 
   tasks:
     - name: check db version
@@ -16,6 +17,45 @@
 
     - include: upgrade-db-cluster.yml
       when: not mysqlver.stdout|search('Distrib 5\.6')
+
+- name: upgrade percona arbiter
+  hosts: db_arbiter
+  tags: dbupgrade
+
+  pre_tasks:
+    - name: purge old garbd and configs
+      apt: name=percona-xtradb-cluster-garbd-2.x state=absent purge=true
+
+    - name: remove old garb config
+      file: path=/etc/default/garb state=absent
+
+    - name: garbd.log permissions
+      file: path=/var/log/garbd.log owner=nobody state=touch
+
+  roles:
+    - role: percona-common
+
+    - role: percona-arbiter
+
+- name: remove percona compat settings
+  hosts: db
+  tags: dbupgrade
+  serial: 1
+
+  tasks:
+    - name: remove compat settings
+      lineinfile: regexp="{{ item }}" state=absent
+                  dest=/etc/mysql/conf.d/replication.cnf
+      with_items:
+        - '^wsrep_provider_options\s*='
+        - '^log_bin_use_v1_row_events\s*='
+        - '^gtid_mode\s*='
+        - '^binlog_checksum\s*='
+      notify: restart mysql
+
+  handlers:
+    - name: restart mysql
+      service: name=mysql state=restarted
 
 - name: upgrade keystone
   hosts: controller
