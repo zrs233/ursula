@@ -1,0 +1,9 @@
+---
+- name: apache2 process check
+  sensu_process_check: service=apache2
+  notify: restart sensu-client
+
+- name: dashboard port check
+  sensu_check: name=check-dashboard-clear-port-redirects plugin=check-http.rb
+               args='-u http://localhost/ -r'
+  notify: restart sensu-client

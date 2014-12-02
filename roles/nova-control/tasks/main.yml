@@ -23,3 +23,5 @@
   ufw: rule=allow to_port=8777 proto=tcp
 
 - include: novnc.yml
+
+- include: monitoring.yml tags=monitoring,common

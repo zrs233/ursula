@@ -16,3 +16,5 @@
 
 - name: memcached gem for sensu check
   gem: name=memcached state=latest user_install=no include_dependencies=yes
+
+- include: monitoring.yml tags=monitoring,common

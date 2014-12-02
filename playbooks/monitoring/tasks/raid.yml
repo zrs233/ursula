@@ -1,4 +1,0 @@
----
-- name: raid check
-  sensu_check: name=check-raid plugin=check-raid.sh interval=300 occurrences=1
-  notify: restart sensu-client

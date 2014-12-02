@@ -23,3 +23,5 @@
 - name: start neutron-linuxbridge-agent
   service: name=neutron-linuxbridge-agent state=started
   when: neutron.plugin == 'ml2'
+
+- include: monitoring.yml tags=monitoring,common

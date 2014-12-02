@@ -1,0 +1,4 @@
+---
+- name: neutron process check
+  sensu_process_check: service=neutron-server
+  notify: restart sensu-client

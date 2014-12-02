@@ -50,3 +50,5 @@
     - heat-api
     - heat-api-cfn
     - heat-engine
+
+- include: monitoring.yml tags=monitoring,common

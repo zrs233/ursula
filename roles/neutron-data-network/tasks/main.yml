@@ -53,3 +53,5 @@
     - neutron-metadata-agent
 
 - include: ipchanged.yml
+
+- include: monitoring.yml tags=monitoring,common

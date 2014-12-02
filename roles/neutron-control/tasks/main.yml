@@ -22,3 +22,5 @@
 
 - name: Permit access to Neutron
   ufw: rule=allow to_port=9797 proto=tcp
+
+- include: monitoring.yml tags=monitoring,common

@@ -16,3 +16,5 @@
 
 - name: Permit access to Cinder
   ufw: rule=allow to_port=8778 proto=tcp
+
+- include: monitoring.yml tags=monitoring,common

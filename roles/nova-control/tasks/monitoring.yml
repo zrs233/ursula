@@ -1,0 +1,20 @@
+---
+- name: nova process checks
+  sensu_process_check: service={{ item }}
+  with_items:
+    - nova-api
+    - nova-cert
+    - nova-conductor
+    - nova-consoleauth
+    - nova-scheduler
+  notify: restart sensu-client
+
+- name: nova-api check
+  sensu_check: name=check-nova-api plugin=check-os-api.rb
+               args="--service nova" use_sudo=true prefix=". /root/stackrc;"
+  notify: restart sensu-client
+
+- name: nova-services check
+  sensu_check: name=check-nova-services plugin=check-nova-services.sh
+               use_sudo=true
+  notify: restart sensu-client

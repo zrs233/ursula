@@ -22,3 +22,5 @@
 
 - name: start nova-compute
   service: name=nova-compute state=started
+
+- include: monitoring.yml tags=monitoring,common

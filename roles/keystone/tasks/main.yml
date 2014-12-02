@@ -62,3 +62,5 @@
   template: src=etc/cron.hourly/drop-expired-keystone-tokens
             dest=/etc/cron.hourly/drop-expired-keystone-tokens
             owner=root group=root mode=0755
+
+- include: monitoring.yml tags=monitoring,common

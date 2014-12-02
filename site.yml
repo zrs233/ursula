@@ -237,5 +237,3 @@
     - name: restart neutron-openvswitch-agent to ensure VXLAN mesh is configured
       service: name=neutron-openvswitch-agent state=restarted
       when: neutron.plugin == 'ovs'
-
-- include: playbooks/monitoring.yml tags=common,monitoring

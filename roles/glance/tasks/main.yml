@@ -69,3 +69,5 @@
 
 - include: image-sync.yml
   when: glance.sync.enabled
+
+- include: monitoring.yml tags=monitoring,common
