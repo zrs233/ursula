@@ -4,6 +4,8 @@
             owner=root group=root mode=0644
   when: common.apt_cache is defined
 
+- include: bbg-repo.yml
+
 - name: update apt index
   apt: update_cache=yes cache_valid_time=3600
 
