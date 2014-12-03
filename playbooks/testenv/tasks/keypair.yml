@@ -12,6 +12,8 @@
   register: testenv_keypair
 
 - name: persist the keypair
-  copy: dest={{ testenv_keypair_path }} content={{ testenv_keypair.key }}
-        mode=0600
+  copy:
+    dest: "{{ testenv_keypair_path }}"
+    content: "{{ testenv_keypair.key }}"
+    mode: 0600
   when: testenv_keypair.changed
