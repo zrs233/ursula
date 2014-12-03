@@ -1,0 +1,6 @@
+---
+- name: install bbg openstack repo key
+  apt_key: url=http://apt.openstack.blueboxgrid.com/ubuntu/ursula-apt.gpg.key
+
+- name: install bbg openstack repo
+  apt_repository: repo='deb http://apt.openstack.blueboxgrid.com/ubuntu/ precise main' update_cache=yes
