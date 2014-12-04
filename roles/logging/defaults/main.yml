@@ -29,7 +29,7 @@ logging:
       - /var/log/upstart/tgt.log
   forward:
     host: null
-    port: 514
+    port: 4560
     tls:
       enabled: true
       ca_cert: |
