@@ -97,6 +97,9 @@
   - name: glance has the cirros image
     shell: . /root/stackrc; glance image-list | grep cirros
 
+  - name: cirros image is public
+    shell: . /root/stackrc; glance image-show cirros |grep is_public |grep True
+
   - name: nova has a working api
     shell: . /root/stackrc; nova list | grep ID
 
