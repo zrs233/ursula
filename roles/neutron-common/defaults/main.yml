@@ -10,6 +10,7 @@ neutron:
   service_plugins:
     - neutron.services.l3_router.l3_router_plugin.L3RouterPlugin
   enable_flat_networks: False
+  alembic_version: 0.7.0
 
   logs:
     - paths:

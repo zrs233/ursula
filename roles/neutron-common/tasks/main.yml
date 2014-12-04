@@ -31,6 +31,10 @@
             group=root
             mode=0440
 
+- name: install working alembic
+  pip: name=alembic version={{ neutron.alembic_version }}
+       extra_args="-i {{ openstack.pypi_mirror }}" state=present
+
 - name: get neutron source repo
   git: repo={{ openstack.git_mirror }}/neutron.git
        dest=/opt/stack/neutron
