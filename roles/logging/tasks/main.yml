@@ -6,7 +6,7 @@
   apt: pkg=logstash-forwarder
 
 - name: install logstash-forwarder service
-  file: src=etc/init/logstash-forwarder.conf dest=/etc/init/logstash-forwarder.conf mode=0644
+  copy: src=etc/init/logstash-forwarder.conf dest=/etc/init/logstash-forwarder.conf mode=0644
 
 - name: custom cert auth directory
   file: dest=/usr/local/share/ca-certificates state=directory mode=0755
