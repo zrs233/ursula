@@ -1,6 +1,6 @@
 ---
-- name: refresh CAs
+- name: refresh cert auths
   command: update-ca-certificates
 
-- name: restart rsyslog
-  service: name=rsyslog state=restarted
+- name: restart logstash-forwarder
+  service: name=logstash-forwarder state=restarted
