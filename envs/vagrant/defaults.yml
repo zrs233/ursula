@@ -96,7 +96,7 @@ neutron:
   networks:
     - name: internal
       shared: true
-      external: true
+      external: false
       network_type: flat
       provider_physical_network: physnet
       segmentation_id: ~
