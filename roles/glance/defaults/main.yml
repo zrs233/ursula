@@ -30,3 +30,6 @@ glance:
       fields:
         type: openstack
         tags: glance,glance-registry
+  logging:
+    debug: False
+    verbose: True

@@ -19,3 +19,7 @@ heat:
       fields:
         type: openstack
         tags: heat,heat-manage
+  rev: 0007c2d671c811bf01bdfac60357d8dd855b5cb5
+  logging:
+    debug: False
+    verbose: True
