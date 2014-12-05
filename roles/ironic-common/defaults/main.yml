@@ -12,3 +12,6 @@ ironic:
     - fake
     - pxe_ssh
     - pxe_ipmitool
+  logging:
+    debug: {{ logging.debug }}
+    verbose: {{ logging.verbose }}

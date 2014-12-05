@@ -33,3 +33,7 @@ logging:
         SwV0UP8aZzBr+n5JmHq61JV0Vy0C61HF2ZDsZNf62d6cfuq4TiMK/FRm6eEw3Ziq
         s3KGTb+wEuHlErtX1Q==
         -----END CERTIFICATE-----
+
+logging:
+  debug: False
+  verbose: True

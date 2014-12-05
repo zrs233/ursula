@@ -30,3 +30,8 @@ glance:
       fields:
         type: openstack
         tags: glance,glance-registry
+
+  logging:
+    debug: {{ logging.debug }}
+    verbose: {{ logging.verbose }}
+
