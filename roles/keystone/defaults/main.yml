@@ -17,5 +17,5 @@ keystone:
         type: openstack
         tags: keystone,keystone-manage
   logging:
-    debug: {{ logging.debug }}
-    verbose: {{ logging.verbose }}
+    debug: False
+    verbose: True

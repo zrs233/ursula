@@ -13,5 +13,5 @@ ironic:
     - pxe_ssh
     - pxe_ipmitool
   logging:
-    debug: {{ logging.debug }}
-    verbose: {{ logging.verbose }}
+    debug: False
+    verbose: True
