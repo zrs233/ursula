@@ -15,7 +15,3 @@
 
 - name: start swift-proxy service
   service: name=swift-proxy state=started
-
-- name: configure haproxy
-  template: src=etc/haproxy/haproxy.cfg dest=/etc/haproxy/haproxy.cfg mode=0644
-  notify: restart haproxy
