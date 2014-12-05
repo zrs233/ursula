@@ -25,3 +25,4 @@
   when: neutron.plugin == 'ml2'
 
 - include: monitoring.yml tags=monitoring,common
+- include: logging.yml tags=logging

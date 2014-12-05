@@ -1,0 +1,4 @@
+---
+- name: configure logstash-forwarder
+  template: src=etc/logstash-forwarder.d/neutron-control.conf dest=/etc/logstash-forwarder.d/neutron-control.conf mode=0644
+  notify: restart logstash-forwarder

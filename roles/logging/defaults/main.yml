@@ -2,31 +2,6 @@ logging:
   follow:
     enabled: true
     logs:
-      - /var/log/cinder/cinder-api.log
-      - /var/log/cinder/cinder-manage.log
-      - /var/log/cinder/cinder-scheduler.log
-      - /var/log/glance/glance-api.log
-      - /var/log/glance/glance-manage.log
-      - /var/log/glance/glance-registry.log
-      - /var/log/heat/heat-api.log
-      - /var/log/heat/heat-engine.log
-      - /var/log/heat/heat-manage.log
-      - /var/log/keystone/keystone-all.log
-      - /var/log/keystone/keystone-manage.log
-      - /var/log/neutron/neutron-dhcp-agent.log
-      - /var/log/neutron/neutron-l3-agent.log
-      - /var/log/neutron/neutron-linuxbridge-agent.log
-      - /var/log/neutron/neutron-metadata-agent.log
-      - /var/log/neutron/neutron-openvswitch-agent.log
-      - /var/log/neutron/neutron-server.log
-      - /var/log/nova/nova-api.log
-      - /var/log/nova/nova-cert.log
-      - /var/log/nova/nova-compute.log
-      - /var/log/nova/nova-conductor.log
-      - /var/log/nova/nova-consoleauth.log
-      - /var/log/nova/nova-manage.log
-      - /var/log/nova/nova-scheduler.log
-      - /var/log/upstart/tgt.log
   forward:
     host: null
     port: 4560

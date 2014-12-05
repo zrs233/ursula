@@ -1,0 +1,4 @@
+---
+- name: configure logstash-forwarder
+  template: src=etc/logstash-forwarder.d/heat.conf dest=/etc/logstash-forwarder.d/heat.conf mode=0644
+  notify: restart logstash-forwarder

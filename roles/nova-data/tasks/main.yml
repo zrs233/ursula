@@ -28,3 +28,4 @@
   service: name=nova-compute state=started
 
 - include: monitoring.yml tags=monitoring,common
+- include: logging.yml tags=logging

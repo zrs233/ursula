@@ -21,7 +21,6 @@
 
 - name: logstash-forwarder config directory
   file: dest=/etc/logstash-forwarder.d state=directory mode=0755
-  when: logging.forward.host
 
 - name: configure logstash-forwarder
   template: src=etc/logstash-forwarder.d/main.conf dest=/etc/logstash-forwarder.d/main.conf mode=0644

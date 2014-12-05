@@ -71,3 +71,4 @@
   when: glance.sync.enabled
 
 - include: monitoring.yml tags=monitoring,common
+- include: logging.yml tags=logging
