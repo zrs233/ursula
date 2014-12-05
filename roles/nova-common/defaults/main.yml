@@ -61,5 +61,5 @@ nova:
         tags: nova,nova-scheduler
 
   logging:
-    debug: {{ logging.debug }}
-    verbose: {{ logging.verbose }}
+    debug: False
+    verbose: True

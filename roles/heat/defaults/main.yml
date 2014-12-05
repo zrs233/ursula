@@ -20,5 +20,5 @@ heat:
         type: openstack
         tags: heat,heat-manage
   logging:
-    debug: {{ logging.debug }}
-    verbose: {{ logging.verbose }}
+    debug: False
+    verbose: True

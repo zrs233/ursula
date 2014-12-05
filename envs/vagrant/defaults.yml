@@ -80,10 +80,14 @@ openstack:
 
 nova:
   libvirt_type: qemu
+  logging:
+    debug: True
 
 cinder:
   volume_file: /opt/stack/cinder-volumes
   volume_file_size: 2G
+  logging:
+    debug: True
 
 neutron:
   network_vlan_ranges: physnet
@@ -109,13 +113,19 @@ neutron:
       ip_version: 4
   routers: []
   router_interfaces: []
+  logging:
+    debug: True
 
 glance:
   images:
     - name: cirros
       url: https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img
+  logging:
+    debug: True
 
 keystone:
+  logging:
+    debug: True
   tenants:
     - admin
     - service
@@ -242,9 +252,13 @@ keystone:
 
 heat:
   enabled: False
+  logging:
+    debug: True
 
 ironic:
   enabled: False
+  logging:
+    debug: True
 
 ssl:
   crt: |

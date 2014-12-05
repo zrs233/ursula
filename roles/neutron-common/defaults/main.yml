@@ -35,5 +35,5 @@ neutron:
         tags: neutron,neutron-metadata-agent
 
   logging:
-    debug: {{ logging.debug }}
-    verbose: {{ logging.verbose }}
+    debug: False
+    verbose: True
