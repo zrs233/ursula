@@ -27,6 +27,11 @@
     - /etc/ironic/environment.d
     - /etc/ironic/rootwrap.d
 
+- name: create ironic lib directory
+  file: dest={{ item }} state=directory owner=ironic group=ironic mode=0755
+  with_items:
+    - /var/lib/ironic
+
 - name: create ironic log directory
   file: dest=/var/log/ironic state=directory owner=root group=ironic mode=0770
 

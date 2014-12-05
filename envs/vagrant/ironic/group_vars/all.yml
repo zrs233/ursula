@@ -13,3 +13,4 @@ nova:
 
 ironic:
   enabled: True
+  tftp_server: 172.16.255.100

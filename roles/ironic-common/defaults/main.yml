@@ -6,8 +6,9 @@ ironic:
   client_rev: e611ae5f206d846e72684ba16c345653232c45c3
   client_virtualenv: /opt/stack/python-ironicclient
   client_path: /opt/stack/python-ironicclient
-  tftp_root: /tftproot
+  tftp_server: hostvars[inventory_hostname][primary_interface]['ipv4']['address']
+  tftpboot_path: /tftpboot
   enabled_drivers:
     - fake
-    - agent_ssh
-    - agent_ipmitool
+    - pxe_ssh
+    - pxe_ipmitool
