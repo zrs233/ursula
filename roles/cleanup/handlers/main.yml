@@ -1,0 +1,3 @@
+---
+- name: refresh cert auths
+  command: update-ca-certificates

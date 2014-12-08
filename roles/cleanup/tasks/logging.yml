@@ -1,10 +1,23 @@
-- name: keystone logging.conf
+- name: remove keystone logging.conf
   file: dest=/etc/keystone/logging.conf state=absent
-- file: dest=/var/log/keystone/error.log state=absent
-- file: dest=/var/log/keystone/access.log state=absent
+- name: remove keystone error log
+  file: dest=/var/log/keystone/error.log state=absent
+- name: remove keystone access log
+  file: dest=/var/log/keystone/access.log state=absent
 
-- name: nova logging.conf
+- name: remove nova logging.conf
   file: dest=/etc/nova/logging.conf state=absent
 
-- name: cinder logging.conf
+- name: remove cinder logging.conf
   file: dest=/etc/cinder/logging.conf state=absent
+
+- name: remove rsyslog configs
+  file: dest=/etc/rsyslog.d/{{ item }}.conf state=absent
+  with_items:
+    - follow.conf
+    - forward.conf
+    - udp.conf
+
+- name: remove rsyslog forward cert auth
+  file: dest=/usr/local/share/ca-certificates/rsyslog-forward.crt state=absent
+  notify: refresh cert auths
