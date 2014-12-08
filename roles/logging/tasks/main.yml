@@ -22,10 +22,6 @@
   copy: src=etc/rsyslog.d/49-haproxy.conf dest=/etc/rsyslog.d/49-haproxy.conf mode=0644
   notify: restart rsyslog
 
-- name: send swift logs to local file
-  copy: src=etc/rsyslog.d/49-swift.conf dest=/etc/rsyslog.d/49-swift.conf mode=0644
-  notify: restart rsyslog
-
 - name: custom CA cert directory
   file: dest=/usr/local/share/ca-certificates state=directory mode=0755
   when: rsyslog.forward.host and rsyslog.forward.tls.enabled
