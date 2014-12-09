@@ -47,6 +47,13 @@
 - name: ironic rootwrap
   command: rsync -avh {{ ironic.path }}/etc/ironic/rootwrap.d /etc/ironic
 
+- name: ironic sudoer
+  template: src=etc/sudoers.d/ironic
+            dest=/etc/sudoers.d/ironic
+            owner=root
+            group=root
+            mode=0440
+
 - meta: flush_handlers
 
 - name: ironic-client

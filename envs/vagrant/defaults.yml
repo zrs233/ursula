@@ -100,7 +100,7 @@ neutron:
   networks:
     - name: internal
       shared: true
-      external: false
+      external: true
       network_type: flat
       provider_physical_network: physnet
       segmentation_id: ~
@@ -109,7 +109,7 @@ neutron:
       network_name: internal
       cidr: 172.16.255.0/24
       enable_dhcp: "true"
-      gateway_ip: 172.16.255.254
+      gateway_ip: 172.16.255.100
       ip_version: 4
   routers: []
   router_interfaces: []

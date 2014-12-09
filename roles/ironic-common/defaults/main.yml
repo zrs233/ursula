@@ -7,6 +7,8 @@ ironic:
   client_virtualenv: /opt/stack/python-ironicclient
   client_path: /opt/stack/python-ironicclient
   tftp_server: hostvars[inventory_hostname][primary_interface]['ipv4']['address']
+  dns_server: hostvars[inventory_hostname][primary_interface]['ipv4']['address']
+  api_url: "http://{{ hostvars[inventory_hostname][primary_interface]['ipv4']['address'] }}:6385"
   tftpboot_path: /tftpboot
   enabled_drivers:
     - fake
