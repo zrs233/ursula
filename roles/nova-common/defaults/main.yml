@@ -4,6 +4,7 @@ nova:
   rev: 8526a727dc20a96d7245ae836e81c29967166f77
   compute_driver: nova.virt.libvirt.LibvirtDriver
   api_workers: 5
+  conductor_workers: 5
   metadata_api_workers: 5
   cpu_allocation_ratio: 1.0
   ram_allocation_ratio: 1.0
