@@ -4,6 +4,7 @@ cinder:
   enabled_backends: None
   default_backend: None
   backends: []
+  api_workers: 5
 
   logs:
   - paths:
