@@ -107,3 +107,5 @@
   with_items:
     - localhost
     - "{{ ansible_hostname }}"
+
+- include: monitoring.yml tags=monitoring,common
