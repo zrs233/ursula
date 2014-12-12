@@ -13,7 +13,7 @@
   when: not rabbitmq.cluster
 
 - name: remove default rabbit user clustered
-  rabbitmq_user: user=guest state=absent node=rabbitmq.nodename
+  rabbitmq_user: user=guest state=absent node={{ rabbitmq.nodename }}
   when: rabbitmq.cluster
 
 - name: openstack rabbit user

@@ -27,7 +27,7 @@ etc_hosts:
 rabbitmq:
   port: 5672
   user: openstack
-  cluster: false
+  cluster: true
 
 memcached:
   memory: 64
