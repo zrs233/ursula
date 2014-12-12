@@ -2,3 +2,11 @@
 - template: src=etc/sysctl.d/60-kernel-tuning.conf dest=/etc/sysctl.d/60-kernel-tuning.conf owner=root group=root mode=0644
   notify:
     - apply-sysctl
+
+- name: "Kernel boot parameters: disable console screen blanking, enabled serial console on IPMI serial over LAN"
+  lineinfile: dest=/etc/default/grub
+              regexp="^GRUB_CMDLINE_LINUX_DEFAULT="
+              line='GRUB_CMDLINE_LINUX_DEFAULT="console=tty0 console=ttyS2,115200n8 consoleblank=0"'
+
+- name: Update GRUB configuration
+  command: /usr/sbin/update-grub
