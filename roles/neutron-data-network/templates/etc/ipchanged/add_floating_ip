@@ -1,12 +1,46 @@
 #!/bin/bash
 
 . /root/stackrc
+export HOSTNAME=$( hostname )
+
+function neutron_and_local_agents_alive () {
+  logger ipchanged UP checking neutron health
+  local OUTPUT=$( neutron agent-list --host=${HOSTNAME} )
+  # Any agents down, not ready
+  echo ${OUTPUT} | grep -q 'xxx' && return 1
+  # At least one agent up, and none down, ready
+  echo ${OUTPUT} | grep -q ':-)' && return 0
+  # Didn't receive any agents or api returned an error
+  return 1
+}
+
+function neutron_is_responding () {
+  local OUTPUT=$( neutron agent-list )
+  return $?
+}
+
+logger ipchanged UP floating interface
+
+sleep 5
+
+if [[ neutron_is_responding ]]; then
+  logger ipchanged UP neutron API is available
+  logger ipchanged UP restart neutron-linuxbridge-agent
+  restart neutron-linuxbridge-agent
+else
+  logger ipchanged UP neutron API is not available
+  logger ipchanged UP restarting neutron
+  neutron-restart-all
+fi
 
 # Wait up to 5 minutes for Neutron to recover from MySQL and HAProxy cutover
 TRIES=0
-until neutron agent-list || [ $(( TRIES++ )) -eq 10 ]; do
+until neutron_and_local_agents_alive || [ $(( TRIES++ )) -eq 10 ]; do
   sleep 30
 done
 
-export HOSTNAME=$( hostname )
-/usr/local/bin/migrate_neutron_services
+if [[ neutron_and_local_agents_alive ]]; then
+  logger ipchanged UP neutron agents OK
+  logger ipchanged UP migrating neutron services
+  /usr/local/bin/migrate_neutron_services
+fi
