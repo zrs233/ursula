@@ -8,3 +8,6 @@
     - ipmi_devintf
     - ipmi_si
     - ipmi_msghandler
+
+- name: IPMI serial over LAN console
+  template: src=etc/init/ttyS2.conf dest=/etc/init/ttyS2.conf
