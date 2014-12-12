@@ -36,7 +36,7 @@
   when: monitoring.client_key is defined
 
 - name: disable embedded ruby
-  lineinfile: dest=/etc/default/sensu regexp=^EMBEDDED_RUBY 
+  lineinfile: dest=/etc/default/sensu regexp=^EMBEDDED_RUBY
               line=EMBEDDED_RUBY=false
   notify: restart sensu-client
 
@@ -112,3 +112,8 @@
 - name: raid check
   sensu_check: name=check-raid plugin=check-raid.sh interval=300 occurrences=1
   notify: restart sensu-client
+
+- name: kernel-options
+  sensu_check: name=kernel-options plugin=check-kernel-options.rb
+  notify: restart sensu-client
+
