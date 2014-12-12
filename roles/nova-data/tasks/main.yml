@@ -16,6 +16,10 @@
 - name: probe nbd
   modprobe: name=nbd state=present
 
+- lineinfile: dest=/etc/modules line="nbd"
+
+- modprobe: name=nbd state=present
+
 - name: install nova-compute service
   upstart_service: name=nova-compute user=nova cmd=/usr/local/bin/nova-compute
                    config_dirs=/etc/nova

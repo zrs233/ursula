@@ -179,6 +179,7 @@
   hosts: swiftnode
   roles:
     - role: haproxy
+      haproxy_type: swift
       tags: ['openstack', 'swift', 'control']
 
     - role: swift-object

@@ -131,7 +131,7 @@
 
 - hosts: controller
   serial: 1
-  var_files:
+  vars_files:
     - ../roles/client/defaults/main.yml
   tasks:
   - name: keystonemiddleware
