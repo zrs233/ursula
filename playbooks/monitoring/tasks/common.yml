@@ -40,3 +40,7 @@
   file: path=/etc/sensu/conf.d/checks/check-log-{{ item }}.json state=absent
   with_items: logs_to_scan
   notify: restart sensu-client
+
+- name: kernel-options
+  sensu_check: name=kernel-options plugin=check-kernel-options.rb
+  notify: restart sensu-client
