@@ -16,37 +16,37 @@ nova:
 
   logs:
     - paths:
-	- /var/log/nova/nova-api.log
+        - /var/log/nova/nova-api.log
       fields:
-	type: openstack
-	tags: nova,nova-api
+        type: openstack
+        tags: nova,nova-api
     - paths:
-	- /var/log/nova/nova-cert.log
+        - /var/log/nova/nova-cert.log
       fields:
-	type: openstack
-	tags: nova,nova-cert
+        type: openstack
+        tags: nova,nova-cert
     - paths:
-	- /var/log/nova/nova-compute.log
+        - /var/log/nova/nova-compute.log
       fields:
-	type: openstack
-	tags: nova,nova-compute
+        type: openstack
+        tags: nova,nova-compute
     - paths:
-	- /var/log/nova/nova-conductor.log
+        - /var/log/nova/nova-conductor.log
       fields:
-	type: openstack
-	tags: nova,nova-conductor
+        type: openstack
+        tags: nova,nova-conductor
     - paths:
-	- /var/log/nova/nova-consoleauth.log
+        - /var/log/nova/nova-consoleauth.log
       fields:
-	type: openstack
-	tags: nova,nova-consoleauth
+        type: openstack
+        tags: nova,nova-consoleauth
     - paths:
-	- /var/log/nova/nova-manage.log
+        - /var/log/nova/nova-manage.log
       fields:
-	type: openstack
-	tags: nova,nova-manage
+        type: openstack
+        tags: nova,nova-manage
     - paths:
-	- /var/log/nova/nova-scheduler.log
+        - /var/log/nova/nova-scheduler.log
       fields:
-	type: openstack
-	tags: nova,nova-scheduler
+        type: openstack
+        tags: nova,nova-scheduler

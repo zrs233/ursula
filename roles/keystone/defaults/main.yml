@@ -5,12 +5,12 @@ keystone:
 
   logs:
     - paths:
-	- /var/log/keystone/keystone-all.log
+      - /var/log/keystone/keystone-all.log
       fields:
-	type: openstack
-	tags: keystone,keystone-all
+        type: openstack
+        tags: keystone,keystone-all
     - paths:
-	- /var/log/keystone/keystone-manage.log
+        - /var/log/keystone/keystone-manage.log
       fields:
-	type: openstack
-	tags: keystone,keystone-manage
+        type: openstack
+        tags: keystone,keystone-manage

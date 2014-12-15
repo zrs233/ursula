@@ -5,17 +5,17 @@ heat:
 
   logs:
     - paths:
-	- /var/log/heat/heat-api.log
+        - /var/log/heat/heat-api.log
       fields:
-	type: openstack
-	tags: heat,heat-api
+        type: openstack
+        tags: heat,heat-api
     - paths:
-	- /var/log/heat/heat-engine.log
+        - /var/log/heat/heat-engine.log
       fields:
-	type: openstack
-	tags: heat,heat-engine
+        type: openstack
+        tags: heat,heat-engine
     - paths:
-	- /var/log/heat/heat-manage.log
+        - /var/log/heat/heat-manage.log
       fields:
-	type: openstack
-	tags: heat,heat-manage
+        type: openstack
+        tags: heat,heat-manage

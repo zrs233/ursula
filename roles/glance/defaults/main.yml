@@ -14,17 +14,17 @@ glance:
 
   logs:
     - paths:
-	- /var/log/glance/glance-api.log
+        - /var/log/glance/glance-api.log
       fields:
-	type: openstack
-	tags: glance,glance-api
+        type: openstack
+        tags: glance,glance-api
     - paths:
-	- /var/log/glance/glance-manage.log
+        - /var/log/glance/glance-manage.log
       fields:
-	type: openstack
-	tags: glance,glance-manage
+        type: openstack
+        tags: glance,glance-manage
     - paths:
-	- /var/log/glance/glance-registry.log
+        - /var/log/glance/glance-registry.log
       fields:
-	type: openstack
-	tags: glance,glance-registry
+        type: openstack
+        tags: glance,glance-registry
