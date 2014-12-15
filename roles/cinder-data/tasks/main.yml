@@ -50,4 +50,3 @@
   service: name=cinder-volume state=started
 
 - include: monitoring.yml tags=monitoring,common
-- include: logging.yml tags=logging

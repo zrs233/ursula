@@ -24,4 +24,3 @@
   ufw: rule=allow to_port=9797 proto=tcp
 
 - include: monitoring.yml tags=monitoring,common
-- include: logging.yml tags=logging

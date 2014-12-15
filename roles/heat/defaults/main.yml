@@ -2,3 +2,20 @@
 heat:
   enabled: False
   rev: 0007c2d671c811bf01bdfac60357d8dd855b5cb5
+
+  logs:
+    - paths:
+	- /var/log/heat/heat-api.log
+      fields:
+	type: openstack
+	tags: heat,heat-api
+    - paths:
+	- /var/log/heat/heat-engine.log
+      fields:
+	type: openstack
+	tags: heat,heat-engine
+    - paths:
+	- /var/log/heat/heat-manage.log
+      fields:
+	type: openstack
+	tags: heat,heat-manage

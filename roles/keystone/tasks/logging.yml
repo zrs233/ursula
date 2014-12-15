@@ -1,4 +1,0 @@
----
-- name: configure logstash-forwarder
-  template: src=etc/logstash-forwarder.d/keystone.conf dest=/etc/logstash-forwarder.d/keystone.conf mode=0644
-  notify: restart logstash-forwarder

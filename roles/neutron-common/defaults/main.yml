@@ -10,3 +10,25 @@ neutron:
   service_plugins:
     - neutron.services.l3_router.l3_router_plugin.L3RouterPlugin
   enable_flat_networks: False
+
+  logs:
+    - paths:
+	- /var/log/neutron/neutron-server.log
+      fields:
+	type: openstack
+	tags: neutron,neutron-server
+    - paths:
+	- /var/log/neutron/neutron-dhcp-agent.log
+      fields:
+	type: openstack
+	tags: neutron,neutron-dhcp-agent
+    - paths:
+	- /var/log/neutron/neutron-l3-agent.log
+      fields:
+	type: openstack
+	tags: neutron,neutron-l3-agent
+    - paths:
+	- /var/log/neutron/neutron-metadata-agent.log
+      fields:
+	type: openstack
+	tags: neutron,neutron-metadata-agent

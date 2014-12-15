@@ -11,3 +11,20 @@ glance:
     storage_path: /var/lib/btsync
     device_name: image-cache
     dir: /var/lib/glance/images
+
+  logs:
+    - paths:
+	- /var/log/glance/glance-api.log
+      fields:
+	type: openstack
+	tags: glance,glance-api
+    - paths:
+	- /var/log/glance/glance-manage.log
+      fields:
+	type: openstack
+	tags: glance,glance-manage
+    - paths:
+	- /var/log/glance/glance-registry.log
+      fields:
+	type: openstack
+	tags: glance,glance-registry

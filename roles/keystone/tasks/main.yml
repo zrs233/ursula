@@ -64,4 +64,3 @@
             owner=root group=root mode=0755
 
 - include: monitoring.yml tags=monitoring,common
-- include: logging.yml tags=logging

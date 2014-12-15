@@ -17,6 +17,3 @@
     - neutron-l3-agent
     - neutron-openvswitch-agent
     - neutron-linuxbridge-agent
-
-- name: restart logstash-forwarder
-  service: name=logstash-forwarder state=restarted

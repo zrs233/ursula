@@ -2,3 +2,15 @@
 keystone:
   rev: e6adb2f75a2cbee9
   token_expiration_in_seconds: 86400
+
+  logs:
+    - paths:
+	- /var/log/keystone/keystone-all.log
+      fields:
+	type: openstack
+	tags: keystone,keystone-all
+    - paths:
+	- /var/log/keystone/keystone-manage.log
+      fields:
+	type: openstack
+	tags: keystone,keystone-manage

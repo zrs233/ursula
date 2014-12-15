@@ -10,6 +10,3 @@
 
 - name: restart heat-engine
   service: name=heat-engine state=restarted
-
-- name: restart logstash-forwarder
-  service: name=logstash-forwarder state=restarted
