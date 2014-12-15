@@ -11,4 +11,7 @@
 - name: apply-sysctl
   shell: "cat /etc/sysctl.conf /etc/sysctl.d/*.conf | sysctl -e -p -"
 
+- name: update grub config
+  command: /usr/sbin/update-grub
+
 - include: ssh.yml

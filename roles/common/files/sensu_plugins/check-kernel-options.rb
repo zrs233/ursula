@@ -19,13 +19,13 @@ require 'socket'
 class CheckKernelOptions < Sensu::Plugin::Check::CLI
 
   def run
-    contents = File::open('/proc/cmdline', 'r'){|io| io.read}
+    kernel_cmd_line = File::open('/proc/cmdline', 'r'){ |io| io.read }
 
     [
-        'console=ttyS2,115200n8',
-        'consoleblank=0'
+        'consoleblank=0',
+        /console=ttyS\d+,115200n8/
     ].each do |option|
-        warning "Kernel not booted without #{option}" unless contents.include?(option)
+        warning "Kernel booted without #{option}" unless kernel_cmd_line.match(option)
     end
 
     ok "Kernel boot options appear good"
