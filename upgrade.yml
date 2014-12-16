@@ -3,6 +3,7 @@
 # future upgrades. NOT a rolling upgrade optimized for downtime.
 #
 # Assumes ml2 networking
+# Assumes rabbit cluster has been enabled
 ---
 - name: upgrade percona cluster in compat mode
   hosts: db
@@ -56,6 +57,14 @@
   handlers:
     - name: restart mysql
       service: name=mysql state=restarted
+
+- name: upgrade rabbit to clustering
+  hosts: controller
+  serial: 1
+  tags: rabbitmq
+
+  roles:
+    - role: rabbitmq
 
 - name: upgrade keystone
   hosts: controller
