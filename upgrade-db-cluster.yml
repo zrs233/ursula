@@ -33,6 +33,9 @@
     wsrep_method:
       regexp: '^wsrep_sst_method\s*='
       line: "wsrep_sst_method = xtrabackup-v2"
+    read_only:
+      regexp: '^read_only\s*='
+      line: "read_only = ON"
 
 - name: install new packages
   apt: name=percona-xtradb-cluster-56

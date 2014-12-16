@@ -52,6 +52,7 @@
         - '^log_bin_use_v1_row_events\s*='
         - '^gtid_mode\s*='
         - '^binlog_checksum\s*='
+        - '^read_only\s*='
       notify: restart mysql
 
   handlers:
