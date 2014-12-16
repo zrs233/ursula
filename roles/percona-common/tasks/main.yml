@@ -7,5 +7,3 @@
 
 - name: percona apt repository
   apt_repository: repo='deb http://repo.percona.com/apt {{ ansible_distribution_release }} main' update_cache=yes
-
-- include: monitoring.yml tags=monitoring,common
