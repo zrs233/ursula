@@ -9,7 +9,7 @@
   notify: restart sensu-client
 
 - name: nova-api process checks
-  sensu_process_check: service=nova-api warn_over=40 crit_over=50
+  sensu_process_check: service=nova-api warn_over=20 crit_over=30
   notify: restart sensu-client
 
 - name: nova-api check
