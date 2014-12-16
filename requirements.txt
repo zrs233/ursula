@@ -1,4 +1,4 @@
-ansible==1.7.2
+-e git://github.com/blueboxgroup/ansible@v1.8.2-bbg#egg=ansble
 python-novaclient==2.19.0
 python-neutronclient==2.3.6
 python-keystoneclient
