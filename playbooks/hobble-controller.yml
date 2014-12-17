@@ -1,0 +1,57 @@
+---
+- hosts: all
+  serial: 10
+  vars:
+    timezone: Etc/UTC
+    services: [ 'neutron-server', 'neutron-metadata-agent', 'neutron-l3-agent', 'neutron-dhcp-agent', 'nova-cert', 'keystone', 'nova-api', 'nova-conductor', 'glance-registry', 'ipchanged', 'nova-scheduler', 'cinder-scheduler', 'cinder-api', 'glance-api', 'nova-novncproxy']
+  tasks:
+
+      # stop controller services
+      - service: name={{ item }} state=stopped enabled=no
+        with_items: services
+
+      - shell: rm /etc/init/{{ item }}*
+        ignore_errors: True
+        with_items: services
+
+      - service: name=ufw state=stopped enabled=no
+        ignore_errors: True
+
+# some packages we want to uninstall:
+# rabbit
+      # remove percona
+      - apt: name=percona* state=absent purge=yes
+      
+      - command: rm -rf /var/lib/mysql
+        ignore_errors: True
+
+      - command: rm /etc/my.cnf
+        ignore_errors: True
+
+      - command: rm -rf /etc/mysql
+        ignore_errors: True
+
+      # remove rabbit
+      - command: apt-get remove rabbitmq-server --purge -y
+      
+      - command: killall -u rabbitmq
+        ignore_errors: True
+
+      # remove ucarp
+      - apt:  name=ucarp state=absent purge=yes
+
+      # remove the sensu checks
+      - shell: rm -rf /etc/sensu/conf.d/checks/*
+        ignore_errors: True
+
+      # restart sensu
+      - service: name=sensu-client state=restarted sleep=2
+
+      # close any ports that were opened by ufw
+      - command: apt-get remove ufw --purge -y
+      
+      - shell: rm -rf /etc/ufw
+        ignore_errors: True
+      
+
+
