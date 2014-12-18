@@ -12,6 +12,7 @@ glance:
     storage_path: /var/lib/btsync
     device_name: image-cache
     dir: /var/lib/glance/images
+  store_swift: False
 
   logs:
     - paths:
