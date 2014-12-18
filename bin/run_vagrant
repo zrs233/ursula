@@ -31,7 +31,7 @@ else
     exit -1
 fi
 
-vagrant up ${BOXES}
+vagrant up --provider=virtualbox ${BOXES}
 
 # Write the Vagrant SSH config to be used by ansible
 TEMPFILE=`mktemp 2>/dev/null || mktemp -t 'ursula-fifo'`
