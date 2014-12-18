@@ -320,9 +320,8 @@ def main():
     group_id = None
     group = security_group.get()
     if group:
-        group_id = group.id
         if state == 'absent':
-            security_group.delete()
+            group.delete()
             changed = True
     elif state == 'present':
         group = security_group.create()
