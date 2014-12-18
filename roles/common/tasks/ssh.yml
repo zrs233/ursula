@@ -12,7 +12,7 @@
 - name: disable root login
   lineinfile: dest=/etc/ssh/sshd_config regexp=^PermitRootLogin
               line="PermitRootLogin no"
-  when: common.ssh_disable_root_login
+  when: common.ssh.disable_root
 
 - name: add ssh private keys
   template: src=ssh-private-key dest={{ item.dest }}

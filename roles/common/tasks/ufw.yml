@@ -10,7 +10,7 @@
 
 - name: Permit SSH
   ufw: rule=allow to_port=22 proto=tcp src={{ item }}
-  with_items: common.ssh_allow_from
+  with_items: common.ssh.allow_from
 
 - name: Permit unrestricted access from remainder of cluster
   ufw: rule=allow from_ip={{ undercloud_cidr }} proto=any

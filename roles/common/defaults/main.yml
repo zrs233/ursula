@@ -9,6 +9,7 @@ common:
     enabled: True
   python_extra_packages: []
   ssh_private_keys: []
-  ssh_allow_from:
-    - 0.0.0.0/0
-  ssh_disable_root_login: True
+  ssh:
+    allow_from:
+      - 0.0.0.0/0
+    disable_root: False
