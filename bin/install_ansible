@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -e
+
+# ansible does not install via pip. Yes, I don't understand how this can be either.
+# However, since trying to change this upstream will be a complete yak shave, just 
+# install it like this until I have time to change it in our own fork.
+
+source share/common
+
+TEMPDIR=$(mktemp -d 2>/dev/null || mktemp -d -t 'ansible-install')
+git clone https://github.com/blueboxgroup/ansible.git --recursive -b v${URSULA_ANSIBLE_VERSION}  ${TEMPDIR}/ansible
+cd ${TEMPDIR}/ansible
+python setup.py install
+cd -
+rm -rf ${TEMPDIR}

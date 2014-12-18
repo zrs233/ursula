@@ -1,5 +1,7 @@
 set -e
 
+export URSULA_ANSIBLE_VERSION=1.7.2-bbg
+
 # Shared amongst test suite and ursula binaries
 ansible_command() {
   local inventory=$1
