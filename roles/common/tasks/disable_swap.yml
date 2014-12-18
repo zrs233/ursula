@@ -1,10 +1,9 @@
 ---
 - lineinfile: dest=/etc/fstab regexp='\s+swap\s+' state=absent
-# Disable unused swap devices
-- shell: |
-    awk '/^\// {print $1 "\t" $4}' /proc/swaps | \
-    while read SWAPDEV SWAPUSED; do
-      if [ ${SWAPUSED} -eq 0 ]; then
-        swapoff ${SWAPDEV}
-      fi
-    done
+
+- name: place swap_off_all utility script
+  copy: dest=/usr/local/bin/swap_off_all src=swap_off_all mode=0755
+
+- name: disable unused swap devices
+  command: /usr/local/bin/swap_off_all
+
