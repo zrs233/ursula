@@ -5,13 +5,22 @@
             dest=/etc/modprobe.d/kvm-nested.conf owner=root group=root
             mode=0644
 
+- name: install cloudarchive key
+  apt: pkg=ubuntu-cloud-keyring
+
+- name: install cloudarchive repos
+  apt_repository: repo='deb http://ubuntu-cloud.archive.canonical.com/ubuntu precise-updates/icehouse main'
+                  state=present update_cache=yes
+
 - name: install nova-compute packages
-  action: apt pkg={{ item }}
+  apt: pkg={{ item }}
   with_items:
-    - libvirt-bin
-    - python-libvirt
-    - qemu-kvm
+    - libvirt-bin={{ nova.libvirt_bin_version }}
+    - python-libvirt={{ nova.python_libvirt_version }}
+    - qemu-kvm={{ nova.qemu_kvm_version }}
+    - librbd1={{ nova.librdb1_version }}
     - open-iscsi
+  notify: restart nova services
 
 - name: update various lines in libvirtd.conf
   lineinfile: dest=/etc/libvirt/libvirtd.conf regexp="{{ item.value.regexp }}"
@@ -31,6 +40,11 @@
 - name: update libvirtd default
   lineinfile: dest=/etc/default/libvirt-bin regexp="^libvirtd_opts\s*="
               line="libvirtd_opts=\"-d -l\""
+  notify: restart libvirt-bin
+
+- name: update qemu migration option
+  lineinfile: dest=/etc/libvirt/qemu.conf regexp="^allow_incoming_qemukvm\s*="
+              line="allow_incoming_qemukvm = 1"
   notify: restart libvirt-bin
 
 - name: ensure kvm is supported by cpu and enabled in bios
