@@ -31,6 +31,10 @@
             group=root
             mode=0440
 
+- name: install working alembic
+  pip: name=alembic version={{ neutron.alembic_version }}
+       extra_args="-i {{ openstack.pypi_mirror }}" state=present
+
 - name: get neutron source repo
   git: repo={{ openstack.git_mirror }}/neutron.git
        dest=/opt/stack/neutron
@@ -40,18 +44,6 @@
   until: result|success
   retries: 3
   delay: 60
-
-# Patch around neutron's Open vSwitch kernel module version detection
-# Problem is now that Open vSwitch is merged into mainline kernel
-# modinfo openvswitch no longer includes a version: field
-- name: create kms version detect patch
-  template: src=opt/stack/neutron/fix-ovs-klm-version-detection.patch
-            dest=/opt/stack/neutron/fix-ovs-klm-version-detection.patch
-            mode=0644
-
-- name: patch source code
-  shell: patch -p1 < fix-ovs-klm-version-detection.patch
-         chdir=/opt/stack/neutron
   notify:
     - pip install neutron
     - neutron rootwrap
@@ -72,6 +64,16 @@
 - name: neutron log dir
   file: dest=/var/log/neutron state=directory mode=0755
         owner=neutron group=neutron
+
+# Neutron needs admin tenant uuid. This goes away after juno
+# when neutron can use tenant_name.
+- name: Fetch admin tenant info from keystone
+  keystone_user: tenant=admin
+                 endpoint=https://{{ endpoints.main }}:5001/v2.0/
+                 login_tenant_name=admin
+                 login_user=admin
+                 login_password={{ secrets.admin_password }}
+  register: admin_tenant
 
 - name: neutron config
   template: src={{ item }} dest=/etc/neutron mode=0644

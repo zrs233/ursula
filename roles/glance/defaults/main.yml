@@ -1,7 +1,8 @@
 ---
 glance:
-  rev: 252fe8572400c25c35
+  rev: def65d3a891a15a671f0713d3dbc9563228af9a7
   api_workers: 5
+  registry_workers: 5
   sync:
     enabled: true
     listening_port: 25307

@@ -17,6 +17,11 @@
     - setup horizon venv
     - compress horizon assets
 
+- template: src=opt/stack/horizon/hide-external-networks.patch dest=/opt/stack/horizon/hide-external-networks.patch mode=0644
+- shell: patch -p1 < hide-external-networks.patch chdir=/opt/stack/horizon
+  notify:
+    - setup horizon venv
+
 - name: add python-memcached to horizon requirements
   lineinfile: dest=/opt/stack/horizon/requirements.txt
               regexp=^python-memcached

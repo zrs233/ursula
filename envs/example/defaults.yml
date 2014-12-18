@@ -27,7 +27,7 @@ etc_hosts:
 rabbitmq:
   port: 5672
   user: openstack
-  cluster: false
+  cluster: true
 
 memcached:
   memory: 64
@@ -48,13 +48,15 @@ endpoints:
   heat:     "{{ fqdn }}"
   heat-cfn: "{{ fqdn }}"
   ironic: "{{ fqdn }}"
+  identity_uri: https://{{ fqdn }}:35358
+  auth_uri: https://{{ fqdn }}:5001/v2.0
 
 mysql:
   root_password: asdf
 xtradb:
-  galera_version: 2.x
-  client_version: 5.5
-  server_version: 5.5
+  galera_version: 3.x
+  client_version: 5.6
+  server_version: 5.6
   sst_auth_user: sst_admin
   sst_auth_password: asdf
 
@@ -83,6 +85,7 @@ client:
 nova:
   libvirt_type: qemu
   api_workers: 1
+  conductor_workers: 1
   metadata_api_workers: 1
 
 cinder:
@@ -150,6 +153,7 @@ neutron:
 
 glance:
   api_workers: 1
+  registry_workers: 1
   images:
     - name: cirros
       url: http://download.cirros-cloud.net/0.3.3/cirros-0.3.3-x86_64-disk.img

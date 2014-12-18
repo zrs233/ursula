@@ -57,7 +57,7 @@
     when: rabbitmq.cluster == true
 
   - name: rabbitmq has the management plugin enabled
-    shell: rabbitmq-plugins list | grep '\[E\] rabbitmq_management'
+    shell: rabbitmq-plugins list | grep '\[E.*\] rabbitmq_management'
     when: rabbitmq.cluster == true
 
   - name: rabbitmq has the rabbitmqadmin script installed

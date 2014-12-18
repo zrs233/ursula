@@ -1,19 +1,35 @@
 ---
+- name: add erlang-solutions apt key
+  apt_key: id=A14F4FCA url='http://packages.erlang-solutions.com/debian/erlang_solutions.asc'
+
+- name: add erlang-solutions apt repository
+  apt_repository: update_cache=yes
+                  repo='deb http://packages.erlang-solutions.com/debian precise contrib'
+
+- name: install erlang-solutions erlang
+  apt: pkg=esl-erlang
+
+- name: add rabbitmq apt key
+  apt_key: id=056E8E56 url='http://www.rabbitmq.com/rabbitmq-signing-key-public.asc'
+
+- name: add rabbitmq apt repository
+  apt_repository: repo='deb http://www.rabbitmq.com/debian/ testing main'
+                  update_cache=yes
+
+- name: install rabbitmq
+  apt: pkg=rabbitmq-server
+
 # Create the cluster if desired
 - include: cluster.yml
   when: rabbitmq.cluster
 
 # Backward compatibility with existing configurations.
-- name: install rabbitmq
-  apt: pkg=rabbitmq-server
-  when: not rabbitmq.cluster
-
 - name: remove default rabbit user
   rabbitmq_user: user=guest state=absent
   when: not rabbitmq.cluster
 
 - name: remove default rabbit user clustered
-  rabbitmq_user: user=guest state=absent node=rabbitmq.nodename
+  rabbitmq_user: user=guest state=absent node={{ rabbitmq.nodename }}
   when: rabbitmq.cluster
 
 - name: openstack rabbit user

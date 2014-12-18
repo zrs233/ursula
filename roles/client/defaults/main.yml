@@ -1,10 +1,10 @@
 ---
 client:
   self_signed_cert: false
-  novaclient_rev: 516586a6b8
-  keystoneclient_rev: 876c2d6c2a
-  keystonemiddleware_rev: 671285f4e6
-  neutronclient_rev: 8aacb125df
-  glanceclient_rev: cd11833cff
-  cinderclient_rev: d21ed05b4e
-  heatclient_rev: 8503781c67
+  novaclient_rev: ae0890ad696ba0bad124a2edfda0a45a82695997
+  keystoneclient_rev: d54bd32cd09912982b2f59a01384c7189817c055
+  keystonemiddleware_rev: 88dbf24458ecda14c27910fc587402d428180af1
+  neutronclient_rev: 50679755d53044c5a5312fc918f1d44b1c2a917a
+  glanceclient_rev: 3b6754a8cc8932cd9645d54acc8d02826993a546
+  cinderclient_rev: d6f4ab3c9630262c5c6b0c5562db4bae50aab2d5
+  heatclient_rev: 78af7de8e590cfcae80958c62fe9176bee0ffda5

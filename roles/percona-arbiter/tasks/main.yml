@@ -1,24 +1,19 @@
 ---
 - name: try to stop old garbd service
-  service: name=garbd state=stopped enabled=false
+  service: name=garbd state=stopped enabled=false pattern=/usr/bin/garbd
   failed_when: False
 
-- name: remove old garbd upstart script
-  file: dest=/etc/init/garbd.conf state=absent
+- name: make garbd log
+  copy: dest=/var/log/garbd.log owner=nobody content='' force=no
 
 # the arbiter node only needs the garbd daemon
 - name: install percona garbd package
   apt: pkg={{ item }} state=installed
   with_items:
-    - percona-xtradb-cluster-garbd-2.x
+    - percona-xtradb-cluster-garbd-3.x
 
 - name: install garbd config
-  template: src=etc/default/garb dest=/etc/default/garb mode=0644
-
-# Workaround: percona-xtradb-cluster-garbd-2.x 2.11.2675.precise is missing an init script, so include the one from 188.precise
-- name: workaround for a missing init script
-  template: src=etc/init.d/percona-xtradb-cluster-garbd-2.x
-            dest=/etc/init.d/percona-xtradb-cluster-garbd-2.x mode=0755
+  template: src=etc/default/garbd dest=/etc/default/garbd mode=0644
 
 - name: ensure garbd running
-  service: name=percona-xtradb-cluster-garbd-2.x state=started enabled=on
+  service: name=garbd state=started enabled=on pattern=/usr/bin/garbd

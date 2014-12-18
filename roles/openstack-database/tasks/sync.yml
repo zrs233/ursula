@@ -7,4 +7,4 @@
 - name: sync the db
   command: "{{ db_sync_cmd|default(database_name ~ '-manage') }} {{ db_sync|default('db_sync') }}"
   run_once: true
-  when: db_current.status != 0
+  when: db_current.status != 0 or force_sync|default('False')

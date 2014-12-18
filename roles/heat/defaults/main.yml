@@ -1,7 +1,7 @@
 ---
 heat:
   enabled: False
-  rev: 0007c2d671c811bf01bdfac60357d8dd855b5cb5
+  rev: cbef40647e35cc065e36ee86b4ca1305676f4c1b
 
   logs:
     - paths:

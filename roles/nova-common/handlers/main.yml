@@ -12,6 +12,7 @@
 
 - name: restart nova services
   restart_if_present: service={{ item }}
+  when: restart|default('True')
   with_items:
     - nova-api
     - nova-cert

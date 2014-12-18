@@ -1,10 +1,12 @@
 ---
 nova:
   patches:
-  rev: 6bf7e78a6dc
+  rev: 8526a727dc20a96d7245ae836e81c29967166f77
   compute_driver: nova.virt.libvirt.LibvirtDriver
   api_workers: 5
+  conductor_workers: 5
   metadata_api_workers: 5
+  ec2_workers: 5
   cpu_allocation_ratio: 1.0
   ram_allocation_ratio: 1.0
   libvirt_cpu_model: null
@@ -13,6 +15,10 @@ nova:
   novnc_repo: https://github.com/kanaka/noVNC.git
   novnc_rev: 292f6a5d
   scheduler_default_filters: AvailabilityZoneFilter,RamFilter,ComputeFilter,CoreFilter
+  libvirt_bin_version: 1.2.2-0ubuntu13.1.6~cloud2
+  python_libvirt_version: 1.2.2-0ubuntu2~cloud0
+  qemu_kvm_version: 2.0.0+dfsg-2ubuntu1.6~cloud0
+  librdb1_version: 0.80.5-0ubuntu0.14.04.1~cloud0
 
   logs:
     - paths:

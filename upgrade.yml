@@ -1,0 +1,363 @@
+# Play for upgrading from one version of OpenStack to another.
+# Heavily flavored for Havana to Juno for now, but useful as a model for
+# future upgrades. NOT a rolling upgrade optimized for downtime.
+#
+# Assumes ml2 networking
+# Assumes rabbit cluster has been enabled
+---
+- name: upgrade percona cluster in compat mode
+  hosts: db
+  tags: dbupgrade
+  serial: 1
+
+  tasks:
+    - name: check db version
+      command: mysql -V
+      changed_when: False
+      register: mysqlver
+
+    - include: upgrade-db-cluster.yml
+      when: not mysqlver.stdout|search('Distrib 5\.6')
+
+- name: upgrade percona arbiter
+  hosts: db_arbiter
+  tags: dbupgrade
+
+  pre_tasks:
+    - name: purge old garbd and configs
+      apt: name=percona-xtradb-cluster-garbd-2.x state=absent purge=true
+
+    - name: remove old garb config
+      file: path=/etc/default/garb state=absent
+
+    - name: garbd.log permissions
+      file: path=/var/log/garbd.log owner=nobody state=touch
+
+  roles:
+    - role: percona-common
+
+    - role: percona-arbiter
+
+- name: remove percona compat settings
+  hosts: db
+  tags: dbupgrade
+  serial: 1
+
+  tasks:
+    - name: remove compat settings
+      lineinfile: regexp="{{ item }}" state=absent
+                  dest=/etc/mysql/conf.d/replication.cnf
+      with_items:
+        - '^wsrep_provider_options\s*='
+        - '^log_bin_use_v1_row_events\s*='
+        - '^gtid_mode\s*='
+        - '^binlog_checksum\s*='
+        - '^read_only\s*='
+      notify: restart mysql
+
+  handlers:
+    - name: restart mysql
+      service: name=mysql state=restarted
+
+- name: upgrade rabbit to clustering
+  hosts: controller
+  serial: 1
+  tags: rabbitmq
+
+  roles:
+    - role: rabbitmq
+
+- name: upgrade keystone
+  hosts: controller
+  tags: keystone
+
+  roles:
+    - role: keystone
+      restart: False
+
+    - role: stop-services
+      services:
+        - keystone
+
+    - role: openstack-database
+      database_name: keystone  
+      force_sync: True
+
+  tasks:
+    - name: start keystone services
+      service: name=keystone state=started
+
+- name: upgrade glance
+  hosts: controller
+  tags: glance
+
+  roles:
+    - role: glance
+      restart: False
+
+    - role: stop-services
+      services:
+        - glance-api
+        - glance-registry
+
+    - role: openstack-database
+      database_name: glance
+      force_sync: True
+
+  tasks:
+    - name: start glance services
+      service: name={{ item }} state=started
+      with_items:
+        - glance-registry
+        - glance-api
+
+# Cinder block
+- name: stage cinder data software
+  hosts: cinder_volume
+  tags:
+    - cinder
+    - cinder-volume
+
+  roles:
+    - role: cinder-data
+      restart: False
+
+- name: stage cinder control software and stop services
+  hosts: controller
+  tags:
+    - cinder
+    - cinder-control
+
+  roles:
+    - role: cinder-control
+      restart: False
+
+    - role: stop-services
+      services:
+        - cinder-api
+        - cinder-scheduler
+
+- name: stop cinder data services
+  hosts: cinder_volume
+  tags:
+    - cinder
+    - cinder-volume
+
+  roles:
+    - role: stop-services
+      services:
+        - cinder-volume
+
+- name: upgrade cinder control plane
+  hosts: controller
+  tags:
+    - cinder
+    - cinder-control
+
+  roles:
+    - role: openstack-database
+      database_name: cinder
+      db_versions: 'db versions'
+      db_sync: 'db sync'
+      force_sync: True
+
+  tasks:
+    - name: start cinder control services
+      service: name={{ item }} state=started
+      with_items:
+        - cinder-scheduler
+        - cinder-api
+
+- name: start cinder data services
+  hosts: cinder_volume
+  tags:
+    - cinder
+    - cinder-volume
+
+  tasks:
+    - name: start cinder data services
+      service: name=cinder-volume state=started
+
+# Nova block
+- name: stage nova compute
+  hosts: compute
+  tags:
+    - nova
+    - nova-data
+
+  roles:
+    - role: nova-data
+      restart: False
+
+- name: stage nova control and stop services
+  hosts: controller
+  tags:
+    - nova
+    - nova-control
+
+  roles:
+    - role: nova-control
+      restart: False
+
+    - role: stop-services
+      services:
+        - nova-api
+        - nova-conductor
+        - nova-scheduler
+        - nova-cert
+        - nova-consoleauth
+        - nova-novncproxy
+
+- name: stop nova compute
+  hosts: compute
+  tags:
+    - nova
+    - nova-data
+
+  roles:
+    - role: stop-services
+      services:
+        - nova-compute
+
+- name: upgrade nova control plane
+  hosts: controller
+  tags:
+    - nova
+    - nova-control
+
+  roles:
+    - role: openstack-database
+      database_name: nova
+      db_versions: 'db versions'
+      db_sync: 'db sync'
+      force_sync: True
+
+  tasks:
+    - name: start nova control services
+      service: name={{ item }} state=started
+      with_items:
+        - nova-api
+        - nova-conductor
+        - nova-scheduler
+        - nova-cert
+        - nova-consoleauth
+        - nova-novncproxy
+
+- name: start nova compute
+  hosts: compute
+  tags:
+    - nova
+    - nova-data
+
+  tasks:
+    - name: stop nova compute
+      service: name=nova-compute state=started
+
+# Neutron block
+- name: stage neutron core data
+  hosts: compute:network
+  tags:
+    - neutron
+    - neutron-data
+
+  roles:
+    - role: neutron-data
+      restart: False
+
+- name: stage neutron network
+  hosts: network
+  tags:
+    - neutron
+    - neutron-network
+
+  roles:
+    - role: neutron-data-network
+      restart: False
+
+- name: upgrade neutron control plane
+  hosts: controller
+  tags:
+    - neutron
+    - neutron-control
+
+  pre_tasks:
+    - name: check db version
+      command: neutron-db-manage --config-file /etc/neutron/neutron.conf
+               --config-file /etc/neutron/plugins/ml2/ml2_plugin.ini
+               current
+      register: neutron_db_ver
+      run_once: True
+
+    - name: stamp neutron to havana
+      command: neutron-db-manage --config-file /etc/neutron/neutron.conf
+               --config-file /etc/neutron/plugins/ml2/ml2_plugin.ini
+               stamp havana
+      when: not neutron_db_ver.stdout|search('juno')
+      run_once: True
+
+  roles:
+    - role: stop-services
+      services: neutron-server
+
+    - role: neutron-control
+
+- name: restart neutron data service
+  hosts: compute:network
+  tags:
+    - neutron
+    - neutron-data
+
+  tasks:
+    - name: restart neutron data service
+      service: name=neutron-linuxbridge-agent state=restarted
+
+- name: restart neutron data network services
+  hosts: network
+  tags:
+    - neutron
+    - neutron-network
+
+  tasks:
+    - name: restart neutron data network agent services
+      service: name={{ item }} state=restarted
+      with_items:
+        - neutron-l3-agent
+        - neutron-dhcp-agent
+        - neutron-metadata-agent
+
+- name: upgrade heat
+  hosts: controller
+  tags: heat
+
+  roles:
+    - role: heat
+      restart: False
+      when: heat.enabled
+
+    - role: stop-services
+      services:
+        - heat
+        - heat-api-cfn
+        - heat-engine
+      when: heat.enabled
+
+    - role: openstack-database
+      database_name: heat  
+      force_sync: True
+      when: heat.enabled
+
+  tasks:
+    - name: start heat services
+      service: name={{ item }} state=started
+      with_items:
+        - heat-api
+        - heat-api-cfn
+        - heat-engine
+      when: heat.enabled
+
+- name: upgrade horizon
+  hosts: controller
+  tags: horizon
+
+  roles:
+    - role: horizon

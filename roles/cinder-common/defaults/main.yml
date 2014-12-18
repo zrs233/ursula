@@ -1,9 +1,10 @@
 ---
 cinder:
-  rev: eedc8eda9bbb
+  rev: 7b1d7a31335bd8723551c9af5c270927ad830c3f
   enabled_backends: None
   default_backend: None
   backends: []
+  api_workers: 5
 
   logs:
   - paths:
