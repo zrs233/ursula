@@ -65,5 +65,3 @@
        to_ip={{ ironic.dns_server }}
 
 - meta: flush_handlers
-
-- include: register.yml
