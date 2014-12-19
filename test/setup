@@ -19,7 +19,7 @@ cat > ${ROOT}/envs/test/hosts <<eof
 # Tell ansible to use the python in PATH instead of /usr/bin/python
 127.0.0.1 ansible_python_interpreter=python
 eof
-cp ${ROOT}/envs/example/${TYPE}/defaults.yml ${ROOT}/envs/test/defaults.yml
+cp ${ROOT}/envs/example/defaults.yml ${ROOT}/envs/test/defaults.yml
 
 echo "destroying: ${VMS}"
 ${ROOT}/test/cleanup
@@ -35,7 +35,7 @@ CONTROLLER_IP=$(private_ip test-controller-0)
 rm -rf ${ROOT}/envs/test/group_vars/
 rm -f ${ROOT}/envs/test/hosts
 mkdir -p ${ROOT}/envs/test/
-cp -r ${ROOT}/envs/example/${TYPE}/* ${ROOT}/envs/test
+cp -r ${ROOT}/envs/example/* ${ROOT}/envs/test
 echo "---" > ${ROOT}/envs/test/group_vars/all.yml
 echo "controller_primary: ${CONTROLLER_IP}" >> ${ROOT}/envs/test/group_vars/all.yml
 
@@ -62,8 +62,7 @@ popd
 rm -rf ${CERT_DIR}
 
 echo "writing inventory file"
-if [ ${TYPE} == "standard" ]; then
-  cat > ${ROOT}/envs/test/hosts <<eof
+cat > ${ROOT}/envs/test/hosts <<eof
 [db]
 $(public_ip "test-controller-0")
 $(public_ip "test-controller-1")
@@ -87,26 +86,6 @@ $(public_ip "test-controller-1")
 [cinder_volume]
 $(public_ip "test-compute-0")
 eof
-else
-  cat > ${ROOT}/envs/test/hosts <<eof
-[db]
-$(public_ip "test-controller-0")
-$(public_ip "test-controller-1")
-
-[db_arbiter]
-$(public_ip "test-compute-0")
-
-[controller]
-$(public_ip "test-controller-0")
-
-[compute]
-$(public_ip "test-controller-0")
-
-[network]
-$(public_ip "test-controller-0")
-$(public_ip "test-controller-1")
-eof
-fi
 
 echo "copying files"
 $(ansible_command \
