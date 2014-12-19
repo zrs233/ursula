@@ -4,6 +4,11 @@
             owner=root group=root mode=0644
   when: common.apt_cache is defined
 
+- name: add global proxy
+  lineinfile: dest=/etc/environment regexp=^http_proxy=
+              line="http_proxy={{ common.global_proxy }}"
+  when: common.global_proxy is defined
+
 - include: bbg-repo.yml
 
 - name: update apt index
