@@ -1,4 +1,3 @@
-ansible==1.7.2
 python-novaclient==2.19.0
 python-neutronclient==2.3.6
 python-keystoneclient
@@ -8,3 +7,4 @@ oslo.utils
 tox
 pep8
 -e git://github.com/willthames/ansible-lint.git@9777f20aafd4be8706c9ce17005c981cb19a6a25#egg=ansible-lint
+https://github.com/blueboxgroup/ansible/archive/release1.7.2-bbg.tar.gz
