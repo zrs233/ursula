@@ -1,4 +1,9 @@
-FROM python:2
+FROM ubuntu:precise
+
+RUN apt-get update && \
+    apt-get install -yqq libssl-dev build-essential libffi-dev libxml2-dev \
+    python-dev python-pip git curl wget
+    
 
 ADD . /ursula
 
