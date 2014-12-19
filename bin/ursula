@@ -110,7 +110,7 @@ main() {
   ANSIBLE_VERSION=$(ansible-playbook --version | head -n1)
   if [ "$ANSIBLE_VERSION" != "ansible-playbook ${URSULA_ANSIBLE_VERSION}" ]; then
     echo "You are not using ansible-playbook ${URSULA_ANSIBLE_VERSION}. Current version: '${ANSIBLE_VERSION}'"
-    echo "You may install the correct version with ./bin/install_ansible"
+    echo "You may install the correct version with 'pip install -U -r requirements.txt'"
     exit -1
   fi
 
