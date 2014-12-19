@@ -13,3 +13,4 @@ common:
     allow_from:
       - 0.0.0.0/0
     disable_root: False
+    disable_dns: True
