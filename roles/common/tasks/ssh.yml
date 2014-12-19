@@ -14,7 +14,7 @@
               line="PermitRootLogin no"
   when: common.ssh.disable_root|bool
 
-name: disable dns lookups
+- name: disable dns lookups
   lineinfile: dest=/etc/ssh/sshd_config regexp=^UseDNS
               line="UseDNS no"
   when: common.ssh.disable_dns|bool
