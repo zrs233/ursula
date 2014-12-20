@@ -1,9 +1,6 @@
 ---
 - lineinfile: dest=/etc/fstab regexp='\s+swap\s+' state=absent
 
-- name: place swap_off_all utility script
-  copy: dest=/usr/local/bin/swap_off_all src=swap_off_all mode=0755
-
-- name: disable unused swap devices
-  command: /usr/local/bin/swap_off_all
+- name: disable swap on all devices
+  script: swap_off_all
 
