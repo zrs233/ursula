@@ -78,6 +78,9 @@ $(public_ip "test-controller-1")
 [network]
 $(public_ip "test-controller-0")
 $(public_ip "test-controller-1")
+
+[cinder_volume]
+$(public_ip "test-compute-0")
 eof
 
 echo "copying files"
