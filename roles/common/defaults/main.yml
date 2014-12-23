@@ -10,3 +10,8 @@ common:
     serial_console: ttyS1
   python_extra_packages: []
   ssh_private_keys: []
+  ssh:
+    allow_from:
+      - 0.0.0.0/0
+    disable_root: False
+    disable_dns: True

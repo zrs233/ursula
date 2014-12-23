@@ -9,8 +9,20 @@
   notify:
     - reload-sshd
 
+- name: disable root login
+  lineinfile: dest=/etc/ssh/sshd_config regexp=^PermitRootLogin
+              line="PermitRootLogin no"
+  when: common.ssh.disable_root|bool
+
+- name: disable dns lookups
+  lineinfile: dest=/etc/ssh/sshd_config regexp=^UseDNS
+              line="UseDNS no"
+  when: common.ssh.disable_dns|bool
+
+
 - name: add ssh private keys
   template: src=ssh-private-key dest={{ item.dest }}
             owner={{ item.owner|default("root") }}
             group={{ item.group|default("root") }} mode=0600
   with_items: common.ssh_private_keys
+
