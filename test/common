@@ -32,3 +32,13 @@ public_ip() {
 private_ip() {
   nova list | grep "$1" | awk '{print $12}' | awk -F= '{print $2}' | awk -F, '{print $1}'
 }
+
+bell() {
+  if [[ -z $CI ]]; then
+    if [[ $USERNAME == 'myles']];
+      /usr/bin/firefox https://www.youtube.com/watch\?v\=dQw4w9WgXcQ &
+    else
+      [[ -n $PS1 ]] && [[ ! -n CI ]] && echo -en "\a" > /dev/tty
+    fi
+  fi
+}

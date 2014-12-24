@@ -18,7 +18,7 @@ cd ${ROOT}
 
 if [ "${ACTION}" == "all" -o "${ACTION}" == "unit" ]; then
   tox
-  [[ -n $PS1 ]] && echo -en "\a" > /dev/tty
+  bell
 fi
 
 if [ "${ACTION}" == "all" -o "${ACTION}" == "deploy" ]; then
@@ -27,7 +27,7 @@ if [ "${ACTION}" == "all" -o "${ACTION}" == "deploy" ]; then
     ${LOGIN_USER} \
     "site.yml $@" \
     "true")
-  [[ -n $PS1 ]] && echo -en "\a" > /dev/tty
+  bell
 fi
 
 if [ "${ACTION}" == "all" -o "${ACTION}" == "test" ]; then
@@ -36,7 +36,7 @@ if [ "${ACTION}" == "all" -o "${ACTION}" == "test" ]; then
     ${LOGIN_USER} \
     ${ROOT}/playbooks/tests/tasks/main.yml  $@ \
     "true")
-  [[ -n $PS1 ]] && echo -en "\a" > /dev/tty
+  bell
 fi
 
 if [ "${ACTION}" == "all" -o "${ACTION}" == "cleanup" ]; then
@@ -45,7 +45,7 @@ if [ "${ACTION}" == "all" -o "${ACTION}" == "cleanup" ]; then
     ${LOGIN_USER} \
     ${ROOT}/playbooks/tests/tasks/cleanup.yml \
     "true")
-  [[ -n $PS1 ]] && echo -en "\a" > /dev/tty
+  bell
 fi
 
 if [ "${ACTION}" == "upgrade" ]; then
@@ -54,7 +54,7 @@ if [ "${ACTION}" == "upgrade" ]; then
     ${LOGIN_USER} \
     "upgrade.yml $@" \
     "true")
-  [[ -n $PS1 ]] && echo -en "\a" > /dev/tty
+  bell
 fi
 
 echo "test complete"
