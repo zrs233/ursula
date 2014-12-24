@@ -34,5 +34,8 @@ private_ip() {
 }
 
 ring_bell() {
-  [[ -z $CI ]] && echo -en "\a" > /dev/tty
+  if [[ -z $CI ]]; then
+    echo -en "\a" > /dev/tty
+  fi
+  return 0
 }
