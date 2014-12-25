@@ -4,6 +4,8 @@ primary_interface: ansible_eth1
 primary_ip: "{{ hostvars[inventory_hostname][primary_interface]['ipv4']['address'] }}"
 undercloud_cidr: '172.16.0.0/24'
 
+country_code: US
+
 fqdn: openstack.example.org
 undercloud_floating_ip: "{{ hostvars[groups['controller'][0]][primary_interface]['ipv4']['address'] }}"
 secrets:
