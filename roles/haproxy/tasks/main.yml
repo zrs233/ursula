@@ -16,13 +16,13 @@
 - name: install ssl cert+key
   template: src=etc/haproxy/openstack.pem dest=/etc/haproxy/openstack.pem
             owner=haproxy group=haproxy mode=0600
-  notify: reload haproxy
+  notify: restart haproxy
   tags:
     - ssl
 
 - name: haproxy config
   template: src=etc/haproxy/haproxy_{{ haproxy_type }}.cfg
             dest=/etc/haproxy/haproxy.cfg mode=0644
-  notify: reload haproxy
+  notify: restart haproxy
 
 - include: monitoring.yml tags=monitoring,common
