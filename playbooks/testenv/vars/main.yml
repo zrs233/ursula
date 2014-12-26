@@ -1,8 +1,9 @@
 ---
+testenv_instance_prefix: test
 testenv_instance_names:
-  - test-controller-0
-  - test-controller-1
-  - test-compute-0
+  - "{{ testenv_instance_prefix }}-controller-0"
+  - "{{ testenv_instance_prefix }}-controller-1"
+  - "{{ testenv_instance_prefix }}-compute-0"
 testenv_keypair_name: int-test
 testenv_keypair_path: "{{ ansible_env.ROOT }}/envs/test/{{ testenv_keypair_name }}.pem"
 testenv_image_id: "{{ ansible_env.IMAGE_ID }}"

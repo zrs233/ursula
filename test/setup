@@ -22,6 +22,8 @@ cat > ${ROOT}/envs/test/hosts <<eof
 eof
 cp ${ROOT}/envs/example/defaults.yml ${ROOT}/envs/test/defaults.yml
 
+echo "testenv_instance_prefix: ${testenv_instance_prefix}" >> ${ROOT}/envs/test/defaults.yml
+
 echo "destroying: ${VMS}"
 ${ROOT}/test/cleanup
 
@@ -65,27 +67,27 @@ rm -rf ${CERT_DIR}
 echo "writing inventory file"
 cat > ${ROOT}/envs/test/hosts <<eof
 [db]
-$(public_ip "test-controller-0")
-$(public_ip "test-controller-1")
+$(public_ip "${testenv_instance_prefix}-controller-0")
+$(public_ip "${testenv_instance_prefix}-controller-1")
 
 [db_arbiter]
-$(public_ip "test-compute-0")
+$(public_ip "${testenv_instance_prefix}-compute-0")
 
 [controller]
-$(public_ip "test-controller-0")
-$(public_ip "test-controller-1")
+$(public_ip "${testenv_instance_prefix}-controller-0")
+$(public_ip "${testenv_instance_prefix}-controller-1")
 
 [compute]
-$(public_ip "test-compute-0")
-$(public_ip "test-controller-0")
-$(public_ip "test-controller-1")
+$(public_ip "${testenv_instance_prefix}-compute-0")
+$(public_ip "${testenv_instance_prefix}-controller-0")
+$(public_ip "${testenv_instance_prefix}-controller-1")
 
 [network]
-$(public_ip "test-controller-0")
-$(public_ip "test-controller-1")
+$(public_ip "${testenv_instance_prefix}-controller-0")
+$(public_ip "${testenv_instance_prefix}-controller-1")
 
 [cinder_volume]
-$(public_ip "test-compute-0")
+$(public_ip "${testenv_instance_prefix}-compute-0")
 eof
 
 echo "copying files"

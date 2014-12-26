@@ -5,7 +5,6 @@ export STACK_RC=${STACK_RC:-~/.stackrc}
 source $(dirname $0)/../share/common
 
 export ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
-VMS="test-controller-0 test-controller-1 test-compute-0"
 KEY_NAME=int-test
 KEY_PATH=${ROOT}/envs/test/${KEY_NAME}.pem
 LOGIN_USER=ubuntu
@@ -19,6 +18,14 @@ export ANSIBLE_SSH_ARGS="${SSH_ARGS}"
 export ANSIBLE_VAR_DEFAULTS_FILE="${ROOT}/envs/test/defaults.yml"
 export IMAGE_ID=${IMAGE_ID:=014f8214-37b0-4920-b7ce-ec05edc253fb}
 export NET_ID=${NET_ID:=ba0fdd03-72b5-41eb-bb67-fef437fd6cb4}
+
+if [[ $(git rev-parse --abbrev-ref HEAD) == 'HEAD' ]]; then
+  export testenv_instance_prefix=$(git rev-parse --short HEAD)
+else
+  export testenv_instance_prefix=$(git rev-parse --abbrev-ref HEAD)
+fi
+
+VMS="${testenv_instance_prefix}-controller-0 ${testenv_instance_prefix}-controller-1 ${testenv_instance_prefix}-compute-0"
 
 die() {
   echo "[ERROR] $*"; exit 1
