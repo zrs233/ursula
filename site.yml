@@ -250,3 +250,9 @@
     - name: restart neutron-openvswitch-agent to ensure VXLAN mesh is configured
       service: name=neutron-openvswitch-agent state=restarted
       when: neutron.plugin == 'ovs'
+
+- name: cleanup ansible proxy
+  hosts: all
+  tasks:
+    - include: roles/common/tasks/noproxy.yml
+      when: common.ansible_proxy is defined
