@@ -4,4 +4,4 @@
   with_items:
   - libssl1.0.0
   - openssl
-  notify: restart haproxy
+  notify: reload haproxy

@@ -5,8 +5,8 @@
 - name: refresh CAs
   command: update-ca-certificates
 
-- name: restart haproxy
-  restart_if_present: service=haproxy
+- name: reload haproxy
+  service: name=haproxy state=reloaded
 
 - name: apply-sysctl
   shell: "cat /etc/sysctl.conf /etc/sysctl.d/*.conf | sysctl -e -p -"
