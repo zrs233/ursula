@@ -1,15 +1,13 @@
 ---
-
 # hobble-controller
-# 
+#
 # strip a node of all network, database, and controller services and packages
-
 - hosts: controller
-  serial: 10
+  serial: 1
   vars:
     services:
      - neutron-server
-     - metadata-agent
+     - neutron-metadata-agent
      - neutron-l3-agent
      - neutron-dhcp-agent
      - nova-cert
@@ -25,48 +23,50 @@
      - nova-novncproxy
 
   tasks:
+  - name: stop controller services
+    service: name={{ item }} state=stopped enabled=no
+    with_items: services
+    failed_when: False
 
-      # stop controller services
-      - service: name={{ item }} state=stopped enabled=no
-        with_items: services
+  - name: remove service config
+    file: path=/etc/init/{{ item }}.conf state=absent
+    with_items: services
 
-      # remove service config
-      - file: path=/etc/init/{{ item }}* state=absent
-        with_items: services
+  - name: remove percona
+    apt: name=percona* state=absent
+  - name: Remove Percona configuration but retain data
+    file: path={{ item }} state=absent
+    with_items:
+    - /etc/my.cnf
+    - /etc/mysql
 
-      # remove percona, but we are intentionally leave /var/lib/mysql
-      - apt: name=percona* state=absent
-      - file: path={{ item }} state=absent
-        with_items:
-          - /etc/my.cnf
-          - /etc/mysql
+  - name: remove RabbitMQ
+    apt: name=rabbitmq-server state=absent purge=yes
+  - name: Ensure RabbitMQ is stopped
+    command: killall -u rabbitmq
+    failed_when: False
 
-      # remove rabbit
-      - apt: name=rabbitmq-server state=absent purge=yes
-      - command: killall -u rabbitmq
-        failed_when: False
+  - name: remove ucarp
+    apt: name=ucarp state=absent purge=yes
 
-      # remove ucarp
-      - apt: name=ucarp state=absent purge=yes
+  - name: remove haproxy
+    apt: name=haproxy state=absent purge=yes
+  - name: Remove HAProxy config
+    file: path=/etc/haproxy state=absent
 
-      # remove haproxy
-      - apt: name=haproxy state=absent purge=yes
-      - file: path=/etc/haproxy state=absent
+  - name: Glance replication task
+    file: path=/etc/cron.d/glance-image-sync state=absent
+  - name: Disable rsync daemon (for Glance replication)
+    service: name=rsync state=stopped enabled=no
 
-      # remove rsync
-      - apt: name=rsync state=absent purge=yes
+  - name: Disable UFW
+    service: name=ufw enabled=no state=stopped
+  - name: close any ports that were opened by ufw
+    ufw: state=reset
 
-      # close any ports that were opened by ufw
-      - service: name=ufw enabled=no state=stopped
-      - ufw: state=reset 
+  - name: remove sensu checks
+    shell: rm -rf /etc/sensu/conf.d/checks/*
+    failed_when: False
 
-      # remove sensu checks
-      - shell: rm -rf /etc/sensu/conf.d/checks/*
-        failed_when: False
-
-      # restart sensu
-      - service: name=sensu-client state=restarted sleep=2
-
-      
-
-
+  - name: restart sensu
+    service: name=sensu-client state=restarted sleep=2
