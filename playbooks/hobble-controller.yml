@@ -1,0 +1,72 @@
+---
+# hobble-controller
+#
+# strip a node of all network, database, and controller services and packages
+- hosts: controller
+  serial: 1
+  vars:
+    services:
+     - neutron-server
+     - neutron-metadata-agent
+     - neutron-l3-agent
+     - neutron-dhcp-agent
+     - nova-cert
+     - keystone
+     - nova-api
+     - nova-conductor
+     - glance-registry
+     - ipchanged
+     - nova-scheduler
+     - cinder-scheduler
+     - cinder-api
+     - glance-api
+     - nova-novncproxy
+
+  tasks:
+  - name: stop controller services
+    service: name={{ item }} state=stopped enabled=no
+    with_items: services
+    failed_when: False
+
+  - name: remove service config
+    file: path=/etc/init/{{ item }}.conf state=absent
+    with_items: services
+
+  - name: remove percona
+    apt: name=percona* state=absent
+  - name: Remove Percona configuration but retain data
+    file: path={{ item }} state=absent
+    with_items:
+    - /etc/my.cnf
+    - /etc/mysql
+
+  - name: remove RabbitMQ
+    apt: name=rabbitmq-server state=absent purge=yes
+  - name: Ensure RabbitMQ is stopped
+    command: killall -u rabbitmq
+    failed_when: False
+
+  - name: remove ucarp
+    apt: name=ucarp state=absent purge=yes
+
+  - name: remove haproxy
+    apt: name=haproxy state=absent purge=yes
+  - name: Remove HAProxy config
+    file: path=/etc/haproxy state=absent
+
+  - name: Glance replication task
+    file: path=/etc/cron.d/glance-image-sync state=absent
+  - name: Disable rsync daemon (for Glance replication)
+    service: name=rsync state=stopped enabled=no
+
+  - name: Disable UFW
+    service: name=ufw enabled=no state=stopped
+  - name: close any ports that were opened by ufw
+    ufw: state=reset
+
+  - name: remove sensu checks
+    shell: rm -rf /etc/sensu/conf.d/checks/*
+    failed_when: False
+
+  - name: restart sensu
+    service: name=sensu-client state=restarted sleep=2
