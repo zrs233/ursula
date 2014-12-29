@@ -18,6 +18,7 @@ if [[ -z ${TYPE} ]]; then
     exit -1
 else
     shift
+fi
 
 if [ "${TYPE}" == "swift" ]; then
     BOXES="controller1 swiftnode1 swiftnode2 swiftnode3"

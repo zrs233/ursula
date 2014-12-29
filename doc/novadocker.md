@@ -42,11 +42,12 @@ within just a few seconds the container will be up and running.
 $ docker ps
 $ curl <ip.of.docker.instance>
 WORDPRESS SETUP PAGE
-$ nova boot --image=busybox --flavor=1 --nic net-id=<net-uuid> my_first_docker
 ```
 
-You can check that it is actually running with
+within just a few seconds the container will be up and running.
 
 ```
 $ docker ps
+$ curl <ip.of.docker.instance>
+WORDPRESS SETUP PAGE
 ```

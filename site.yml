@@ -148,23 +148,12 @@
   roles:
     - nova-common
 
-- name: docker if enabled
-  hosts: controller:compute
-  roles:
-    - docker
-
 - name: nova control plane
   gather_facts: force
   hosts: controller
   roles:
     - role: nova-control
       tags: ['openstack', 'nova', 'control']
-
-- name: novadocker if enabled
-  hosts: controller:compute
-  roles:
-    - role: novadocker
-      tags: ['openstack', 'nova' 'novadocker']
 
 - name: nova data plane
   gather_facts: force

@@ -375,9 +375,3 @@ common:
     enabled: false
 
 stack_env: vagrant
-
-docker:
-  enabled: False
-
-novadocker:
-  enabled: False

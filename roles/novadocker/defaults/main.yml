@@ -1,6 +1,0 @@
----
-novadocker:
-  enabled: false
-  rev: 0ed79f468e
-  repo: https://github.com/paulczar/nova-docker.git
-  dest: /opt/stack/novadocker
