@@ -17,4 +17,4 @@
         name: "{{ testenv_security_groups }}"
         description: "{{ testenv_security_groups_description }}"
         state: absent
-        when: testenv_security_groups_cleanup
+      when: testenv_security_groups_cleanup

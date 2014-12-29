@@ -30,6 +30,7 @@
       with_items:
       - IPv4
       - IPv6
+      when: testenv_security_group.results[0].group_id
 
     - name: create instances
       nova_compute:
