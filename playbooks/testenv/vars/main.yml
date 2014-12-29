@@ -23,3 +23,4 @@ testenv_security_group_rules:
   - { proto: 'tcp', port: 9797, state: 'present' }   # Neutron SSL
   - { proto: 'tcp', port: 9798, state: 'present' }   # Cinder SSL
   - { proto: 'icmp', port: -1, state: 'present' }
+testenv_security_groups_cleanup: false
