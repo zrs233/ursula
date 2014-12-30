@@ -5,6 +5,7 @@
     - lvm2
     - tgt
     - nbd-client
+    - open-iscsi
 
 - name: iscsi target framework conf dir
   file: dest=/etc/tgt/conf.d state=directory
