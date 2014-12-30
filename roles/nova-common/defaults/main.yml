@@ -59,7 +59,3 @@ nova:
       fields:
         type: openstack
         tags: nova,nova-scheduler
-
-  logging:
-    debug: False
-    verbose: True

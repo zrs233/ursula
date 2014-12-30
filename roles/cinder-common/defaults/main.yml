@@ -27,6 +27,3 @@ cinder:
     fields:
       type: openstack
       tags: cinder,tgt
-  logging:
-    debug: False
-    verbose: True
