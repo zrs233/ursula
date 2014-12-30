@@ -7,6 +7,8 @@
 
 - name: reload haproxy
   service: name=haproxy state=reloaded
+  register: hareload
+  failed_when: hareload|failed and "service not found" not in hareload.stderr
 
 - name: apply-sysctl
   shell: "cat /etc/sysctl.conf /etc/sysctl.d/*.conf | sysctl -e -p -"
