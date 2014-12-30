@@ -51,7 +51,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     allinone_config.vm.network :private_network, ip: "172.16.255.100", :netmask => "255.255.255.0"
     allinone_config.vm.network :private_network, ip: "192.168.255.100", :netmask => "255.255.255.0"
     allinone_config.vm.provider "virtualbox" do |v|
-      v.memory = 4096
+      v.memory = 6144
       v.cpus = 2
       v.customize ["modifyvm", :id, "--nicpromisc3", "allow-all"]
       v.customize ["modifyvm", :id, "--nicpromisc4", "allow-all"]
@@ -66,7 +66,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       controller_config.vm.network :private_network, ip: "172.16.0.10#{i}", :netmask => "255.255.255.0"
       controller_config.vm.network :private_network, ip: "192.168.254.10#{i}", :netmask => "255.255.255.0"
       controller_config.vm.provider "virtualbox" do |v|
-        v.memory = 2048
+        v.memory = 3072
         v.customize ["modifyvm", :id, "--nicpromisc3", "allow-all"]
       end
     end
