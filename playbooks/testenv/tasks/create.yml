@@ -9,8 +9,8 @@
 
     - name: create the security group and rules
       nova_group:
-        name: "{{ testenv_security_groups }}"
-        description: "{{ testenv_security_groups_description }}"
+        name: "{{ testenv_instance_prefix }}_{{ testenv_security_groups }}"
+        description: "{{ testenv_instance_prefix }} {{ testenv_security_groups_description }}"
         rules:
           - ip_protocol: "{{ item.proto }}"
             from_port: "{{ item.port }}"
