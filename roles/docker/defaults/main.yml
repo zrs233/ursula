@@ -1,4 +1,0 @@
----
-docker:
-  enabled: false
-  mirror: "deb https://get.docker.com/ubuntu docker main"

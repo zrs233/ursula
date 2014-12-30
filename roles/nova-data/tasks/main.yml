@@ -2,8 +2,6 @@
 - include: ssh.yml
   when: nova.enable_ssh|bool
 
-- debug: msg="nova compute driver is {{ nova.compute_driver  }}"
-
 - include: libvirt.yml
   when: nova.compute_driver == "nova.virt.libvirt.LibvirtDriver"
 
