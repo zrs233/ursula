@@ -110,7 +110,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       "controller" => ["controller1", "controller2", "allinone"],
       "compute" => ["compute1", "allinone"],
       "workstation" => ["workstation"],
-      "router" => ["router"],
       "openstack:children" => ["controller", "compute", "allinone"],
       "all_groups:children" => ["controller", "compute", "workstation"]
     }
