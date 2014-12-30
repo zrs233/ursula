@@ -1,6 +1,8 @@
 ---
 stack_env: example
 
+country_code: US
+
 primary_interface: 'ansible_eth0'
 primary_ip: "{{ hostvars[inventory_hostname][primary_interface]['ipv4']['address'] }}"
 undercloud_cidr: 10.230.7.0/24
