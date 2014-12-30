@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
 
-virtualenv $HOME/.venv
-source $HOME/.venv/bin/activate
-pip install -U -r requirements.txt
+# if in jenkins, make the venv from the workspace and build ID
+# to allow concurrent runs.
+if [[ "$CI" == "jenkins" ]]; then
+    VENV=$WORKSPACE/venv
+    virtualenv $VENV
+    source $VENV/bin/activate
+    pip install -U -r requirements.txt
+fi
 
 source $(dirname $0)/common
 
