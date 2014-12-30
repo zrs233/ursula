@@ -16,6 +16,3 @@ keystone:
       fields:
         type: openstack
         tags: keystone,keystone-manage
-  logging:
-    debug: False
-    verbose: True

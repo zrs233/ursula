@@ -252,13 +252,6 @@
       tags: ['openstack', 'ironic', 'data']
       when: ironic.enabled == True
 
-# TBD
-#- name: barbican code and config
-#  hosts: controller
-#  roles:
-#    - role: barbican
-#      tags: ['openstack', 'barbican', 'control']
-
 - name: openstack base setup
   hosts: controller[0]
   roles:
