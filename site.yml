@@ -141,12 +141,8 @@
       database_name: glance
       tags: ['openstack', 'glance', 'control']
 
-- name: nova code and config
-  hosts: controller:db:compute
-  vars_files:
-    - roles/rabbitmq/defaults/main.yml
-  roles:
-    - nova-common
+    - role: glance
+      tags: ['openstack', 'glance', 'control']
 
 - name: nova control plane
   gather_facts: force

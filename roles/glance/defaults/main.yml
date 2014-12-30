@@ -12,7 +12,6 @@ glance:
     storage_path: /var/lib/btsync
     device_name: image-cache
     dir: /var/lib/glance/images
-  container_formats: ami,ari,aki,bare,ovf
   store_swift: False
 
   logs:
