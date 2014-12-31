@@ -4,6 +4,9 @@
        version={{ item.rev }} accept_hostkey=True
   with_items: common.python_extra_packages
 
+- name: freeze eventlet to 0.15.2 for nova to work
+  pip: name=eventlet version=0.15.2
+
 - name: install drivers
   command: python setup.py install chdir=/opt/stack/{{ item.name }}
   with_items: common.python_extra_packages
