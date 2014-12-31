@@ -17,4 +17,8 @@
 - name: permit access to ironic (SSL)
   ufw: rule=allow port=6384 proto=tcp
 
+- name: sync cinder database
+  command: "{{ ironic.virtualenv }}/bin/ironic-dbsync upgrade"
+  when: database_create.changed or force_sync|default('false')|bool
+
 - meta: flush_handlers

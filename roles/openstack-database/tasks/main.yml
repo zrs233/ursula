@@ -14,7 +14,3 @@
   run_once: true
   mysql_db: db={{ database_name }} state=present
   register: database_create
-
-- include: sync.yml
-  # Database was created, and service not specified to skip or specified to always run
-  when: (database_create.changed and database_sync|bool != False) or database_sync|bool

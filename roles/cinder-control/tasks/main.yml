@@ -17,4 +17,8 @@
 - name: Permit access to Cinder
   ufw: rule=allow to_port=8778 proto=tcp
 
+- name: sync cinder database
+  command: cinder-manage db sync
+  when: database_create.changed or force_sync|default('false')|bool
+
 - include: monitoring.yml tags=monitoring,common

@@ -23,4 +23,9 @@
 - name: Permit access to Neutron
   ufw: rule=allow to_port=9797 proto=tcp
 
+- name: sync neutron database
+  command: neutron-db-manage --config-file /etc/neutron/neutron.conf \
+           --config-file /etc/neutron/plugins/ml2/ml2_plugin.ini upgrade head
+  when: database_create.changed or force_sync|default('false')|bool
+
 - include: monitoring.yml tags=monitoring,common

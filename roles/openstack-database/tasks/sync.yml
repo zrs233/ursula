@@ -1,4 +1,0 @@
----
-- name: "sync database {{ database_name }}"
-  command: "{{ db_sync_cmd|default(database_name ~ '-manage') }} {{ db_sync|default('db_sync') }}"
-  run_once: true

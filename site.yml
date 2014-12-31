@@ -120,11 +120,11 @@
   gather_facts: force
   hosts: controller
   roles:
-    - role: keystone
-      tags: ['openstack', 'keystone', 'control']
-
     - role: openstack-database
       database_name: keystone
+      tags: ['openstack', 'keystone', 'control']
+
+    - role: keystone
       tags: ['openstack', 'keystone', 'control']
 
 - name: keystone setup
@@ -137,11 +137,11 @@
   gather_facts: force
   hosts: controller
   roles:
-    - role: glance
-      tags: ['openstack', 'glance', 'control']
-
     - role: openstack-database
       database_name: glance
+      tags: ['openstack', 'glance', 'control']
+
+    - role: glance
       tags: ['openstack', 'glance', 'control']
 
 - name: nova control plane
@@ -227,12 +227,12 @@
   gather_facts: force
   hosts: controller
   roles:
-    - role: heat
+    - role: openstack-database
+      database_name: heat
       tags: ['openstack', 'heat', 'control']
       when: heat.enabled == True
 
-    - role: openstack-database
-      database_name: heat
+    - role: heat
       tags: ['openstack', 'heat', 'control']
       when: heat.enabled == True
 
