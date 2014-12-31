@@ -55,8 +55,6 @@
 
 - include: system-tools.yml
 
-- include: security-patches.yml
-
 - include: disable-swap.yml
 
 - include: hwraid.yml

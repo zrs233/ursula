@@ -5,6 +5,12 @@
     - role: common
       tags: ['common']
 
+- name: security and errata
+  hosts: all
+  roles:
+    - role: security_errata
+      tags: ['common', 'security', 'errata']
+
 - name: install logging and dependencies
   hosts: all
   roles:
