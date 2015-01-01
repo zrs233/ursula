@@ -41,20 +41,16 @@
 - name: glance log dir
   file: dest=/var/log/glance state=directory mode=0755 owner=glance group=glance
 
+- name: permit access to glance
+  ufw: rule=allow to_port={{ item }} proto=tcp
+  with_items:
+    - 9292
+    - 9293
+
 - name: install glance services
   upstart_service: name={{ item }}
                    user=glance
                    cmd=/usr/local/bin/{{ item }}
-  with_items:
-    - glance-api
-    - glance-registry
-
-- name: sync glance database
-  command: glance-manage db_sync
-  when: database_create.changed or force_sync|default('false')|bool
-
-- name: start glance services
-  service: name={{ item }} state=started
   with_items:
     - glance-api
     - glance-registry
@@ -65,11 +61,15 @@
   notify:
     - restart glance services
 
-- name: permit access to glance
-  ufw: rule=allow to_port={{ item }} proto=tcp
+- name: sync glance database
+  command: glance-manage db_sync
+  when: database_create.changed or force_sync|default('false')|bool
+
+- name: start glance services
+  service: name={{ item }} state=started
   with_items:
-    - 9292
-    - 9293
+    - glance-api
+    - glance-registry
 
 - include: image-sync.yml
   when: glance.sync.enabled
