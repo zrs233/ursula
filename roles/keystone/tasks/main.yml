@@ -87,6 +87,10 @@
   notify:
     - restart keystone services
 
+- name: sync keystone database
+  command: keystone-manage db_sync
+  when: database_create.changed or force_sync|default('false')|bool
+
 - meta: flush_handlers
 
 - name: start keystone
@@ -102,9 +106,5 @@
   template: src=etc/cron.hourly/drop-expired-keystone-tokens
             dest=/etc/cron.hourly/drop-expired-keystone-tokens
             owner=root group=root mode=0755
-
-- name: sync keystone database
-  command: keystone-manage db_sync
-  when: database_create.changed or force_sync|default('false')|bool
 
 - include: monitoring.yml tags=monitoring,common

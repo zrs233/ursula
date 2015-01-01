@@ -10,6 +10,10 @@
     - nova-consoleauth
     - nova-scheduler
 
+- name: sync nova database
+  command: nova-manage db sync
+  when: database_create.changed or force_sync|default('false')|bool
+
 - name: start nova controller services
   service: name={{ item }} state=started
   with_items:
@@ -21,10 +25,6 @@
 
 - name: permit access to nova api
   ufw: rule=allow to_port=8777 proto=tcp
-
-- name: sync nova database
-  command: nova-manage db sync
-  when: database_create.changed or force_sync|default('false')|bool
 
 - include: novnc.yml
 

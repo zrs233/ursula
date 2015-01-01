@@ -49,6 +49,10 @@
     - glance-api
     - glance-registry
 
+- name: sync glance database
+  command: glance-manage db_sync
+  when: database_create.changed or force_sync|default('false')|bool
+
 - name: start glance services
   service: name={{ item }} state=started
   with_items:
@@ -69,9 +73,5 @@
 
 - include: image-sync.yml
   when: glance.sync.enabled
-
-- name: sync glance database
-  command: glance-manage db_sync
-  when: database_create.changed or force_sync|default('false')|bool
 
 - include: monitoring.yml tags=monitoring,common
