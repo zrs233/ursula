@@ -48,13 +48,9 @@
     - ironic-api
     - ironic-conductor
 
-- name: permit access to ironic (SSL)
-  ufw: rule=allow port=6384 proto=tcp
-
-# this is a workaround until I figure out
-# why dhcpclients can't access dns.
 - name: permit access to ironic
-  ufw: rule=allow port=6385 proto=tcp
+  ufw: rule=allow port={{ ironic.api_url.port }} proto=tcp
+       to_ip={{ ironic.api_url.host }}
 
 - name: permit access to tftpd
   ufw: rule=allow port=69 proto=udp
