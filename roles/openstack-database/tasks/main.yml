@@ -1,8 +1,4 @@
 ---
-- name: databases
-  run_once: true
-  mysql_db: db={{ database_name }} state=present
-
 - name: database users
   run_once: true
   mysql_user: name={{ database_name }} host=%
@@ -14,7 +10,7 @@
   run_once: true
   mysql_user: name={{ database_name }} host=localhost state=absent
 
-- include: sync.yml
-  when: database_sync is not defined or database_sync|bool
-
-#- include: keystone.yml
+- name: "create database {{ database_name }}"
+  run_once: true
+  mysql_db: db={{ database_name }} state=present
+  register: database_create
