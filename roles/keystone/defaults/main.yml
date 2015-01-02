@@ -1,6 +1,6 @@
 ---
 keystone:
-  rev: db291b340e63b74d8d240abfc37d03fb163f33f1
+  rev: 8a7282bebd1ebfb92d9ccd87f85b8490a89da4e0
   token_expiration_in_seconds: 86400
   admin_workers: 5
   public_workers: 5
