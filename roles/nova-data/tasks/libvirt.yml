@@ -11,6 +11,7 @@
 - name: install cloudarchive repos
   apt_repository: repo='deb http://ubuntu-cloud.archive.canonical.com/ubuntu precise-updates/icehouse main'
                   state=present update_cache=yes
+  when: ansible_distribution_version == "12.04"
 
 - name: install nova-compute packages
   apt: pkg={{ item }}
@@ -21,6 +22,17 @@
     - librbd1={{ nova.librdb1_version }}
     - open-iscsi
   notify: restart nova services
+  when: ansible_distribution_version == "12.04"
+
+- name: install nova-compute packages (trusty)
+  apt: pkg={{ item }}
+  with_items:
+    - libvirt-bin={{ nova.trusty.libvirt_bin_version }}
+    - python-libvirt={{ nova.trusty.python_libvirt_version }}
+    - qemu-kvm={{ nova.trusty.qemu_kvm_version }}
+    - open-iscsi
+  notify: restart nova services
+  when: ansible_distribution_version == "14.04"
 
 - name: update various lines in libvirtd.conf
   lineinfile: dest=/etc/libvirt/libvirtd.conf regexp="{{ item.value.regexp }}"
