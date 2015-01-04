@@ -106,5 +106,11 @@
   template: src=etc/cron.hourly/drop-expired-keystone-tokens
             dest=/etc/cron.hourly/drop-expired-keystone-tokens
             owner=root group=root mode=0755
+  run_once: true
+
+- name: ensure only one token flush cron job
+  file: path=/etc/cron.hourly/drop-expired-keystone-tokens
+        state=absent
+  when: inventory_hostname != play_hosts[0]
 
 - include: monitoring.yml tags=monitoring,common
