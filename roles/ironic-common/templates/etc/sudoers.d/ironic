@@ -1,0 +1,1 @@
+ironic ALL=(root) NOPASSWD: /usr/local/bin/ironic-rootwrap

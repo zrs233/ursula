@@ -33,6 +33,9 @@
   pip: name=pip version=1.4.1
   when: ansible_distribution_version == "12.04"
 
+- name: pin alembic to 0.7.0
+  pip: name=alembic version=0.7.0
+
 - name: set UTC timezone
   template: src=etc/timezone dest=/etc/timezone owner=root group=root mode=0644
   notify:

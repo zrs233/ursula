@@ -1,35 +1,22 @@
 ---
 
 - name: pip install ironic
-  pip: name='{{ item }}' virtualenv='{{ ironic.virtualenv }}' extra_args='-i {{ openstack.pypi_mirror }}'
+  pip: name='{{ item }}' extra_args='-i {{ openstack.pypi_mirror }}'
   with_items:
     - MySQL-python
     - '{{ ironic.path }}'
 
 - name: pip install ironicclient
-  pip: name='{{ ironic.client_path }}' virtualenv='{{ ironic.client_virtualenv }}' extra_args='-i {{ openstack.pypi_mirror }}'
+  pip: name='{{ ironic.client_path }}' extra_args='-i {{ openstack.pypi_mirror }}'
 
-- name: fix ironic certs
-  file: src=/etc/ssl/certs/ca-certificates.crt dest={{ item }} owner=root mode=0644 state=link force=yes
-  with_items:
-    - '{{ ironic.virtualenv }}/lib/python2.7/site-packages/requests/cacert.pem'
-  when: ansible_distribution_version == "12.04"
-
-- name: fix ironicclient certs
-  file: src=/etc/ssl/certs/ca-certificates.crt dest={{ item }} owner=root mode=0644 state=link force=yes
-  with_items:
-    - '{{ ironic.client_virtualenv }}/lib/python2.7/site-packages/requests/cacert.pem'
-    - '{{ ironic.client_virtualenv }}/lib/python2.7/site-packages/httplib2/cacerts.txt'
-  when: ansible_distribution_version == "12.04"
-
-- name: create ironic symlinks
-  file: src={{ ironic.virtualenv }}/bin/{{ item }} dest=/usr/local/bin/{{ item }} state=link
+- name: start ironic controller services
+  service: name={{ item }} state=started
   with_items:
     - ironic-api
     - ironic-conductor
-    - ironic-dbsync
 
-- name: create ironicclient symlinks
-  file: src={{ ironic.client_virtualenv }}/bin/{{ item }} dest=/usr/local/bin/{{ item }} state=link
+- name: restart ironic controller services
+  service: name={{ item }} state=restarted
   with_items:
-    - ironic
+    - ironic-api
+    - ironic-conductor

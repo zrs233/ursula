@@ -3,6 +3,9 @@ nova:
   patches:
   rev: 8526a727dc20a96d7245ae836e81c29967166f77
   compute_driver: nova.virt.libvirt.LibvirtDriver
+  firewall_driver: nova.virt.firewall.NoopFirewallDriver
+  scheduler_host_manager: nova.scheduler.host_manager.HostManager
+  compute_manager: nova.compute.manager.ComputeManager
   api_workers: 5
   conductor_workers: 5
   metadata_api_workers: 5

@@ -157,6 +157,7 @@
   roles:
     - role: nova-data
       tags: ['openstack', 'nova', 'data']
+      when: ironic.enabled == False
 
 - name: cinder control plane
   gather_facts: force
@@ -242,6 +243,13 @@
   roles:
     - role: ironic-control
       tags: ['openstack', 'ironic', 'control']
+      when: ironic.enabled == True
+
+- name: ironic data plane
+  hosts: controller
+  roles:
+    - role: ironic-data
+      tags: ['openstack', 'ironic', 'data']
       when: ironic.enabled == True
 
 - name: openstack base setup

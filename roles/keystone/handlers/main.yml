@@ -9,3 +9,7 @@
 - name: restart keystone services
   restart_if_present: service=keystone
   when: restart|default('True')
+
+- name: restart logstash-forwarder
+  service: name=logstash-forwarder state=restarted
+

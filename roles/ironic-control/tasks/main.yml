@@ -1,8 +1,38 @@
 ---
+- name: install ironic pxe driver prereqs
+  apt: pkg={{ item }} state=installed
+  with_items:
+    - tftpd-hpa
+    - tftp
+    - syslinux
+    - syslinux-common
+
+- name: create tftpboot
+  file: path={{ ironic.tftpboot_path }}
+        state=directory
+        owner=ironic
+        group=ironic
+        mode=0755
+
+- name: check if pxelinux.0 exists
+  stat: path={{ ironic.tftpboot_path }}/pxelinux.0
+  register: pxe
+
+- name: copy pxelinux.0 to tftpboot
+  command: cp /usr/lib/syslinux/pxelinux.0 {{ ironic.tftpboot_path }}/
+  when: pxe.stat.exists == False
+
+- name: create tfpd map file
+  copy: src=tftpboot/map-file dest=/tftpboot/map-file
+
+- name: create tftpd defaults
+  template: src=etc/default/tftpd-hpa dest=/etc/default/tftpd-hpa
+  notify: restart tftpd
+
 - name: install ironic controller services
   upstart_service: name={{ item }}
                    user=ironic
-                   cmd={{ ironic.virtualenv }}/bin/{{ item }}
+                   cmd=/usr/local/bin/{{ item }}
                    config_dirs=/etc/ironic
   with_items:
     - ironic-api
@@ -18,7 +48,16 @@
     - ironic-api
     - ironic-conductor
 
-- name: permit access to ironic (SSL)
-  ufw: rule=allow port=6384 proto=tcp
+- name: permit access to ironic
+  ufw: rule=allow port={{ ironic.api_url.port }} proto=tcp
+       to_ip={{ ironic.api_url.host }}
+
+- name: permit access to tftpd
+  ufw: rule=allow port=69 proto=udp
+       to_ip={{ ironic.tftp_server }}
+
+- name: permit access to dns
+  ufw: rule=allow port=53
+       to_ip={{ ironic.dns_server }}
 
 - meta: flush_handlers

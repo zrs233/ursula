@@ -19,8 +19,6 @@
        update={{ openstack.git_update }}
   notify:
   - pip install ironic
-  - fix ironic certs
-  - create ironic symlinks
 
 - name: create ironic config directories
   file: dest={{ item }} state=directory owner=root group=ironic mode=0750
@@ -28,6 +26,11 @@
     - /etc/ironic
     - /etc/ironic/environment.d
     - /etc/ironic/rootwrap.d
+
+- name: create ironic lib directory
+  file: dest={{ item }} state=directory owner=ironic group=ironic mode=0755
+  with_items:
+    - /var/lib/ironic
 
 - name: create ironic log directory
   file: dest=/var/log/ironic state=directory owner=root group=ironic mode=0770
@@ -44,6 +47,13 @@
 - name: ironic rootwrap
   command: rsync -avh {{ ironic.path }}/etc/ironic/rootwrap.d /etc/ironic
 
+- name: ironic sudoer
+  template: src=etc/sudoers.d/ironic
+            dest=/etc/sudoers.d/ironic
+            owner=root
+            group=root
+            mode=0440
+
 - meta: flush_handlers
 
 - name: ironic-client
@@ -53,5 +63,3 @@
        update={{ openstack.git_update }}
   notify:
   - pip install ironicclient
-  - fix ironicclient certs
-  - create ironicclient symlinks
