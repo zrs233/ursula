@@ -79,9 +79,14 @@ openstack:
   git_update: yes
 
 nova:
+  api_workers: 1
+  conductor_workers: 1
+  metadata_api_workers: 1
+  ec2_workers: 1
   libvirt_type: qemu
 
 cinder:
+  api_workers: 1
   volume_file: /opt/stack/cinder-volumes
   volume_file_size: 2G
 
@@ -111,11 +116,15 @@ neutron:
   router_interfaces: []
 
 glance:
+  api_workers: 1
+  registry_workers: 1
   images:
     - name: cirros
       url: https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img
 
 keystone:
+  admin_workers: 1
+  public_workers: 1
   tenants:
     - admin
     - service
