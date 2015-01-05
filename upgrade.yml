@@ -5,6 +5,12 @@
 # Assumes ml2 networking
 # Assumes rabbit cluster has been enabled
 ---
+- name: upgrade common bits first
+  hosts: all
+  tags: common
+  roles:
+    - role: common
+
 - name: upgrade percona cluster in compat mode
   hosts: db
   tags: dbupgrade
