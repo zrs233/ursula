@@ -34,13 +34,14 @@ $(ansible_command \
   ${ROOT}/playbooks/testenv/tasks/create.yml)
 
 echo "building config"
-CONTROLLER_IP=$(private_ip test-controller-0)
+CONTROLLER_IP=$(private_ip ${testenv_instance_prefix}-controller-0)
 rm -rf ${ROOT}/envs/test/group_vars/
 rm -f ${ROOT}/envs/test/hosts
 mkdir -p ${ROOT}/envs/test/
 cp -r ${ROOT}/envs/example/* ${ROOT}/envs/test
 echo "---" > ${ROOT}/envs/test/group_vars/all.yml
 echo "controller_primary: ${CONTROLLER_IP}" >> ${ROOT}/envs/test/group_vars/all.yml
+echo "testenv_instance_prefix: ${testenv_instance_prefix}" >> ${ROOT}/envs/test/group_vars/all.yml
 
 echo "generating ssl cert for openstack.example.com"
 CERT_DIR=$(mktemp -d 2> /dev/null || mktemp -d -t 'setup')

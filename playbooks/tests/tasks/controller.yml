@@ -53,7 +53,7 @@
 
   - name: rabbitmq has a properly configured cluser
     shell: rabbitmqctl -q cluster_status | awk '/disc/,/\},/' | grep -c
-           test-controller | grep 2
+           controller | grep 2
     when: rabbitmq.cluster == true
 
   - name: rabbitmq has the management plugin enabled
