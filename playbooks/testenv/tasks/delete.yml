@@ -1,9 +1,12 @@
 ---
 - name: de-provision test instances
-  hosts: local
-  connection: local
+  hosts: localhost
+
   vars_files:
-  - ../vars/main.yml
+    - ../vars/main.yml
+  vars:
+    ansible_python_interpreter: "/usr/bin/env python"
+
   tasks:
     - name: delete test instances
       local_action: nova_compute name={{ item }} state=absent
