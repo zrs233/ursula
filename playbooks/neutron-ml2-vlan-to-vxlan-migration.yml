@@ -9,7 +9,7 @@
   - name: Stop neutron-linuxbridge-agent
     service: name=neutron-linuxbridge-agent state=stopped
 
-  - name: Disconnect any VLAN interfaces from Neutron bridges to creating network loop
+  - name: Disconnect any VLAN interfaces from Neutron bridges to prevent creating network loop
     shell: ip -d link show | perl -ne 'system("brctl", "delif", $2, $1) if /^\d+. (eth\d+\.\d+).*master (brq[0-9a-f]{8}-[0-9a-f]{2})/'
 
 - hosts: network
