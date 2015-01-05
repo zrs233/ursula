@@ -5,15 +5,15 @@
 # vxlan needs newer iproute
 - name: Add apt-key for bbg/openstack ppa
   apt_key: id=49DE63CB url='http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0xC37BA5F849DE63CB'
-  when: neutron.tenant_network_type == 'vxlan'
+  when: neutron.tenant_network_type == 'vxlan' and neutron.plugin == 'ml2'
 
 - name: Add bbg/openstack ppa repo
   apt_repository: repo='ppa:blueboxgroup/openstack' update_cache=yes
-  when: neutron.tenant_network_type == 'vxlan'
+  when: neutron.tenant_network_type == 'vxlan' and neutron.plugin == 'ml2' 
 
 - name: update iproute2 to latest ppa
   apt: name=iproute2 state=latest
-  when: neutron.tenant_network_type == 'vxlan'
+  when: neutron.tenant_network_type == 'vxlan' and neutron.plugin == 'ml2'
 
 - name: install neutron-openvswitch-agent service
   upstart_service: name=neutron-openvswitch-agent
