@@ -39,7 +39,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       v.memory = 1024
     end
     if File.exist?("#{ENV['HOME']}/.stackrc")
-      config.vm.provision "file", source: "~/.stackrc", destination: ".stackrc"
+      workstation_config.vm.provision "file", source: "~/.stackrc", destination: ".stackrc"
+    end
+    workstation_config.vm.provision "ansible" do |ansible|
+      ansible.playbook = "playbooks/vagrant/predeploy.yml"
+      ansible.sudo = true
+      ansible.groups = { "workstation" => ["workstation"] }
     end
   end
 
@@ -101,18 +106,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         v.memory = 768
       end
     end
-  end
-
-  config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "playbooks/vagrant/bootstrap.yml"
-    ansible.sudo = true
-    ansible.groups = {
-      "controller" => ["controller1", "controller2", "allinone"],
-      "compute" => ["compute1", "allinone"],
-      "workstation" => ["workstation"],
-      "openstack:children" => ["controller", "compute", "allinone"],
-      "all_groups:children" => ["controller", "compute", "workstation"]
-    }
   end
 
 end

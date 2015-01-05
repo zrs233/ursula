@@ -2,7 +2,7 @@
 # This playbook boot straps a new compute node with its network config
 #
 ---
-- name: base level taska across all
+- name: base level tasks across all
   hosts: all
   serial: 10
   vars:
@@ -48,24 +48,8 @@
     - name: bridge-utils
       apt: pkg=bridge-utils
 
-    - name: populate network configuration
-      copy: content="{{ network_interfaces }}" dest=/etc/network/interfaces
-            force=yes owner=root group=root mode=0644
-      when: network_interfaces is defined
-      notify: restart machine
-
-    - meta: flush_handlers
-
-    - name: waiting for server to come back
-      pause: minutes=1
-      sudo: false
-
-  handlers:
-    - name: restart machine
-      command: shutdown -r now
-      async: 0
-      poll: 0
-      ignore_errors: true
+    - name: enable ip forwarding
+      sysctl: name="net.ipv4.ip_forward" value=1 sysctl_set=yes state=present reload=yes
 
 - name: workstation tasks
   hosts: workstation

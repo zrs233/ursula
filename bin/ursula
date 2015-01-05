@@ -117,8 +117,13 @@ main() {
   for pbook in ${PREDEPLOY_PLAYBOOK} ${PLAYBOOK} ${POSTDEPLOY_PLAYBOOK}; do
     if [ -f ${pbook} ]; then
       command=$(ansible_command ${HOSTS} "root" ${pbook})
-      $command $EXTRA_ANSIBLE_ARGS $TEST_ARGS
-
+      if [[ ${pbook} == ${PLAYBOOK} ]]; then
+        $command $EXTRA_ANSIBLE_ARGS $TEST_ARGS
+      else
+        # if pre or post deploy we don't want tags.
+        EXTRA_ANSIBLE_ARGS_NOTAGS=`echo "${EXTRA_ANSIBLE_ARGS} " | sed 's/--tags=.* / /' | sed 's/--skip-tags=.* / /'`
+        $command $EXTRA_ANSIBLE_ARGS_NOTAGS $TEST_ARGS
+      fi
       if [ "$?" != "0" ]; then
         echo "Run failed on playbook ${pbook}"
         exit -1
