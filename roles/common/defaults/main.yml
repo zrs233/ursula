@@ -15,3 +15,13 @@ common:
       - 0.0.0.0/0
     disable_root: False
     disable_dns: True
+
+monitoring:
+  checks:
+    memory:
+      warning: 4096
+      critical: 1024
+  rabbit:
+    vhost: /sensu
+    username: sensu
+    password: sensu

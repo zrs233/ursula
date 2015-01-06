@@ -92,6 +92,21 @@
   sensu_check: name=syslog-socket plugin=check-syslog-socket.rb
   notify: restart sensu-client
 
+- name: memory check
+  sensu_check: name=memory plugin=check-mem.sh
+               args="-w {{ monitoring.checks.memory.warning }} -c {{ monitoring.checks.memory.critical }}"
+  notify: restart sensu-client
+
+- name: memory metrics check
+  sensu_metrics_check: name=memory-metrics plugin=memory-metrics.rb
+                       args='--scheme stats.{{ inventory_hostname  }}'
+  notify: restart sensu-client
+
+- name: network metrics check
+  sensu_metrics_check: name=network-metrics plugin=metrics-net.rb
+                       args='--scheme stats.{{ inventory_hostname  }}'
+  notify: restart sensu-client
+
 - name: log scanning caching dir
   file: path=/var/cache/check-log owner=sensu state=directory
 
