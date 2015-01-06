@@ -1,6 +1,6 @@
 ---
 glance:
-  rev: def65d3a891a15a671f0713d3dbc9563228af9a7
+  rev: 42564be7ea133313a52639c27172d035390da1f2
   api_workers: 5
   registry_workers: 5
   sync:
