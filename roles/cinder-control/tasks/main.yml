@@ -11,6 +11,7 @@
 - name: sync cinder database
   command: cinder-manage db sync
   when: database_create.changed or force_sync|default('false')|bool
+  run_once: true
 
 - name: start cinder controller services
   service: name={{ item }} state=started

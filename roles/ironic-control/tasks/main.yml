@@ -41,6 +41,7 @@
 - name: sync cinder database
   command: "{{ ironic.virtualenv }}/bin/ironic-dbsync upgrade"
   when: database_create.changed or force_sync|default('false')|bool
+  run_once: true
 
 - name: start ironic controller services
   service: name={{ item }} state=started

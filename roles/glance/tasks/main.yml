@@ -64,6 +64,7 @@
 - name: sync glance database
   command: glance-manage db_sync
   when: database_create.changed or force_sync|default('false')|bool
+  run_once: true
 
 - name: start glance services
   service: name={{ item }} state=started
