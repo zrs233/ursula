@@ -15,13 +15,13 @@
     "user": "{{ monitoring.rabbit.user }}",
     "password": "{{ monitoring.rabbit.pass }}",
     {% if monitoring.client_cert is defined and monitoring.client_key is defined %}
-    "vhost": "/sensu",
+    "vhost": "{{ monitoring.rabbit.vhost }}",
     "ssl": {
       "cert_chain_file": "/etc/sensu/ssl/cert.pem",
       "private_key_file": "/etc/sensu/ssl/key.pem"
     }
     {% else %}
-    "vhost": "/sensu"
+    "vhost": "{{ monitoring.rabbit.vhost }}"
     {% endif %}
   }
 }
