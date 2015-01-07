@@ -54,6 +54,12 @@
 
 - include: ufw.yml
 
+# Include serial console before kernel-tuning to build serial_console_cmdline
+- include: serial-console.yml tty=ttyS0
+
+- include: ipmi.yml
+  when: common.ipmi.enabled
+
 - include: kernel-tuning.yml
 
 - include: system-tools.yml
@@ -67,8 +73,5 @@
 - name: drop an motd with ursula metadata
   action: template src=etc/motd.tail dest=/etc/motd.tail mode=0644
   changed_when: False
-
-- include: ipmi.yml
-  when: common.ipmi.enabled
 
 - include: monitoring.yml tags=monitoring,common
