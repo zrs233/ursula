@@ -13,6 +13,7 @@
 - name: sync nova database
   command: nova-manage db sync
   when: database_create.changed or force_sync|default('false')|bool
+  run_once: true
 
 - name: start nova controller services
   service: name={{ item }} state=started

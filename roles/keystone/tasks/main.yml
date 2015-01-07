@@ -90,6 +90,7 @@
 - name: sync keystone database
   command: keystone-manage db_sync
   when: database_create.changed or force_sync|default('false')|bool
+  run_once: true
 
 - meta: flush_handlers
 

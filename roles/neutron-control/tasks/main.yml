@@ -21,6 +21,7 @@
   command: neutron-db-manage --config-file /etc/neutron/neutron.conf \
            --config-file /etc/neutron/plugins/ml2/ml2_plugin.ini upgrade head
   when: database_create.changed or force_sync|default('false')|bool
+  run_once: true
 
 - name: start neutron-server
   action: service name=neutron-server state=started
