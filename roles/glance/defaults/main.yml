@@ -1,6 +1,7 @@
 ---
 glance:
-  rev: 252fe8572400c25c35
+  rev: 5218021e6fff46b4bb
+  git_mirror: https://github.com/blueboxgroup
   api_workers: 5
   sync:
     enabled: true

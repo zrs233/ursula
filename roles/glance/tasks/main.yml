@@ -15,7 +15,7 @@
 
 - name: get glance source repo
   git: |
-    repo={{ openstack.git_mirror }}/glance.git
+    repo={{ glance.git_mirror }}/glance.git
     dest=/opt/stack/glance
     version={{ glance.rev }}
     update={{ openstack.git_update }}
