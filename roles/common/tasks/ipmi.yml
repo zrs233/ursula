@@ -9,5 +9,4 @@
     - ipmi_si
     - ipmi_msghandler
 
-- name: IPMI serial over LAN console
-  template: src=etc/init/tty_ipmi_console.conf dest=/etc/init/{{ common.ipmi.serial_console }}.conf
+- include: serial-console.yml tty=common.ipmi.serial_console baud_rate=115200
