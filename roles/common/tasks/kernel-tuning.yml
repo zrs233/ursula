@@ -9,5 +9,5 @@
 - name: "Kernel boot parameters: disable console screen blanking, enabled serial console on IPMI serial over LAN"
   lineinfile: dest=/etc/default/grub
               regexp="^GRUB_CMDLINE_LINUX_DEFAULT="
-              line="GRUB_CMDLINE_LINUX_DEFAULT=\"console=tty1 console={{ common.ipmi.serial_console }},115200n8 consoleblank=0\""
+              line="GRUB_CMDLINE_LINUX_DEFAULT=\"console=tty1{{ serial_console_cmdline|default('') }} consoleblank=0\""
   notify: update grub config
