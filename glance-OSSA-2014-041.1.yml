@@ -1,0 +1,42 @@
+# Play for upgrading glance to resolve directory traversal
+# security bug. Only glance-api needs to be updated on the controllers.
+# Duplicates some code from glance role, but just the required parts.
+---
+- name: glance
+  hosts: controller
+  serial: 1
+
+  vars_files:
+    - roles/glance/defaults/main.yml
+
+  tasks:
+    # git module doesn't like the remote changing out from under it
+    # so manually add the remote here if it wasn't already added.
+    - name: add bbg remote repo
+      command: git remote add -f bbg https://github.com/blueboxgroup/glance.git
+               chdir=/opt/stack/glance
+               creates=/opt/stack/glance/.git/refs/remotes/bbg
+
+    - name: get glance source repo
+      git: repo={{ openstack.git_mirror }}/glance.git
+           dest=/opt/stack/glance
+           version={{ glance.rev }}
+           update={{ openstack.git_update }}
+      register: result
+      until: result|success
+      retries: 3
+      delay: 60
+      notify:
+        - pip install glance
+        - restart glance-api
+
+  handlers:
+    - name: pip install glance
+      command: pip install -i {{ openstack.pypi_mirror }} /opt/stack/glance
+      register: result
+      until: result|success
+      retries: 3
+      delay: 60
+
+    - name: restart glance-api
+      service: name=glance-api state=restarted
