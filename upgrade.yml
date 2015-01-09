@@ -79,19 +79,9 @@
 
   roles:
     - role: keystone
-      restart: False
-
-    - role: stop-services
-      services:
-        - keystone
-
-    - role: openstack-database
-      database_name: keystone
-      force_sync: True
-
-  tasks:
-    - name: start keystone services
-      service: name=keystone state=started
+      force_sync: true
+      database_create:
+        changed: False
 
 - name: upgrade glance
   hosts: controller
@@ -99,23 +89,9 @@
 
   roles:
     - role: glance
-      restart: False
-
-    - role: stop-services
-      services:
-        - glance-api
-        - glance-registry
-
-    - role: openstack-database
-      database_name: glance
-      force_sync: True
-
-  tasks:
-    - name: start glance services
-      service: name={{ item }} state=started
-      with_items:
-        - glance-registry
-        - glance-api
+      force_sync: true
+      database_create:
+        changed: false
 
 # Cinder block
 - name: stage cinder data software
@@ -128,6 +104,10 @@
     - role: cinder-data
       restart: False
 
+    - role: stop-services
+      services:
+        - cinder-volume
+
 - name: stage cinder control software and stop services
   hosts: controller
   tags:
@@ -136,43 +116,9 @@
 
   roles:
     - role: cinder-control
-      restart: False
-
-    - role: stop-services
-      services:
-        - cinder-api
-        - cinder-scheduler
-
-- name: stop cinder data services
-  hosts: cinder_volume
-  tags:
-    - cinder
-    - cinder-volume
-
-  roles:
-    - role: stop-services
-      services:
-        - cinder-volume
-
-- name: upgrade cinder control plane
-  hosts: controller
-  tags:
-    - cinder
-    - cinder-control
-
-  roles:
-    - role: openstack-database
-      database_name: cinder
-      db_versions: 'db versions'
-      db_sync: 'db sync'
-      force_sync: True
-
-  tasks:
-    - name: start cinder control services
-      service: name={{ item }} state=started
-      with_items:
-        - cinder-scheduler
-        - cinder-api
+      force_sync: true
+      database_create:
+        changed: false
 
 - name: start cinder data services
   hosts: cinder_volume
@@ -195,6 +141,10 @@
     - role: nova-data
       restart: False
 
+    - role: stop-services
+      services:
+        - nova-compute
+
 - name: stage nova control and stop services
   hosts: controller
   tags:
@@ -203,51 +153,9 @@
 
   roles:
     - role: nova-control
-      restart: False
-
-    - role: stop-services
-      services:
-        - nova-api
-        - nova-conductor
-        - nova-scheduler
-        - nova-cert
-        - nova-consoleauth
-        - nova-novncproxy
-
-- name: stop nova compute
-  hosts: compute
-  tags:
-    - nova
-    - nova-data
-
-  roles:
-    - role: stop-services
-      services:
-        - nova-compute
-
-- name: upgrade nova control plane
-  hosts: controller
-  tags:
-    - nova
-    - nova-control
-
-  roles:
-    - role: openstack-database
-      database_name: nova
-      db_versions: 'db versions'
-      db_sync: 'db sync'
-      force_sync: True
-
-  tasks:
-    - name: start nova control services
-      service: name={{ item }} state=started
-      with_items:
-        - nova-api
-        - nova-conductor
-        - nova-scheduler
-        - nova-cert
-        - nova-consoleauth
-        - nova-novncproxy
+      force_sync: true
+      database_create:
+        changed: false
 
 - name: start nova compute
   hosts: compute
@@ -256,7 +164,7 @@
     - nova-data
 
   tasks:
-    - name: stop nova compute
+    - name: start nova compute
       service: name=nova-compute state=started
 
 # Neutron block
@@ -302,10 +210,10 @@
       run_once: True
 
   roles:
-    - role: stop-services
-      services: neutron-server
-
     - role: neutron-control
+      force_sync: true
+      database_created:
+        changed: false
 
 - name: restart neutron data service
   hosts: compute:network
@@ -337,28 +245,9 @@
 
   roles:
     - role: heat
-      restart: False
-      when: heat.enabled
-
-    - role: stop-services
-      services:
-        - heat
-        - heat-api-cfn
-        - heat-engine
-      when: heat.enabled
-
-    - role: openstack-database
-      database_name: heat
-      force_sync: True
-      when: heat.enabled
-
-  tasks:
-    - name: start heat services
-      service: name={{ item }} state=started
-      with_items:
-        - heat-api
-        - heat-api-cfn
-        - heat-engine
+      force_sync: true
+      database_create:
+        changed: false
       when: heat.enabled
 
 - name: upgrade horizon

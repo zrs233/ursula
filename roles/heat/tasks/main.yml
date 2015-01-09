@@ -42,6 +42,25 @@
     - heat-api-cfn
     - heat-engine
 
+- name: stop heat services before db sync
+  service: name={{ item }} state=stopped
+  when: database_create.changed or force_sync|default('false')|bool
+  with_items:
+    - heat-api
+    - heat-api-cfn
+    - heat-engine
+
+- name: sync heat database
+  command: heat-manage db_sync
+  when: database_create.changed or force_sync|default('false')|bool
+  run_once: true
+  changed_when: true
+  notify:
+    - restart heat-api
+    - restart heat-api-cfn
+    - restart heat-engine
+  # we want this to always be changed so that it can notify the service restart
+
 - meta: flush_handlers
 
 - name: start heat services
