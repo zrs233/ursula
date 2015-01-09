@@ -1,4 +1,12 @@
 ---
+- name: discover keystone setup status
+  stat: path=/etc/keystone/.setup
+  register: keystone_setup
+
+- name: set keystone_configured fact
+  set_fact: keystone_configured=True
+  when: keystone_setup.stat.exists
+
 - name: keystone tenants
   keystone_user: tenant={{ item }}
                  tenant_description="{{ item }} tenant"
@@ -31,3 +39,6 @@
   # TODO refactor keystone.services data to be easier to pull out individual services
   with_items: keystone.services
   when: endpoints[item.name] is defined and item.name == 'keystone'
+
+- name: set keystone setup status
+  file: path=/etc/keystone/.setup state=touch

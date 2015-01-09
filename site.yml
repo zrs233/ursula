@@ -131,7 +131,9 @@
   hosts: controller[0]
   roles:
     - role: keystone-setup
+      keystone_configured: false
       tags: ['openstack', 'setup']
+      when: not keystone_configured
 
 - name: glance code and config
   gather_facts: force
