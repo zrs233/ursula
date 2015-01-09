@@ -9,7 +9,6 @@ country_code: US
 fqdn: openstack.example.org
 undercloud_floating_ip: "{{ hostvars[groups['controller'][0]][primary_interface]['ipv4']['address'] }}"
 secrets:
-  admin_token:      asdf
   db_password:      asdf
   service_password: asdf
   rabbit_password:  asdf
