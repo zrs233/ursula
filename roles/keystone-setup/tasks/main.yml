@@ -7,24 +7,41 @@
   set_fact: keystone_configured=True
   when: keystone_setup.stat.exists
 
+- name: generate admin_token
+  set_fact: admin_token="{{ 'asdf' * 9|random(start=2) }}"
+            insert_token=True
+
+- name: add admin_token to keystone conf
+  lineinfile: dest=/etc/keystone/keystone.conf
+              line="admin_token = {{ admin_token }}"
+              insertafter='\[DEFAULT\]'
+              state=present
+
+- name: add admin_token_auth to keystone pipeline
+  template: dest=/etc/keystone/keystone-paste.ini
+            src=roles/keystone/templates/etc/keystone/keystone-paste.ini
+
+- name: restart keystone api
+  service: name=keystone state=restarted
+
 - name: keystone tenants
   keystone_user: tenant={{ item }}
                  tenant_description="{{ item }} tenant"
-                 token={{ secrets.admin_token }}
+                 token={{ admin_token }}
   with_items: keystone.tenants
 
 - name: keystone users
   keystone_user: user={{ item.name }}
                  password={{ item.password }}
                  tenant={{ item.tenant }}
-                 token={{ secrets.admin_token }}
+                 token={{ admin_token }}
   with_items: keystone.users
 
 - name: keystone roles
   keystone_user: role={{ item.role }}
                  user={{ item.user }}
                  tenant={{ item.tenant }}
-                 token={{ secrets.admin_token }}
+                 token={{ admin_token }}
   with_items: keystone.user_roles
 
 - name: keystone endpoint
@@ -35,10 +52,25 @@
                     internal_url={{ item.internal_url }}
                     admin_url={{ item.admin_url }}
                     region=RegionOne
-                    token={{ secrets.admin_token }}
+                    token={{ admin_token }}
   # TODO refactor keystone.services data to be easier to pull out individual services
   with_items: keystone.services
   when: endpoints[item.name] is defined and item.name == 'keystone'
+
+- name: remote admin_token from keystone api
+  lineinfile: dest=/etc/keystone/keystone.conf
+              line="admin_token = {{ admin_token }}"
+              state=absent
+
+- name: set insert_token to false
+  set_fact: insert_token=False
+
+- name: remove admin_token_auth from keystone pipeline
+  template: dest=/etc/keystone/keystone-paste.ini
+            src=roles/keystone/templates/etc/keystone/keystone-paste.ini
+
+- name: restart keystone api
+  service: name=keystone state=restarted
 
 - name: set keystone setup status
   file: path=/etc/keystone/.setup state=touch
