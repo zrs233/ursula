@@ -61,7 +61,7 @@
 
 - name: ensure kvm is supported by cpu and enabled in bios
   command: kvm-ok
-  when: nova.libvirt_type == "kvm"
+  when: "'{{ nova.libvirt_type }}' == 'kvm'"
   changed_when: False
 
 - name: shutdown default libvirt network if started
@@ -70,3 +70,6 @@
 
 - name: disable libvirt default network autostart
   file: dest=/etc/libvirt/qemu/networks/autostart/default.xml state=absent
+
+- name: add nova to the libvirtd group
+  user: name=nova groups=libvirtd append=true system=yes createhome=no

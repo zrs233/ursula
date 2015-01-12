@@ -1,6 +1,7 @@
 ---
 - name: nova user
-  user: name=nova comment=nova shell=/bin/sh system=yes home=/var/lib/nova createhome=yes generate_ssh_key=yes ssh_key_bits=4096
+  user: name=nova comment=nova shell=/bin/sh system=yes home=/var/lib/nova
+        createhome=yes generate_ssh_key=yes ssh_key_bits=4096
 
 - name: nova packages
   apt: pkg=python-numpy

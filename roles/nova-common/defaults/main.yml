@@ -26,6 +26,11 @@ nova:
     libvirt_bin_version: 1.2.2-0ubuntu13.1.7
     python_libvirt_version: 1.2.2-0ubuntu2
     qemu_kvm_version: 2.0.0+dfsg-2ubuntu1.9
+  driver:
+    docker:
+      rev: 2f23a09ba49bfafedc712b82613417da7147c5a3
+      git_mirror: https://github.com/stackforge/nova-docker.git
+      dest: /opt/stack/novadocker
 
   logs:
     - paths:

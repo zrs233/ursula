@@ -75,3 +75,6 @@
   changed_when: False
 
 - include: monitoring.yml tags=monitoring,common
+
+- include: docker.yml
+  when: common.docker.enabled
