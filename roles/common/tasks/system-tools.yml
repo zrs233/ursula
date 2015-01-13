@@ -25,6 +25,8 @@
     - socat
     - tree
     - vim
+    - cdpr
+    - sysstat
 
 - name: required by custom ansible modules
   gem: name=antsy state=latest user_install=no include_dependencies=yes
