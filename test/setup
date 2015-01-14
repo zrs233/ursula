@@ -22,6 +22,8 @@ cat > ${ROOT}/envs/test/hosts <<eof
 eof
 cp ${ROOT}/envs/example/defaults.yml ${ROOT}/envs/test/defaults.yml
 
+echo "testenv_instance_prefix: ${testenv_instance_prefix}" >> ${ROOT}/envs/test/defaults.yml
+
 echo "destroying: ${VMS}"
 ${ROOT}/test/cleanup
 
@@ -32,13 +34,14 @@ $(ansible_command \
   ${ROOT}/playbooks/testenv/tasks/create.yml)
 
 echo "building config"
-CONTROLLER_IP=$(private_ip test-controller-0)
+CONTROLLER_IP=$(private_ip ${testenv_instance_prefix}-controller-0)
 rm -rf ${ROOT}/envs/test/group_vars/
 rm -f ${ROOT}/envs/test/hosts
 mkdir -p ${ROOT}/envs/test/
 cp -r ${ROOT}/envs/example/* ${ROOT}/envs/test
 echo "---" > ${ROOT}/envs/test/group_vars/all.yml
 echo "controller_primary: ${CONTROLLER_IP}" >> ${ROOT}/envs/test/group_vars/all.yml
+echo "testenv_instance_prefix: ${testenv_instance_prefix}" >> ${ROOT}/envs/test/group_vars/all.yml
 
 echo "generating ssl cert for openstack.example.com"
 CERT_DIR=$(mktemp -d 2> /dev/null || mktemp -d -t 'setup')
@@ -65,27 +68,27 @@ rm -rf ${CERT_DIR}
 echo "writing inventory file"
 cat > ${ROOT}/envs/test/hosts <<eof
 [db]
-$(public_ip "test-controller-0")
-$(public_ip "test-controller-1")
+$(public_ip "${testenv_instance_prefix}-controller-0")
+$(public_ip "${testenv_instance_prefix}-controller-1")
 
 [db_arbiter]
-$(public_ip "test-compute-0")
+$(public_ip "${testenv_instance_prefix}-compute-0")
 
 [controller]
-$(public_ip "test-controller-0")
-$(public_ip "test-controller-1")
+$(public_ip "${testenv_instance_prefix}-controller-0")
+$(public_ip "${testenv_instance_prefix}-controller-1")
 
 [compute]
-$(public_ip "test-compute-0")
-$(public_ip "test-controller-0")
-$(public_ip "test-controller-1")
+$(public_ip "${testenv_instance_prefix}-compute-0")
+$(public_ip "${testenv_instance_prefix}-controller-0")
+$(public_ip "${testenv_instance_prefix}-controller-1")
 
 [network]
-$(public_ip "test-controller-0")
-$(public_ip "test-controller-1")
+$(public_ip "${testenv_instance_prefix}-controller-0")
+$(public_ip "${testenv_instance_prefix}-controller-1")
 
 [cinder_volume]
-$(public_ip "test-compute-0")
+$(public_ip "${testenv_instance_prefix}-compute-0")
 eof
 
 echo "copying files"
