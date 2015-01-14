@@ -323,3 +323,7 @@ ssl:
 common:
   ipmi:
     enabled: false
+
+logging:
+  forward:
+    host: 172.16.0.13
