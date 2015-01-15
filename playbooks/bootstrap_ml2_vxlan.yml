@@ -37,7 +37,7 @@
     - ucarp
 
   # Install customized iproute2 for vxlan
-  - apt: name: iproute2=3.12.0-2~ubuntu12.04.1~ppa1  update_cache=yes 
+  - apt: name='iproute2=3.12.0-2~ubuntu12.04.1~ppa1' update_cache=yes
 
   # Upgrade the distribution
   - apt: upgrade=dist
