@@ -76,3 +76,11 @@
   when: glance.sync.enabled
 
 - include: monitoring.yml tags=monitoring,common
+
+- name: set up log rotation for glance
+  logrotate: name=glance path=/var/log/glance/*.log
+  args:
+    options:
+      - daily
+      - missingok
+      - rotate 7

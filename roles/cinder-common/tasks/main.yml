@@ -53,3 +53,11 @@
 - name: cinder sudoer
   template: src=etc/sudoers.d/cinder dest=/etc/sudoers.d/cinder owner=root
             group=root mode=0440
+
+- name: set up log rotation for cinder
+  logrotate: name=cinder path=/var/log/cinder/*.log
+  args:
+    options:
+      - daily
+      - missingok
+      - rotate 7
