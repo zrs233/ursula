@@ -22,6 +22,7 @@
     - socat
     - tree
     - vim
+    - logrotate
 
 - name: requried by custom ansible modules
   gem: name=antsy state=latest user_install=no include_dependencies=yes
