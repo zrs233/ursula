@@ -66,3 +66,11 @@
 - name: setup glance image replication
   include: image-sync.yml
   when: glance.sync.enabled
+
+- name: set up log rotation for glance
+  logrotate: name=glance path=/var/log/glance/*.log
+  args:
+    options:
+      - daily
+      - missingok
+      - rotate 7

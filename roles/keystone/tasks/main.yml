@@ -63,3 +63,11 @@
     owner=root
     group=root
     mode=0755
+
+- name: set up log rotation for keystone
+  logrotate: name=keystone path=/var/log/keystone/*.log
+  args:
+    options:
+      - daily
+      - missingok
+      - rotate 7
