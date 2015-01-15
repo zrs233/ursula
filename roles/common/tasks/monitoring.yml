@@ -97,6 +97,10 @@
                args="-w {{ monitoring.checks.memory.warning }} -c {{ monitoring.checks.memory.critical }}"
   notify: restart sensu-client
 
+- name: check nbd devices in use
+  sensu_check: name=nbd-in-use plugin=check-nbd-in-use.sh
+  notify: restart sensu-client
+
 - name: memory metrics check
   sensu_metrics_check: name=memory-metrics plugin=memory-metrics.rb
                        args='--scheme stats.{{ inventory_hostname  }}'
