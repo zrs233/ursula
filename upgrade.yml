@@ -7,12 +7,14 @@
 ---
 - name: upgrade common bits first
   hosts: all
+  max_fail_percentage: 1
   tags: common
   roles:
     - role: common
 
 - name: upgrade percona cluster in compat mode
   hosts: db
+  max_fail_percentage: 1
   tags: dbupgrade
   serial: 1
 
@@ -27,6 +29,7 @@
 
 - name: upgrade percona arbiter
   hosts: db_arbiter
+  max_fail_percentage: 1
   tags: dbupgrade
 
   pre_tasks:
@@ -46,6 +49,7 @@
 
 - name: remove percona compat settings
   hosts: db
+  max_fail_percentage: 1
   tags: dbupgrade
   serial: 1
 
@@ -67,6 +71,7 @@
 
 - name: upgrade rabbit to clustering
   hosts: controller
+  max_fail_percentage: 1
   serial: 1
   tags: rabbitmq
 
@@ -75,6 +80,7 @@
 
 - name: upgrade keystone
   hosts: controller
+  max_fail_percentage: 1
   tags: keystone
 
   roles:
@@ -85,6 +91,7 @@
 
 - name: upgrade glance
   hosts: controller
+  max_fail_percentage: 1
   tags: glance
 
   roles:
@@ -96,6 +103,7 @@
 # Cinder block
 - name: stage cinder data software
   hosts: cinder_volume
+  max_fail_percentage: 1
   tags:
     - cinder
     - cinder-volume
@@ -110,6 +118,7 @@
 
 - name: stage cinder control software and stop services
   hosts: controller
+  max_fail_percentage: 1
   tags:
     - cinder
     - cinder-control
@@ -122,6 +131,7 @@
 
 - name: start cinder data services
   hosts: cinder_volume
+  max_fail_percentage: 1
   tags:
     - cinder
     - cinder-volume
@@ -133,6 +143,7 @@
 # Nova block
 - name: stage nova compute
   hosts: compute
+  max_fail_percentage: 1
   tags:
     - nova
     - nova-data
@@ -147,6 +158,7 @@
 
 - name: stage nova control and stop services
   hosts: controller
+  max_fail_percentage: 1
   tags:
     - nova
     - nova-control
@@ -159,6 +171,7 @@
 
 - name: start nova compute
   hosts: compute
+  max_fail_percentage: 1
   tags:
     - nova
     - nova-data
@@ -170,6 +183,7 @@
 # Neutron block
 - name: stage neutron core data
   hosts: compute:network
+  max_fail_percentage: 1
   tags:
     - neutron
     - neutron-data
@@ -180,6 +194,7 @@
 
 - name: stage neutron network
   hosts: network
+  max_fail_percentage: 1
   tags:
     - neutron
     - neutron-network
@@ -190,6 +205,7 @@
 
 - name: upgrade neutron control plane
   hosts: controller
+  max_fail_percentage: 1
   tags:
     - neutron
     - neutron-control
@@ -217,6 +233,7 @@
 
 - name: restart neutron data service
   hosts: compute:network
+  max_fail_percentage: 1
   tags:
     - neutron
     - neutron-data
@@ -227,6 +244,7 @@
 
 - name: restart neutron data network services
   hosts: network
+  max_fail_percentage: 1
   tags:
     - neutron
     - neutron-network
@@ -241,6 +259,7 @@
 
 - name: upgrade heat
   hosts: controller
+  max_fail_percentage: 1
   tags: heat
 
   roles:
@@ -252,6 +271,7 @@
 
 - name: upgrade horizon
   hosts: controller
+  max_fail_percentage: 1
   tags: horizon
 
   roles:
