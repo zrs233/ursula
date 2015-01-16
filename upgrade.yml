@@ -151,10 +151,12 @@
   roles:
     - role: nova-data
       restart: False
+      when: ironic.enabled == False
 
     - role: stop-services
       services:
         - nova-compute
+      when: ironic.enabled == False
 
 - name: stage nova control and stop services
   hosts: controller
@@ -179,6 +181,33 @@
   tasks:
     - name: start nova compute
       service: name=nova-compute state=started
+      when: ironic.enabled == False
+
+# Ironic block
+- name: upgrade ironic control
+  hosts: controller
+  max_fail_percentage: 1
+  tags: ironic
+
+  roles:
+    - role: stop-services
+      services:
+        - nova-compute
+      when: ironic.enabled == True
+
+    - role: ironic-control
+      force_sync: true
+      database_create:
+        changed: False
+      when: ironic.enabled == True
+
+    - role: ironic-data
+      when: ironic.enabled == True
+
+  tasks:
+    - name: start nova compute
+      service: name=nova-compute state=started
+      when: ironic.enabled == True
 
 # Neutron block
 - name: stage neutron core data
