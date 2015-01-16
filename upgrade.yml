@@ -305,3 +305,5 @@
 
   roles:
     - role: horizon
+
+- include: site.yml
