@@ -9,11 +9,10 @@
 
 - name: glance-api check
   sensu_check: name=check-glance-api plugin=check-os-api.rb
-               args="--service glance" use_sudo=true prefix=". /root/stackrc;"
+               args="--service glance"
   notify: restart sensu-client
 
 - name: glance-store check
   sensu_check: name=check-glance-store plugin=check-glance-store.py
                env_vars=GLANCE_IMAGE_DIR:/var/lib/glance/images
-               use_sudo=true prefix=". /root/stackrc;"
   notify: restart sensu-client

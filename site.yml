@@ -132,7 +132,7 @@
   roles:
     - role: keystone-setup
       keystone_configured: false
-      tags: ['openstack', 'setup']
+      tags: ['openstack', 'setup', 'keystone-setup']
       when: not keystone_configured
 
 - name: glance code and config
