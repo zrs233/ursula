@@ -1,4 +1,8 @@
 ---
+- name: set hostname
+  hostname: name={{ hostname }}
+  when: hostname is defined
+
 - include: proxy.yml
 
 - include: bbg-repo.yml

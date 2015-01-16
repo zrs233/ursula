@@ -34,7 +34,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define "workstation" do |workstation_config|
     workstation_config.vm.box = "ursula-precise"
     workstation_config.vm.box_url = BOX_URL
-    workstation_config.vm.hostname = "workstation"
+    workstation_config.vm.hostname = "workstation.ursula"
     workstation_config.vm.provider "virtualbox" do |v|
       v.memory = 1024
     end
@@ -51,7 +51,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define "allinone" do |allinone_config|
     allinone_config.vm.box = "ursula-precise"
     allinone_config.vm.box_url = BOX_URL
-    allinone_config.vm.hostname = "allinone"
+    allinone_config.vm.hostname = "allinone.ursula"
     allinone_config.vm.network :private_network, ip: "172.16.0.100", :netmask => "255.255.255.0"
     allinone_config.vm.network :private_network, ip: "172.16.255.100", :netmask => "255.255.255.0"
     allinone_config.vm.network :private_network, ip: "192.168.255.100", :netmask => "255.255.255.0"
@@ -67,7 +67,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.define "controller#{i}" do |controller_config|
       controller_config.vm.box = "ursula-precise"
       controller_config.vm.box_url = BOX_URL
-      controller_config.vm.hostname = "controller#{i}"
+      controller_config.vm.hostname = "controller#{i}.ursula"
       controller_config.vm.network :private_network, ip: "172.16.0.10#{i}", :netmask => "255.255.255.0"
       controller_config.vm.network :private_network, ip: "192.168.254.10#{i}", :netmask => "255.255.255.0"
       controller_config.vm.provider "virtualbox" do |v|
@@ -81,7 +81,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.define "compute#{i}" do |compute_config|
       compute_config.vm.box = "ursula-precise"
       compute_config.vm.box_url = BOX_URL
-      compute_config.vm.hostname = "compute#{i}"
+      compute_config.vm.hostname = "compute#{i}.ursula"
       compute_config.vm.network :private_network, ip: "172.16.0.11#{i}", :netmask => "255.255.255.0"
       compute_config.vm.network :private_network, ip: "192.168.254.11#{i}", :netmask => "255.255.255.0"
       compute_config.vm.provider "virtualbox" do |v|
