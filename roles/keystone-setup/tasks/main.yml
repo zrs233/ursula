@@ -1,11 +1,12 @@
 ---
 - name: discover keystone setup status
-  stat: path=/etc/keystone/.setup
+  command: mysql --batch --silent keystone -e "select type from service where type = 'compute'"
+  failed_when: false
   register: keystone_setup
 
 - name: set keystone_configured fact
   set_fact: keystone_configured=True
-  when: keystone_setup.stat.exists|bool
+  when: keystone_setup.stdout|search("compute")
 
 - name: generate admin_token
   set_fact: admin_token="{{ 'asdf' * 9|random(start=2) }}"
@@ -76,6 +77,3 @@
 
 - name: restart keystone api
   service: name=keystone state=restarted
-
-- name: set keystone setup status
-  file: path=/etc/keystone/.setup state=touch
