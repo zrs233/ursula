@@ -25,7 +25,7 @@ fi
 
 CRIT=${CRIT:=1}
 
-NO_NBD=`ps x | grep qemu-nbd | grep -v grep | awk '{ print $(NF) }' | uniq -d | wc -l`
+NO_NBD=`ps h $(pgrep qemu-nbd) | awk '{ print $(NF) }' | uniq -d | wc -l`
 
 output="$NO_NBD files open by multiple /dev/nbdX"
 
