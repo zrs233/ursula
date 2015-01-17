@@ -87,6 +87,8 @@
   action: template src=etc/motd.tail dest=/etc/motd.tail mode=0644
   changed_when: False
 
+- name: Include stack name in /etc/issue
+  lineinfile: dest=/etc/issue regexp="^{{ stack_env }} OpenStack Node" line="{{ stack_env }} OpenStack Node"
 
 - include: monitoring.yml tags=monitoring,common
 
