@@ -26,6 +26,8 @@ plugin       = args[:plugin]
 plugin_args  = args[:args]
 prefix       = args[:prefix]
 env_vars     = args[:env_vars]
+plugin_dir   = args[:plugin_dir] || '/etc/sensu/plugins'
+check_dir    = args[:check_dir] || '/etc/sensu/conf.d/checks'
 
 # parse_env_vars works around Ansible disallowing '='
 # in string arguments, instead environmental variables can be
@@ -41,8 +43,8 @@ def parse_env_vars(env_vars)
   output.join(' ')
 end
 
-plugin_path = "/etc/sensu/plugins/#{plugin}"
-check_path = "/etc/sensu/conf.d/checks/#{name}.json"
+plugin_path = "#{plugin_dir}/#{plugin}"
+check_path = "/#{check_dir}/#{name}.json"
 
 # if command is not specified via args then generate it
 command = args[:command] || ''

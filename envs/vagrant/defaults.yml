@@ -79,7 +79,7 @@ monitoring:
       username: monitor
       password: "{{ secrets.monitor_password }}"
       tenant: admin
-      role: monitor
+      role: admin
   client_cert: |
     -----BEGIN CERTIFICATE-----
     MIIC3TCCAcWgAwIBAgIBAjANBgkqhkiG9w0BAQUFADASMRAwDgYDVQQDEwdTZW5z
@@ -186,6 +186,8 @@ glance:
     debug: True
 
 keystone:
+  admin_workers: 1
+  public_workers: 1
   token_expiration_in_seconds: 86400
   logging:
     debug: True
@@ -193,7 +195,6 @@ keystone:
   tenants:
     - admin
     - service
-    - demo
 
   users:
     - name: admin

@@ -80,7 +80,7 @@ monitoring:
       username: monitor
       password: "{{ secrets.monitor_password }}"
       tenant: admin
-      role: monitor
+      role: admin
 
 openstack:
   pypi_mirror: https://pypi.python.org/simple/

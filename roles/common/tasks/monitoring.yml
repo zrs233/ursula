@@ -91,12 +91,12 @@
 
 - name: vmstat metrics check
   sensu_metrics_check: name=vmstat-metrics plugin=vmstat-metrics.rb
-                       args='--scheme stats.{{ inventory_hostname  }}'
+                       args='--scheme stats.{{ inventory_hostname }}'
   notify: restart sensu-client
 
 - name: load metrics check
   sensu_metrics_check: name=load-metrics plugin=load-metrics.rb
-                       args='--scheme stats.{{ inventory_hostname  }}'
+                       args='--scheme stats.{{ inventory_hostname }}'
   notify: restart sensu-client
 
 - name: syslog check

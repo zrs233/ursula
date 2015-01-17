@@ -21,3 +21,17 @@
   sensu_check: name=check-nova-services plugin=check-nova-services.sh
                use_sudo=true
   notify: restart sensu-client
+
+- name: nova metrics check
+  sensu_metrics_check: name=nova-metrics plugin=metrics-nova.py
+                       args='--scheme stats.openstack.nova.hypervisor'
+                       prefix='ip a | grep :ucarp > /dev/null &&'
+                       interval=10
+  notify: restart sensu-client
+
+- name: nova state metrics check
+  sensu_metrics_check: name=nova-state-metrics plugin=metrics-nova-state.py
+                       args='--scheme stats.openstack.nova.states'
+                       prefix='ip a | grep :ucarp > /dev/null &&'
+                       interval=10
+  notify: restart sensu-client
