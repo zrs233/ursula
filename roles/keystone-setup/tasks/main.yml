@@ -24,6 +24,11 @@
 - name: restart keystone api
   service: name=keystone state=restarted
 
+- name: wait for keystone to be functional
+  pause: seconds=3
+  # this could wait for a service uri to be up, but a 3 second sleep
+  # works fine. Service uri may need auth to validate.
+
 - name: keystone tenants
   keystone_user: tenant={{ item }}
                  tenant_description="{{ item }} tenant"
