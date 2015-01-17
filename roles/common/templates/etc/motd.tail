@@ -1,6 +1,7 @@
 
 Ursula Node Data:
-Release: $Id$
+Stack: {{ stack_env }}
+Release: {{ ursula_revision }}
 Deployed: {{ ansible_date_time['iso8601'] }}
 Groups: {{ group_names | join(', ') }}
 
