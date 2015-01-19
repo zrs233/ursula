@@ -86,4 +86,6 @@
 - include: monitoring.yml tags=monitoring,common
 
 - name: Include Swift warning in message of the day
-  lineinfile: dest=/etc/motd.tail regexp="^WARNING Swift node" line="WARNING Swift node: do not replace disks without consulting Swift specific procedures"
+  lineinfile: dest=/etc/motd.tail
+              regexp="^WARNING Swift node"
+              line='WARNING Swift node -- do not replace disks without consulting Swift specific procedures'
