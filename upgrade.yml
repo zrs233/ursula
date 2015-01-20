@@ -86,6 +86,7 @@
   roles:
     - role: keystone
       force_sync: true
+      restart: False
       database_create:
         changed: False
 
@@ -97,6 +98,7 @@
   roles:
     - role: glance
       force_sync: true
+      restart: False
       database_create:
         changed: false
 
@@ -126,6 +128,7 @@
   roles:
     - role: cinder-control
       force_sync: true
+      restart: False
       database_create:
         changed: false
 
@@ -168,6 +171,7 @@
   roles:
     - role: nova-control
       force_sync: true
+      restart: False
       database_create:
         changed: false
 
@@ -197,6 +201,7 @@
 
     - role: ironic-control
       force_sync: true
+      restart: False
       database_create:
         changed: False
       when: ironic.enabled == True
@@ -257,6 +262,7 @@
   roles:
     - role: neutron-control
       force_sync: true
+      restart: False
       database_created:
         changed: false
 
@@ -294,6 +300,7 @@
   roles:
     - role: heat
       force_sync: true
+      restart: False
       database_create:
         changed: false
       when: heat.enabled
