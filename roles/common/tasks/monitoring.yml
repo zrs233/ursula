@@ -115,6 +115,11 @@
                        args='--scheme stats.{{ inventory_hostname  }}'
   notify: restart sensu-client
 
+- name: log files greater than 1gb check
+  sensu_check: name=log_file_size plugin=check-for-large-files.sh
+               args='-d /var/log -s 1048576'
+  notify: restart sensu-client
+
 - name: log scanning caching dir
   file: path=/var/cache/check-log owner=sensu state=directory
 
