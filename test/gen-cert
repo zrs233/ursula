@@ -46,6 +46,7 @@ openssl req \
     -new \
     -batch \
     -subj "$(echo -n "$subj" | tr "\n" "/")" \
+    -sha256 \
     -key ${DOMAIN}.key \
     -out ${DOMAIN}.csr \
     -passin env:PASSPHRASE
@@ -57,8 +58,16 @@ fail_if_error $?
 openssl rsa -in ${DOMAIN}.key.org -out ${DOMAIN}.key -passin env:PASSPHRASE
 fail_if_error $?
 
+# Generate an extensions configuration file for SAN
+cat >> req.conf <<eof
+[ v3_req ]
+basicConstraints = CA:FALSE
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment, keyCertSign
+subjectAltName = DNS.1:${DOMAIN}
+eof
+
 # Generate the cert (good for 10 years)
-openssl x509 -req -days 3650 -in ${DOMAIN}.csr -signkey ${DOMAIN}.key -out ${DOMAIN}.crt
+openssl x509 -req -extfile req.conf -extensions v3_req -days 3650 -sha256 -in ${DOMAIN}.csr -signkey ${DOMAIN}.key -out ${DOMAIN}.crt
 fail_if_error $?
 
 exit 0
