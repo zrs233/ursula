@@ -17,6 +17,7 @@ secrets:
   metadata_proxy_shared_secret: asdf
   horizon_secret_key:           asdf
   glance_sync:      ADQ64XUQLUWH75M634RVBLP55RKPGGOWG
+  monitor_password: asdf
 
 endpoints:
   main:     "{{ fqdn }}"
@@ -73,6 +74,12 @@ monitoring:
   keepalive:
     handler: email
   scan_for_log_errors: true
+  openstack:
+    user:
+      username: monitor
+      password: "{{ secrets.monitor_password }}"
+      tenant: admin
+      role: monitor
   client_cert: |
     -----BEGIN CERTIFICATE-----
     MIIC3TCCAcWgAwIBAgIBAjANBgkqhkiG9w0BAQUFADASMRAwDgYDVQQDEwdTZW5z
@@ -179,13 +186,14 @@ glance:
     debug: True
 
 keystone:
-  admin_workers: 1
-  public_workers: 1
+  token_expiration_in_seconds: 86400
   logging:
     debug: True
+    verbose: True
   tenants:
     - admin
     - service
+    - demo
 
   users:
     - name: admin
@@ -215,6 +223,10 @@ keystone:
     - name: ironic
       password: "{{ secrets.service_password }}"
       tenant: service
+    - name: "{{ monitoring.openstack.user.username }}"
+      password: "{{ monitoring.openstack.user.password }}"
+      tenant: "{{ monitoring.openstack.user.tenant }}"
+
 
   user_roles:
     - user: admin
@@ -250,6 +262,9 @@ keystone:
     - user: ironic
       tenant: service
       role: admin
+    - user: "{{ monitoring.openstack.user.username }}"
+      tenant: "{{ monitoring.openstack.user.tenant }}"
+      role: "{{ monitoring.openstack.user.role }}"
 
   services:
     - name: keystone

@@ -14,7 +14,7 @@
 
 - name: nova-api check
   sensu_check: name=check-nova-api plugin=check-os-api.rb
-               args="--service nova" use_sudo=true prefix=". /root/stackrc;"
+               args="--service nova"
   notify: restart sensu-client
 
 - name: nova-services check

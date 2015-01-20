@@ -5,5 +5,5 @@
 
 - name: keystone-api check
   sensu_check: name=check-keystone-api plugin=check-os-api.rb
-               args="--service keystone" use_sudo=true prefix=". /root/stackrc;"
+               args="--service keystone"
   notify: restart sensu-client

@@ -46,6 +46,17 @@
             mode=0444
   notify: restart sensu-client
 
+- name: sensu monitoring credentials
+  template: dest=/etc/sensu/stackrc src=etc/sensu/stackrc
+            owner=root group=sensu mode=0640
+  when: monitoring.openstack.user is defined
+
+- name: load monitoring credentials
+  lineinfile: dest=/etc/default/sensu regexp="^\. /etc/sensu/stackrc"
+              line=". /etc/sensu/stackrc"
+  notify: restart sensu-client
+  when: monitoring.openstack.user is defined
+
 - name: enable and start sensu-client
   service: name=sensu-client state=started enabled=yes
 
