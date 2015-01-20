@@ -73,6 +73,7 @@ monitoring:
     vhost: /rabbit
   keepalive:
     handler: email
+  cluster_prefix:
   scan_for_log_errors: true
   openstack:
     user:

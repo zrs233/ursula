@@ -17,13 +17,3 @@ common:
     disable_dns: True
   docker:
     enabled: False
-
-monitoring:
-  checks:
-    memory:
-      warning: 4096
-      critical: 1024
-  rabbit:
-    vhost: /sensu
-    username: sensu
-    password: sensu
