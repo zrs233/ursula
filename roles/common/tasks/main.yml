@@ -74,12 +74,13 @@
   when: common.hwraid.enabled
 
 
-- name: Fetch Ursula revision
+- name: fetch Ursula revision
   local_action: command git describe --tags
   run_once: true
+  sudo: no
   register: ursula_git_describe
 
-- name: Store Ursula revision
+- name: store Ursula revision
   set_fact: ursula_revision={{ ursula_git_describe.stdout }}
 
 # run this last so we only update if run was successful
@@ -87,7 +88,7 @@
   action: template src=etc/motd.tail dest=/etc/motd.tail mode=0644
   changed_when: False
 
-- name: Include stack name in /etc/issue
+- name: include stack name in /etc/issue
   lineinfile: dest=/etc/issue regexp="^{{ stack_env }} OpenStack Node" line="{{ stack_env }} OpenStack Node"
 
 - include: monitoring.yml tags=monitoring,common
