@@ -1,5 +1,4 @@
 ---
-
 - name: pip install ironic
   pip: name='{{ item }}' extra_args='-i {{ openstack.pypi_mirror }}'
   with_items:
@@ -9,14 +8,9 @@
 - name: pip install ironicclient
   pip: name='{{ ironic.client_path }}' extra_args='-i {{ openstack.pypi_mirror }}'
 
-- name: start ironic controller services
-  service: name={{ item }} state=started
-  with_items:
-    - ironic-api
-    - ironic-conductor
-
 - name: restart ironic controller services
   service: name={{ item }} state=restarted
   with_items:
     - ironic-api
     - ironic-conductor
+  when: restart|default('True')
