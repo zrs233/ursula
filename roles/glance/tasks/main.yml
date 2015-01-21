@@ -66,6 +66,7 @@
   with_items:
     - glance-api
     - glance-registry
+  when: database_create.changed or force_sync|default('false')|bool
 
 - name: sync glance database
   command: glance-manage db_sync
