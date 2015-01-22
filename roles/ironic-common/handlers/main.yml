@@ -4,9 +4,11 @@
   with_items:
     - MySQL-python
     - '{{ ironic.path }}'
+  notify: update CA certs
 
 - name: pip install ironicclient
   pip: name='{{ ironic.client_path }}' extra_args='-i {{ openstack.pypi_mirror }}'
+  notify: update CA certs
 
 - name: restart ironic controller services
   service: name={{ item }} state=restarted

@@ -4,3 +4,4 @@ dependencies:
   - role: logging-config
     service: neutron
     logdata: "{{ neutron.logs }}"
+  - role: openstack-source

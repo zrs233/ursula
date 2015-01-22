@@ -1,3 +1,4 @@
 ---
 dependencies:
   - role: monitoring-common
+  - role: openstack-source

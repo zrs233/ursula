@@ -4,3 +4,4 @@ dependencies:
   - role: logging-config
     service: cinder
     logdata: "{{ cinder.logs }}"
+  - role: openstack-source
