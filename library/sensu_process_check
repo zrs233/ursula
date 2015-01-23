@@ -1,35 +1,79 @@
-#!/usr/bin/env ruby
-require 'rubygems'
-require 'antsy'
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 
-args = Antsy.args
-service = args[:service]
-short_service_name = File.basename(service)
-warn_over=args[:warn_over] || 15
-crit_over=args[:crit_over] || 30
+# Copyright 2014, Blue Box Group, Inc.
+# Copyright 2014, Craig Tracey <craigtracey@gmail.com>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
 
-Antsy.fail! "argument 'service' is required" unless service and not service.empty?
+import os
+import traceback
 
-check_fname = "/etc/sensu/conf.d/checks/#{short_service_name}-service.json"
+from hashlib import md5
+from jinja2 import Environment
 
-check = {
-  'checks' => {
-    short_service_name => {
-      'command' => "/etc/sensu/plugins/check-procs.rb -p #{service} -w #{warn_over} -c #{crit_over} -W 1 -C 1",
-      'standalone' => true,
-      'handlers' => [ 'pagerduty' ],
-      'interval' => 30,
-      'notification' => "unexpected number of #{service} processes",
-      'occurrences' => 2
-    }
-  }
-}
+def main():
 
-if File.exists?(check_fname) and (JSON.parse(File.read(check_fname)) == check)
-  Antsy.no_change!
-else
-  File.open(check_fname, 'w') do |f|
-    f.write JSON.pretty_generate(check)
-  end
-  Antsy.changed!
-end
+    module = AnsibleModule(
+        argument_spec=dict(
+            service=dict(default=None, required=True),
+            short_service_name=dict(default='', required=False),
+            warn_over=dict(default=15, required=False),
+            crit_over=dict(default=30, required=False),
+            interval=dict(default=30, required=False),
+            occurrences=dict(default=2, required=False),
+            plugin_dir=dict(default='/etc/sensu/plugins', required=False),
+            check_dir=dict(default='/etc/sensu/conf.d/checks', required=False)
+        )
+    )
+
+    try:
+        changed = False
+        if module.params['short_service_name'] == '':
+            short_service_name = os.path.basename(module.params['service'])
+        check_path = "%s/%s-service.json" % ( module.params['check_dir'], short_service_name)
+        command = "%s/check-procs.rb -p %s -w %s -c %s -W 1 -C 1" % (module.params['plugin_dir'], module.params['service'], module.params['warn_over'], module.params['crit_over'] )
+        notification = "unexpected number of %s processes" % ( module.params['service'] )
+        check=dict({
+            'checks': {
+                short_service_name: {
+                    'command': command,
+                    'standalone': True,
+                    'handlers': [ 'pagerduty' ],
+                    'interval': int(module.params['interval']),
+                    'notification': notification,
+                    'occurrences':  int(module.params['occurrences'])
+                }
+            }
+        })
+
+        if os.path.isfile(check_path):
+            with open(check_path) as fh:
+                if json.load(fh) == check:
+                    module.exit_json(changed=False, result="ok")
+                else:
+                    with open(check_path, "w") as fh:
+                        fh.write(json.dumps(check, indent=4))
+                    module.exit_json(changed=True, result="changed")
+        else:
+            with open(check_path, "w") as fh:
+                fh.write(json.dumps(check, indent=4))
+            module.exit_json(changed=True, result="created")
+    except Exception as e:
+        formatted_lines = traceback.format_exc()
+        module.fail_json(msg="creating the check failed: %s %s" % (e,formatted_lines))
+
+# this is magic, see lib/ansible/module_common.py
+#<<INCLUDE_ANSIBLE_MODULE_COMMON>>
+main()
