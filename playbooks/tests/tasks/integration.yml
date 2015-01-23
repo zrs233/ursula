@@ -25,6 +25,17 @@
            external | awk '/ external / {print $2}' ); nova add-floating-ip
            turtle-stack ${FLOATING_IP}; sleep 60
 
+  - name: nova can create a volume via cinder
+    shell: . /root/stackrc; nova volume-create --display-name=turtle-vol 2
+
+  - name: discover volume id
+    shell: . /root/stackrc; nova volume-list |awk '/turtle-vol/ {print $2}'
+    register: turtle_vol
+
+  - name: nova can attach cinder volume
+    shell: . /root/stackrc; nova volume-attach
+           turtle-stack {{ turtle_vol.stdout }} auto
+
   - name: can ping instance
     shell: . /root/stackrc; TURTLE_IP=$( nova list | awk
            '/turtle-stack/ {print $13}' ); ping -c 5 ${TURTLE_IP}
