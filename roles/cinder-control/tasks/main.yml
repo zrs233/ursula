@@ -8,10 +8,22 @@
     - cinder-api
     - cinder-scheduler
 
+- name: stop cinder services before db sync
+  service: name={{ item }} state=stopped
+  with_items:
+    - cinder-api
+    - cinder-scheduler
+  when: database_create.changed or force_sync|default('false')|bool
+
 - name: sync cinder database
   command: cinder-manage db sync
   when: database_create.changed or force_sync|default('false')|bool
   run_once: true
+  changed_when: true
+  notify: restart cinder services
+  # we want this to always be changed so that it can notify the service restart
+
+- meta: flush_handlers
 
 - name: start cinder controller services
   service: name={{ item }} state=started

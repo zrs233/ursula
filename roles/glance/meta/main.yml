@@ -4,3 +4,4 @@ dependencies:
   - role: logging-config
     service: glance
     logdata: "{{ glance.logs }}"
+  - role: openstack-source

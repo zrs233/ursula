@@ -87,10 +87,17 @@
   notify:
     - restart keystone services
 
+- name: stop keystone service before db sync
+  service: name=keystone state=stopped
+  when: database_create.changed or force_sync|default('false')|bool
+
 - name: sync keystone database
   command: keystone-manage db_sync
   when: database_create.changed or force_sync|default('false')|bool
   run_once: true
+  changed_when: true
+  notify: restart keystone services
+  # we want this to always be changed so that it can notify the service restart
 
 - meta: flush_handlers
 

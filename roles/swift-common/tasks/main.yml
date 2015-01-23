@@ -30,9 +30,11 @@
 
 - name: pip install swifttool
   shell: pip install /opt/stack/swifttool
+  notify: update CA certs
 
 - name: install keystoneclient via pip
   pip: name=python-keystoneclient
+  notify: update CA certs
 
 - name: get swift source repo
   git: |
@@ -48,6 +50,7 @@
 
 - name: pip install swift services
   shell: pip install -i {{ openstack.pypi_mirror }} /opt/stack/swift
+  notify: update CA certs
 
 - name: get swift client source repo
   git: |
@@ -58,6 +61,7 @@
 
 - name: pip install swift client
   shell: pip install -i {{ openstack.pypi_mirror }} /opt/stack/python-swiftclient
+  notify: update CA certs
 
 - name: create swift configuration diectory
   file: dest=/etc/swift state=directory owner=swiftops group=swiftops mode=0755

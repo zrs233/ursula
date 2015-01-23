@@ -61,10 +61,23 @@
   notify:
     - restart glance services
 
+- name: stop glance services before db sync
+  service: name={{ item }} state=stopped
+  with_items:
+    - glance-api
+    - glance-registry
+  when: database_create.changed or force_sync|default('false')|bool
+
 - name: sync glance database
   command: glance-manage db_sync
   when: database_create.changed or force_sync|default('false')|bool
   run_once: true
+  changed_when: true
+  notify:
+    - restart glance services
+  # we want this to always be changed so that it can notify the service restart
+
+- meta: flush_handlers
 
 - name: start glance services
   service: name={{ item }} state=started
