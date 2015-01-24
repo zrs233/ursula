@@ -7,4 +7,7 @@ dependencies:
   - role: openstack-source
     project_name: keystone
     project_rev: "{{ keystone.source.rev }}"
+    # is this even required anymore with Juno?
+    python_requirements:
+      - { name: babel, version: "{{ keystone.babel_version }}" }
     when: openstack_install_method == 'source'
