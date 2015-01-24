@@ -2,62 +2,19 @@
 - name: openstack creds
   template: src=root/stackrc dest=/root/stackrc
 
-- name: keystone-client
-  git: repo={{ openstack.git_mirror }}/python-keystoneclient.git
-       dest=/opt/stack/python-keystoneclient
-       version={{ client.keystoneclient_rev }}
-       update={{ openstack.git_update }}
+- name: install openstack clients
+  pip: name={{ item }}
+  with_items:
+    - python-keystoneclient
+    - python-glanceclient
+    - python-novaclient
+    - python-neutronclient
+    - python-cinderclient
+    - python-heatclient
+    - python-ironicclient
+    - python-swiftclient
   notify:
-    - pip install keystoneclient
-
-- name: keystonemiddleware
-  git: repo={{ openstack.git_mirror }}/keystonemiddleware.git
-       dest=/opt/stack/keystonemiddleware
-       version={{ client.keystonemiddleware_rev }}
-       update={{ openstack.git_update }}
-  notify:
-    - pip install keystonemiddleware
-
-- name: glance-client
-  git: repo={{ openstack.git_mirror }}/python-glanceclient.git
-       dest=/opt/stack/python-glanceclient
-       version={{ client.glanceclient_rev }}
-       update={{ openstack.git_update }}
-  notify:
-    - pip install glanceclient
-
-- name: nova-client
-  git: repo={{ openstack.git_mirror }}/python-novaclient.git
-       dest=/opt/stack/python-novaclient
-       version={{ client.novaclient_rev }}
-       update={{ openstack.git_update }}
-  notify:
-    - pip install novaclient
-
-- name: neutron-client
-  git: repo={{ openstack.git_mirror }}/python-neutronclient.git
-       dest=/opt/stack/python-neutronclient
-       version={{ client.neutronclient_rev }}
-       update={{ openstack.git_update }}
-  notify:
-    - pip install neutronclient
-
-- name: cinder-client
-  git: repo={{ openstack.git_mirror }}/python-cinderclient.git
-       dest=/opt/stack/python-cinderclient
-       version={{ client.cinderclient_rev }}
-       update={{ openstack.git_update }}
-  notify:
-    - pip install cinderclient
-
-- name: heat-client
-  git: repo={{ openstack.git_mirror }}/python-heatclient.git
-       dest=/opt/stack/python-heatclient
-       version={{ client.heatclient_rev }}
-       update={{ openstack.git_update }}
-  notify:
-    - pip install heatclient
-  when: heat.enabled
+    - update ca certs
 
 - name: migrate neutron services script
   template: src=usr/local/bin/migrate_neutron_services
