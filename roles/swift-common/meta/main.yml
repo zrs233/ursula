@@ -3,7 +3,7 @@ dependencies:
   - role: monitoring-common
   - role: openstack-source
     project_name: swift
-    python_requirements: 
+    python_requirements:
       - { name: python-keystoneclient, version: '1.0.0' }
     project_rev: "{{ swift.source.rev }}"
     when: openstack_install_method == 'source'

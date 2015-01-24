@@ -6,7 +6,8 @@ keystone:
   public_workers: 5
 
   source:
-    rev: '5db37331e6ea3b21314d4d47e63fa1505e48285a'
+    rev: '8a7282bebd1ebfb92d9ccd87f85b8490a89da4e0'
+
   package:
     console_scripts:
       - keystone-manage

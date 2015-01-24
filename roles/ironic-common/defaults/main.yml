@@ -24,7 +24,7 @@ ironic:
       - ironic-api
       - ironic-conductor
       - ironic-dbsync
-      - ironic-nova-bm-migrate  
+      - ironic-nova-bm-migrate
       - ironic-rootwrap
 
   logging:

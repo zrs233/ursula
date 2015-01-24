@@ -11,7 +11,7 @@ dependencies:
     python_requirements:
       - { name: babel, version: "{{ keystone.babel_version }}" }
     when: openstack_install_method == 'source'
-  - role: openstack-package 
+  - role: openstack-package
     project_name: keystone
     package_alternatives: "{{ keystone.package.console_scripts }}"
     when: openstack_install_method == 'package'

@@ -14,8 +14,6 @@ glance:
   store_swift: False
 
   source:
-    rev: 'bb48dfc54f592259a73a27218b6d5f657b39294c'
-
   package:
     console_scripts:
       - glance-api
@@ -28,6 +26,7 @@ glance:
       - glance-registry
       - glance-replicator
       - glance-scrubber
+    rev: '0e355462833feeaa6f3124fda4bd5ff7064c8512'
 
   logs:
     - paths:

@@ -14,4 +14,3 @@ dependencies:
     rootwrap: True
     package_alternatives: "{{ nova.package.console_scripts }}"
     when: openstack_install_method == 'package'
-

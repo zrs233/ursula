@@ -13,7 +13,7 @@ neutron:
   alembic_version: 0.7.0
 
   source:
-    rev: 'dbeaa70172bc2f40e587c5e2f62bb28b600b7e25'
+    rev: '679246d7280e9fb374f8db0972b21b3653724c42'
   package:
     console_scripts:
       - neutron-check-nsx-config
