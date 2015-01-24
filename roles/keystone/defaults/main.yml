@@ -12,11 +12,6 @@ keystone:
       - keystone-manage
       - keystone-all
 
-  package:
-    console_scripts:
-      - keystone-manage
-      - keystone-all
-
   logs:
     - paths:
       - /var/log/keystone/keystone-all.log
