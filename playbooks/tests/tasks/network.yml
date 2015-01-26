@@ -2,8 +2,8 @@
 - name: network tests
   hosts: controller[0]
   tasks:
-  - name: migrate neutron services to test-controller-0
-    shell: . /root/stackrc; HOSTNAME=test-controller-0 /usr/local/bin/migrate_neutron_services
+  - name: migrate neutron services to controller 0
+    shell: . /root/stackrc; HOSTNAME={{ ansible_hostname }} /usr/local/bin/migrate_neutron_services
 
   - name: determine Neutron external interface name
     neutron_network: name=external login_tenant_name=admin
