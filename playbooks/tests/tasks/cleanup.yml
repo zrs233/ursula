@@ -6,6 +6,10 @@
     shell: . /root/stackrc; nova delete turtle-stack && sleep 30
     failed_when: False
 
+  - name: clean up test volume
+    shell: . /root/stackrc; cinder delete turtle-vol
+    failed_when: False
+
   - name: cleanup test instance, key-pair and security group
     shell: . /root/stackrc; nova secgroup-delete turtle-sec
     failed_when: False
