@@ -20,15 +20,12 @@
 import os
 import traceback
 
-from hashlib import md5
-from jinja2 import Environment
-
 def main():
 
     module = AnsibleModule(
         argument_spec=dict(
             service=dict(default=None, required=True),
-            short_service_name=dict(default='', required=False),
+            short_service_name=dict(required=False),
             warn_over=dict(default=15, required=False),
             crit_over=dict(default=30, required=False),
             interval=dict(default=30, required=False),
@@ -40,7 +37,7 @@ def main():
 
     try:
         changed = False
-        if module.params['short_service_name'] == '':
+        if not module.params['short_service_name']:
             short_service_name = os.path.basename(module.params['service'])
         check_path = "%s/%s-service.json" % ( module.params['check_dir'], short_service_name)
         command = "%s/check-procs.rb -p %s -w %s -c %s -W 1 -C 1" % (module.params['plugin_dir'], module.params['service'], module.params['warn_over'], module.params['crit_over'] )
