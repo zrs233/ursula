@@ -67,8 +67,16 @@ options:
    image_id:
      description:
         - The id of the image that has to be cloned
-     required: true
+     required: false
      default: None
+   image_name:
+     description:
+        - The name of the image that has to be cloned
+     required: false
+     default: None
+   image_exclude:
+     description:
+        - Text to use to filter image names, for the case, such as HP, where there are multiple image names matching the common identifying portions. image_exclude is a negative match filter - it is text that may not exist in the image name. Defaults to "(deprecated)"
    flavor_id:
      description:
         - The id of the flavor in which the new VM has to be created
@@ -147,8 +155,20 @@ def _delete_server(module, nova):
     module.fail_json(msg = "Timed out waiting for server to get deleted, please check manually")
 
 
+def _get_image_id(module, nova):
+    if module.params['image_name']:
+        for image in nova.images.list():
+            if (module.params['image_name'] in image.name and (
+                    not module.params['image_exclude']
+                    or module.params['image_exclude'] not in image.name)):
+                return image.id
+        module.fail_json(msg = "Error finding image id from name(%s)" % module.params['image_name'])
+    return module.params['image_id']
+
+
 def _create_server(module, nova):
-    bootargs = [module.params['name'], module.params['image_id'], module.params['flavor_id']]
+    image_id = _get_image_id(module, nova)
+    bootargs = [module.params['name'], image_id, module.params['flavor_id']]
     bootkwargs = {
                 'nics' : module.params['nics'],
                 'meta' : module.params['meta'],
@@ -157,6 +177,8 @@ def _create_server(module, nova):
     }
     if not module.params['key_name']:
         del bootkwargs['key_name']
+    if module.params['availability_zone']:
+        bootkwargs['availability_zone'] = module.params['availability_zone']
     try:
         server = nova.servers.create(*bootargs, **bootkwargs)
         server = nova.servers.get(server.id)
@@ -217,9 +239,12 @@ def main():
         region_name                     = dict(default=None),
         name                            = dict(required=True),
         image_id                        = dict(default=None),
+        image_name                      = dict(default=None),
+        image_exclude                   = dict(default='(deprecated)'),
         flavor_id                       = dict(default=1),
         key_name                        = dict(default=None),
         security_groups                 = dict(default='default'),
+        availability_zone               = dict(default=None),
         nics                            = dict(default=None),
         meta                            = dict(default=None),
         wait                            = dict(default='yes', choices=['yes', 'no']),
@@ -255,8 +280,8 @@ def main():
     except Exception as e:
         module.fail_json( msg = "Error in authenticating to nova: %s" % e.message)
     if module.params['state'] == 'present':
-        if not module.params['image_id']:
-            module.fail_json( msg = "Parameter 'image_id' is required if state == 'present'")
+        if not module.params['image_id'] and not module.params['image_name']:
+            module.fail_json( msg = "Parameter 'image_id' or 'image_name' is required if state == 'present'")
         else:
             _get_server_state(module, nova)
             _create_server(module, nova)
