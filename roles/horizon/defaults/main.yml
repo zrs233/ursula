@@ -2,6 +2,8 @@
 horizon:
   source:
     rev: e5a9037d2ff5f2fbd5bde8e073e90b8d290994d3
+
   logo_url: https://s3.amazonaws.com/horizon-branding/bluebox-u1.1.x.png
   favicon_url: https://s3.amazonaws.com/horizon-branding/bluebox.ico
   keystone_api_version: 2.0
+  virtualenv: /opt/stack/horizon/.venv

@@ -1,11 +1,11 @@
 ---
-- include: venv.yml
-
-- name: compress horizon assets
-  command: sudo -u www-data tools/with_venv.sh ./manage.py compress chdir=/opt/stack/horizon/
+# not really a "horizon service" but horizon is the outlier
+- name: restart horizon services
+  restart_if_present: service=apache2
 
 - name: restart apache
-  service: name=apache2 state=restarted
+  restart_if_present: service=apache2
 
-- name: update CA certs
-  command: update-ca-certificates
+- name: compress horizon assets
+  command: sudo -u www-data tools/with_venv.sh ./manage.py compress
+           chdir=/opt/stack/horizon/
