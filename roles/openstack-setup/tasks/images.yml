@@ -6,7 +6,8 @@
                 disk_format=qcow2
                 auth_url=https://{{ endpoints.main }}:5001/v2.0/
                 login_tenant_name=admin
-                login_password={{ secrets.admin_password }}
+                login_username=provider_admin
+                login_password={{ secrets.provider_admin_password }}
                 is_public=yes
                 timeout=12000
   with_items: glance.images

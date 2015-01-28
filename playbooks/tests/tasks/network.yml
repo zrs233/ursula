@@ -6,8 +6,10 @@
     shell: . /root/stackrc; HOSTNAME={{ ansible_hostname }} /usr/local/bin/migrate_neutron_services
 
   - name: determine Neutron external interface name
-    neutron_network: name=external login_tenant_name=admin
-                     login_password={{ secrets.admin_password }}
+    neutron_network: name=external
+                     login_tenant_name=admin
+                     login_username=provider_admin
+                     login_password={{ secrets.provider_admin_password }}
                      {% if client.self_signed_cert -%}
                      cacert=/opt/stack/ssl/openstack.crt
                      {% endif -%}

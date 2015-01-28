@@ -4,8 +4,8 @@
     cinder_volume_type
       volume_type={{ item }}
       auth_url=https://{{ endpoints.main }}:5001/v2.0/
-      login_username=admin
-      login_password={{ secrets.admin_password }}
+      login_username=provider_admin
+      login_password={{ secrets.provider_admin_password }}
       login_tenant_name=admin
   with_items: cinder.volume_types
 
@@ -19,7 +19,7 @@
       key_size={{ item.key_size }}
       control_location={{ item.control_location }}
       auth_url=https://{{ endpoints.main }}:5001/v2.0/
-      login_username=admin
-      login_password={{ secrets.admin_password }}
+      login_username=provider_admin
+      login_password={{ secrets.provider_admin_password }}
       login_tenant_name=admin
   with_items: cinder.encrypted_volume_types
