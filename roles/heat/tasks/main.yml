@@ -18,6 +18,15 @@
     - heat-api-cfn
     - heat-engine
 
+- name: heat config
+  template: src=etc/heat/{{ item }} dest=/etc/heat/{{ item }} mode=0644
+  with_items:
+    - heat.conf
+    - policy.json
+    - api-paste.ini
+  notify:
+    - restart heat services
+
 - name: stop heat services before db sync
   service: name={{ item }} state=stopped
   when: database_create.changed or force_sync|default('false')|bool
@@ -43,15 +52,6 @@
     - heat-api
     - heat-api-cfn
     - heat-engine
-
-- name: heat config
-  template: src=etc/heat/{{ item }} dest=/etc/heat/{{ item }} mode=0644
-  with_items:
-    - heat.conf
-    - policy.json
-    - api-paste.ini
-  notify:
-    - restart heat services
 
 - include: monitoring.yml tags=monitoring,common
 
