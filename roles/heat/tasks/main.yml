@@ -53,15 +53,6 @@
     - heat-api-cfn
     - heat-engine
 
-- name: heat config
-  template: src=etc/heat/{{ item }} dest=/etc/heat/{{ item }} mode=0644
-  with_items:
-    - heat.conf
-    - policy.json
-    - api-paste.ini
-  notify:
-    - restart heat services
-
 - include: monitoring.yml tags=monitoring,common
 
 - name: set up log rotation for heat
