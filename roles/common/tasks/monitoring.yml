@@ -91,12 +91,12 @@
 
 - name: vmstat metrics check
   sensu_metrics_check: name=vmstat-metrics plugin=vmstat-metrics.rb
-                       args='--scheme stats.{{ inventory_hostname  }}'
+                       args='--scheme {{ monitoring.graphite.host_prefix }}'
   notify: restart sensu-client
 
 - name: load metrics check
   sensu_metrics_check: name=load-metrics plugin=load-metrics.rb
-                       args='--scheme stats.{{ inventory_hostname  }}'
+                       args='--scheme {{ monitoring.graphite.host_prefix }}'
   notify: restart sensu-client
 
 - name: syslog check
@@ -116,14 +116,26 @@
   sensu_check: name=nbd-not-unique plugin=check-nbd-nonunique.sh
   notify: restart sensu-client
 
+- name: hostname matches ansible_nodename
+  sensu_check: name=hostname-matches-ansible_nodename plugin=check-hostname.sh
+               args="-v {{ ansible_nodename }} -k ansible_nodename"
+               interval=3600
+  notify: restart sensu-client
+
+- name: hostname matches ansbile inventory name
+  sensu_check: name=hostname-matches-inventory_hostname plugin=check-hostname.sh
+               args="-v {{ inventory_hostname }} -k inventory_hostname"
+               interval=3600
+  notify: restart sensu-client
+
 - name: memory metrics check
   sensu_metrics_check: name=memory-metrics plugin=memory-metrics.rb
-                       args='--scheme stats.{{ inventory_hostname  }}'
+                       args='--scheme {{ monitoring.graphite.host_prefix }}'
   notify: restart sensu-client
 
 - name: network metrics check
   sensu_metrics_check: name=network-metrics plugin=metrics-net.rb
-                       args='--scheme stats.{{ inventory_hostname  }}'
+                       args='--scheme {{ monitoring.graphite.host_prefix }}'
   notify: restart sensu-client
 
 - name: log files greater than 1gb check

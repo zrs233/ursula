@@ -2,3 +2,17 @@
 - name: neutron process check
   sensu_process_check: service=neutron-server
   notify: restart sensu-client
+
+- name: neutron free fips check
+  sensu_check: name=check-neutron-free-fips plugin=check-neutron-fip.py
+               args="--crit 2 --warn 5"
+               prefix='{{ monitoring.cluster_prefix }}'
+               interval=10
+  notify: restart sensu-client
+
+- name: neutron free fips metrics check
+  sensu_metrics_check: name=neutron-free-fips-metric plugin=metrics-neutron-fip.py
+                       args='--scheme {{ monitoring.graphite.cluster_prefix }}.neutron'
+                       prefix='{{ monitoring.cluster_prefix }}'
+                       interval=10
+  notify: restart sensu-client
