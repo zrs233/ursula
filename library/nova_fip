@@ -139,7 +139,7 @@ def _allocate_address(nova, pool):
     floating_ips = nova.floating_ips.list()
     for fip in floating_ips:
         # allocated but not assigned
-        if fip.pool == pool and fip.instance_id is None:
+        if fip.pool == pool and fip.instance_id is None and fip.fixed_ip is None:
             address = fip
 
     # return an available floating ip
