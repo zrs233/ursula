@@ -5,4 +5,3 @@ openstack_source:
   project_rev: "{{ project_rev|default('master') }}"
   git_update: no
   rootwrap: "{{ rootwrap|default(False)|bool }}"
-  virtualenv: "{{ virtualenv|default(False)|bool }}"

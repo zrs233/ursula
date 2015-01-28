@@ -10,5 +10,5 @@ dependencies:
     additional_handlers: [ "compress horizon assets" ]
     when: openstack_install_method == 'source'
   - role: openstack-package
-    project_name: horizon 
+    project_name: horizon
     when: openstack_install_method == 'package'
