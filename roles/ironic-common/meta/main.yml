@@ -3,4 +3,5 @@ dependencies:
   - role: openstack-source
     project_name: ironic
     project_rev: "{{ ironic.source.rev }}"
+    rootwrap: True
     when: openstack_install_method == 'source'
