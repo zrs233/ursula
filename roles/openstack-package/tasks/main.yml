@@ -23,6 +23,10 @@
         state=link
   when: symlink_exists.rc != 0
 
+- name: ensure project config directory exists
+  file: name="/etc/{{ project_name }}" state=directory
+  when: openstack_package.rootwrap|bool
+
 - name: stat rootwrap.d
   stat: path="/etc/{{ project_name }}/rootwrap.d"
   register: st
