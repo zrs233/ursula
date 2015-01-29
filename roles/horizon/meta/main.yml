@@ -9,3 +9,6 @@ dependencies:
       - { name: python-memcached, version: '1.48' }
     additional_handlers: [ "compress horizon assets" ]
     when: openstack_install_method == 'source'
+  - role: openstack-package
+    project_name: horizon 
+    when: openstack_install_method == 'package'

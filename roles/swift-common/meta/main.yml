@@ -7,3 +7,7 @@ dependencies:
       - { name: python-keystoneclient, version: '1.0.0' }
     project_rev: "{{ swift.source.rev }}"
     when: openstack_install_method == 'source'
+  - role: openstack-package
+    project_name: swift
+    package_alternatives: "{{ swift.package.console_scripts }}"
+    when: openstack_install_method == 'package'

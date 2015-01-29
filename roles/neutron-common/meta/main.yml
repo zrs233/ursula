@@ -11,3 +11,8 @@ dependencies:
       - { name: alembic, version: "{{ neutron.alembic_version }}" }
     rootwrap: True
     when: openstack_install_method == 'source'
+  - role: openstack-package
+    project_name: neutron
+    rootwrap: True
+    package_alternatives: "{{ neutron.package.console_scripts }}"
+    when: openstack_install_method == 'package'

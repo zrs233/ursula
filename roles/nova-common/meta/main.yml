@@ -9,3 +9,9 @@ dependencies:
     project_rev: "{{ nova.source.rev }}"
     rootwrap: True
     when: openstack_install_method == 'source'
+  - role: openstack-package
+    project_name: nova
+    rootwrap: True
+    package_alternatives: "{{ nova.package.console_scripts }}"
+    when: openstack_install_method == 'package'
+

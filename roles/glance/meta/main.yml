@@ -9,3 +9,7 @@ dependencies:
     project_name: glance
     project_rev: "{{ glance.source.rev }}"
     when: openstack_install_method == 'source'
+  - role: openstack-package
+    project_name: glance
+    package_alternatives: "{{ glance.package.console_scripts }}"
+    when: openstack_install_method == 'package'

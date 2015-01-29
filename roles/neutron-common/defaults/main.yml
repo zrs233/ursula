@@ -14,6 +14,37 @@ neutron:
 
   source:
     rev: 'dbeaa70172bc2f40e587c5e2f62bb28b600b7e25'
+  package:
+    console_scripts:
+      - neutron-check-nsx-config
+      - neutron-cisco-cfg-agent
+      - neutron-db-manage
+      - neutron-debug
+      - neutron-dhcp-agent
+      - neutron-hyperv-agent
+      - neutron-ibm-agent
+      - neutron-l3-agent
+      - neutron-lbaas-agent
+      - neutron-linuxbridge-agent
+      - neutron-metadata-agent
+      - neutron-metering-agent
+      - neutron-mlnx-agent
+      - neutron-nec-agent
+      - neutron-netns-cleanup
+      - neutron-ns-metadata-proxy
+      - neutron-nsx-manage
+      - neutron-nvsd-agent
+      - neutron-ofagent-agent
+      - neutron-openvswitch-agent
+      - neutron-ovs-cleanup
+      - neutron-rootwrap
+      - neutron-rootwrap-xen-dom0
+      - neutron-ryu-agent
+      - neutron-sanity-check
+      - neutron-server
+      - neutron-sriov-nic-agent
+      - neutron-usage-audit
+      - neutron-vpn-agent
 
   logs:
     - paths:

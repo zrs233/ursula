@@ -4,6 +4,16 @@ heat:
 
   source:
     rev: 'cbef40647e35cc065e36ee86b4ca1305676f4c1b'
+  package:
+    console_scripts:
+      - heat-api
+      - heat-api-cfn
+      - heat-api-cloudwatch
+      - heat-db-setup
+      - heat-engine
+      - heat-keystone-setup
+      - heat-keystone-setup-domain
+      - heat-manage
 
   logs:
     - paths:

@@ -7,6 +7,10 @@ keystone:
 
   source:
     rev: '5db37331e6ea3b21314d4d47e63fa1505e48285a'
+  package:
+    console_scripts:
+      - keystone-manage
+      - keystone-all
 
   logs:
     - paths:

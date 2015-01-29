@@ -5,3 +5,7 @@ dependencies:
     project_rev: "{{ ironic.source.rev }}"
     rootwrap: True
     when: openstack_install_method == 'source'
+  - role: openstack-package
+    project_name: ironic
+    package_alternatives: "{{ ironic.package.console_scripts }}"
+    when: openstack_install_method == 'package'

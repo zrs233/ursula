@@ -16,6 +16,19 @@ glance:
   source:
     rev: 'bb48dfc54f592259a73a27218b6d5f657b39294c'
 
+  package:
+    console_scripts:
+      - glance-api
+      - glance-cache-cleaner
+      - glance-cache-manage
+      - glance-cache-prefetcher
+      - glance-cache-pruner
+      - glance-control
+      - glance-manage
+      - glance-registry
+      - glance-replicator
+      - glance-scrubber
+
   logs:
     - paths:
         - /var/log/glance/glance-api.log

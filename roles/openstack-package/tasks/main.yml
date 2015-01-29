@@ -1,0 +1,43 @@
+---
+- name: add openstack package repo key
+  apt_key: url='{{ openstack_package.repo_key_url }}'
+
+- name: add openstack package repo
+  apt_repository: repo='{{ openstack_package.repo }}'
+
+- name: "install {{ project_name }} package"
+  apt: pkg="{{ package_name|default(openstack_package.package_name) }}" 
+       update_cache=yes cache_valid_time=3600
+
+- name: setup openstack current base path
+  file: dest=/opt/openstack state=directory
+
+- name: test whether current {{ project_name }} symlink exists
+  shell: 'test -h /opt/openstack/current'
+  register: symlink_exists
+  ignore_errors: True
+
+- name: setup current symlink if it doesnt exist
+  file: src="/opt/bbc/openstack-{{ openstack_package_version }}"
+        dest=/opt/openstack/current
+        state=link
+  when: symlink_exists.rc != 0
+
+- name: stat rootwrap.d
+  stat: path="/etc/{{ project_name }}/rootwrap.d"
+  register: st
+  when: openstack_package.rootwrap|bool
+
+- name: remove rootwrap.d if a directory
+  file: dest="/etc/{{ project_name }}/rootwrap.d" state=absent
+  when: openstack_package.rootwrap|bool and st.stat.isdir|bool
+
+- name: "setup {{ project_name }} rootwrap"
+  file: src="/opt/openstack/current/{{ project_name }}/etc/{{ project_name }}/rootwrap.d"
+        dest="/etc/{{ project_name }}/rootwrap.d" state=link
+  when: openstack_package.rootwrap|bool
+
+- name: update-alternatives
+  shell: update-alternatives --install /usr/local/bin/{{ item }} {{ item }} /opt/openstack/current/{{ project_name }}/bin/{{ item }} 10 --force
+  with_items: package_alternatives
+  when: package_alternatives is defined
