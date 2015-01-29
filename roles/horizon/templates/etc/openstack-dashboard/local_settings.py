@@ -243,4 +243,7 @@ STATIC_ROOT='/opt/bbc/openstack-{{ openstack_package_version }}/horizon/static'
 STATIC_ROOT='/opt/stack/horizon/static'
 {% endif %}
 STATICFILES_DIRS.append(('/etc/openstack-dashboard/static'))
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8e85d9f... Update Horizon to play nice with packaging
