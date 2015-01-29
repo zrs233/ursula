@@ -7,6 +7,17 @@ cinder:
 
   source:
     rev: '7b1d7a31335bd8723551c9af5c270927ad830c3f'
+  package:
+    console_scripts:
+      - cinder-all
+      - cinder-api
+      - cinder-backup
+      - cinder-manage
+      - cinder-rootwrap
+      - cinder-rtstool
+      - cinder-scheduler
+      - cinder-volume
+      - cinder-volume-usage-audit
 
   package:
     console_scripts:

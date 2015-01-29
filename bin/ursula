@@ -89,7 +89,7 @@ process_opts() {
 }
 
 set_vars() {
-  PREDEPLOY_PLAYBOOK=${URSULA_ENV}/playbooks/predeploy.yml
+  #PREDEPLOY_PLAYBOOK=${URSULA_ENV}/playbooks/predeploy.yml
   POSTDEPLOY_PLAYBOOK=${URSULA_ENV}/playbooks/postdeploy.yml
   HOSTS=${URSULA_ENV}/hosts
   SSH_CONFIG=${URSULA_ENV}/ssh_config
