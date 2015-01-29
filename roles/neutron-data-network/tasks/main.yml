@@ -18,6 +18,18 @@
 - include: igmp-router.yml
   when: neutron.plugin == 'ml2' and 'vxlan' in neutron.tunnel_types
 
+- name: assert kernel supports vxlan
+  command: modinfo -F version vxlan
+  changed_when: false
+  when: "'vxlan' in neutron.tunnel_types"
+
+- name: assert iproute2 supports vxlan
+  command: ip link add type vxlan help
+  register: iproute_out
+  changed_when: false
+  failed_when: iproute_out.rc == 255
+  when: "'vxlan' in neutron.tunnel_types"
+
 - name: set ovs data path agent fact
   set_fact: neutron_data_path_agent=neutron-openvswitch-agent
   when: neutron.plugin == 'ovs'
