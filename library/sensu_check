@@ -1,83 +1,95 @@
-#!/usr/bin/env ruby
-require 'rubygems'
-require 'antsy'
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 
-def set_arg_to_bool(var, default = true)
-  if var == 'false' || var == false
-    return false
-  elsif var == 'true' || var == true
-    return true
-  end
-  default
-end
+# Copyright 2014, Blue Box Group, Inc.
+# Copyright 2014, Craig Tracey <craigtracey@gmail.com>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
 
-# defaults
-INTERVAL = 30
+import os
+import traceback
 
-args = Antsy.args
+from hashlib import md5
+from jinja2 import Environment
 
-name         = args[:name]
-use_sudo     = set_arg_to_bool(args[:use_sudo], false)
-auto_resolve = set_arg_to_bool(args[:auto_resolve], true)
-handle       = set_arg_to_bool(args[:handle], true)
-interval     = args[:interval] || INTERVAL
-occurrences  = args[:occurrences] || 2
-plugin       = args[:plugin]
-plugin_args  = args[:args]
-prefix       = args[:prefix]
-env_vars     = args[:env_vars]
-plugin_dir   = args[:plugin_dir] || '/etc/sensu/plugins'
-check_dir    = args[:check_dir] || '/etc/sensu/conf.d/checks'
+def main():
 
-# parse_env_vars works around Ansible disallowing '='
-# in string arguments, instead environmental variables can be
-# passed in using comma separated string, with a colon supplanting
-# the equals sign
-# e.g. env_vars=PATH:/home/foo,SHELL:/bin/bash
-def parse_env_vars(env_vars)
-  output = []
-  vars = env_vars.split(',')
-  vars.each do |v|
-    output << v.gsub(':','=')
-  end
-  output.join(' ')
-end
+    module = AnsibleModule(
+        argument_spec=dict(
+            name=dict(default=None, required=True),
+            use_sudo=dict(required=False, choices=BOOLEANS, default=False),
+            handle=dict(required=False, choices=BOOLEANS, default=True),
+            auto_resolve=dict(required=False, choices=BOOLEANS, default=True),
+            interval=dict(required=False, default=30),
+            occurrences=dict(required=False, default=2),
+            plugin=dict(required=True),
+            args=dict(required=False, default=''),
+            prefix=dict(required=False,default=''),
+            env_vars=dict(required=False,default=''),
+            command=dict(required=False,default=''),
+            handler=dict(required=False,default='pagerduty'),
+            plugin_dir=dict(default='/etc/sensu/plugins', required=False),
+            check_dir=dict(default='/etc/sensu/conf.d/checks', required=False)
+        )
+    )
 
-plugin_path = "#{plugin_dir}/#{plugin}"
-check_path = "/#{check_dir}/#{name}.json"
+    try:
+        changed = False
+        plugin_path = '%s/%s' % (module.params['plugin_dir'], module.params['plugin'])
+        check_path = '%s/%s.json' % (module.params['check_dir'], module.params['name'])
+        command = module.params['command']
+        if not command:
+            command = '%s %s' % (plugin_path, module.params['args'])
+            if module.params['env_vars']:
+                env_vars = module.params['env_vars'].replace(":","=").replace(","," ")
+                command = '%s %s' % (env_vars, command)
+            if module.params['prefix']:
+                command = '%s %s' % (module.params['prefix'], module.params['command'])
+            if module.params['use_sudo']:
+                command = "sudo %s" % (command)
+        notification = '%s check failed' % (module.params['name'])
+        check=dict({
+            'checks': {
+                module.params['name']: {
+                    'command': command,
+                    'standalone': True,
+                    'handlers': [ module.params['handler'] ],
+                    'interval': int(module.params['interval']),
+                    'notification': notification,
+                    'occurrences': int(module.params['occurrences']),
+                    'auto_resolve': module.params['auto_resolve'],
+                    'handle': module.params['handle']
+                }
+            }
+        })
 
-# if command is not specified via args then generate it
-command = args[:command] || ''
-if command.empty?
-  command = "#{plugin_path} #{plugin_args}"
-  command = "#{parse_env_vars(env_vars)} #{command}" if env_vars
-  command = "#{prefix} #{command}" if prefix
-  command = "sudo #{command}" if use_sudo
-end
+        if os.path.isfile(check_path):
+            with open(check_path) as fh:
+                if json.load(fh) == check:
+                    module.exit_json(changed=False, result="ok")
+                else:
+                    with open(check_path, "w") as fh:
+                        fh.write(json.dumps(check, indent=4))
+                    module.exit_json(changed=True, result="changed")
+        else:
+            with open(check_path, "w") as fh:
+                fh.write(json.dumps(check, indent=4))
+            module.exit_json(changed=True, result="created")
+    except Exception as e:
+        formatted_lines = traceback.format_exc()
+        module.fail_json(msg="creating the check failed: %s %s" % (e,formatted_lines))
 
-Antsy.fail! "argument 'name' is required" unless name and not name.empty?
-Antsy.fail! "argument 'plugin' or 'command' is required" unless command and not command.empty?
-
-check = {
-  'checks' => {
-    name => {
-      'command' => command,
-      'standalone' => true,
-      'handlers' => [ 'pagerduty' ],
-      'interval' => interval.to_i,
-      'notification' => "#{name} check failed",
-      'occurrences' => occurrences.to_i,
-      'auto_resolve' => auto_resolve,
-      'handle' => handle
-    }
-  }
-}
-
-if File.exists?(check_path) and (JSON.parse(File.read(check_path)) == check)
-  Antsy.no_change!
-else
-  File.open(check_path, 'w') do |f|
-    f.write JSON.pretty_generate(check)
-  end
-  Antsy.changed!
-end
+# this is magic, see lib/ansible/module_common.py
+#<<INCLUDE_ANSIBLE_MODULE_COMMON>>
+main()
