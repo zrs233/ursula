@@ -27,6 +27,18 @@ glance:
       - glance-replicator
       - glance-scrubber
     rev: '0e355462833feeaa6f3124fda4bd5ff7064c8512'
+  package:
+    console_scripts:
+      - glance-api
+      - glance-cache-cleaner
+      - glance-cache-manage
+      - glance-cache-prefetcher
+      - glance-cache-pruner
+      - glance-control
+      - glance-manage
+      - glance-registry
+      - glance-replicator
+      - glance-scrubber
 
   logs:
     - paths:

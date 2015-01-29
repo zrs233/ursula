@@ -6,7 +6,7 @@
   apt_repository: repo='{{ openstack_package.repo }}'
 
 - name: "install {{ project_name }} package"
-  apt: pkg="{{ package_name|default(openstack_package.package_name) }}" 
+  apt: pkg="{{ package_name|default(openstack_package.package_name) }}"
        update_cache=yes cache_valid_time=3600
 
 - name: setup openstack current base path

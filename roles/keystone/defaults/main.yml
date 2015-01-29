@@ -7,6 +7,10 @@ keystone:
 
   source:
     rev: '8a7282bebd1ebfb92d9ccd87f85b8490a89da4e0'
+  package:
+    console_scripts:
+      - keystone-manage
+      - keystone-all
 
   package:
     console_scripts:
