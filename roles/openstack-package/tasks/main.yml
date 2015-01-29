@@ -30,7 +30,7 @@
 
 - name: remove rootwrap.d if a directory
   file: dest="/etc/{{ project_name }}/rootwrap.d" state=absent
-  when: openstack_package.rootwrap|bool and st.stat.isdir|bool
+  when: openstack_package.rootwrap|bool and st.stat is defined and st.stat.isdir
 
 - name: "setup {{ project_name }} rootwrap"
   file: src="/opt/openstack/current/{{ project_name }}/etc/{{ project_name }}/rootwrap.d"

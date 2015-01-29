@@ -5,7 +5,7 @@ country_code: US
 
 #openstack_install_method: 'source'
 openstack_install_method: 'package'
-openstack_package_version: '10.0-bbc33'
+openstack_package_version: '10.0-bbc34'
 
 primary_interface: 'ansible_eth0'
 primary_ip: "{{ hostvars[inventory_hostname][primary_interface]['ipv4']['address'] }}"
