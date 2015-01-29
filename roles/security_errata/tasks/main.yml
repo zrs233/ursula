@@ -6,3 +6,6 @@
   - openssl
   notify: reload haproxy
   tags: CVE-2014-0160
+
+- include: CVE-2015-0235.yml
+  tags: CVE-2015-0235
