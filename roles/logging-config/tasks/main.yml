@@ -1,3 +1,4 @@
 ---
 - name: install log template
   template: src=etc/logstash-forwarder.d/template.conf dest=/etc/logstash-forwarder.d/{{ service }}.conf
+  notify: restart logstash-forwarder
