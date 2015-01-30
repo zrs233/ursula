@@ -4,13 +4,13 @@
   - name: migrate neutron services to test-controller-0
     shell: . /root/stackrc; HOSTNAME=test-controller-0 /usr/local/bin/migrate_neutron_services
   - name: determine Neutron external interface name
-    action: neutron_network
-      name=external
-      login_tenant_name=admin
-      login_password={{ secrets.admin_password }}
-      {% if client.self_signed_cert -%}
-        cacert=/opt/stack/ssl/openstack.crt
-      {% endif -%}
+    neutron_network: name=external
+                     login_tenant_name=admin
+                     login_username=provider_admin
+                     login_password={{ secrets.provider_admin_password }}
+                     {% if client.self_signed_cert -%}
+                     cacert=/opt/stack/ssl/openstack.crt
+                     {% endif -%}
     register: result
   - set_fact: neutron_external_interface=brq{{ result.id|truncate(length=11,killwords=true,end='') }}
   - shell: sed -i.bak s/br-ex/{{ neutron_external_interface }}/g /etc/network/interfaces.d/br-ex.cfg

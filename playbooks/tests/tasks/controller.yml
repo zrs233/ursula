@@ -55,7 +55,7 @@
   - name: iptables lets ssh in from outside
     shell: ufw status verbose | egrep '^22/tcp                     ALLOW IN    Anywhere'
   - name: all backends are up in haproxy
-    shell: curl -k -s -u admin:{{ secrets.admin_password }} https://127.0.0.1/haproxy_stats\;csv | awk '/DOWN/ {print;ec=1} END{exit ec}'
+    shell: curl -k -s -u provider_admin:{{ secrets.provider_admin_password }} https://127.0.0.1/haproxy_stats\;csv | awk '/DOWN/ {print;ec=1} END{exit ec}'
 
 - hosts: controller[0]
   tasks:
