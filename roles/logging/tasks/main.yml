@@ -2,8 +2,26 @@
 - name: create logstash user
   user: name=logstash comment=logstash shell=/bin/false system=yes home=/opt/logstash-forwarder
 
+- name: install bbg openstack repo key
+  apt_key: url=http://apt.openstack.blueboxgrid.com/ubuntu/ursula-apt.gpg.key
+  when: ansible_distribution_version == "12.04"
+
+- name: install bbg openstack repo
+  apt_repository: repo='deb http://apt.openstack.blueboxgrid.com/ubuntu/ precise main' update_cache=yes
+  when: ansible_distribution_version == "12.04"
+
 - name: install logstash-forwarder
   apt: pkg=logstash-forwarder
+  when: ansible_distribution_version == "12.04"
+
+- name: download logstash
+  get_url: url=http://repo.openstack.blueboxgrid.com/ubuntu/pool/main/l/logstash-forwarder/logstash-forwarder_{{ logging.version }}_amd64.deb
+           dest=/tmp/logstash-forwarder_{{ logging.version }}_amd64.deb
+  when: ansible_distribution_version == "14.04"
+
+- name: install logstash
+  apt: deb=/tmp/logstash-forwarder_{{ logging.version }}_amd64.deb
+  when: ansible_distribution_version == "14.04"
 
 - name: install logstash-forwarder service
   copy: src=etc/init/logstash-forwarder.conf dest=/etc/init/logstash-forwarder.conf mode=0644
