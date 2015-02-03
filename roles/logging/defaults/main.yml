@@ -1,53 +1,12 @@
-rsyslog:
+logging:
   follow:
     enabled: true
-    mode: polling
-    poll_interval: 10
-    logs:
-      cinder-api: /var/log/cinder/cinder-api.log
-      cinder-manage: /var/log/cinder/cinder-manage.log
-      cinder-schedule: /var/log/cinder/cinder-scheduler.log
-      glance-api: /var/log/glance/glance-api.log
-      glance-manage: /var/log/glance/glance-manage.log
-      glance-registry: /var/log/glance/glance-registry.log
-      heat-api: /var/log/heat/heat-api.log
-      heat-engine: /var/log/heat/heat-engine.log
-      heat-manage: /var/log/heat/heat-manage.log
-      keystone-all: /var/log/keystone/keystone-all.log
-      keystone-manage: /var/log/keystone/keystone-manage.log
-      neutron-dhcp-agent: /var/log/neutron/neutron-dhcp-agent.log
-      neutron-l3-agent: /var/log/neutron/neutron-l3-agent.log
-      neutron-linuxbridge-agent: /var/log/neutron/neutron-linuxbridge-agent.log
-      neutron-metadata-agent: /var/log/neutron/neutron-metadata-agent.log
-      neutron-openvswitch-agent: /var/log/neutron/neutron-openvswitch-agent.log
-      neutron-server: /var/log/neutron/neutron-server.log
-      nova-api: /var/log/nova/nova-api.log
-      nova-cert: /var/log/nova/nova-cert.log
-      nova-compute: /var/log/nova/nova-compute.log
-      nova-conductor: /var/log/nova/nova-conductor.log
-      nova-consoleauth: /var/log/nova/nova-consoleauth.log
-      nova-manage: /var/log/nova/nova-manage.log
-      nova-scheduler: /var/log/nova/nova-scheduler.log
-      tgt: /var/log/upstart/tgt.log
+    logs: []
   forward:
     host: null
-    port: 514
-    config:
-      ActionResumeInterval: 10
-      ActionQueueSize: 100000
-      ActionQueueDiscardMark: 97500
-      ActionQueueHighWaterMark: 80000
-      ActionQueueType: LinkedList
-      ActionQueueFileName: rsyslogforwardqueue
-      ActionQueueCheckpointInterval: 100
-      ActionQueueMaxDiskSpace: 2g
-      ActionResumeRetryCount: -1
-      ActionQueueSaveOnShutdown: on
-      ActionQueueTimeoutEnqueue: 10
-      ActionQueueDiscardSeverity: 0
+    port: 4560
     tls:
       enabled: true
-      authmode: x509/certvalid
       ca_cert: |
         Blue Box Group CA certificate
         Replace this with your root CA or server cert
