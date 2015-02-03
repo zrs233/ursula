@@ -12,3 +12,40 @@ nova:
   enable_ssh: False
   novnc_repo: https://github.com/kanaka/noVNC.git
   novnc_rev: 292f6a5d
+
+  logs:
+    - paths:
+        - /var/log/nova/nova-api.log
+      fields:
+        type: openstack
+        tags: nova,nova-api
+    - paths:
+        - /var/log/nova/nova-cert.log
+      fields:
+        type: openstack
+        tags: nova,nova-cert
+    - paths:
+        - /var/log/nova/nova-compute.log
+      fields:
+        type: openstack
+        tags: nova,nova-compute
+    - paths:
+        - /var/log/nova/nova-conductor.log
+      fields:
+        type: openstack
+        tags: nova,nova-conductor
+    - paths:
+        - /var/log/nova/nova-consoleauth.log
+      fields:
+        type: openstack
+        tags: nova,nova-consoleauth
+    - paths:
+        - /var/log/nova/nova-manage.log
+      fields:
+        type: openstack
+        tags: nova,nova-manage
+    - paths:
+        - /var/log/nova/nova-scheduler.log
+      fields:
+        type: openstack
+        tags: nova,nova-scheduler

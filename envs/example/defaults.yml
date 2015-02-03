@@ -333,3 +333,17 @@ common:
 
 heat:
   enabled: False
+
+logging:
+  follow:
+    logs:
+      - paths:
+        - /var/log/syslog
+        fields:
+          type: syslog
+          tags: syslog
+      - paths:
+        - /var/log/auth.log
+        fields:
+          type: syslog
+          tags: auth

@@ -4,3 +4,25 @@ cinder:
   enabled_backends:
   default_backend:
   backends: []
+
+  logs:
+  - paths:
+      - /var/log/cinder/cinder-api.log
+    fields:
+      type: openstack
+      tags: cinder,cinder-api
+  - paths:
+      - /var/log/cinder/cinder-manage.log
+    fields:
+      type: openstack
+      tags: cinder,cinder-manage
+  - paths:
+      - /var/log/cinder/cinder-scheduler.log
+    fields:
+      type: openstack
+      tags: cinder,cinder-scheduler
+  - paths:
+      - /var/log/upstart/tgt.log
+    fields:
+      type: openstack
+      tags: cinder,tgt

@@ -1,46 +1,51 @@
 ---
-- apt: pkg=ufw
+- name: create logstash user
+  user: name=logstash comment=logstash shell=/bin/false system=yes home=/opt/logstash-forwarder
 
-- name: Open IPv4 port for 514/udp
-  command: ufw allow proto udp from 127.0.0.1 port 514
-  notify: enable ufw
+- name: install bbg openstack repo key
+  apt_key: url=http://apt.openstack.blueboxgrid.com/ubuntu/ursula-apt.gpg.key
+  when: ansible_distribution_version == "12.04"
 
-- name: Open IPv6 port for 514/udp
-  command: ufw allow proto udp from ::1 port 514
-  notify: enable ufw
+- name: install bbg openstack repo
+  apt_repository: repo='deb http://apt.openstack.blueboxgrid.com/ubuntu/ precise main' update_cache=yes
+  when: ansible_distribution_version == "12.04"
 
-- name: Do not write OpenStack (local7) log files into /var/log/syslog
-  template: src=etc/rsyslog.d/50-default.conf dest=/etc/rsyslog.d/50-default.conf mode=0644
-  notify: restart rsyslog
+- name: install logstash-forwarder
+  apt: pkg=logstash-forwarder
+  when: ansible_distribution_version == "12.04"
 
-- name: Read OpenStack log files into rsyslog
-  template: src=etc/rsyslog.d/follow-{{ rsyslog.follow.mode }}.conf dest=/etc/rsyslog.d/follow.conf mode=0644
-  notify: restart rsyslog
-  when: rsyslog.follow.enabled
+- name: download logstash
+  get_url: url=http://repo.openstack.blueboxgrid.com/ubuntu/pool/main/l/logstash-forwarder/logstash-forwarder_{{ logging.version }}_amd64.deb
+           dest=/tmp/logstash-forwarder_{{ logging.version }}_amd64.deb
+  when: ansible_distribution_version == "14.04"
 
-- name: Listen for local syslog messages
-  template: src=etc/rsyslog.d/udp.conf dest=/etc/rsyslog.d/udp.conf mode=0644
-  notify: restart rsyslog
+- name: install logstash
+  apt: deb=/tmp/logstash-forwarder_{{ logging.version }}_amd64.deb
+  when: ansible_distribution_version == "14.04"
 
-- name: send haproxy logs to local file
-  copy: src=etc/rsyslog.d/49-haproxy.conf dest=/etc/rsyslog.d/49-haproxy.conf mode=0644
-  notify: restart rsyslog
+- name: install logstash-forwarder service
+  copy: src=etc/init/logstash-forwarder.conf dest=/etc/init/logstash-forwarder.conf mode=0644
 
-- name: custom CA cert directory
+- name: custom cert auth directory
   file: dest=/usr/local/share/ca-certificates state=directory mode=0755
-  when: rsyslog.forward.host and rsyslog.forward.tls.enabled
+  when: logging.forward.host and logging.forward.tls.enabled
 
 - name: (possibly self-signed) ssl cert
-  template: src=rsyslog-forward.crt dest=/usr/local/share/ca-certificates/rsyslog-forward.crt mode=0644
-  notify: refresh CAs
-  when: rsyslog.forward.host and rsyslog.forward.tls.enabled
+  template: src=logging-forward.crt dest=/usr/local/share/ca-certificates/logging-forward.crt mode=0644
+  notify:
+    - refresh cert auths
+    - restart logstash-forwarder
+  when: logging.forward.host and logging.forward.tls.enabled
 
-- name: rsyslog TLS dependency
-  apt: pkg=rsyslog-gnutls
-  notify: restart rsyslog
-  when: rsyslog.forward.host and rsyslog.forward.tls.enabled
+- name: logstash-forwarder config directory
+  file: dest=/etc/logstash-forwarder.d state=directory mode=0755
 
-- name: send logs to Syslog receiver
-  template: src=etc/rsyslog.d/forward.conf dest=/etc/rsyslog.d/forward.conf mode=0644
-  notify: restart rsyslog
-  when: rsyslog.forward.host
+- name: configure logstash-forwarder
+  template: src=etc/logstash-forwarder.d/main.conf dest=/etc/logstash-forwarder.d/main.conf mode=0644
+  notify: restart logstash-forwarder
+  when: logging.forward.host
+
+- meta: flush_handlers
+
+- name: start and enable logstash-forwarder service
+  service: name=logstash-forwarder state=started enabled=yes

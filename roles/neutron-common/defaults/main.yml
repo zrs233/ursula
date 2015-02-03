@@ -9,3 +9,25 @@ neutron:
     - 8.8.4.4
   service_plugins:
     - neutron.services.l3_router.l3_router_plugin.L3RouterPlugin
+
+  logs:
+    - paths:
+        - /var/log/neutron/neutron-server.log
+      fields:
+        type: openstack
+        tags: neutron,neutron-server
+    - paths:
+        - /var/log/neutron/neutron-dhcp-agent.log
+      fields:
+        type: openstack
+        tags: neutron,neutron-dhcp-agent
+    - paths:
+        - /var/log/neutron/neutron-l3-agent.log
+      fields:
+        type: openstack
+        tags: neutron,neutron-l3-agent
+    - paths:
+        - /var/log/neutron/neutron-metadata-agent.log
+      fields:
+        type: openstack
+        tags: neutron,neutron-metadata-agent
