@@ -6,4 +6,4 @@
   apt_key: id=CD2EFD2A url=http://www.percona.com/redir/downloads/RPM-GPG-KEY-percona
 
 - name: percona apt repository
-  apt_repository: repo='deb http://repo.percona.com/apt {{ ansible_distribution_release }} main' update_cache=yes
+  apt_repository: repo='deb {{ apt.repo.percona }} {{ ansible_distribution_release }} main' update_cache=yes

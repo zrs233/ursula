@@ -3,6 +3,10 @@
   hostname: name={{ hostname }}
   when: hostname is defined
 
+- name: ubuntu apt source list
+  template: src=etc/apt/sources.list dest=/etc/apt/sources.list
+  when: apt.ubuntu_mirror is defined
+
 - include: proxy.yml
 
 - include: bbg-repo.yml
@@ -72,6 +76,7 @@
 
 - include: hwraid.yml
   when: common.hwraid.enabled
+  tags: hwraid
 
 
 - name: fetch Ursula revision

@@ -1,5 +1,6 @@
 ---
 common:
+  bbg_openstack_repo: 'deb http://apt.openstack.blueboxgrid.com/ubuntu/ precise main'
   hwraid:
     enabled: True
     clients:
@@ -17,3 +18,17 @@ common:
     disable_dns: True
   docker:
     enabled: False
+
+apt:
+  repo:
+    docker: https://get.docker.com/ubuntu
+    bbg_openstack: http://apt.openstack.blueboxgrid.com/ubuntu/
+    hwraid: http://hwraid.le-vert.net/ubuntu
+    sensu: http://repos.sensuapp.org/apt
+    haproxy: http://ppa.launchpad.net/vbernat/haproxy-1.5/ubuntu
+    bbg_openstack_ppa: http://ppa.launchpad.net/blueboxgroup/openstack/ubuntu
+    percona: http://repo.percona.com/apt
+    rabbitmq: http://www.rabbitmq.com/debian/
+    btsync: http://ppa.launchpad.net/tuxpoldo/btsync/ubuntu
+    cloud_archive: http://ubuntu-cloud.archive.canonical.com/ubuntu
+    erlang: http://packages.erlang-solutions.com/debian

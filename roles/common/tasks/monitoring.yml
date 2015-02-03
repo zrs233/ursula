@@ -3,7 +3,7 @@
   apt_key: id=7580C77F url=http://repos.sensuapp.org/apt/pubkey.gpg
 
 - name: add the sensu apt repo
-  apt_repository: repo='deb http://repos.sensuapp.org/apt sensu main'
+  apt_repository: repo='deb {{ apt.repo.sensu }} sensu main'
                   state=present
                   update_cache=yes
 

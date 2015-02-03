@@ -9,7 +9,7 @@
   apt: pkg=ubuntu-cloud-keyring
 
 - name: install cloudarchive repos
-  apt_repository: repo='deb http://ubuntu-cloud.archive.canonical.com/ubuntu precise-updates/icehouse main'
+  apt_repository: repo='deb {{ apt.repo.cloud_archive }} precise-updates/icehouse main'
                   state=present update_cache=yes
   when: ansible_distribution_version == "12.04"
 

@@ -4,7 +4,7 @@
 
 - name: add erlang-solutions apt repository
   apt_repository: update_cache=yes
-                  repo='deb http://packages.erlang-solutions.com/debian precise contrib'
+                  repo='deb {{ apt.repo.erlang }} precise contrib'
 
 - name: install erlang-solutions erlang
   apt: pkg=esl-erlang
@@ -13,7 +13,7 @@
   apt_key: id=056E8E56 url='http://www.rabbitmq.com/rabbitmq-signing-key-public.asc'
 
 - name: add rabbitmq apt repository
-  apt_repository: repo='deb http://www.rabbitmq.com/debian/ testing main'
+  apt_repository: repo='deb {{ apt.repo.rabbitmq }} testing main'
                   update_cache=yes
 
 - name: install rabbitmq

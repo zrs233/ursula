@@ -8,7 +8,7 @@
   when: neutron.plugin == 'ml2' and 'vxlan' in neutron.tunnel_types
 
 - name: Add bbg/openstack ppa repo
-  apt_repository: repo='ppa:blueboxgroup/openstack' update_cache=yes
+  apt_repository: repo='deb {{ apt.repo.bbg_openstack_ppa }} precise main' update_cache=yes
   when: neutron.plugin == 'ml2' and 'vxlan' in neutron.tunnel_types
 
 - name: update iproute2 to latest ppa
