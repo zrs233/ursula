@@ -52,22 +52,6 @@
       service: neutron
       logdata: "{{ neutron.logs }}"
 
-
-# TODO: These roles are missing logging configs!!!
-#- name: horizon logging
-#  hosts: controller
-#  roles:
-#  - role: ../roles/logging-config
-#    service: horizon
-#    logdata: "{{ horizon.logs }}"
-#
-#- name: swift logging
-#  hosts: swiftnode
-#  roles:
-#  - role: ../roles/logging-config
-#    service: swift
-#    logdata: "{{ swift.logs }}"
-
 - name: heat logging
   hosts: heatnode
   roles:
