@@ -1,10 +1,10 @@
 ---
 - name: add hwraid apt key
   apt_key: id=23B3D3B4
-           url=http://hwraid.le-vert.net/debian/hwraid.le-vert.net.gpg.key
+           url="{{ apt.repo.hwraid.key_url }}"
 
 - name: add hwraid apt repository
-  apt_repository: repo='deb {{ apt.repo.hwraid }} precise main'
+  apt_repository: repo='deb {{ apt.repo.hwraid.repo }} precise main'
                   state=present update_cache=yes
 
 - name: install raid utilities

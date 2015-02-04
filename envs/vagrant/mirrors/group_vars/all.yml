@@ -14,14 +14,35 @@ nova:
 apt:
   ubuntu_mirror: http://173.247.104.68/archive.ubuntu.com/ubuntu
   repo:
-    docker: http://173.247.104.68/docker
-    bbg_openstack: http://173.247.104.68/apt.openstack.blueboxgrid.com/ubuntu
-    hwraid: http://173.247.104.68/hwraid.le-vert.net/ubuntu
-    sensu: http://173.247.104.68/repos.sensuapp.org/apt
-    haproxy: http://173.247.104.68/ppa.launchpad.net/vbernat/haproxy-1.5/ubuntu
-    bbg_openstack_ppa: http://173.247.104.68/ppa.launchpad.net/blueboxgroup/openstack/ubuntu
-    percona: http://173.247.104.68/repo.percona.com/apt
-    rabbitmq: http://173.247.104.68/www.rabbitmq.com/debian/
-    btsync: http://173.247.104.68/ppa.launchpad.net/tuxpoldo/btsync/ubuntu
-    cloud_archive: http://173.247.104.68/ubuntu-cloud.archive.canonical.com/ubuntu
-    erlang: http://173.247.104.68/packages.erlang-solutions.com/ubuntu
+    docker:
+      repo: http://173.247.104.68/get.docker.com/ubuntu
+      key_url: http://173.247.104.68/keys/docker.gpg
+    bbg_openstack:
+      repo: http://173.247.104.68/apt.openstack.blueboxgrid.com/ubuntu
+      key_url: http://173.247.104.68/keys/bluebox_openstack_repo.gpg
+    hwraid:
+      repo: http://173.247.104.68/hwraid.le-vert.net/ubuntu
+      key_url: http://173.247.104.68/keys/hwraid.gpg
+    sensu:
+      repo: http://173.247.104.68/repos.sensuapp.org/apt
+      key_url: http://173.247.104.68/keys/sensu.gpg
+    haproxy:
+      repo: http://173.247.104.68/ppa.launchpad.net/vbernat/haproxy-1.5/ubuntu
+      key_url: http://173.247.104.68/keys/ppa.gpg
+    bbg_openstack_ppa:
+      repo: http://173.247.104.68/ppa.launchpad.net/blueboxgroup/openstack/ubuntu
+      key_url: http://173.247.104.68/keys/ppa.gpg
+    percona:
+      repo: http://173.247.104.68/repo.percona.com/apt
+      key_url: http://173.247.104.68/keys/percona.gpg
+    rabbitmq:
+      repo: http://173.247.104.68/www.rabbitmq.com/debian/
+      key_url: http://173.247.104.68/keys/rabbit.asc
+    btsync:
+      repo: http://173.247.104.68/ppa.launchpad.net/tuxpoldo/btsync/ubuntu
+      key_url: http://173.247.104.68/keys/ppa.gpg
+    cloud_archive:
+      repo: http://173.247.104.68/ubuntu-cloud.archive.canonical.com/ubuntu
+    erlang:
+      repo: http://173.247.104.68/packages.erlang-solutions.com/ubuntu
+      key_url: http://173.247.104.68/keys/erlang.asc

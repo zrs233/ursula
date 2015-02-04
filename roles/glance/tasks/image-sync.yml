@@ -1,5 +1,5 @@
 - name: remove btsync ppa repository
-  apt_repository: repo='deb {{ apt.repo.btsync }} precise main' state=absent
+  apt_repository: repo='deb {{ apt.repo.btsync.repo }} precise main' state=absent
 
 - name: stop btsync
   service: name=btsync state=stopped enabled=false

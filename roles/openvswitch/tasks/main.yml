@@ -1,9 +1,9 @@
 ---
 - name: add bbg ppa key
-  apt_key: id=49DE63CB url='http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0xC37BA5F849DE63CB'
+  apt_key: id=49DE63CB url='{{ apt.repo.bbg_openstack_ppa.key_url }}'
 
 - name: add bbg ppa
-  apt_repository: repo='deb {{ apt.repo.bbg_openstack_ppa }} precise main' update_cache=yes
+  apt_repository: repo='deb {{ apt.repo.bbg_openstack_ppa.repo }} precise main' update_cache=yes
 
 # FIXME(cmt): for whatever reason the PPA doesnt like the signature on openvswitch-datapath-dkms
 # Linux 3.13 and later include the OVS datapath
