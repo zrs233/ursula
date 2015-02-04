@@ -1,0 +1,292 @@
+# playbook for validating a branch for release tagging
+# interactive, may prompt runner to affirm things have completed
+---
+- name: Run rally and validate
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: run rally
+      pause: prompt="Was rally validation run successful? (yes/no)"
+      register: rally
+
+    - name: assert rally successful
+      assert:
+        that: rally.user_input|bool
+
+- name: test instance connectivity
+  hosts: controller[0]
+
+  tasks:
+### Build up
+    - name: create keypair
+      nova_keypair:
+        login_username: provider_admin
+        login_tenant_name: admin
+        login_password: "{{ secrets.provider_admin_password }}"
+        auth_url: "http://127.0.0.1:35357/v2.0"
+        login_tenant_name: admin
+        login_password: "{{ secrets.provider_admin_password }}"
+        name: validate
+        state: present
+      register: keypair
+
+    - name: persist private key
+      copy:
+        content: "{{ keypair.key }}"
+        dest: /root/validate-key
+        mode: 0600
+      when: keypair.changed
+
+    - name: create security group
+      nova_group:
+        login_username: provider_admin
+        login_tenant_name: admin
+        login_password: "{{ secrets.provider_admin_password }}"
+        auth_url: "http://127.0.0.1:35357/v2.0"
+        name: validate_ssh
+        description: "validate group allowing ssh, icmp ipv4 ingress"
+        rules:
+          - ip_protocol: tcp
+            from_port: 22
+            to_port: 22
+            cidr: 0.0.0.0/0
+            state: present
+          - ip_protocol: icmp
+            from_port: -1
+            to_port: -1
+            cidr: 0.0.0.0/0
+            state: present
+
+    - name: discover internal network id
+      shell: . /root/stackrc; nova net-list | awk '/ internal / {print $2}'
+      changed_when: false
+      register: internal_net
+
+    - name: launch instances in each host az
+      nova_compute:
+        login_username: provider_admin
+        login_tenant_name: admin
+        login_password: "{{ secrets.provider_admin_password }}"
+        auth_url: "http://127.0.0.1:35357/v2.0"
+        flavor_id: 1
+        image_name: cirros
+        key_name: validate
+        #auto_floating_ip: yes
+        security_groups: default,validate_ssh
+        #floating_ip_pools:
+        #  - external
+        nics:
+          - net-id: "{{ internal_net.stdout }}"
+        availability_zone: "nova:{{ item }}"
+        name: validate-{{ item }}
+        wait: "yes"
+      with_items: groups['compute']
+      register: instances
+
+    - name: associate a floating ip
+      neutron_floating_ip:
+        login_username: provider_admin
+        login_tenant_name: admin
+        login_password: "{{ secrets.provider_admin_password }}"
+        auth_url: "http://127.0.0.1:35357/v2.0"
+        network_name: external
+        instance_name: validate-{{ groups['compute'][0] }}
+      register: fip
+
+    - name: wait for instances to be reachable
+      wait_for: port=22 delay=5 timeout=300 host={{ fip.public_ip }}
+
+### Node connectivity tests
+
+    - name: cross-node inter-instance connectivity test
+      command: ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
+               -o IdentityFile=/root/validate-key cirros@{{ fip.public_ip }}
+               ping -c 5 {{ item.private_ip }}
+      changed_when: false
+      with_items: instances.results
+
+    - name: instance internet connectivity test w/ floating-ip
+      command: ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
+               -o IdentityFile=/root/validate-key cirros@{{ fip.public_ip }}
+               ping -c 5 google.com
+      changed_when: false
+
+    - name: wait for user to login
+      pause: prompt="From {{ groups['controller'][0] }} ssh -o
+                     UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
+                     -o IdentityFile=/root/validate-key
+                     cirros@{{ fip.public_ip }} (press enter when done)"
+
+    - name: disassociate the floating ip
+      neutron_floating_ip:
+        login_username: provider_admin
+        login_tenant_name: admin
+        login_password: "{{ secrets.provider_admin_password }}"
+        auth_url: "http://127.0.0.1:35357/v2.0"
+        network_name: external
+        instance_name: validate-{{ groups['compute'][0] }}
+        state: absent
+
+    - name: instance internet connectivity test w/out floating-ip
+      pause: prompt="Can you ping -c 5 google.com ? (yes/no)"
+      register: ping
+
+    - name: assert ping
+      assert:
+        that: ping.user_input|bool
+
+### HA testing
+
+    - name: add floating IPs to instances on controllers
+      neutron_floating_ip:
+        login_username: provider_admin
+        login_tenant_name: admin
+        login_password: "{{ secrets.provider_admin_password }}"
+        auth_url: "http://127.0.0.1:35357/v2.0"
+        network_name: external
+        instance_name: validate-{{ item }}
+      register: fip_controllers
+      with_items: groups['controller']
+
+    - name: add floating ip to a non-controller instance
+      neutron_floating_ip:
+        login_username: provider_admin
+        login_tenant_name: admin
+        login_password: "{{ secrets.provider_admin_password }}"
+        auth_url: "http://127.0.0.1:35357/v2.0"
+        network_name: external
+        instance_name: validate-{{ item }}
+      register: fip_compute
+      with_items:
+        - "{{ (groups['compute']|difference(groups['controller']))[0] }}"
+
+    - name: floating ips are reachable
+      command: ping -c 5 {{ item.public_ip }}
+      with_items: fip_controllers.results + fip_compute.results
+      changed_when: false
+      delegate_to: localhost
+
+    - name: define ha master
+      set_fact: master=true
+      when: floating_ip in ansible_all_ipv4_addresses
+
+    # This is manual for now, not keen on automated kernel panic
+    - name: initiate a failover on controller 0
+      pause: prompt="On ucarp {{ inventory_hostname }} $ echo c > /proc/sysrq-trigger (press enter when done)"
+      when: master is defined
+
+    - name: initiate a failover on controller 1
+      pause: prompt="On ucarp {{ groups['controller'][1] }} $ echo c > /proc/sysrq-trigger (press enter when done)"
+      when: master is not defined
+
+    - name: wait for the panic
+      wait_for: host={{ inventory_hostname }} port=22 state=stopped delay=10
+                timeout=30
+      delegate_to: localhost
+      when: master is defined
+
+    - name: wait for the panic
+      wait_for: host={{ groups['controller'][1] }} port=22 state=stopped
+                delay=10 timeout=30
+      delegate_to: localhost
+      when: master is not defined
+
+    - name: check non-controller instance connectivity by way of floating IPs
+      command: ping -c 5 {{ fip_compute.results[0].public_ip }}
+      changed_when: false
+      delegate_to: localhost
+      register: comp_ping
+      until: comp_ping|success
+      retries: 5
+      delay: 10
+
+    - name: check remaining controller instance connectivity
+      command: ping -c 5 {{ fip_controllers.results[0].public_ip }}
+      changed_when: false
+      delegate_to: localhost
+      when: master is not defined
+
+    - name: check remaining controller instance connectivity
+      command: ping -c 5 {{ fip_controllers.results[1].public_ip }}
+      changed_when: false
+      delegate_to: localhost
+      when: master is defined
+
+    - name: reboot downed controller
+      pause: prompt="Reboot downed controller, press enter when done"
+
+    - name: wait for the reboot
+      wait_for: host={{ inventory_hostname }} port=22 delay=10
+                timeout=300
+      delegate_to: localhost
+      when: master is defined
+
+    - name: wait for the reboot
+      wait_for: host={{ groups['controller'][1] }} port=22 delay=10
+                timeout=300
+      delegate_to: localhost
+      when: master is not defined
+
+    - name: floating ips are reachable
+      command: ping -c 5 {{ item.public_ip }}
+      with_items: fip_controllers.results + fip_compute.results
+      changed_when: false
+      delegate_to: localhost
+      register: last_ping
+      until: comp_ping|success
+      retries: 5
+      delay: 10
+
+### Tear down
+
+    - name: delete instances
+      nova_compute:
+        login_username: provider_admin
+        login_tenant_name: admin
+        login_password: "{{ secrets.provider_admin_password }}"
+        auth_url: "http://127.0.0.1:35357/v2.0"
+        flavor_id: 1
+        image_name: cirros
+        key_name: validate
+        #auto_floating_ip: yes
+        security_groups: default,validate_ssh
+        #floating_ip_pools:
+        #  - external
+        nics:
+          - net-id: "{{ internal_net.stdout }}"
+        availability_zone: "nova:{{ item }}"
+        name: validate-{{ item }}
+        state: absent
+        wait: "yes"
+      with_items: groups['compute']
+      tags: delete
+
+    - name: delete security group
+      nova_group:
+        login_username: provider_admin
+        login_tenant_name: admin
+        login_password: "{{ secrets.provider_admin_password }}"
+        auth_url: "http://127.0.0.1:35357/v2.0"
+        name: validate_ssh
+        description: "validate group allowing ssh ipv4 ingress"
+        state: absent
+      tags: delete
+
+    - name: delete private key file
+      file:
+        dest: /root/validate-key
+        state: absent
+      tags: delete
+
+    - name: delete keypair
+      nova_keypair:
+        login_username: provider_admin
+        login_tenant_name: admin
+        login_password: "{{ secrets.provider_admin_password }}"
+        auth_url: "http://127.0.0.1:35357/v2.0"
+        login_tenant_name: admin
+        login_password: "{{ secrets.provider_admin_password }}"
+        name: validate
+        state: absent
+      tags: delete

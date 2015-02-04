@@ -22,7 +22,10 @@ import six
 
 try:
     from novaclient.openstack.common import uuidutils
-    from novaclient.openstack.common import strutils
+    try:
+        from nova.openstack.common import strutils
+    except ImportError:
+        from novaclient.openstack.common import strutils
     from novaclient.v1_1 import client
     from novaclient.v1_1 import security_groups
     from novaclient.v1_1 import security_group_rules
