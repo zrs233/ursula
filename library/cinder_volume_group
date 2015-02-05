@@ -1,95 +1,144 @@
-#!/usr/bin/env ruby
-require 'rubygems'
-require 'antsy'
+#!/usr/bin/python
+#coding: utf-8 -*-
 
+DOCUMENTATION = '''
+---
+author: Jesse Keating and Dustin Lundquist
+module: cinder_volume_group
+short_description: Configure LVM volume groups
+description:
+  - This module creates a LVM VG for Cinder to use
+options:
+  size:
+    description:
+      - The size of the VG file to create
+    required: true
+  file:
+    description:
+      - The file path on the filesystem to create
+    required: false
+    aliases: ["dest"]
+  passphrase:
+    description:
+      - A passphrase to encrypt the file with LUKS (optional)
+  vgname:
+    description:
+      - The name for the volume group
+    default: cinder-volumes
+'''
+
+EXAMPLES = '''
 # create a volume group for cinder, named `cinder-volumes`,
-# backed by either a disk partition, or a file mounted over
-# loop device
+# backed by a file mounted over loop device
 
-# example usages:
-#   cinder_volume_group: path=/some/path/foo size=100G
-#   cinder_volume_group: device=/dev/sdb size=1T
+- cinder_volume_group: path=/some/path/foo size=100G
+'''
 
-args = Antsy.args
-size = args[:size]        # used only for file-backed VGs
-file = args[:file]        # used only for file-backed VGs
-pass = args[:passphrase]  # used only for encrypted file-backed volumes
-device = args[:device]    # used only for device-backed VGs
-vgname = 'cinder-volumes'
+import os
+import re
+import subprocess
 
-Antsy.fail! 'must provide either file+size or device' unless ((file and size) or device)
-Antsy.fail! 'file and device are mutually exclusive' if (file and device)
-Antsy.fail! 'passphrase is supported only for file-backed vgs' if (not file and pass)
+def is_luks(device, module):
+    cmd = ['hd', '-n', '16384', device]
+    rc, out, err = module.run_command(cmd, check_rc=True)
+    return re.search('LUKS', out)
 
-changed = false
+def is_lvm_pv(device, module):
+    cmd = ['hd', '-n', '16384', device]
+    rc, out, err = module.run_command(cmd, check_rc=True)
+    return re.search('LVM2', out)
 
-def is_luks?(device_or_file)
-  system <<-eof
-    hd -n 16384 #{device_or_file} | grep LUKS
-  eof
-end
+def vgexists(name, module):
+    cmd = ['vgs', name]
+    rc, out, err = module.run_command(cmd)
+    return bool(rc == 0)
 
-def is_lvm_pv?(device)
-  system <<-eof
-    hd -n 16384 #{device} | grep LVM2
-  eof
-end
 
-if system "vgs #{vgname}"
-  Antsy.no_change!
-else
-  if file
-    Antsy.fail! "volume file #{file} already exists" if File.exist?(file)
-    Antsy.fail! "can't create volume file"  unless system "umask 0077 && truncate -s #{size} #{file}"
+def main():
+    module = AnsibleModule(
+        argument_spec  = dict(
+            size       = dict(required=True),
+            file       = dict(required=True, aliases=['dest']),
+            passphrase = dict(),
+            vgname     = dict(default='cinder-volumes'),
+        ),
+    )
 
-    Antsy.fail! "#{file} is already a LUKS volume" if is_luks?(file)
+    size = module.params.get('size')
+    dest = module.params.get('file')
+    passphrase = module.params.get('passphrase')
+    vgname = module.params.get('vgname')
 
+    # see if we have this vg already
+    if vgexists(vgname, module):
+        module.exit_json(changed=False)
+
+    # Check if our dest already exists
+    if os.path.exists(dest):
+        module.fail_json(msg="Destination file %s already exists" % dest)
+
+    # Create dest file
+    cmd = ['truncate', '-s', size, dest]
+    rc, out, err = module.run_command(cmd, check_rc=True)
+    try:
+        os.chmod(dest, 0700)
+    except Exception, e:
+        module.fail_json(msg="Unable to set permissions: %s" % e)
+
+    # Setup loop device
     device = '/dev/loop0'
 
-    File.open '/etc/init/losetup.conf', 'w' do |f|
-      f.write <<-eof.gsub /^\s+/, ""
-        start on filesystem
-        task
-        exec losetup #{device} #{file}
-      eof
-    end
-    Antsy.fail! "can't setup loop device"  unless system "losetup #{device} #{file}"
+    lines = ['start on filesystem', 'task',
+             'exec losetup %s %s' % (device, dest)]
+    try:
+        with open('/etc/init/losetup.conf', 'w') as f:
+            f.write('\n'.join(lines) + '\n')
+    except Exception, e:
+        module.fail_json(msg="Unable to write losetup file: %s" % e)
 
-    changed |= true
-  end
+    cmd = ['losetup', device, dest]
+    rc, out, err = module.run_command(cmd, check_rc=True)
 
-  if pass
-    if is_luks?(device)
-      # Try to open the LUKS volume
-      Antsy.fail! "can't unlock LUKS volume" unless system <<-eof
-        echo -n #{pass} | cryptsetup luksOpen --key-file=- #{device} #{vgname}
-      eof
+    # Crypt the device if desired
+    if passphrase:
+        for cryptmod in ['cryptoloop', 'aes']:
+            cmd = ['modprobe', cryptmod]
+            rc, out, err = module.run_command(cmd, check_rc=True)
 
-      device = "/dev/mapper/#{vgname}"
-      changed |= true
-    else
-      Antsy.fail! "#{device} is a LVM physical volume" if is_lvm_pv?(device)
-      Antsy.fail! "can't create volume group" unless system <<-eof
-        modprobe cryptoloop
-        modprobe aes
-        echo -n #{pass} | cryptsetup luksFormat --key-file=- #{device} && \
-        echo -n #{pass} | cryptsetup luksOpen --key-file=- #{device} #{vgname}
-      eof
+        luksfmt = ['cryptsetup', 'luksFormat', '--key-file=-',
+                   device]
+        luksopn = ['cryptsetup', 'luksOpen', '--key-file=-',
+                   device, vgname]
 
-      device = "/dev/mapper/#{vgname}"
-      changed |= true
-    end
-  end
+        try:
+            # format
+            ps = subprocess.Popen(['echo', '-n', passphrase],
+                                   stdout=subprocess.PIPE)
+            output = subprocess.check_output(luksfmt, stdin=ps.stdout)
+            # open
+            ps = subprocess.Popen(['echo', '-n', passphrase],
+                                   stdout=subprocess.PIPE)
+            output = subprocess.check_output(luksopn, stdin=ps.stdout)
+        except Exception, e:
+            module.fail_json(msg="Failed to setup crypt device: %s" % e)
 
-  Antsy.fail! "#{device} is a LUKS volume" if is_luks?(device)
+        device = "/dev/mapper/%s" % vgname
 
-  unless system "vgs #{vgname}" || is_lvm_pv?(device)
-    Antsy.fail!('volume group creation failed') unless system "vgcreate #{vgname} #{device}"
+    if is_luks('/dev/mapper/%s' % vgname, module):
+        module.fail_json(msg="%s is a LUKS volume" % device)
 
-    changed |= true
-  end
+    if is_lvm_pv(device, module):
+        module.fail_json(msg="%s is already a LVM PV" % device)
+    else:
+        cmd = ['vgcreate', vgname, device]
+        rc, out, err = module.run_command(cmd, check_rc=True)
+
+    if not vgexists(vgname, module):
+        module.fail_json(msg="Unable to setup %s" % vgname)
+
+    module.exit_json(changed=True, file=dest)
 
 
-  Antsy.fail! "Unable to setup #{vgname}" unless system "vgs #{vgname}"
-  Antsy.changed! if changed
-end
+# this is magic, see lib/ansible/module.params['common.py
+#<<INCLUDE_ANSIBLE_MODULE_COMMON>>
+main()
