@@ -23,7 +23,7 @@ apt:
   repo:
     docker:
       repo: https://get.docker.com/ubuntu
-      key_url: http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xD8576A8BA88D21E9
+      key_url: 'http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xD8576A8BA88D21E9'
     bbg_openstack:
       repo: http://apt.openstack.blueboxgrid.com/ubuntu/
       key_url: http://apt.openstack.blueboxgrid.com/ubuntu/ursula-apt.gpg.key
@@ -35,10 +35,10 @@ apt:
       key_url: http://repos.sensuapp.org/apt/pubkey.gpg
     haproxy:
       repo: http://ppa.launchpad.net/vbernat/haproxy-1.5/ubuntu
-      key_url: http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0xC37BA5F849DE63CB
+      key_url: 'http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0xC37BA5F849DE63CB'
     bbg_openstack_ppa:
       repo: http://ppa.launchpad.net/blueboxgroup/openstack/ubuntu
-      key_url: http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0xC37BA5F849DE63CB
+      key_url: 'http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0xC37BA5F849DE63CB'
     percona:
       repo: http://repo.percona.com/apt
       key_url: http://www.percona.com/redir/downloads/RPM-GPG-KEY-percona
@@ -47,10 +47,10 @@ apt:
       key_url: http://www.rabbitmq.com/rabbitmq-signing-key-public.asc
     btsync:
       repo: http://ppa.launchpad.net/tuxpoldo/btsync/ubuntu
-      key_url: http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0xC37BA5F849DE63CB
+      key_url: 'http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0xC37BA5F849DE63CB'
     cloud_archive:
       repo: http://ubuntu-cloud.archive.canonical.com/ubuntu
-      key_url: http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0xC37BA5F849DE63CB
+      key_url: 'http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0xC37BA5F849DE63CB'
     erlang:
       repo: http://packages.erlang-solutions.com/debian
       key_url: http://packages.erlang-solutions.com/debian/erlang_solutions.asc
