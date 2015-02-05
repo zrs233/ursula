@@ -10,15 +10,15 @@
 - name: install sensu
   apt: pkg=sensu
 
-- name: install sensu-plugin gem
-  gem: name=sensu-plugin user_install=no include_dependencies=yes state=latest
-
 - name: sensu sudoers
   template: src=monitoring/sensu-sudoers dest=/etc/sudoers.d/sensu owner=root
             group=root mode=0440
 
 - name: ensure /etc/sudoers.d/sensu permissions are 0440
   file: path=/etc/sudoers.d/sensu mode=0440
+
+- name: sensu gems directory
+  file: dest=/opt/sensu/gems state=directory owner=sensu mode=0750
 
 - name: sensu cert directory
   file: dest=/etc/sensu/ssl state=directory owner=sensu mode=0750
@@ -35,9 +35,9 @@
   notify: restart sensu-client
   when: monitoring.client_key is defined
 
-- name: disable embedded ruby
+- name: use embedded ruby
   lineinfile: dest=/etc/default/sensu regexp=^EMBEDDED_RUBY
-              line=EMBEDDED_RUBY=false
+              line=EMBEDDED_RUBY=true
   notify: restart sensu-client
 
 - name: sensu client config
