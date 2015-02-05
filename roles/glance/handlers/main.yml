@@ -8,7 +8,7 @@
   notify: update CA certs
 
 - name: restart glance services
-  restart_if_present: service={{ item }}
+  service: name={{ item }} state=restarted must_exist=false
   when: restart|default('True')
   with_items:
     - glance-api
