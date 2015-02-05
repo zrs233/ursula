@@ -1,5 +1,6 @@
 ---
-- apt: pkg={{ item }}
+- name: install cinder-data required packages
+  apt: pkg={{ item }}
   with_items:
     - cryptsetup
     - lvm2
@@ -20,7 +21,8 @@
       src: etc/tgt/conf.d/cinder_tgt.conf
       dest: /etc/tgt/conf.d/cinder_tgt.conf
 
-- service: name=tgt state=started
+- name: ensure tgt service is running
+  service: name=tgt state=started
 
 # TODO: allow for device-backed VGs in addition to file-backed VGs
 - name: cinder volume group
