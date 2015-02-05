@@ -1,19 +1,19 @@
 ---
 - name: add erlang-solutions apt key
-  apt_key: id=A14F4FCA url='http://packages.erlang-solutions.com/debian/erlang_solutions.asc'
+  apt_key: id=A14F4FCA url='{{ apt.repo.erlang.key_url }}'
 
 - name: add erlang-solutions apt repository
   apt_repository: update_cache=yes
-                  repo='deb http://packages.erlang-solutions.com/debian precise contrib'
+                  repo='deb {{ apt.repo.erlang.repo }} precise contrib'
 
 - name: install erlang-solutions erlang
   apt: pkg=esl-erlang
 
 - name: add rabbitmq apt key
-  apt_key: id=056E8E56 url='http://www.rabbitmq.com/rabbitmq-signing-key-public.asc'
+  apt_key: id=056E8E56 url='{{ apt.repo.rabbitmq.key_url }}'
 
 - name: add rabbitmq apt repository
-  apt_repository: repo='deb http://www.rabbitmq.com/debian/ testing main'
+  apt_repository: repo='deb {{ apt.repo.rabbitmq.repo }} testing main'
                   update_cache=yes
 
 - name: install rabbitmq

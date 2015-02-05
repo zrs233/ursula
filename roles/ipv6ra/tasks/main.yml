@@ -1,10 +1,10 @@
 ---
 # IPv6 RA requires dnsmasq >= 2.64
 - name: Add apt-key for bbg/openstack ppa
-  apt_key: id=49DE63CB url='http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0xC37BA5F849DE63CB'
+  apt_key: id=49DE63CB url='{{ apt.repo.bbg_openstack_ppa.key_url }}'
 
 - name: Add bbg/openstack ppa repo
-  apt_repository: repo='ppa:blueboxgroup/openstack' update_cache=yes
+  apt_repository: repo='deb {{ apt.repo.bbg_openstack_ppa.repo }} precise main' update_cache=yes
 
 - name: Update dnsmasq to the ppa version
   apt: pkg=dnsmasq state=latest

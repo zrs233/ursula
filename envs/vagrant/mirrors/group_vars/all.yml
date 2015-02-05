@@ -1,0 +1,48 @@
+---
+stack_env: vagrant
+floating_ip: 10.1.1.100
+
+xtradb:
+  sst_auth_password: asdf
+
+percona:
+  replication: False
+
+nova:
+  scheduler_default_filters: AvailabilityZoneFilter,ComputeFilter
+
+apt:
+  ubuntu_mirror: http://173.247.104.68/archive.ubuntu.com/ubuntu
+  repo:
+    docker:
+      repo: http://173.247.104.68/get.docker.com/ubuntu
+      key_url: http://173.247.104.68/keys/docker.gpg
+    bbg_openstack:
+      repo: http://173.247.104.68/apt.openstack.blueboxgrid.com/ubuntu
+      key_url: http://173.247.104.68/keys/bluebox_openstack_repo.gpg
+    hwraid:
+      repo: http://173.247.104.68/hwraid.le-vert.net/ubuntu
+      key_url: http://173.247.104.68/keys/hwraid.gpg
+    sensu:
+      repo: http://173.247.104.68/repos.sensuapp.org/apt
+      key_url: http://173.247.104.68/keys/sensu.gpg
+    haproxy:
+      repo: http://173.247.104.68/ppa.launchpad.net/vbernat/haproxy-1.5/ubuntu
+      key_url: http://173.247.104.68/keys/ppa.gpg
+    bbg_openstack_ppa:
+      repo: http://173.247.104.68/ppa.launchpad.net/blueboxgroup/openstack/ubuntu
+      key_url: http://173.247.104.68/keys/ppa.gpg
+    percona:
+      repo: http://173.247.104.68/repo.percona.com/apt
+      key_url: http://173.247.104.68/keys/percona.gpg
+    rabbitmq:
+      repo: http://173.247.104.68/www.rabbitmq.com/debian/
+      key_url: http://173.247.104.68/keys/rabbit.asc
+    btsync:
+      repo: http://173.247.104.68/ppa.launchpad.net/tuxpoldo/btsync/ubuntu
+      key_url: http://173.247.104.68/keys/ppa.gpg
+    cloud_archive:
+      repo: http://173.247.104.68/ubuntu-cloud.archive.canonical.com/ubuntu
+    erlang:
+      repo: http://173.247.104.68/packages.erlang-solutions.com/ubuntu
+      key_url: http://173.247.104.68/keys/erlang.asc

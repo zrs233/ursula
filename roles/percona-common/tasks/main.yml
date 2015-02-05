@@ -3,7 +3,7 @@
   apt: pkg=python-pycurl
 
 - name: percona apt repository key
-  apt_key: id=CD2EFD2A url=http://www.percona.com/redir/downloads/RPM-GPG-KEY-percona
+  apt_key: id=CD2EFD2A url='{{ apt.repo.percona.key_url }}'
 
 - name: percona apt repository
-  apt_repository: repo='deb http://repo.percona.com/apt {{ ansible_distribution_release }} main' update_cache=yes
+  apt_repository: repo='deb {{ apt.repo.percona.repo }} {{ ansible_distribution_release }} main' update_cache=yes
