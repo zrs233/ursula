@@ -23,7 +23,7 @@
       user: name=nova comment=nova shell=/bin/sh home=/var/lib/nova createhome=yes
 
     - name: start nova services
-      restart_if_present: service={{ item }}
+      service: name={{ item }} state=restarted must_exist=false
       with_items:
         - nova-api
         - nova-consoleauth
@@ -32,4 +32,3 @@
         - nova-scheduler
         - nova-compute
         - nova-conductor
-

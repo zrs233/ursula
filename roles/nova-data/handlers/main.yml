@@ -13,6 +13,6 @@
   command: rsync -avh {{ nova.driver.docker.dest }}/etc/nova/rootwrap.d/ /etc/nova/rootwrap.d/
 
 - name: restart nova compute
-  restart_if_present: service={{ item }}
+  service: name={{ item }} state=restarted must_exist=false
   with_items:
     - nova-compute

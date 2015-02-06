@@ -8,7 +8,7 @@
   notify: update CA certs
 
 - name: restart keystone services
-  restart_if_present: service=keystone
+  service: name=keystone state=restarted must_exist=false
   when: restart|default('True')
 
 - name: restart logstash-forwarder

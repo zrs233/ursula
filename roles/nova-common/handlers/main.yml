@@ -12,7 +12,7 @@
   command: rsync -avh /opt/stack/nova/etc/nova/rootwrap.d /etc/nova
 
 - name: restart nova services
-  restart_if_present: service={{ item }}
+  service: name={{ item }} state=restarted must_exist=false
   when: restart|default('True')
   with_items:
     - nova-api
