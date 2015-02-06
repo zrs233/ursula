@@ -11,7 +11,7 @@
   command: rsync -avh /opt/stack/neutron/etc/neutron/rootwrap.d /etc/neutron
 
 - name: restart neutron services
-  restart_if_running: service={{ item }}
+  service: name={{ item }} state=restarted_if_running must_exist=false
   when: restart|default('True')
   with_items:
     - neutron-server

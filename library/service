@@ -33,12 +33,13 @@ options:
         - Name of the service.
     state:
         required: false
-        choices: [ started, stopped, restarted, reloaded ]
+        choices: [ started, stopped, restarted, reloaded, restarted_if_running ]
         description:
           - C(started)/C(stopped) are idempotent actions that will not run
             commands unless necessary.  C(restarted) will always bounce the
-            service.  C(reloaded) will always reload. B(At least one of state
-            and enabled are required.)
+            service.  C(reloaded) will always reload. C(restarted_if_running)
+            will only restart a service if it is already running.
+            B(At least one of state and enabled are required.)
     sleep:
         required: false
         version_added: "1.3"
@@ -94,6 +95,9 @@ EXAMPLES = '''
 
 # Example action to restart network service for interface eth0
 - service: name=network state=restarted args=eth0
+
+# Example action to restart nova-api if it is running
+- service: name=nova-api state=restarted_if_running must_exist=false
 '''
 
 import platform
@@ -276,7 +280,8 @@ class Service(object):
         # Find out if state has changed
         if not self.running and self.state in ["started", "running", "reloaded"]:
             self.svc_change = True
-        elif self.running and self.state in ["stopped","reloaded"]:
+        elif self.running and self.state in ["stopped","reloaded",
+                                             "restarted_if_running"]:
             self.svc_change = True
         elif self.state == "restarted":
             self.svc_change = True
@@ -296,7 +301,7 @@ class Service(object):
                 self.action = "stop"
             elif self.state == 'reloaded':
                 self.action = "reload"
-            elif self.state == 'restarted':
+            elif self.state in ['restarted', 'restarted_if_running']:
                 self.action = "restart"
 
             if self.module.check_mode:
@@ -1154,7 +1159,7 @@ def main():
     module = AnsibleModule(
         argument_spec = dict(
             name = dict(required=True),
-            state = dict(choices=['running', 'started', 'stopped', 'restarted', 'reloaded']),
+            state = dict(choices=['running', 'started', 'stopped', 'restarted', 'reloaded', 'restarted_if_running']),
             sleep = dict(required=False, type='int', default=None),
             pattern = dict(required=False, default=None),
             enabled = dict(type='bool'),
@@ -1239,6 +1244,9 @@ def main():
         # report accurate state at this moment so just show what we ran
         if service.module.params['state'] in ['started','restarted','running','reloaded']:
             result['state'] = 'started'
+        elif service.module.params['state'] == 'restarted_if_running':
+            if result['changed']:
+                result['state'] = 'restarted'
         else:
             result['state'] = 'stopped'
 
