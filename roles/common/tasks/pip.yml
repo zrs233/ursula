@@ -1,0 +1,6 @@
+---
+- name: root user pip config directory
+  file: dest=/root/.pip state=directory
+
+- name: pip config file
+  template: src=etc/pip.conf dest=/root/.pip/pip.conf
