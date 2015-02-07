@@ -46,3 +46,7 @@ apt:
     erlang:
       repo: http://173.247.104.68/packages.erlang-solutions.com/ubuntu
       key_url: http://173.247.104.68/keys/erlang.asc
+
+common:
+  pip:
+    proxy_url: http://173.247.104.68:8092/simple

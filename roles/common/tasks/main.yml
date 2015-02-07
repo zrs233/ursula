@@ -7,6 +7,9 @@
   template: src=etc/apt/sources.list dest=/etc/apt/sources.list
   when: apt.ubuntu_mirror is defined
 
+- include: pip.yml
+  when: common.pip is defined
+
 - include: proxy.yml
 
 - include: bbg-repo.yml
