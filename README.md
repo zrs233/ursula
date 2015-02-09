@@ -66,7 +66,7 @@ This sets the `http_proxy` environment variable in `/etc/environment` but does n
 
 `common.global_proxy: http://10.230.7.181:3128`
 
-### ### Enable proxy only for APT
+### Enable proxy only for APT
 
 This sets your proxy only for apt repositories:
 
