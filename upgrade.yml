@@ -305,6 +305,28 @@
         changed: false
       when: heat.enabled
 
+- name: upgrade swift
+  hosts: swiftnode
+  any_errors_fatal: true
+  tags: swift
+
+  roles:
+    - role: haproxy
+      haproxy_type: swift
+      tags: ['openstack', 'swift', 'control']
+
+    - role: swift-object
+      tags: ['openstack', 'swift', 'data']
+
+    - role: swift-account
+      tags: ['openstack', 'swift', 'data']
+
+    - role: swift-container
+      tags: ['openstack', 'swift', 'data']
+
+    - role: swift-proxy
+      tags: ['openstack', 'swift', 'control']
+
 - name: upgrade horizon
   hosts: controller
   max_fail_percentage: 1
