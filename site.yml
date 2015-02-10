@@ -104,7 +104,7 @@
       tags: ['haproxy', 'infra']
 
 - name: iptables
-  hosts: controller
+  hosts: network
   roles:
     - role: iptables
       tags: ['iptables', 'infra']
