@@ -12,3 +12,6 @@
   command: /usr/sbin/update-grub
 
 - include: ssh.yml
+
+- name: restart-ntp
+  service: name=ntp state=restarted
