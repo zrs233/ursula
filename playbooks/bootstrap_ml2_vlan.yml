@@ -7,13 +7,17 @@
   vars:
     timezone: Etc/UTC
   tasks:
-  
+
   #
   # TODO Bail if run against existing compute nodes
-  # 
+  #
 
   - apt: pkg=python-pycurl
     when: ansible_distribution_version == "12.04"
+
+  - name: "Disable GRUB OS prober"
+    lineinfile: dest=/etc/default/grub
+                line="GRUB_DISABLE_OS_PROBER=true"
 
   # Upgrade Kernel to 3.5.0 on Precise
   # and install Open vSwitch datapath (in mainline kernel on more recent distributions)
@@ -28,6 +32,7 @@
   - apt: pkg={{ item }}
     with_items:
     - vlan
+    - ifenslave-2.6
     - ucarp
   - apt: upgrade=dist
 
@@ -62,10 +67,8 @@
     with_items: network_interfaces_d
     tags: network_config
 
-  # booting with new networking config so we can't wait for restart 
+  # booting with new networking config so we can't wait for restart
   - command: shutdown -r now
     async: 0
     poll: 0
     failed_when: False
-
-
