@@ -20,8 +20,6 @@
     - netcat
     - pstack
     - pv
-    - ruby1.9.1
-    - ruby1.9.1-dev
     - smem
     - socat
     - tree
