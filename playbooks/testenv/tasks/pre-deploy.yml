@@ -61,8 +61,8 @@
     template: src=../templates/etc/network/interfaces.d/eth0.cfg
               dest=/etc/network/interfaces.d/eth0.cfg
 
-- name: controller tasks
-  hosts: controller
+- name: network tasks
+  hosts: network
   tasks:
   - name: interfaces.d/eth0.cfg with NAT for floating IP pool
     template: src=../templates/etc/network/interfaces.d/eth0-controllers.cfg

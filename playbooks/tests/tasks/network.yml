@@ -1,8 +1,8 @@
 ---
 - name: network tests
-  hosts: controller[0]
+  hosts: network[0]
   tasks:
-  - name: migrate neutron services to controller 0
+  - name: migrate neutron services to first network node
     shell: . /root/stackrc; HOSTNAME={{ ansible_hostname }} /usr/local/bin/migrate_neutron_services
 
   - name: determine Neutron external interface name
@@ -79,8 +79,8 @@
   - name: ifup br-ex
     command: ifup {{neutron_external_interface}}
 
-- name: network tests across all controllers
-  hosts: controller
+- name: network tests across all network nodes
+  hosts: network
   tasks:
   - name: neutron dnsmasq has 8.8.8.8 upstream resolver
     shell: grep 8.8.8.8 /etc/dnsmasq.conf
