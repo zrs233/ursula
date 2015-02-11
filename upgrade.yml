@@ -3,7 +3,6 @@
 # future upgrades. NOT a rolling upgrade optimized for downtime.
 #
 # Assumes ml2 networking
-# Assumes rabbit cluster has been enabled
 ---
 - name: upgrade common bits first
   hosts: all
@@ -68,27 +67,6 @@
   handlers:
     - name: restart mysql
       service: name=mysql state=restarted
-
-- name: upgrade rabbit to clustering
-  hosts: controller
-  max_fail_percentage: 1
-  serial: 1
-  tags: rabbitmq
-
-  roles:
-    - role: rabbitmq
-
-- name: upgrade keystone
-  hosts: controller
-  max_fail_percentage: 1
-  tags: keystone
-
-  roles:
-    - role: keystone
-      force_sync: true
-      restart: False
-      database_create:
-        changed: False
 
 - name: upgrade glance
   hosts: controller
@@ -326,6 +304,18 @@
 
     - role: swift-proxy
       tags: ['openstack', 'swift', 'control']
+
+- name: upgrade keystone
+  hosts: controller
+  max_fail_percentage: 1
+  tags: keystone
+
+  roles:
+    - role: keystone
+      force_sync: true
+      restart: False
+      database_create:
+        changed: False
 
 - name: upgrade horizon
   hosts: controller
