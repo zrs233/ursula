@@ -1,4 +1,8 @@
 ---
 dependencies:
-  - role: apt
+  - role: apt-repos
+    repos:
+      - name: 'haproxy package repo'
+        repo: 'deb {{ apt_repos.haproxy.repo }} precise main'
+        key_url: '{{ apt_repos.haproxy.key_url }}'
   - role: monitoring-common

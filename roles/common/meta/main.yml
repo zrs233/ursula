@@ -1,4 +1,14 @@
 ---
 dependencies:
-  - role: apt
+  - role: apt-repos
+    repos: 
+      - repo: 'deb {{ apt_repos.bbg_openstack.repo }} precise main'
+        key_url: '{{ apt_repos.bbg_openstack.key_url }}'
+      - repo: 'deb {{ apt_repos.docker.repo }} docker main'
+        key_url: '{{ apt_repos.docker.key_url }}'
+        conditional: '{{ common.docker.enabled }}'
+      - repo: 'deb {{ apt_repos.hwraid.repo }} precise main'
+        key_url: '{{ apt_repos.hwraid.key_url }}'
+      - repo: 'deb {{ apt_repos.sensu.repo }} sensu main'
+        key_url: '{{ apt_repos.sensu.key_url }}'
   - role: monitoring-common

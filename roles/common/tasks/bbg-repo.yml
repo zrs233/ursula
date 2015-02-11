@@ -1,6 +1,0 @@
----
-- name: install bbg openstack repo key
-  apt_key: url={{ apt.repo.bbg_openstack.key_url }}
-
-- name: install bbg openstack repo
-  apt_repository: repo='deb {{ apt.repo.bbg_openstack.repo }} precise main' update_cache=yes

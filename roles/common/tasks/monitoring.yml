@@ -1,12 +1,4 @@
 ---
-- name: install sensu apt key
-  apt_key: id=7580C77F url="{{ apt.repo.sensu.key_url }}"
-
-- name: add the sensu apt repo
-  apt_repository: repo='deb {{ apt.repo.sensu.repo }} sensu main'
-                  state=present
-                  update_cache=yes
-
 - name: install sensu
   apt: pkg=sensu
 

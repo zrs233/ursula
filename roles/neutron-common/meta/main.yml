@@ -1,5 +1,6 @@
 ---
 dependencies:
+  - role: apt-repos
   - role: monitoring-common
   - role: logging-config
     service: neutron
