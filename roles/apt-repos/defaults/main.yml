@@ -1,12 +1,11 @@
 ---
 apt_repos:
-  conditional: "{{ conditional|default(True)|bool }}"
   docker:
     repo: 'https://get.docker.com/ubuntu'
     key_url: 'http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xD8576A8BA88D21E9'
   bbg_openstack:
     repo: 'http://repo.openstack.blueboxgrid.com/ubuntu/'
-    key_url: 'http://repo.openstack.blueboxgrid.com/ubuntu/ursula-apt.gpg.key'
+    key_url: 'http://repo.openstack.blueboxgrid.com/blue_box_cloud.gpg.key'
   hwraid:
     repo: 'http://hwraid.le-vert.net/ubuntu'
     key_url: 'http://hwraid.le-vert.net/debian/hwraid.le-vert.net.gpg.key'

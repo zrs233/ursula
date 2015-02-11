@@ -2,15 +2,15 @@
 - name: add any dependent repository keys from url
   apt_key: url="{{ item.key_url }}"
   with_items: repos 
-  when: repos is defined and and item.key_url is defined and (item.conditional is defined and item.conditional|bool)
+  when: repos is defined and item.key_url is defined
 
 # things like keyrings may come as packages vs. keys
 - name: add any dependent repository key packages
   apt: pkg="{{ item.key_package }}"
   with_items: repos
-  when: repos is defined and apt_repos.conditional and item.key_package is defined and (item.conditional is defined and item.conditional|bool)
+  when: repos is defined and item.key_package is defined 
 
 - name: add any dependent repositories
   apt_repository: repo="{{ item.repo }}" update_cache=yes
   with_items: repos
-  when: repos is defined and (item.conditional is defined and item.conditional|bool)
+  when: repos is defined 
