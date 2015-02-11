@@ -15,6 +15,7 @@
     - iotop
     - iperf
     - ltrace
+    - mcelog
     - mtr
     - netcat
     - pstack
