@@ -30,7 +30,7 @@
                        size={{ cinder.volume_file_size }}
   when: cinder.passphrase is not defined
 
-- name: cinder volume group
+- name: encrypted cinder volume group
   cinder_volume_group: file={{ cinder.volume_file }}
                        size={{ cinder.volume_file_size }}
                        passphrase={{ cinder.passphrase }}
