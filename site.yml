@@ -3,7 +3,7 @@
   hosts: all
   roles:
     - role: common
-      tags: ['common']
+      tags: ['common','common-base']
 
 - name: security and errata
   hosts: all

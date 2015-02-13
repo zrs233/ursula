@@ -4,6 +4,24 @@
        dest=/usr/share/novnc
        version={{ nova.novnc_rev }}
        update={{ openstack.git_update }}
+  when: nova.novnc_method == 'git'
+
+- name: novnc staging dir
+  file: dest=/opt/stack/novnc state=directory
+  when: nova.novnc_method == 'file'
+
+
+- name: fetch novnc tarball
+  get_url: url={{ nova.novnc_url }} dest=/opt/stack/novnc/novnc-0.5.1.tgz
+  when: nova.novnc_method == 'file'
+
+- name: unzip novnc tarball
+  unarchive: src=/opt/stack/novnc/novnc-0.5.1.tgz dest=/opt/stack/novnc/ copy=no
+  when: nova.novnc_method == 'file'
+
+- name: ensure novnc dir exists
+  file: src=/opt/stack/novnc/noVNC-0.5.1 dest=/usr/share/novnc state=link
+  when: nova.novnc_method == 'file'
 
 - name: install nova-novncproxy service
   upstart_service: name=nova-novncproxy user=nova

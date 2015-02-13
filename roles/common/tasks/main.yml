@@ -7,9 +7,6 @@
   template: src=etc/apt/sources.list dest=/etc/apt/sources.list
   when: apt.ubuntu_mirror is defined
 
-- include: pip.yml
-  when: common.pip is defined
-
 - include: proxy.yml
 
 - include: bbg-repo.yml
@@ -40,12 +37,8 @@
     - libxml2-dev
     - libxslt1-dev
 
-- name: update pip
-  pip: name=pip version=1.4.1
-  when: ansible_distribution_version == "12.04"
-
-- name: pin alembic to 0.7.0
-  pip: name=alembic version=0.7.0
+- include: pip.yml
+  tags: pip
 
 - name: set UTC timezone
   template: src=etc/timezone dest=/etc/timezone owner=root group=root mode=0644

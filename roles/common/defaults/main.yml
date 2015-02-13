@@ -18,3 +18,5 @@ common:
     disable_dns: True
   docker:
     enabled: False
+  pip_version: 1.4.1
+  setuptools_version: system

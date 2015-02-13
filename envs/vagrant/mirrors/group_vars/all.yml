@@ -10,7 +10,9 @@ percona:
 
 nova:
   scheduler_default_filters: AvailabilityZoneFilter,ComputeFilter
-  novnc_repo: http://172.16.0.18:8098/git/mirror/noVNC.git
+  novnc_repo: http://173.247.104.68:8098/git/mirror/noVNC.git
+  novnc_method: file
+  novnc_url: http://173.247.104.68:8090/files/novnc-0.5.1.tar.gz
 
 apt:
   ubuntu_mirror: http://173.247.104.68/archive.ubuntu.com/ubuntu
@@ -49,9 +51,26 @@ apt:
       key_url: http://173.247.104.68/keys/erlang.asc
 
 common:
-  pip:
-    proxy_url: http://173.247.104.68:8092/simple
+  pip_version: 6.0.8
+  setuptools_version: 12.1
 
 openstack:
-  git_mirror: http://172.16.0.18:8098/git/mirror
+  git_mirror: http://173.247.104.68:8098/git/mirror
   pypi_mirror: http://173.247.104.68:8092/simple
+
+memcached:
+  gem:
+    url: http://173.247.104.68:8090/files/memcached-1.8.0.gem
+    name: memcached-1.8.0.gem
+
+logging:
+  logstashforwarder_url: http://173.247.104.68:8090/files/logstash-forwarder_0.3.1_amd64.deb
+
+horizon:
+  logo_url: http://173.247.104.68:8090/files/bluebox-u1.1.x.png
+  favicon_url: http://173.247.104.68:8090/files/bluebox.ico
+
+glance:
+  images:
+    - name: cirros
+      url: http://173.247.104.68:8090/files/cirros-0.3.0-x86_64-disk.img

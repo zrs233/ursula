@@ -4,15 +4,7 @@
 
 - name: install openstack clients
   pip: name={{ item }}
-  with_items:
-    - python-keystoneclient
-    - python-glanceclient
-    - python-novaclient
-    - python-neutronclient
-    - python-cinderclient
-    - python-heatclient
-    - python-ironicclient
-    - python-swiftclient
+  with_items: client.names
   notify:
     - update ca certs
 

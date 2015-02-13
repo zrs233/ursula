@@ -1,7 +1,7 @@
 ---
 nova:
   patches:
-  rev: 8526a727dc20a96d7245ae836e81c29967166f77
+  rev: 4fdd83fcd02a6adbf99916765ffdc0521bf10e45
   compute_driver: nova.virt.libvirt.LibvirtDriver
   firewall_driver: nova.virt.firewall.NoopFirewallDriver
   scheduler_host_manager: nova.scheduler.host_manager.HostManager
@@ -15,8 +15,10 @@ nova:
   libvirt_cpu_model: null
   libvirt_type: kvm
   enable_ssh: False
+  novnc_method: git
   novnc_repo: https://github.com/kanaka/noVNC.git
   novnc_rev: 292f6a5d
+  novnc_url: https://github.com/kanaka/noVNC/archive/v0.5.1.tar.gz
   scheduler_default_filters: AvailabilityZoneFilter,RamFilter,ComputeFilter,CoreFilter
   libvirt_bin_version: 1.2.2-0ubuntu13.1.6~cloud2
   python_libvirt_version: 1.2.2-0ubuntu2~cloud0
