@@ -3,7 +3,6 @@
 # a cleanup script to run after a host has been migrated from OVS to ml2 / linux bridge
 
 - hosts: all
-  serial: 10
   tasks:
 
     - name: remove ipchanged for br-eth0
