@@ -15,6 +15,10 @@
   apt: name=iproute2 state=latest
   when: neutron.plugin == 'ml2' and 'vxlan' in neutron.tunnel_types
 
+- name: permit VXLAN traffic
+  ufw: rule=allow to_port=4789 proto=udp
+  when: neutron.plugin == 'ml2' and 'vxlan' in neutron.tunnel_types
+
 - name: install neutron-openvswitch-agent service
   upstart_service: name=neutron-openvswitch-agent
                    user=neutron
