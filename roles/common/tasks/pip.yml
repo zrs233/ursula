@@ -23,4 +23,4 @@
   when: common.setuptools_version != "system"
 
 - name: pin alembic to 0.7.0
-  pip: name=alembic version=0.7.0  
+  pip: name=alembic version=0.7.0
