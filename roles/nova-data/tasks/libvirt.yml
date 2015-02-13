@@ -13,6 +13,8 @@
     - qemu-kvm={{ nova.qemu_kvm_version }}
     - librbd1={{ nova.librdb1_version }}
     - open-iscsi
+    - libvirt-dev={{ nova.libvirt_bin_version }}
+    - pkg-config
   notify: restart nova services
   when: ansible_distribution_version == "12.04"
 
@@ -23,8 +25,19 @@
     - python-libvirt={{ nova.trusty.python_libvirt_version }}
     - qemu-kvm={{ nova.trusty.qemu_kvm_version }}
     - open-iscsi
+    - libvirt-dev={{ nova.libvirt_bin_version }}
+    - pkg-config
   notify: restart nova services
   when: ansible_distribution_version == "14.04"
+
+# in the case of packaging, we want to be sure that libvirt python
+# modules are built against the libvirt running on the host, so build
+# this part of the virtualenv on the system itself
+- name: install libvirt-python in package venv
+  pip: name=libvirt-python 
+       virtualenv="{{ 'nova'|ursula_package_path(openstack_package_version) }}"
+  notify: restart nova services
+  when: openstack_install_method == 'package'
 
 - name: update various lines in libvirtd.conf
   lineinfile: dest=/etc/libvirt/libvirtd.conf regexp="{{ item.value.regexp }}"
