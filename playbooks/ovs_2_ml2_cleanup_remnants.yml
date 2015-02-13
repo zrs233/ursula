@@ -29,4 +29,4 @@
       when: ansible_phy_br_eth0 is defined
 
     - name: remove OVS neutron agents
-      shell: neutron agent-list | awk '/Open vSwitch agent/ { print $2 }' | xargs neutron agent-delete
+      shell: . /root/stackrc && neutron agent-list | awk '/Open vSwitch agent/ { print $2 }' | xargs neutron agent-delete
