@@ -1,6 +1,6 @@
 ---
 neutron:
-  rev: 679246d7280e9fb374f8db0972b21b3653724c42
+  rev: dbeaa70172bc2f40e587c5e2f62bb28b600b7e25
   api_workers: 3
   agent_down_time: 20
   report_interval: 4

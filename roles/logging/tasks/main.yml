@@ -3,11 +3,11 @@
   user: name=logstash comment=logstash shell=/bin/false system=yes home=/opt/logstash-forwarder
 
 - name: install bbg openstack repo key
-  apt_key: url=http://apt.openstack.blueboxgrid.com/ubuntu/ursula-apt.gpg.key
+  apt_key: url={{ apt.repo.bbg_openstack.key_url }}
   when: ansible_distribution_version == "12.04"
 
 - name: install bbg openstack repo
-  apt_repository: repo='deb http://apt.openstack.blueboxgrid.com/ubuntu/ precise main' update_cache=yes
+  apt_repository: repo='deb {{ apt.repo.bbg_openstack.repo }} precise main' update_cache=yes
   when: ansible_distribution_version == "12.04"
 
 - name: install logstash-forwarder
@@ -15,7 +15,7 @@
   when: ansible_distribution_version == "12.04"
 
 - name: download logstash
-  get_url: url=http://repo.openstack.blueboxgrid.com/ubuntu/pool/main/l/logstash-forwarder/logstash-forwarder_{{ logging.version }}_amd64.deb
+  get_url: url={{ logging.logstashforwarder_url }}
            dest=/tmp/logstash-forwarder_{{ logging.version }}_amd64.deb
   when: ansible_distribution_version == "14.04"
 
