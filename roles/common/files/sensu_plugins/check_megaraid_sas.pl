@@ -156,7 +156,7 @@ ADAPTER: for ( my $adp = 0; $adp < $adapters; $adp++ ) {
 			
 		my ($size, $unit, $raidlevel, $ldpdcount, $state, $spandepth);
 		while (<LDINFO>) {
-			if ( m/Size\s*:\s*((\d+\.?\d*)\s*(MB|GB|TB))/ ) {
+			if ( m/^Size\s*:\s*((\d+\.?\d*)\s*(MB|GB|TB))/ ) {
 				$size = $2;
 				$unit = $3;
 				# Adjust MB to GB if that's what we got
