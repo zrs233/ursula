@@ -11,4 +11,4 @@ monitoring:
     vhost: /sensu
     username: sensu
     password: sensu
-  cluster_prefix: "ip a | grep :ucarp > /dev/null &&"
+  cluster_prefix: "ip a | grep :ucarp > /dev/null"
