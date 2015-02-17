@@ -32,7 +32,7 @@ def main():
             args=dict(default='', required=False),
             plugin_dir=dict(default='/etc/sensu/plugins', required=False),
             check_dir=dict(default='/etc/sensu/conf.d/checks', required=False),
-            prefix=dict(default=None, required=False),
+            prefix=dict(default='', required=False),
             interval=dict(default=20, reuired=False)
         )
     )
