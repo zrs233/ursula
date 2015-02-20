@@ -38,15 +38,21 @@ import os
 import re
 import subprocess
 
-def is_luks(device, module):
+def _is_device_type(device, device_type, module):
+    if not os.path.exists(device):
+        return False
     cmd = ['hd', '-n', '16384', device]
     rc, out, err = module.run_command(cmd, check_rc=True)
-    return re.search('LUKS', out)
+    return re.search(device_type, out)
+
+
+def is_luks(device, module):
+    return _is_device_type(device, 'LUKS', module)
+
 
 def is_lvm_pv(device, module):
-    cmd = ['hd', '-n', '16384', device]
-    rc, out, err = module.run_command(cmd, check_rc=True)
-    return re.search('LVM2', out)
+    return _is_device_type(device, 'LMV2', module)
+
 
 def vgexists(name, module):
     cmd = ['vgs', name]
