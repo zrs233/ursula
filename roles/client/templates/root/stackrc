@@ -1,5 +1,5 @@
 export OS_PASSWORD={{ secrets.provider_admin_password }}
-export OS_AUTH_URL=https://{{ endpoints.main }}:5001/v2.0
+export OS_AUTH_URL={{ endpoints.auth_uri }}
 export OS_USERNAME=provider_admin
 export OS_TENANT_NAME=admin
 {% if client.self_signed_cert -%}

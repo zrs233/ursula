@@ -272,6 +272,12 @@ keystone:
       public_url: https://{{ endpoints.main }}:5001/v2.0
       internal_url: https://{{ endpoints.main }}:5001/v2.0
       admin_url: https://{{ endpoints.main }}:35358/v2.0
+    - name: keystonev3
+      type: identityv3
+      description: 'Identity Service v3'
+      public_url: https://{{ endpoints.main }}:5001/v3
+      internal_url: https://{{ endpoints.main }}:5001/v3
+      admin_url: https://{{ endpoints.main }}:35358/v3
     - name: nova
       type: compute
       description: 'Compute Service'

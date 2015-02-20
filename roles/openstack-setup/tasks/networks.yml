@@ -7,7 +7,7 @@
                    router_external={{ item.external }}
                    provider_segmentation_id={{ item.segmentation_id }}
                    provider_physical_network={{ item.provider_physical_network }}
-                   auth_url=https://{{ endpoints.main }}:5001/v2.0/
+                   auth_url={{ endpoints.auth_uri }}
                    login_tenant_name=admin
                    login_username=provider_admin
                    login_password={{ secrets.provider_admin_password }}
@@ -21,7 +21,7 @@
                   gateway_ip={{ item.gateway_ip }}
                   ip_version={{ item.ip_version }}
                   state=present
-                  auth_url=https://{{ endpoints.main }}:5001/v2.0/
+                  auth_url={{ endpoints.auth_uri }}
                   login_tenant_name=admin
                   login_username=provider_admin
                   login_password={{ secrets.provider_admin_password }}
@@ -32,7 +32,7 @@
                   name={{ item.name }}
                   tenant_name={{ item.tenant_name }}
                   admin_state_up=true
-                  auth_url=https://{{ endpoints.main }}:5001/v2.0/
+                  auth_url={{ endpoints.auth_uri }}
                   login_tenant_name=admin
                   login_username=provider_admin
                   login_password={{ secrets.provider_admin_password }}
@@ -42,7 +42,7 @@
   neutron_router_gateway: state=present
                           router_name={{ item.name }}
                           network_name=external
-                          auth_url=https://{{ endpoints.main }}:5001/v2.0/
+                          auth_url={{ endpoints.auth_uri }}
                           login_tenant_name=admin
                           login_username=provider_admin
                           login_password={{ secrets.provider_admin_password }}
@@ -53,7 +53,7 @@
                             subnet_name={{ item.subnet_name }}
                             tenant_name={{ item.tenant_name }}
                             state=present
-                            auth_url=https://{{ endpoints.main }}:5001/v2.0/
+                            auth_url={{ endpoints.auth_uri }}
                             login_tenant_name=admin
                             login_username=provider_admin
                             login_password={{ secrets.provider_admin_password }}

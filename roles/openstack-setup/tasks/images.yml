@@ -4,7 +4,7 @@
                 copy_from={{ item.url }}
                 container_format=bare
                 disk_format=qcow2
-                auth_url=https://{{ endpoints.main }}:5001/v2.0/
+                auth_url={{ endpoints.auth_uri }}
                 login_tenant_name=admin
                 login_username=provider_admin
                 login_password={{ secrets.provider_admin_password }}
