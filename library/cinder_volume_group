@@ -79,17 +79,16 @@ def main():
     if vgexists(vgname, module):
         module.exit_json(changed=False)
 
-    # Check if our dest already exists
-    if os.path.exists(dest):
-        module.fail_json(msg="Destination file %s already exists" % dest)
-
-    # Create dest file
-    cmd = ['truncate', '-s', size, dest]
-    rc, out, err = module.run_command(cmd, check_rc=True)
-    try:
-        os.chmod(dest, 0700)
-    except Exception, e:
-        module.fail_json(msg="Unable to set permissions: %s" % e)
+    # Create dest file if necessary
+    new_cinder_volumes_file = False
+    if not os.path.exists(dest):
+        cmd = ['truncate', '-s', size, dest]
+        rc, out, err = module.run_command(cmd, check_rc=True)
+        try:
+            os.chmod(dest, 0700)
+            new_cinder_volumes_file = True
+        except Exception, e:
+            module.fail_json(msg="Unable to set permissions: %s" % e)
 
     # Setup loop device
     device = '/dev/loop0'
@@ -111,31 +110,38 @@ def main():
             cmd = ['modprobe', cryptmod]
             rc, out, err = module.run_command(cmd, check_rc=True)
 
-        luksfmt = ['cryptsetup', 'luksFormat', '--key-file=-',
-                   device]
-        luksopn = ['cryptsetup', 'luksOpen', '--key-file=-',
-                   device, vgname]
+        if new_cinder_volumes_file:
+            try:
+                # format
+                luksfmt = ['cryptsetup', 'luksFormat', '--key-file=-',
+                           device]
+                ps = subprocess.Popen(['echo', '-n', passphrase],
+                                       stdout=subprocess.PIPE)
+                output = subprocess.check_output(luksfmt, stdin=ps.stdout)
+            except Exception, e:
+                module.fail_json(msg="Failed to setup crypt device: %s" % e)
 
+        # open
         try:
-            # format
-            ps = subprocess.Popen(['echo', '-n', passphrase],
-                                   stdout=subprocess.PIPE)
-            output = subprocess.check_output(luksfmt, stdin=ps.stdout)
-            # open
+            luksopn = ['cryptsetup', 'luksOpen', '--key-file=-',
+                           device, vgname]
             ps = subprocess.Popen(['echo', '-n', passphrase],
                                    stdout=subprocess.PIPE)
             output = subprocess.check_output(luksopn, stdin=ps.stdout)
         except Exception, e:
-            module.fail_json(msg="Failed to setup crypt device: %s" % e)
+            module.fail_json(msg="Failed to open crypt device: %s" % e)
 
         device = "/dev/mapper/%s" % vgname
 
     if is_luks('/dev/mapper/%s' % vgname, module):
         module.fail_json(msg="%s is a LUKS volume" % device)
 
+
+
+
     if is_lvm_pv(device, module):
         module.fail_json(msg="%s is already a LVM PV" % device)
-    else:
+    elif not vgexists(vgname, module):
         cmd = ['vgcreate', vgname, device]
         rc, out, err = module.run_command(cmd, check_rc=True)
 
