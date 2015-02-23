@@ -32,12 +32,20 @@
   service: name=neutron-openvswitch-agent state=started
   when: neutron.plugin == 'ovs'
 
+- name: ml2 dataplane config
+  template: src=etc/neutron/plugins/ml2/ml2_plugin_dataplane.ini
+            dest=/etc/neutron/plugins/ml2/ml2_plugin_dataplane.ini
+            mode=0644
+  when: neutron.plugin == 'ml2'
+  notify:
+    - restart neutron services
+
 - name: install neutron-linuxbridge-agent service
   upstart_service: name=neutron-linuxbridge-agent
                    user=neutron
                    cmd=/usr/local/bin/neutron-linuxbridge-agent
                    config_dirs=/etc/neutron
-                   config_files=/etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2_plugin.ini
+                   config_files=/etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2_plugin.ini,/etc/neutron/plugins/ml2/ml2_plugin_dataplane.ini
   when: neutron.plugin == 'ml2'
 
 - name: start neutron-linuxbridge-agent

@@ -94,6 +94,7 @@
     - role: haproxy
       haproxy_type: openstack
       tags: ['haproxy', 'infra']
+      when: haproxy.enabled is not defined or haproxy.enabled == True
 
 - name: swift haproxy
   gather_facts: force
@@ -133,7 +134,7 @@
     - role: keystone-setup
       keystone_configured: false
       tags: ['openstack', 'setup', 'keystone-setup']
-      when: not keystone_configured
+      #when: not keystone_configured
 
 - name: glance code and config
   gather_facts: force

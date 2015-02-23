@@ -1,6 +1,6 @@
 ---
 cinder:
-  rev: 7b1d7a31335bd8723551c9af5c270927ad830c3f
+  rev: 532b82059fe16678da7f7ed10d2f862ff1d2e9ea
   enabled_backends: 
   default_backend: 
   backends: []

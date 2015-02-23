@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env /opt/sensu/embedded/bin/ruby
 #
 # Push Memcached stats into graphite
 #

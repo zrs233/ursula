@@ -16,12 +16,12 @@ ALLOWED_HOSTS = ['*']
 # and don't forget to strip it from the client's request.
 # For more information see:
 # https://docs.djangoproject.com/en/1.4/ref/settings/#secure-proxy-ssl-header
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # If Horizon is being served through SSL, then uncomment the following two
 # settings to better secure the cookies from security exploits
-#CSRF_COOKIE_SECURE = True
-#SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
 # Overrides for OpenStack API versions. Use this setting to force the
 # OpenStack dashboard to use a specfic API version for a given service API.
@@ -131,7 +131,7 @@ OPENSTACK_KEYSTONE_URL = "https://%s:5001/v{{horizon.keystone_api_version}}" % O
 OPENSTACK_KEYSTONE_DEFAULT_ROLE = "service"
 
 # Disable SSL certificate checks (useful for self-signed certificates):
-OPENSTACK_SSL_NO_VERIFY = True
+#OPENSTACK_SSL_NO_VERIFY = True
 
 # The OPENSTACK_KEYSTONE_BACKEND settings can be used to identify the
 # capabilities of the auth backend for Keystone.

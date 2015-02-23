@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env /opt/sensu/embedded/bin/ruby
 #
 # Percona Cluster Size Plugin
 # ===

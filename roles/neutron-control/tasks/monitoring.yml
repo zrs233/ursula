@@ -13,6 +13,6 @@
 - name: neutron free fips metrics check
   sensu_metrics_check: name=neutron-free-fips-metric plugin=metrics-neutron-fip.py
                        args='--scheme {{ monitoring.graphite.cluster_prefix }}.neutron'
-                       prefix='{{ monitoring.cluster_prefix }} &&'
+                       prefix='{{ monitoring.cluster_prefix }}'
                        interval=10
   notify: restart sensu-client

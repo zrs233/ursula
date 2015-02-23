@@ -28,4 +28,9 @@
 - name: start nova-compute
   service: name=nova-compute state=started
 
+- name: allow vnc access for console
+  ufw: rule=allow port=5900:6100 proto=tcp
+
 - include: monitoring.yml tags=monitoring,common
+
+
