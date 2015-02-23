@@ -2,9 +2,17 @@
 - name: openstack creds
   template: src=root/stackrc dest=/root/stackrc
 
-- name: install openstack clients
-  pip: name={{ item }}
-  with_items: client.names
+- name: install openstack clients with pinned versions
+  pip: name={{ item.name }} version={{ item.version }}
+  when: item.version is defined
+  with_items: client.packages
+  notify:
+    - update ca certs
+
+- name: install openstack clients without pinned versions
+  pip: name={{ item.name }}
+  when: item.version is not defined
+  with_items: client.packages
   notify:
     - update ca certs
 

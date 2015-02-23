@@ -1,13 +1,13 @@
 ---
 client:
   self_signed_cert: false
-  names:
-    - python-keystoneclient
-    - python-glanceclient
-    - python-novaclient
-    - python-neutronclient
-    - python-cinderclient
-    - python-heatclient
-    - python-ironicclient
-    - python-swiftclient
-
+  packages:
+    - name: python-keystoneclient
+    - name: python-glanceclient
+    - name: python-novaclient
+      version: 2.20.0
+    - name: python-neutronclient
+    - name: python-cinderclient
+    - name: python-heatclient
+    - name: python-ironicclient
+    - name: python-swiftclient
