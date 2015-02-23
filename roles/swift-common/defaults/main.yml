@@ -1,9 +1,9 @@
 ---
 swift:
-  rev: 4765537cba6a6970110953f11f4e1b419d0730d3
-  client:
-    rev: cfbabe72660b5d0c471584d987665396d78a4958
   hash_path_prefix: a57b0dfd61b5fe3a
   disks:
     - sdb
   allow_versions: False
+
+  source:
+    rev: '4765537cba6a6970110953f11f4e1b419d0730d3'

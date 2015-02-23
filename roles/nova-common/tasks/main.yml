@@ -6,22 +6,6 @@
 - name: nova packages
   apt: pkg=python-numpy
 
-- name: get nova source repo
-  git: |
-    repo={{ openstack.git_mirror }}/nova.git
-    dest=/opt/stack/nova
-    version={{ nova.rev }}
-    update={{ openstack.git_update }}
-  register: result
-  until: result|success
-  retries: 3
-  delay: 60
-  notify:
-    - pip install nova
-    - nova rootwrap
-    - restart nova services
-- meta: flush_handlers
-
 - file: dest=/etc/nova state=directory
 - file: dest=/var/lib/nova state=directory owner=nova
 - file: dest=/var/cache/nova state=directory mode=0700 owner=nova group=nova

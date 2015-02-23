@@ -1,16 +1,4 @@
 ---
-- name: pip install keystone
-  action: command pip install -i {{ openstack.pypi_mirror }} /opt/stack/keystone
-  register: result
-  until: result|success
-  retries: 3
-  delay: 60
-  notify: update CA certs
-
 - name: restart keystone services
   service: name=keystone state=restarted must_exist=false
   when: restart|default('True')
-
-- name: restart logstash-forwarder
-  service: name=logstash-forwarder state=restarted
-

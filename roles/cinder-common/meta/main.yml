@@ -5,3 +5,8 @@ dependencies:
     service: cinder
     logdata: "{{ cinder.logs }}"
   - role: openstack-source
+    project_name: cinder
+    project_rev: "{{ cinder.source.rev }}"
+    rootwrap: True
+    when: openstack_install_method == 'source'
+

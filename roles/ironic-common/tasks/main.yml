@@ -12,14 +12,6 @@
         home=/nonexistent
         createhome=no
 
-- name: get ironic source repo
-  git: repo={{ openstack.git_mirror }}/ironic.git
-       dest={{ ironic.path }}
-       version={{ ironic.rev }}
-       update={{ openstack.git_update }}
-  notify:
-  - pip install ironic
-
 - name: create ironic config directories
   file: dest={{ item }} state=directory owner=root group=ironic mode=0750
   with_items:
@@ -36,16 +28,16 @@
   file: dest=/var/log/ironic state=directory owner=root group=ironic mode=0770
 
 - name: ironic config
-  template: src=etc/ironic/ironic.conf dest=/etc/ironic/ironic.conf mode=0640 owner=root group=ironic
+  template: src=etc/ironic/ironic.conf dest=/etc/ironic/ironic.conf mode=0640 
+            owner=root group=ironic
 
 - name: ironic policy config
-  template: src=etc/ironic/policy.json dest=/etc/ironic/policy.json mode=0640 owner=root group=ironic
+  template: src=etc/ironic/policy.json dest=/etc/ironic/policy.json mode=0640 
+            owner=root group=ironic
 
 - name: ironic paste config
-  template: src=etc/ironic/rootwrap.conf dest=/etc/ironic/rootwrap.conf mode=0640 owner=root group=ironic
-
-- name: ironic rootwrap
-  command: rsync -avh {{ ironic.path }}/etc/ironic/rootwrap.d /etc/ironic
+  template: src=etc/ironic/rootwrap.conf dest=/etc/ironic/rootwrap.conf 
+            mode=0640 owner=root group=ironic
 
 - name: ironic sudoer
   template: src=etc/sudoers.d/ironic
@@ -53,16 +45,6 @@
             owner=root
             group=root
             mode=0440
-
-- meta: flush_handlers
-
-- name: ironic-client
-  git: repo={{ openstack.git_mirror }}/python-ironicclient.git
-       dest={{ ironic.client_path }}
-       version={{ ironic.client_rev }}
-       update={{ openstack.git_update }}
-  notify:
-  - pip install ironicclient
 
 - name: set up log rotation for ironic
   logrotate: name=ironic path=/var/log/ironic/*.log

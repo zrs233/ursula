@@ -1,18 +1,7 @@
 ---
-- name: pip install ironic
-  pip: name='{{ item }}' extra_args='-i {{ openstack.pypi_mirror }}'
-  with_items:
-    - MySQL-python
-    - '{{ ironic.path }}'
-  notify: update CA certs
-
-- name: pip install ironicclient
-  pip: name='{{ ironic.client_path }}' extra_args='-i {{ openstack.pypi_mirror }}'
-  notify: update CA certs
-
-- name: restart ironic controller services
-  service: name={{ item }} state=restarted
+- name: restart ironic services
+  restart_if_present: service={{ item }}
+  when: restart|default('True')
   with_items:
     - ironic-api
     - ironic-conductor
-  when: restart|default('True')

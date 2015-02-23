@@ -1,6 +1,5 @@
 ---
 neutron:
-  rev: dbeaa70172bc2f40e587c5e2f62bb28b600b7e25
   api_workers: 3
   agent_down_time: 20
   report_interval: 4
@@ -11,6 +10,9 @@ neutron:
     - neutron.services.l3_router.l3_router_plugin.L3RouterPlugin
   enable_flat_networks: False
   alembic_version: 0.7.0
+
+  source:
+    rev: 'dbeaa70172bc2f40e587c5e2f62bb28b600b7e25'
 
   logs:
     - paths:

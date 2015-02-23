@@ -1,6 +1,5 @@
 ---
 glance:
-  rev: bb48dfc54f592259a73a27218b6d5f657b39294c
   api_workers: 5
   registry_workers: 5
   sync:
@@ -13,6 +12,9 @@ glance:
     device_name: image-cache
     dir: /var/lib/glance/images
   store_swift: False
+
+  source:
+    rev: 'bb48dfc54f592259a73a27218b6d5f657b39294c'
 
   logs:
     - paths:

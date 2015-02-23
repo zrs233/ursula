@@ -9,4 +9,3 @@ dependencies:
     db_version: 'db versions'
     db_sync_cmd: 'ironic-dbsync'
     db_sync: 'upgrade'
-  - role: openstack-source

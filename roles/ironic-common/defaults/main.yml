@@ -1,6 +1,5 @@
 ---
 ironic:
-  rev: 53171f75a64a26dcec91facbdec95b2ed7f74338
   virtualenv: /opt/stack/ironic
   path: /opt/stack/ironic
   client_rev: e611ae5f206d846e72684ba16c345653232c45c3
@@ -17,6 +16,10 @@ ironic:
     - fake
     - pxe_ssh
     - pxe_ipmitool
+
+  source:
+    rev: '53171f75a64a26dcec91facbdec95b2ed7f74338'
+
   logging:
     debug: False
     verbose: True

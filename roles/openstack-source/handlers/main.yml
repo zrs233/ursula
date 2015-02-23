@@ -1,3 +1,30 @@
 ---
-- name: update CA certs
-  command: update-ca-certificates
+- name: "pip install {{ project_name }}"
+  pip: name="/opt/stack/{{ project_name }}" extra_args="-i {{ openstack_source.pypi_mirror }}"
+  register: result
+  until: result|success
+  retries: 3
+  delay: 10
+  notify:
+    - update ca-certs
+
+- name: update ca-certs
+  command: "update-ca-certificates"
+
+- name: ensure project config directory exists
+  file: name="/etc/{{ project_name }}" state=directory
+  when: "{{ openstack_source.rootwrap|bool }}"
+
+- name: stat rootwrap.d
+  stat: path="/etc/{{ project_name }}/rootwrap.d"
+  register: st
+  when: "{{ openstack_source.rootwrap|bool }}"
+
+- name: remove rootwrap.d if a directory
+  file: dest="/etc/{{ project_name }}/rootwrap.d" state=absent
+  when: "{{ openstack_source.rootwrap|bool }} and st.stat is defined and st.stat.isdir"
+
+- name: "setup {{ project_name }} rootwrap"
+  file: src="/opt/stack/{{ project_name }}/etc/{{ project_name }}/rootwrap.d" 
+        dest="/etc/{{ project_name }}/rootwrap.d" state=link
+  when: "{{ openstack_source.rootwrap|bool }}"
