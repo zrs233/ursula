@@ -55,7 +55,7 @@ def main():
                 env_vars = module.params['env_vars'].replace(":","=").replace(","," ")
                 command = '%s %s' % (env_vars, command)
             if module.params['prefix']:
-                command = '%s %s' % (module.params['prefix'], module.params['command'])
+                command = '%s %s' % (module.params['prefix'], command)
             if module.params['use_sudo']:
                 command = "sudo %s" % (command)
         notification = '%s check failed' % (module.params['name'])
