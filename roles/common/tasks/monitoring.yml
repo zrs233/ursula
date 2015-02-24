@@ -122,12 +122,6 @@
                interval=3600
   notify: restart sensu-client
 
-- name: hostname matches ansbile inventory name
-  sensu_check: name=hostname-matches-inventory_hostname plugin=check-hostname.sh
-               args="-v {{ inventory_hostname }} -k inventory_hostname"
-               interval=3600
-  notify: restart sensu-client
-
 - name: memory metrics check
   sensu_metrics_check: name=memory-metrics plugin=memory-metrics.rb
                        args='--scheme {{ monitoring.graphite.host_prefix }}'

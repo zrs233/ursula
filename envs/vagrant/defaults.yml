@@ -392,3 +392,6 @@ common:
     enabled: false
 
 stack_env: vagrant
+
+haproxy:
+  enabled: True

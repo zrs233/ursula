@@ -1,15 +1,18 @@
 #!/usr/bin/env python2.7
 
-from datetime import datetime, timedelta
-from glanceclient import client
-from iso8601 import iso8601
-from keystoneclient.openstack.common import timeutils
-from keystoneclient.v2_0 import client as ksclient
 import logging
 import os
+import pytz
 import re
 import sys
 import time
+
+from datetime import datetime, timedelta
+from dateutil import parser
+
+from glanceclient import client
+from iso8601 import iso8601
+from keystoneclient.v2_0 import client as ksclient
 
 
 glance_auth = {
@@ -46,9 +49,11 @@ files = [(x, os.path.getsize(p),
          for x, p in files if os.path.isfile(p)]
 
 # Fetch the list of glance images
-glance_images = [(x.id, x.size, timeutils.parse_isotime(x.created_at))
-                 for x in glance.images.list() if x.status == 'active']
-
+glance_images = []
+for x in glance.images.list():
+    if x.status == 'active':
+        tz_aware_time = pytz.utc.localize(parser.parse(x.created_at))
+        glance_images.append((x.id, x.size, tz_aware_time))
 
 # Check all active images 1 hour or older are present
 time_cutoff = datetime.now(iso8601.Utc()) - timedelta(0, 3600)

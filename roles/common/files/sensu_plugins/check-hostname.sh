@@ -1,24 +1,23 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# get arguments
+trap "{ echo 'unable to check hostname'; exit 2; }" ERR
+
 while getopts 'k:v:' OPT; do
-  case $OPT in
-    k) KEY=$OPTARG;;  # ansible_nodename
-    v) VALUE=$OPTARG;;  # vagrant
+  case "$OPT" in
+    k) key="$OPTARG";;  # e.g. ansible_nodename
+    v) value="$OPTARG";;  # e.g. vagrant
   esac
 done
 
-if [[ -z $VALUE ]]; then
-  exit 0
-fi
+[ -n "$value" ] || exit 0
 
-HOST=$(hostname)
+host="$(hostname)"
 
-if [[ $HOST != $NAME ]]; then
-  if [[ -n $KEY ]]; then
-    echo "hostname (${HOST}) should match ${KEY} (${VALUE})"
+if [ $(hostname) != "$value" ]; then
+  if [ -n "$key" ]; then
+    echo "hostname ($host) should match $key ($value)"
   else
-    echo "hostname (${HOST}) should be set to ${VALUE}"
+    echo "hostname ($host) should be set to $value"
   fi
   exit 2
 else

@@ -6,4 +6,5 @@
 - name: dashboard port check
   sensu_check: name=check-dashboard-clear-port-redirects plugin=check-http.rb
                args='-u http://localhost/ -r'
+  when: haproxy.enabled|bool
   notify: restart sensu-client

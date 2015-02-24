@@ -23,6 +23,7 @@ nova:
   python_libvirt_version: 1.2.2-0ubuntu2~cloud0
   qemu_kvm_version: 2.0.0+dfsg-2ubuntu1.6~cloud0
   librdb1_version: 0.80.5-0ubuntu0.14.04.1~cloud0
+  glance_endpoint: http://{{ endpoints.glance }}:9292
   trusty:
     libvirt_bin_version: 1.2.2-0ubuntu13.1.7
     python_libvirt_version: 1.2.2-0ubuntu2

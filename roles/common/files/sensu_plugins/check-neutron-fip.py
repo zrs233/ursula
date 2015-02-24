@@ -39,8 +39,8 @@ parser.add_argument('-u', '--user', default=os.environ['OS_USERNAME'])
 parser.add_argument('-p', '--password', default=os.environ['OS_PASSWORD'])
 parser.add_argument('-t', '--tenant', default=os.environ['OS_TENANT_NAME'])
 parser.add_argument('-a', '--auth-url', default=os.environ['OS_AUTH_URL'])
-parser.add_argument('-w', '--warn', default=10)
-parser.add_argument('-c', '--crit', default=1)
+parser.add_argument('-w', '--warn', default=10, type=int)
+parser.add_argument('-c', '--crit', default=1, type=int)
 args = parser.parse_args()
 
 try:
