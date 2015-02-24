@@ -4,15 +4,17 @@
   notify: restart sensu-client
 
 - name: neutron free fips check
-  sensu_check: name=check-neutron-free-fips plugin=check-neutron-fip.py
-               args="--crit 2 --warn 5"
+  sensu_check: name=check-neutron-free-fips plugin=check-neutron-fip.sh
+               args="-c 2 -w 5 -m /root/.my.cnf"
                prefix='{{ monitoring.cluster_prefix }}'
-               interval=10
+               use_sudo=true
+               interval=20
   notify: restart sensu-client
 
 - name: neutron free fips metrics check
-  sensu_metrics_check: name=neutron-free-fips-metric plugin=metrics-neutron-fip.py
-                       args='--scheme {{ monitoring.graphite.cluster_prefix }}.neutron'
+  sensu_metrics_check: name=neutron-free-fips-metric plugin=check-neutron-fip.sh
+                       args='-s {{ monitoring.graphite.cluster_prefix }}.neutron -p  -m /root/.my.cnf'
                        prefix='{{ monitoring.cluster_prefix }}'
-                       interval=10
+                       use_sudo=true
+                       interval=20
   notify: restart sensu-client
