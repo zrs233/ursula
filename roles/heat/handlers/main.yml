@@ -1,6 +1,6 @@
 ---
 - name: restart heat services
-  restart_if_present: service={{ item }}
+  service: name={{ item }} state=restarted must_exist=false
   when: restart|default('True')
   with_items:
     - heat-api
