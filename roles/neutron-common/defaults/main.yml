@@ -2,6 +2,7 @@
 neutron:
   rev: dbeaa70172bc2f40e587c5e2f62bb28b600b7e25
   api_workers: 3
+  metadata_workers: 3
   agent_down_time: 20
   report_interval: 4
   dhcp_dns_servers:
