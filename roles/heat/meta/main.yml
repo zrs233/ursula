@@ -5,3 +5,6 @@ dependencies:
     service: heat
     logdata: "{{ heat.logs }}"
   - role: openstack-source
+    project_name: heat
+    project_rev: "{{ heat.source.rev }}"
+    when: openstack_install_method == 'source'

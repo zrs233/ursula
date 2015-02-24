@@ -3,35 +3,11 @@
   user: name=heat comment=heat shell=/bin/false system=yes home=/nonexistent
         createhome=no
 
-- name: get heat source repo
-  git: repo={{ openstack.git_mirror }}/heat.git
-       dest=/opt/stack/heat
-       version={{ heat.rev }}
-       update={{ openstack.git_update }}
-  notify:
-    - pip install heat
-
-- meta: flush_handlers
-
 - name: create heat environment.d directory
   file: dest=/etc/heat/environment.d state=directory
 
 - name: create heat log directory
   file: dest=/var/log/heat state=directory mode=0755 owner=heat
-
-- name: heat config
-  template: src=etc/heat/heat.conf dest=/etc/heat/heat.conf mode=0644
-  notify:
-    - restart heat-api
-    - restart heat-api-cfn
-    - restart heat-engine
-
-- name: heat policy config
-  template: src=etc/heat/policy.json dest=/etc/heat/policy.json mode=0644
-
-- name: heat paste config
-  template: src=etc/heat/api-paste.ini dest=/etc/heat/api-paste.ini mode=0644
-  notify: restart heat-api
 
 - name: install heat services
   upstart_service: name={{ item }}
@@ -56,9 +32,7 @@
   run_once: true
   changed_when: true
   notify:
-    - restart heat-api
-    - restart heat-api-cfn
-    - restart heat-engine
+    - restart heat services 
   # we want this to always be changed so that it can notify the service restart
 
 - meta: flush_handlers
@@ -69,6 +43,15 @@
     - heat-api
     - heat-api-cfn
     - heat-engine
+
+- name: heat config
+  template: src=etc/heat/{{ item }} dest=/etc/heat/{{ item }} mode=0644
+  with_items:
+    - heat.conf
+    - policy.json
+    - api-paste.ini
+  notify:
+    - restart heat services
 
 - include: monitoring.yml tags=monitoring,common
 

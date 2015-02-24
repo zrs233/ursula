@@ -1,3 +1,51 @@
 ---
-- name: update CA certs
-  command: update-ca-certificates
+# These are effectively duplicate handlers while we wait for ansible 1.8
+# support. As 'virtualenv' is optional, we would need the default(omit)
+# syntax provided by ansible 1.8 to do this cleanly.
+- name: "pip install {{ project_name }}"
+  pip: name="/opt/stack/{{ project_name }}" extra_args="-i {{ openstack_source.pypi_mirror }}"
+  register: pip_result
+  until: pip_result|success
+  retries: 3
+  delay: 10
+  notify:
+    - update ca-certs
+  when: virtualenv is not defined
+
+- name: "pip install {{ project_name }} in virtualenv"
+  pip: name="/opt/stack/{{ project_name }}"
+       extra_args="-i {{ openstack_source.pypi_mirror }}"
+       virtualenv="{{ virtualenv }}"
+  register: pip_venv_result
+  until: pip_venv_result|success
+  retries: 3
+  delay: 10
+  notify:
+    - update ca-certs
+  when: virtualenv is defined
+
+- name: update ca-certs
+  command: "update-ca-certificates"
+
+- name: ensure project config directory exists
+  file: name="/etc/{{ project_name }}" state=directory
+  when: openstack_source.rootwrap|bool
+
+- name: stat rootwrap.d
+  stat: path="/etc/{{ project_name }}/rootwrap.d"
+  register: st
+  when: openstack_source.rootwrap|bool
+
+- name: remove rootwrap.d if a directory
+  file: dest="/etc/{{ project_name }}/rootwrap.d" state=absent
+  when: openstack_source.rootwrap|bool and st.stat is defined and st.stat.isdir
+
+- name: "setup {{ project_name }} rootwrap"
+  file: src="/opt/stack/{{ project_name }}/etc/{{ project_name }}/rootwrap.d"
+        dest="/etc/{{ project_name }}/rootwrap.d" state=link
+  when: openstack_source.rootwrap|bool
+
+- name: "additional handlers"
+  debug: msg="Running additional handlers"
+  notify: "{{ additional_handlers }}"
+  when: additional_handlers is defined

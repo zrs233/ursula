@@ -1,9 +1,12 @@
 ---
 keystone:
-  rev: 5db37331e6ea3b21314d4d47e63fa1505e48285a
+  babel_version: 1.3
   token_expiration_in_seconds: 86400
   admin_workers: 5
   public_workers: 5
+
+  source:
+    rev: '5db37331e6ea3b21314d4d47e63fa1505e48285a'
 
   logs:
     - paths:

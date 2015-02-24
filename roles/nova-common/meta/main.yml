@@ -5,3 +5,7 @@ dependencies:
     service: nova
     logdata: "{{ nova.logs }}"
   - role: openstack-source
+    project_name: nova
+    project_rev: "{{ nova.source.rev }}"
+    rootwrap: True
+    when: openstack_install_method == 'source'

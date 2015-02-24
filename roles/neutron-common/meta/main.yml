@@ -5,3 +5,9 @@ dependencies:
     service: neutron
     logdata: "{{ neutron.logs }}"
   - role: openstack-source
+    project_name: neutron
+    project_rev: "{{ neutron.source.rev }}"
+    python_requirements:
+      - { name: alembic, version: "{{ neutron.alembic_version }}" }
+    rootwrap: True
+    when: openstack_install_method == 'source'

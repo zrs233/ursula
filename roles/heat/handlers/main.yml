@@ -1,16 +1,8 @@
 ---
-- name: pip install heat
-  shell: pip install -i {{ openstack.pypi_mirror }} /opt/stack/heat
-  notify: update CA certs
-
-- name: restart heat-api
-  service: name=heat-api state=restarted
+- name: restart heat services
+  service: name={{ item }} state=restarted must_exist=false
   when: restart|default('True')
-
-- name: restart heat-api-cfn
-  service: name=heat-api state=restarted
-  when: restart|default('True')
-
-- name: restart heat-engine
-  service: name=heat-engine state=restarted
-  when: restart|default('True')
+  with_items:
+    - heat-api
+    - heat-api-cfn
+    - heat-engine

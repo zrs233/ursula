@@ -1,7 +1,6 @@
 ---
 nova:
   patches:
-  rev: 4fdd83fcd02a6adbf99916765ffdc0521bf10e45
   compute_driver: nova.virt.libvirt.LibvirtDriver
   firewall_driver: nova.virt.firewall.NoopFirewallDriver
   scheduler_host_manager: nova.scheduler.host_manager.HostManager
@@ -33,6 +32,9 @@ nova:
       rev: 2f23a09ba49bfafedc712b82613417da7147c5a3
       git_mirror: https://github.com/stackforge/nova-docker.git
       dest: /opt/stack/novadocker
+
+  source:
+    rev: '4fdd83fcd02a6adbf99916765ffdc0521bf10e45'
 
   logs:
     - paths:

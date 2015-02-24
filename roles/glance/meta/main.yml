@@ -6,3 +6,6 @@ dependencies:
     service: glance
     logdata: "{{ glance.logs }}"
   - role: openstack-source
+    project_name: glance
+    project_rev: "{{ glance.source.rev }}"
+    when: openstack_install_method == 'source'

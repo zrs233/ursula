@@ -5,3 +5,6 @@ dependencies:
     service: keystone
     logdata: "{{ keystone.logs }}"
   - role: openstack-source
+    project_name: keystone
+    project_rev: "{{ keystone.source.rev }}"
+    when: openstack_install_method == 'source'

@@ -1,5 +1,5 @@
 ---
-- name: Check if keystone user exists
+- name: check if keystone user exists
   action: shell getent passwd keystone
   register: keystone_user
   failed_when: False
@@ -13,24 +13,6 @@
   user: name=keystone comment=keystone shell=/bin/false system=yes
         home=/nonexistent createhome=no
   when: not keystone_user|success
-
-- name: WORKAROUND - keystone does not include babel in dependencies
-  pip: name=babel
-
-- name: get keystone source repo
-  git: repo={{ openstack.git_mirror }}/keystone.git
-       dest=/opt/stack/keystone
-       version={{ keystone.rev }}
-       update={{ openstack.git_update }}
-  register: result
-  until: result|success
-  retries: 3
-  delay: 60
-  notify:
-    - pip install keystone
-    - restart keystone services
-
-- meta: flush_handlers
 
 - name: keystone config dir
   file: dest=/etc/keystone state=directory
