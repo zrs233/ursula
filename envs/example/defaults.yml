@@ -425,3 +425,6 @@ docker:
 
 novadocker:
   enabled: False
+
+haproxy:
+  enabled: True

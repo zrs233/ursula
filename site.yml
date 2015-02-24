@@ -94,7 +94,7 @@
     - role: haproxy
       haproxy_type: openstack
       tags: ['haproxy', 'infra']
-      when: haproxy.enabled is not defined or haproxy.enabled|bool
+      when: haproxy.enabled|bool
 
 - name: swift haproxy
   gather_facts: force
