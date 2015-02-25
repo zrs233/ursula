@@ -1,10 +1,10 @@
 ---
 # not really a "horizon service" but horizon is the outlier
 - name: restart horizon services
-  restart_if_present: service=apache2
+  service: name=apache2 state=restarted must_exist=false
 
 - name: restart apache
-  restart_if_present: service=apache2
+  service: name=apache2 state=restarted must_exist=false
 
 - name: compress horizon assets
   command: sudo -u www-data tools/with_venv.sh ./manage.py compress

@@ -160,7 +160,7 @@
   roles:
     - role: nova-data
       tags: ['openstack', 'nova', 'data']
-      when: ironic.enabled == False
+      when: not ironic.enabled|bool
 
 - name: cinder control plane
   gather_facts: force
@@ -234,11 +234,11 @@
     - role: openstack-database
       database_name: heat
       tags: ['openstack', 'heat', 'control']
-#      when: heat.enabled == True
+#      when: heat.enabled|bool
 
     - role: heat
       tags: ['openstack', 'heat', 'control']
-#      when: heat.enabled == True
+#      when: heat.enabled|bool
 
 - name: ironic control plane
   gather_facts: force
@@ -246,14 +246,14 @@
   roles:
     - role: ironic-control
       tags: ['openstack', 'ironic', 'control']
-      when: ironic.enabled == True
+      when: ironic.enabled|bool
 
 - name: ironic data plane
   hosts: controller
   roles:
     - role: ironic-data
       tags: ['openstack', 'ironic', 'data']
-      when: ironic.enabled == True
+      when: ironic.enabled|bool
 
 - name: openstack base setup
   hosts: controller[0]

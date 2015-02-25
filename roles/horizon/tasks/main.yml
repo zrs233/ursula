@@ -13,6 +13,9 @@
   notify:
     - restart apache
 
+- name: create horizon config directory
+  file: dest=/etc/openstack-dashboard state=directory
+
 - name: apache ports config
   template: src=etc/apache2/ports.conf
             dest=/etc/apache2/ports.conf
@@ -23,6 +26,9 @@
   command: a2dissite 000-default
   notify:
     - restart apache
+
+- name: create horizon config directory
+  file: dest=/etc/openstack-dashboard state=directory
 
 - name: openstack dashboard config (12.04)
   template: src=etc/apache2/sites-available/openstack_dashboard.conf
@@ -43,50 +49,61 @@
   notify:
     - restart apache
 
-- name: static asset directories
-  file: dest={{ item }}
-        state=directory
-        owner=www-data
-        group=www-data
-        mode=0755
-  with_items:
-    - /opt/stack/horizon/static
-    - /opt/stack/horizon/static/dashboard
-
 - name: horizon local settings
-  template: src=opt/stack/horizon/openstack_dashboard/local/local_settings.py
-            dest=/opt/stack/horizon/openstack_dashboard/local/local_settings.py
+  template: src=etc/openstack-dashboard/{{ item }}
+            dest=/etc/openstack-dashboard/{{ item }}
             mode=0644
+  with_items:
+    - local_settings.py
+    - __init__.py
   notify:
     - restart apache
 
-- name: custom horizon logo
-  get_url: url={{ horizon.logo_url }}
-           dest=/opt/stack/horizon/openstack_dashboard/static/dashboard/img/logo.png
-           mode=0644 force=yes
+- name: create static assets directory
+  file: dest="{{ 'horizon'|ursula_package_path(openstack_package_version) }}/static"
+        owner=www-data group=www-data state=directory
+  when: openstack_install_method == 'package'
 
-- name: custom horizon splash logo
-  get_url: url={{ horizon.logo_url }}
-           dest=/opt/stack/horizon/openstack_dashboard/static/dashboard/img/logo-splash.png
-           mode=0644 force=yes
+- name: create static assets directory
+  file: dest="/opt/stack/horizon/static"
+        owner=www-data group=www-data state=directory
+  when: openstack_install_method == 'source'
 
-- name: custom horizon favicon
-  get_url: url={{ horizon.favicon_url }}
-           dest=/opt/stack/horizon/openstack_dashboard/static/dashboard/img/favicon.ico
-           force=yes
-
-- name: put images and fonts where apache can find them
-  file: src=/opt/stack/horizon/openstack_dashboard/static/dashboard/{{ item }}
-        dest=/opt/stack/horizon/static/dashboard/{{ item }}
-        state=link
-        owner=www-data
-        group=www-data
+- name: create customer-specific static assets directories
+  file: dest=/etc/openstack-dashboard/{{ item }} state=directory
   with_items:
-    - img
-    - fonts
+    - static
+    - static/dashboard
+    - static/dashboard/img
+    - static/dashboard/fonts
 
-# flush before ensuring apache running, saves immediate restart
-- meta: flush_handlers
+- name: custom horizon logo
+  get_url: url={{ item.url }}
+           dest=/etc/openstack-dashboard/static/dashboard/{{ item.name }}
+  with_items:
+    - { name: img/logo.png, url: "{{ horizon.logo_url }}"  }
+    - { name: img/logo-splash.png, url: "{{ horizon.logo_url }}" }
+    - { name: img/favicon.ico, url: "{{ horizon.favicon_url }}" }
+
+- name: gather static assets from openstack package install
+  environment:
+    DJANGO_SETTINGS_MODULE: 'openstack_dashboard.settings'
+    PYTHONPATH: /etc/openstack-dashboard:$PYTHONPATH
+  shell: "{{ item }}"
+  with_items:
+    - "{{ 'horizon'|ursula_package_path(openstack_package_version) }}/bin/django-admin.py collectstatic --noinput"
+    - "{{ 'horizon'|ursula_package_path(openstack_package_version) }}/bin/django-admin.py compress"
+  when: openstack_install_method == 'package'
+
+- name: gather static assets from openstack source install
+  environment:
+    DJANGO_SETTINGS_MODULE: 'openstack_dashboard.settings'
+    PYTHONPATH: "/etc/openstack-dashboard:{{ horizon.virtualenv }}/../:$PYTHONPATH"
+  shell: "{{ item }}"
+  with_items:
+    - "{{ horizon.virtualenv }}/bin/django-admin.py collectstatic --noinput"
+    - "{{ horizon.virtualenv }}/bin/django-admin.py compress"
+  when: openstack_install_method == 'source'
 
 - name: ensure apache started
   service: name=apache2 state=started
