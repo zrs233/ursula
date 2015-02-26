@@ -25,20 +25,17 @@
 - name: nova metrics check
   sensu_metrics_check: name=nova-metrics plugin=metrics-nova.py
                        args='--scheme {{ monitoring.graphite.cluster_prefix }}.nova.hypervisor'
-                       prefix='{{ monitoring.cluster_prefix }}'
                        interval=3600
   notify: restart sensu-client
 
 - name: nova state metrics check
   sensu_metrics_check: name=nova-state-metrics plugin=metrics-nova-state.py
                        args='--scheme {{ monitoring.graphite.cluster_prefix }}.nova.states'
-                       prefix='{{ monitoring.cluster_prefix }}'
                        interval=3600
   notify: restart sensu-client
 
 - name: nova oversubscribe metrics check
   sensu_metrics_check: name=nova-oversubscribe-metrics plugin=metrics-nova-oversub.sh
                        args='-s {{ monitoring.graphite.cluster_prefix }}.nova.oversubscription'
-                       prefix='{{ monitoring.cluster_prefix }}'
                        interval=3600
   notify: restart sensu-client
