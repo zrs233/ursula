@@ -9,6 +9,11 @@
   when: neutron.plugin=='ml2'
   notify: restart sensu-client
 
+- name: nova cinder session check
+  sensu_metrics_check: name=check-cinder-sessions plugin=check-cinder-sessions.py
+                       interval=10
+  notify: restart sensu-client
+
 # ovs
 
 - sensu_process_check: service=neutron-openvswitch-agent
