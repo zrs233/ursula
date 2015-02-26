@@ -132,6 +132,9 @@
                        args='--scheme {{ monitoring.graphite.host_prefix }}'
   notify: restart sensu-client
 
+- name: add sensu to adm group so it can read log files
+  user: name=sensu groups=adm append=yes
+
 - name: log files greater than 1gb check
   sensu_check: name=log_file_size plugin=check-for-large-files.sh
                args='-d /var/log -s 1048576'
