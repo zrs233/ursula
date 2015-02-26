@@ -28,6 +28,7 @@ def main():
     module = AnsibleModule(
         argument_spec=dict(
             name=dict(default=None, required=True),
+            use_sudo=dict(required=False, choices=BOOLEANS, default=False),
             plugin=dict(default=None, required=True),
             args=dict(default='', required=False),
             plugin_dir=dict(default='/etc/sensu/plugins', required=False),
@@ -42,7 +43,8 @@ def main():
         plugin_path = '%s/%s' % (module.params['plugin_dir'], module.params['plugin'])
         check_path = '%s/%s.json' % (module.params['check_dir'], module.params['name'])
         command = '%s %s %s' % ( module.params['prefix'], plugin_path, module.params['args'] )
-
+        if module.params['use_sudo']:
+            command = "sudo %s" % (command)
         check=dict({
             'checks': {
                 module.params['name']: {

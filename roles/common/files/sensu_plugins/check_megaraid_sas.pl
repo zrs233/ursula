@@ -2,25 +2,25 @@
 
 # check_megaraid_sas Nagios plugin
 # Copyright (C) 2007  Jonathan Delgado, delgado@molbio.mgh.harvard.edu
-# 
+#
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2
 # of the License, or (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-# 
-# 
-# Nagios plugin to monitor the status of volumes attached to a LSI Megaraid SAS 
-# controller, such as the Dell PERC5/i and PERC5/e. If you have any hotspares 
-# attached to the controller, you can specify the number you should expect to 
+#
+#
+# Nagios plugin to monitor the status of volumes attached to a LSI Megaraid SAS
+# controller, such as the Dell PERC5/i and PERC5/e. If you have any hotspares
+# attached to the controller, you can specify the number you should expect to
 # find with the '-s' flag.
 #
 # The paths for the Nagios plugins lib and MegaCli may need to me changed.
@@ -77,7 +77,7 @@ my $status = 'OK';
 
 sub max_state ($$) {
 	my ($current, $compare) = @_;
-	
+
 	if (($compare eq 'CRITICAL') || ($current eq 'CRITICAL')) {
 		return 'CRITICAL';
 	} elsif ($compare eq 'OK') {
@@ -93,7 +93,7 @@ sub max_state ($$) {
 
 sub exitreport ($$) {
 	my ($status, $message) = @_;
-	
+
 	print STDOUT "$status: $message\n";
 	exit $ERRORS{$status};
 }
@@ -121,10 +121,10 @@ my $megacli = "$sudo $megaclibin";      # how we actually call MegaCli
 
 # Some sanity checks that you actually have something where you think MegaCli is
 (-e $megaclibin)
-	|| exitreport('UNKNOWN',"error: $megaclibin does not exist");	
+	|| exitreport('UNKNOWN',"error: $megaclibin does not exist");
 
 # Get the number of RAID controllers we have
-open (ADPCOUNT, "$megacli -adpCount $megapostopt |")  
+open (ADPCOUNT, "$megacli -adpCount $megapostopt |")
 	|| exitreport('UNKNOWN',"error: Could not execute $megacli -adpCount $megapostopt");
 
 while (<ADPCOUNT>) {
@@ -137,9 +137,9 @@ close ADPCOUNT;
 
 ADAPTER: for ( my $adp = 0; $adp < $adapters; $adp++ ) {
 	# Get the number of logical drives on this adapter
-	open (LDGETNUM, "$megacli -LdGetNum -a$adp $megapostopt |") 
+	open (LDGETNUM, "$megacli -LdGetNum -a$adp $megapostopt |")
 		|| exitreport('UNKNOWN', "error: Could not execute $megacli -LdGetNum -a$adp $megapostopt");
-	
+
 	my ($ldnum);
 	while (<LDGETNUM>) {
 		if ( m/Number of Virtual drives configured on adapter \d:\s*(\d+)/i ) {
@@ -148,12 +148,12 @@ ADAPTER: for ( my $adp = 0; $adp < $adapters; $adp++ ) {
 		}
 	}
 	close LDGETNUM;
-	
+
 	LDISK: for ( my $ld = 0; $ld < $ldnum; $ld++ ) {
 		# Get info on this particular logical drive
-		open (LDINFO, "$megacli -LdInfo -L$ld -a$adp $megapostopt |") 
+		open (LDINFO, "$megacli -LdInfo -L$ld -a$adp $megapostopt |")
 			|| exitreport('UNKNOWN', "error: Could not execute $megacli -LdInfo -L$ld -a$adp $megapostopt ");
-			
+
 		my ($size, $unit, $raidlevel, $ldpdcount, $state, $spandepth);
 		while (<LDINFO>) {
 			if ( m/^Size\s*:\s*((\d+\.?\d*)\s*(MB|GB|TB))/ ) {
@@ -186,16 +186,16 @@ ADAPTER: for ( my $adp = 0; $adp < $adapters; $adp++ ) {
 				$raidlevel = $raidlevel . "0";
 			}
 		}
-		
+
 		$result .= "$adp:$ld:RAID-$raidlevel:$ldpdcount drives:$size$unit:$state ";
-		
+
 	} #LDISK
 	close LDINFO;
-	
+
 	# Get info on physical disks for this adapter
-	open (PDLIST, "$megacli -PdList  -a$adp $megapostopt |") 
+	open (PDLIST, "$megacli -PdList  -a$adp $megapostopt |")
 		|| exitreport('UNKNOWN', "error: Could not execute $megacli -PdList -a$adp $megapostopt ");
-	
+
 	my ($slotnumber,$fwstate);
 	PDISKS: while (<PDLIST>) {
 		if ( m/Slot Number\s*:\s*(\d+)/ ) {
@@ -238,8 +238,8 @@ my $errorcount = $mediaerrors + $prederrors + $othererrors;
 # Were there any errors?
 if ( $errorcount ) {
 	$result .= "($errorcount Errors) ";
-	if ( ( $mediaerrors > $mediaallow ) || 
-	     ( $prederrors > $predallow )   || 
+	if ( ( $mediaerrors > $mediaallow ) ||
+	     ( $prederrors > $predallow )   ||
 	     ( $othererrors > $otherallow ) ) {
 		$status = max_state($status, 'WARNING');
 	}
