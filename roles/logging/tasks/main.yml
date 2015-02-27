@@ -2,14 +2,6 @@
 - name: create logstash user
   user: name=logstash comment=logstash shell=/bin/false system=yes home=/opt/logstash-forwarder
 
-- name: install bbg openstack repo key
-  apt_key: url={{ apt.repo.bbg_openstack.key_url }}
-  when: ansible_distribution_version == "12.04"
-
-- name: install bbg openstack repo
-  apt_repository: repo='deb {{ apt.repo.bbg_openstack.repo }} precise main' update_cache=yes
-  when: ansible_distribution_version == "12.04"
-
 - name: install logstash-forwarder
   apt: pkg=logstash-forwarder
   when: ansible_distribution_version == "12.04"

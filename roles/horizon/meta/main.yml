@@ -1,3 +1,15 @@
 ---
 dependencies:
   - role: monitoring-common
+  - role: openstack-source
+    project_name: horizon
+    git_mirror: "https://github.com/blueboxgroup"
+    project_rev: "{{ horizon.source.rev }}"
+    virtualenv: "{{ horizon.virtualenv }}"
+    python_requirements:
+      - { name: python-memcached, version: '1.48' }
+    additional_handlers: [ "compress horizon assets" ]
+    when: openstack_install_method == 'source'
+  - role: openstack-package
+    project_name: horizon
+    when: openstack_install_method == 'package'

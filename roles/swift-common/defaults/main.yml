@@ -7,3 +7,39 @@ swift:
 
   source:
     rev: '4765537cba6a6970110953f11f4e1b419d0730d3'
+  package:
+    console_scripts:
+      - swift-account-audit
+      - swift-account-auditor
+      - swift-account-info
+      - swift-account-reaper
+      - swift-account-replicator
+      - swift-account-server
+      - swift-config
+      - swift-container-auditor
+      - swift-container-info
+      - swift-container-reconciler
+      - swift-container-replicator
+      - swift-container-server
+      - swift-container-sync
+      - swift-container-updater
+      - swift-dispersion-populate
+      - swift-dispersion-report
+      - swift-drive-audit
+      - swift-form-signature
+      - swift-get-nodes
+      - swift-init
+      - swift-object-auditor
+      - swift-object-expirer
+      - swift-object-info
+      - swift-object-replicator
+      - swift-object-server
+      - swift-object-updater
+      - swift-oldies
+      - swift-orphans
+      - swift-proxy-server
+      - swift-recon
+      - swift-reconciler-enqueue
+      - swift-recon-cron
+      - swift-ring-builder
+      - swift-temp-url

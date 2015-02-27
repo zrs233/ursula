@@ -80,7 +80,7 @@
   hosts: controller[0]
   tasks:
   - name: horizon config has memcached servers
-    shell: egrep \'[0-9.]+:11211\',\'[0-9]+ /opt/stack/horizon/openstack_dashboard/local/local_settings.py
+    shell: egrep \'[0-9.]+:11211\',\'[0-9]+ /etc/openstack-dashboard/local_settings.py
 
   - name: keystone should include OpenStack services
     shell: . /root/stackrc; keystone service-list | grep {{ item }}

@@ -1,3 +1,6 @@
 ---
 dependencies:
-  - role: apt
+  - role: apt-repos
+    repos:
+      - repo: 'deb {{ apt_repos.bbg_ubuntu.repo }} precise main'
+        key_url: '{{ apt_repos.bbg_ubuntu.key_url }}'

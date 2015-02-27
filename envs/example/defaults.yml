@@ -3,7 +3,9 @@ stack_env: example
 
 country_code: US
 
-openstack_install_method: source
+#openstack_install_method: 'source'
+openstack_install_method: 'package'
+openstack_package_version: '10.0-bbc38'
 
 primary_interface: 'ansible_eth0'
 primary_ip: "{{ hostvars[inventory_hostname][primary_interface]['ipv4']['address'] }}"
@@ -169,6 +171,9 @@ neutron:
     - router_name: default
       subnet_name: internal
       tenant_name: admin
+  service:
+    envs:
+      - "REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt"
 
 glance:
   api_workers: 1

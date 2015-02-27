@@ -2,15 +2,6 @@
 - name: install ipset
   apt: name=ipset
 
-# vxlan needs newer iproute
-- name: Add apt-key for bbg/openstack ppa
-  apt_key: id=49DE63CB url='{{ apt.repo.bbg_openstack_ppa.key_url }}'
-  when: neutron.plugin == 'ml2' and 'vxlan' in neutron.tunnel_types
-
-- name: Add bbg/openstack ppa repo
-  apt_repository: repo='deb {{ apt.repo.bbg_openstack_ppa.repo }} precise main' update_cache=yes
-  when: neutron.plugin == 'ml2' and 'vxlan' in neutron.tunnel_types
-
 - name: update iproute2 to latest ppa
   apt: name=iproute2 state=latest
   when: neutron.plugin == 'ml2' and 'vxlan' in neutron.tunnel_types

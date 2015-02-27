@@ -6,7 +6,30 @@ cinder:
   api_workers: 5
 
   source:
-    rev: '532b82059fe16678da7f7ed10d2f862ff1d2e9ea'
+    rev: '7b1d7a31335bd8723551c9af5c270927ad830c3f'
+  package:
+    console_scripts:
+      - cinder-all
+      - cinder-api
+      - cinder-backup
+      - cinder-manage
+      - cinder-rootwrap
+      - cinder-rtstool
+      - cinder-scheduler
+      - cinder-volume
+      - cinder-volume-usage-audit
+
+  package:
+    console_scripts:
+      - cinder-all
+      - cinder-api
+      - cinder-backup
+      - cinder-manage
+      - cinder-rootwrap
+      - cinder-rtstool
+      - cinder-scheduler
+      - cinder-volume
+      - cinder-volume-usage-audit
 
   logs:
   - paths:

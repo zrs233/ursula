@@ -1,12 +1,4 @@
 ---
-- name: add hwraid apt key
-  apt_key: id=23B3D3B4
-           url="{{ apt.repo.hwraid.key_url }}"
-
-- name: add hwraid apt repository
-  apt_repository: repo='deb {{ apt.repo.hwraid.repo }} precise main'
-                  state=present update_cache=yes
-
 - name: install raid utilities
   apt: pkg={{ item }}
   with_items: common.hwraid.clients

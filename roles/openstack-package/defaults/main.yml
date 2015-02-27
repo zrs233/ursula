@@ -1,0 +1,5 @@
+openstack_package:
+  package_name: 'openstack-{{ project_name }}-{{ openstack_package_version }}'
+  repo: 'deb http://repo.openstack.blueboxgrid.com/bbc precise main'
+  repo_key_url: 'http://repo.openstack.blueboxgrid.com/blue_box_cloud.gpg.key'
+  rootwrap: "{{ rootwrap|default(False)|bool }}"

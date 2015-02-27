@@ -1,9 +1,3 @@
 ---
 - name: install python-pycurl
   apt: pkg=python-pycurl
-
-- name: percona apt repository key
-  apt_key: id=CD2EFD2A url='{{ apt.repo.percona.key_url }}'
-
-- name: percona apt repository
-  apt_repository: repo='deb {{ apt.repo.percona.repo }} {{ ansible_distribution_release }} main' update_cache=yes

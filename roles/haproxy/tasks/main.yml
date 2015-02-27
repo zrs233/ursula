@@ -3,12 +3,6 @@
   template: src=etc/default/haproxy dest=/etc/default/haproxy
   notify: reload haproxy
 
-- name: haproxy ppa key
-  apt_key: url={{ apt.repo.haproxy.key_url }} state=present
-
-- name: haproxy ppa - required to get a version new enough to support ssl
-  apt_repository: repo='deb {{ apt.repo.haproxy.repo }} precise main' update_cache=yes
-
 - name: install haproxy
   apt: pkg=haproxy
 

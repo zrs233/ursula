@@ -8,3 +8,7 @@ dependencies:
     project_name: heat
     project_rev: "{{ heat.source.rev }}"
     when: openstack_install_method == 'source'
+  - role: openstack-package
+    project_name: heat
+    package_alternatives: "{{ heat.package.console_scripts }}"
+    when: openstack_install_method == 'package'

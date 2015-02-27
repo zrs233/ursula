@@ -14,7 +14,32 @@ glance:
   store_swift: False
 
   source:
-    rev: 'bb48dfc54f592259a73a27218b6d5f657b39294c'
+    rev: '0e355462833feeaa6f3124fda4bd5ff7064c8512'
+  package:
+    console_scripts:
+      - glance-api
+      - glance-cache-cleaner
+      - glance-cache-manage
+      - glance-cache-prefetcher
+      - glance-cache-pruner
+      - glance-control
+      - glance-manage
+      - glance-registry
+      - glance-replicator
+      - glance-scrubber
+
+  package:
+    console_scripts:
+      - glance-api
+      - glance-cache-cleaner
+      - glance-cache-manage
+      - glance-cache-prefetcher
+      - glance-cache-pruner
+      - glance-control
+      - glance-manage
+      - glance-registry
+      - glance-replicator
+      - glance-scrubber
 
   logs:
     - paths:
