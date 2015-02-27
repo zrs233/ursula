@@ -28,9 +28,15 @@ ALLOWED_HOSTS = ['*']
 # NOTE: The version should be formatted as it appears in the URL for the
 # service API. For example, The identity service APIs have inconsistent
 # use of the decimal point, so valid options would be "2.0" or "3".
+{% if horizon.keystone_api_version == 3 -%}
+OPENSTACK_API_VERSIONS = {
+    "identity": 3
+}
+{% else %}
 # OPENSTACK_API_VERSIONS = {
 #     "identity": 3
 # }
+{% endif %}
 
 # Set this to True if running on multi-domain model. When this is enabled, it
 # will require user to enter the Domain name in addition to username for login.
