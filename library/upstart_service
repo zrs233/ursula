@@ -29,13 +29,20 @@ stop on {{ stop_on }}
 
 {% if description -%}
 description {{ description }}
-
 {% endif -%}
+
+{% if envs -%}
+{% for env in envs %}
+env {{ env }}
+{% endfor %}
+{% endif -%}
+
 {% if prestart_script -%}
 pre-start script
     {{ prestart_script }}
 end script
 {% endif -%}
+
 {% if respawn -%}
 respawn
 {% endif -%}
@@ -54,6 +61,7 @@ def main():
             config_dirs=dict(default=None),
             config_files=dict(default=None),
             description=dict(default=None),
+            envs=dict(default=None, required=False, type='list'),
             state=dict(default='present'),
             start_on=dict(default='runlevel [2345]'),
             stop_on=dict(default='runlevel [!2345]'),

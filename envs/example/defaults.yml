@@ -171,6 +171,9 @@ neutron:
     - router_name: default
       subnet_name: internal
       tenant_name: admin
+  service:
+    envs:
+      - "REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt"
 
 glance:
   api_workers: 1

@@ -11,11 +11,13 @@
   when: neutron.plugin == 'ml2'
 
 - name: install neutron-server service
-  upstart_service: name=neutron-server
-                   user=neutron
-                   cmd=/usr/local/bin/neutron-server
-                   config_dirs=/etc/neutron
-                   config_files="/etc/neutron/neutron.conf,{{ neutron_plugin_config }}"
+  upstart_service:
+    name: neutron-server
+    user: neutron
+    cmd: /usr/local/bin/neutron-server
+    config_dirs: /etc/neutron
+    config_files: "/etc/neutron/neutron.conf,{{ neutron_plugin_config }}"
+    envs: "{{ neutron.service.envs }}"
 
 - name: stop neutron service before db sync
   service: name=neutron-server state=stopped
