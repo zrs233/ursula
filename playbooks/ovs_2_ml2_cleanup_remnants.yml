@@ -1,6 +1,6 @@
 ---
 # a cleanup script to run after a host has been migrated from OVS to ml2 / linux bridge
-- hosts: all
+- hosts: compute:network
   tasks:
   - name: remove ipchanged for br-eth0
     file: path=/etc/ipchanged/br-eth0 state=absent
