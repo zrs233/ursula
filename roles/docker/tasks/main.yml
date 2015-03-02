@@ -1,0 +1,8 @@
+---
+- name: install docker
+  apt: pkg=lxc-docker
+  when: not docker.version
+
+- name: install docker
+  apt: pkg=lxc-docker-{{ docker.version }}
+  when: docker.version

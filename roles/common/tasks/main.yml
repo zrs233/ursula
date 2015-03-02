@@ -93,6 +93,3 @@
   lineinfile: dest=/etc/issue regexp="^{{ stack_env }} OpenStack Node" line="{{ stack_env }} OpenStack Node"
 
 - include: monitoring.yml tags=monitoring,common
-
-- include: docker.yml
-  when: common.docker.enabled
