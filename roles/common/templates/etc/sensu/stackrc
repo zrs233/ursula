@@ -1,5 +1,5 @@
 export OS_PASSWORD={{ monitoring.openstack.user.password }}
-export OS_AUTH_URL=https://{{ endpoints.main }}:5001/v2.0
+export OS_AUTH_URL={{ endpoints.auth_uri }}
 export OS_USERNAME={{ monitoring.openstack.user.username }}
 export OS_TENANT_NAME={{ monitoring.openstack.user.tenant }}
 {% if client.self_signed_cert -%}
