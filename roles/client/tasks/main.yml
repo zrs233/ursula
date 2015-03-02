@@ -7,7 +7,7 @@
   with_items:
     - python-keystoneclient
     - python-glanceclient
-    - python-novaclient
+    - python-novaclient==2.20.0
     - python-neutronclient
     - python-cinderclient
     - python-heatclient
