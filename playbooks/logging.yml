@@ -3,7 +3,6 @@
   hosts: all
   tasks:
     - include: ../roles/cleanup/tasks/logging.yml
-    - include: ../roles/common/tasks/bbg-repo.yml
   roles:
     - ../roles/logging
 
