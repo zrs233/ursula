@@ -69,6 +69,11 @@
 
 - include: monitoring.yml tags=monitoring,common
 
+- include: logging.yml
+  tags:
+    - logrotate
+    - logging
+
 - name: include swift warning in message of the day
   lineinfile: dest=/etc/motd.tail
               regexp="^WARNING Swift node"

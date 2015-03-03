@@ -1,0 +1,8 @@
+---
+- name: set up log rotation for heat
+  logrotate: name=heat path=/var/log/heat/*.log
+  args:
+    options:
+      - daily
+      - missingok
+      - rotate 7
