@@ -6,3 +6,4 @@ export OS_TENANT_NAME=admin
 export OS_CACERT=/opt/stack/ssl/openstack.crt
 {% endif -%}
 export OS_NO_CACHE=True
+export OS_VOLUME_API_VERSION=2
