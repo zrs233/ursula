@@ -1,0 +1,25 @@
+---
+- name: install apache packages
+  apt: pkg=apache2
+
+- name: install apache modules
+  apt: pkg={{ item }}
+  with_items: apache.modules
+
+- name: disable default vhost
+  file: dest=/etc/apache2/sites-enabled/{{ item }}
+        state=absent
+  with_items:
+    - 000-default
+    - 000-default.conf
+    - default
+    - default.conf
+  notify: stop apache
+
+- name: do not include ports.conf
+  lineinfile: dest=/etc/apache2/apache2.conf
+              regexp="^Include ports\.conf$"
+              state=absent
+
+- name: remove ports.conf
+  file: dest=/etc/apache2/ports.conf state=absent

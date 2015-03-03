@@ -1,0 +1,4 @@
+---
+apache:
+  modules:
+    - libapache2-mod-wsgi
