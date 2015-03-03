@@ -1,13 +1,13 @@
 ---
 - name: create logstash user
-  user: name=logstash comment=logstash shell=/bin/false system=yes home=/opt/logstash-forwarder
+  user: name=logstash comment="Logstash Service User" shell=/sbin/nologin system=yes home=/var/lib/logstash
 
 - name: install logstash-forwarder
   apt: pkg=logstash-forwarder
   when: ansible_distribution_version == "12.04"
 
 - name: download logstash
-  get_url: url={{ logging.logstashforwarder_url }}
+  get_url: url={{ logging.download.url }}
            dest=/tmp/logstash-forwarder_{{ logging.version }}_amd64.deb
   when: ansible_distribution_version == "14.04"
 
@@ -32,7 +32,7 @@
 - name: logstash-forwarder config directory
   file: dest=/etc/logstash-forwarder.d state=directory mode=0755
 
-- name: configure logstash-forwarder
+- name: configure logstash-forwarder forwarding
   template: src=etc/logstash-forwarder.d/main.conf dest=/etc/logstash-forwarder.d/main.conf mode=0644
   notify: restart logstash-forwarder
   when: logging.forward.host
