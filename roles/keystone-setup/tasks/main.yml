@@ -22,8 +22,8 @@
   template: dest=/etc/keystone/keystone-paste.ini
             src=roles/keystone/templates/etc/keystone/keystone-paste.ini
 
-- name: restart keystone api
-  service: name=keystone state=restarted
+- name: restart keystone api (apache)
+  service: name=apache2 state=reloaded
 
 - name: wait for keystone to be functional
   pause: seconds=3
@@ -75,5 +75,5 @@
   template: dest=/etc/keystone/keystone-paste.ini
             src=roles/keystone/templates/etc/keystone/keystone-paste.ini
 
-- name: restart keystone api
-  service: name=keystone state=restarted
+- name: restart keystone api (apache)
+  service: name=apache2 state=reloaded

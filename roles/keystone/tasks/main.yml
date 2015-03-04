@@ -18,35 +18,70 @@
   file: dest=/etc/keystone state=directory
 
 - name: keystone log dir
-  file: dest=/var/log/keystone state=directory mode=0755 owner=keystone
-        group=keystone
-
-- name: install keystone service
-  upstart_service: name=keystone user=keystone cmd=/usr/local/bin/keystone-all
-                   config_dirs=/etc/keystone
+  file: dest=/var/log/keystone state=directory mode=0755 owner=www-data
+        group=www-data
 
 - name: configure keystone
   template: src={{ item }} dest=/etc/keystone/ mode=0644
   with_fileglob: ../templates/etc/keystone/*
   notify:
-    - restart keystone services
+    - reload apache
 
-- name: stop keystone service before db sync
-  service: name=keystone state=stopped
+- name: keystone apache vhost ubuntu 12.04
+  template: src=etc/apache2/sites-available/keystone.conf
+            dest=/etc/apache2/sites-available/keystone
+  when: ansible_distribution_version == "12.04"
+  notify:
+    - reload apache
+
+- name: keystone apache vhost ubuntu
+  template: src=etc/apache2/sites-available/keystone.conf
+            dest=/etc/apache2/sites-available/keystone.conf
+  when: ansible_distribution_version != "12.04"
+  notify:
+    - reload apache
+
+- name: keystone cgi path
+  file: dest=/var/www/cgi-bin/keystone state=directory mode=0755
+        owner=root group=keystone
+
+- name: write out keystone cgi file
+  template: dest=/var/www/cgi-bin/keystone/{{ item }}
+            src=var/www/cgi-bin/keystone/keystone.py
+            owner=keystone group=nogroup mode=0755
+  with_items:
+    - admin
+    - main
+
+- name: disable keystone apache site before db sync
+  apache2_site: name=keystone state=disabled
   when: database_create.changed or force_sync|default('false')|bool
+
+- name: reload apache to disable keystone before db sync
+  service: name=apache2 state=reloaded
+  register: reloaded
+  when: database_create.changed or force_sync|default('false')|bool
+  failed_when: reloaded|failed and not reloaded.msg|search('Unable to open logs')
+  # apache2 without a site can error on reload with the above message
+  # this is okay in our case as it means the site is down which we want
 
 - name: sync keystone database
   command: keystone-manage db_sync
   when: database_create.changed or force_sync|default('false')|bool
   run_once: true
   changed_when: true
-  notify: restart keystone services
+  notify: reload apache
   # we want this to always be changed so that it can notify the service restart
+
+- name: enable keystone apache site
+  apache2_site: name=keystone state=enabled
+  notify:
+    - reload apache
 
 - meta: flush_handlers
 
-- name: start keystone
-  service: name=keystone state=started
+- name: start apache
+  service: name=apache2 state=started
 
 - name: permit access to keystone
   ufw: rule=allow to_port={{ item }} proto=tcp
