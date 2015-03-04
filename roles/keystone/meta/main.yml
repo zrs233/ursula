@@ -15,3 +15,4 @@ dependencies:
     project_name: keystone
     package_alternatives: "{{ keystone.package.console_scripts }}"
     when: openstack_install_method == 'package'
+  - role: apache
