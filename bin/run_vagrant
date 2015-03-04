@@ -7,48 +7,58 @@ function get_vagrant_hosts {
     echo ${STATUS}
 }
 
-TYPE=$1
+ACTION=$1
 PROVIDER=${VAGRANT_DEFAULT_PROVIDER:-virtualbox}
+TYPE=$2
 
-# This directory is used by ansible and needs to exist before the first ansible run
-if [ ! -d ~/.ssh/controlmasters ]; then
-    mkdir -p ~/.ssh/controlmasters
-fi
-
-if [[ -z ${TYPE} ]]; then
-    echo "Usage: run_vagrant TYPE [minimal]"
-    echo "Where type is one of the following:"
-    echo "- allinone ( single monolithic openstack server )"
-    echo "- standard ( two controllers and one compute )"
-    echo "- swift ( object storage )"
+if [[ -z ${TYPE} || -z ${ACTION} ]]; then
+    echo "Usage: run_vagrant ACTION TYPE"
+    echo "Where action is one of the following:"
+    echo "- up: boot/provision the environment described by TYPE"
+    echo "- provision: alias for up"
+    echo "- destroy: destroy environment described by TYPE"
+    echo "Where type is the one of the following:"
+    for dir in $(ls -d envs/example/*/); do
+        echo "- $(basename $dir)"
+    done
     exit -1
 else
     shift
+    shift
 fi
 
-if [ "${TYPE}" == "swift" ]; then
-    BOXES="controller1 swiftnode1 swiftnode2 swiftnode3"
-elif [ "${TYPE}" == "standard" -o "${TYPE}" == "novadocker" ]; then
-    BOXES="controller1 controller2 compute1"
-elif [ "${TYPE}" == "allinone" -o "${TYPE}" == "ironic" -o "${TYPE}" == "mirrors" ]; then
-    BOXES="allinone"
-elif [ "${TYPE}" == "cinder" ]; then
-    BOXES="allinone cinder"
+if [[ -d envs/example/${TYPE} ]]; then
+  BOXES=$(grep -v '\[' envs/example/${TYPE}/hosts | sort | uniq)
 else
     echo "I dont know how to provision '${TYPE}'"
     exit -1
 fi
 
-vagrant up --provider=${PROVIDER} ${BOXES}
+if [[ -e envs/example/${TYPE}/vagrant.yml ]]; then
+    export SETTINGS_FILE=envs/example/${TYPE}/vagrant.yml
+    cp envs/example/${TYPE}/vagrant.yml .vagrant/vagrant.yml
+fi
 
-# Write the Vagrant SSH config to be used by ansible
-TEMPFILE=`mktemp 2>/dev/null || mktemp -t 'ursula-fifo'`
-for I in ${BOXES}; do
-    vagrant ssh-config ${I} >> ${TEMPFILE}
-done
+if [[ ${ACTION} == "up" || ${ACTION} == "provision" ]]; then
+    if [[ ${ACTION} == "up" ]]; then
+        vagrant up --provider=${PROVIDER} ${BOXES} --no-provision
+    fi
+    # Write the Vagrant SSH config to be used by ansible
+    TEMPFILE=".vagrant/${TYPE}.ssh"
+    echo "# SSH config file for ${TYPE}" > ${TEMPFILE}
+    for I in ${BOXES}; do
+        vagrant ssh-config ${I} >> ${TEMPFILE}
+    done
 
-export ANSIBLE_SSH_ARGS="${ANSIBLE_SSH_ARGS} -F ${TEMPFILE}"
-command="ursula envs/vagrant/${TYPE} site.yml -s -u vagrant $@"
-echo running ${command}
-time ${command}
-rm ${TEMPFILE}
+    export ANSIBLE_SSH_ARGS="${ANSIBLE_SSH_ARGS} -F ${TEMPFILE}"
+    command="ursula --ursula-debug envs/example/${TYPE} site.yml --extra-vars @envs/example/vagrant.yml -s -u vagrant $@"
+    echo running ${command}
+    time ${command}
+elif [[ ${ACTION} == "ssh" ]]; then
+    vagrant ssh $@
+elif [[ ${ACTION} == "destroy" ]]; then
+    vagrant destroy -f ${BOXES}
+else
+    vagrant ${ACTION} $@
+fi
+

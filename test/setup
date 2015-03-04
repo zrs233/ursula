@@ -35,7 +35,8 @@ CONTROLLER_IP=$(private_ip ${testenv_instance_prefix}-controller-0)
 rm -rf ${ROOT}/envs/test/group_vars/
 rm -f ${ROOT}/envs/test/hosts
 mkdir -p ${ROOT}/envs/test/
-cp -r ${ROOT}/envs/example/* ${ROOT}/envs/test
+cp ${ROOT}/envs/example/defaults.yml ${ROOT}/envs/test/defaults.yml
+cp -r ${ROOT}/envs/example/ci/* ${ROOT}/envs/test
 echo "---" > ${ROOT}/envs/test/group_vars/all.yml
 echo "controller_primary: ${CONTROLLER_IP}" >> ${ROOT}/envs/test/group_vars/all.yml
 echo "testenv_instance_prefix: ${testenv_instance_prefix}" >> ${ROOT}/envs/test/group_vars/all.yml
