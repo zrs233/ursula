@@ -22,38 +22,38 @@ if [ "${ACTION}" == "all" -o "${ACTION}" == "unit" ]; then
 fi
 
 if [ "${ACTION}" == "all" -o "${ACTION}" == "deploy" ]; then
-  time $(ansible_command \
+  time $(ursula \
     "envs/test/hosts" \
-    ${LOGIN_USER} \
+    -u ${LOGIN_USER} \
     "site.yml $@" \
-    "true")
+    --sudo)
   ring_bell
 fi
 
 if [ "${ACTION}" == "all" -o "${ACTION}" == "test" ]; then
-  time $(ansible_command \
+  time $(ursula \
     "envs/test/hosts" \
-    ${LOGIN_USER} \
+    -u ${LOGIN_USER} \
     ${ROOT}/playbooks/tests/tasks/main.yml  $@ \
-    "true")
+    --sudo)
   ring_bell
 fi
 
 if [ "${ACTION}" == "all" -o "${ACTION}" == "cleanup" ]; then
-  time $(ansible_command \
+  time $(ursula \
     "envs/test/hosts" \
-    ${LOGIN_USER} \
+    -u ${LOGIN_USER} \
     ${ROOT}/playbooks/tests/tasks/cleanup.yml \
-    "true")
+    --sudo)
   ring_bell
 fi
 
 if [ "${ACTION}" == "upgrade" ]; then
-  time $(ansible_command \
+  time $(ursula \
     "envs/test/hosts" \
-    ${LOGIN_USER} \
+    -u ${LOGIN_USER} \
     "upgrade.yml $@" \
-    "true")
+    --sudo)
   ring_bell
 fi
 

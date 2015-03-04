@@ -28,9 +28,8 @@ echo "destroying: ${VMS}"
 ${ROOT}/test/cleanup
 
 echo "booting ${VMS}"
-$(ansible_command \
+$(ursula \
   "envs/test/hosts" \
-  "root" \
   ${ROOT}/playbooks/testenv/tasks/create.yml)
 
 echo "building config"
@@ -92,11 +91,11 @@ $(public_ip "${testenv_instance_prefix}-compute-0")
 eof
 
 echo "copying files"
-$(ansible_command \
+$(ursula \
   "envs/test/hosts" \
-  ${LOGIN_USER} \
-  ${ROOT}/playbooks/testenv/tasks/pre-deploy.yml \
-  "true")
+  -u ${LOGIN_USER} \
+  --sudo \
+  ${ROOT}/playbooks/testenv/tasks/pre-deploy.yml)
 
 ring_bell
 echo "vms are up: ${VMS} !!"
