@@ -40,7 +40,7 @@ for I in ${BOXES}; do
 done
 
 export ANSIBLE_SSH_ARGS="${ANSIBLE_SSH_ARGS} -F ${TEMPFILE}"
-command="ursula envs/vagrant/${TYPE} site.yml -s -u vagrant $@"
+command="ursula envs/vagrant/${TYPE} site.yml -- -s -u vagrant $@"
 echo running ${command}
 time ${command}
 rm ${TEMPFILE}
