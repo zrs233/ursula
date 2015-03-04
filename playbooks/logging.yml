@@ -1,8 +1,17 @@
 ---
-- name: cleanup old configs and install logstash-forwarder
+- name: cleanup old configs
   hosts: all
+  handlers:
+    - include: ../roles/cleanup/handlers/main.yml
   tasks:
+    - name: stop logstash-forwarder service
+      service: name=logstash-forwarder state=stopped enabled=yes
+      register: lsfstop
+      failed_when: lsfstop|failed and ("service not found" not in lsfstop.msg)
     - include: ../roles/cleanup/tasks/logging.yml
+
+- name: install or update logstash-forwarder
+  hosts: all
   roles:
     - ../roles/logging
 
