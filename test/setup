@@ -28,9 +28,7 @@ echo "destroying: ${VMS}"
 ${ROOT}/test/cleanup
 
 echo "booting ${VMS}"
-$(ursula \
-  "envs/test" \
-  ${ROOT}/playbooks/testenv/tasks/create.yml)
+ursula "envs/test" ${ROOT}/playbooks/testenv/tasks/create.yml
 
 echo "building config"
 CONTROLLER_IP=$(private_ip ${testenv_instance_prefix}-controller-0)
@@ -91,11 +89,7 @@ $(public_ip "${testenv_instance_prefix}-compute-0")
 eof
 
 echo "copying files"
-$(ursula \
-  "envs/test" \
-  -u ${LOGIN_USER} \
-  --sudo \
-  ${ROOT}/playbooks/testenv/tasks/pre-deploy.yml)
+ursula "envs/test" -u ${LOGIN_USER} --sudo ${ROOT}/playbooks/testenv/tasks/pre-deploy.yml
 
 ring_bell
 echo "vms are up: ${VMS} !!"

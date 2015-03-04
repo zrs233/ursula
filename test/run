@@ -22,38 +22,22 @@ if [ "${ACTION}" == "all" -o "${ACTION}" == "unit" ]; then
 fi
 
 if [ "${ACTION}" == "all" -o "${ACTION}" == "deploy" ]; then
-  time $(ursula \
-    "envs/test" \
-    -u ${LOGIN_USER} \
-    "site.yml $@" \
-    --sudo)
+  time ursula "envs/test" -u ${LOGIN_USER} --sudo "site.yml $@"
   ring_bell
 fi
 
 if [ "${ACTION}" == "all" -o "${ACTION}" == "test" ]; then
-  time $(ursula \
-    "envs/test" \
-    -u ${LOGIN_USER} \
-    ${ROOT}/playbooks/tests/tasks/main.yml  $@ \
-    --sudo)
+  time ursula "envs/test" -u ${LOGIN_USER} --sudo ${ROOT}/playbooks/tests/tasks/main.yml $@ 
   ring_bell
 fi
 
 if [ "${ACTION}" == "all" -o "${ACTION}" == "cleanup" ]; then
-  time $(ursula \
-    "envs/test" \
-    -u ${LOGIN_USER} \
-    ${ROOT}/playbooks/tests/tasks/cleanup.yml \
-    --sudo)
+  time ursula "envs/test" -u ${LOGIN_USER} --sudo ${ROOT}/playbooks/tests/tasks/cleanup.yml
   ring_bell
 fi
 
 if [ "${ACTION}" == "upgrade" ]; then
-  time $(ursula \
-    "envs/test" \
-    -u ${LOGIN_USER} \
-    "upgrade.yml $@" \
-    --sudo)
+  time ursula "envs/test" -u ${LOGIN_USER} --sudo "upgrade.yml $@"
   ring_bell
 fi
 
