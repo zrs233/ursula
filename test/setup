@@ -29,7 +29,7 @@ ${ROOT}/test/cleanup
 
 echo "booting ${VMS}"
 $(ursula \
-  "envs/test/hosts" \
+  "envs/test" \
   ${ROOT}/playbooks/testenv/tasks/create.yml)
 
 echo "building config"
@@ -92,7 +92,7 @@ eof
 
 echo "copying files"
 $(ursula \
-  "envs/test/hosts" \
+  "envs/test" \
   -u ${LOGIN_USER} \
   --sudo \
   ${ROOT}/playbooks/testenv/tasks/pre-deploy.yml)

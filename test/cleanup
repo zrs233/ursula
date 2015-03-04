@@ -3,5 +3,5 @@
 source $(dirname $0)/common
 
 $(ursula \
-  "envs/test/hosts" \
+  "envs/test" \
   ${ROOT}/playbooks/testenv/tasks/delete.yml)
