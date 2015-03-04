@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-source $(dirname $0)/../share/common
-
 install_pip() {
   which brew >/dev/null || \
     die "This script requires a homebrew installation to proceed.  http://mxcl.github.io/homebrew/"

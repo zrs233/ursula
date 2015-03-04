@@ -38,7 +38,7 @@ you can also run the tests outside of a virtual env like so:
 
 ```bash
     $ pep8 --show-source --show-pep8 .
-    $ ./bin/ursula -t -e envs/example -p site.yml
+    $ ursula -t -e envs/example -p site.yml
 ```
 
 ## Spin up a new environment

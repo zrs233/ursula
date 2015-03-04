@@ -8,3 +8,4 @@ tox
 pep8
 -e git://github.com/willthames/ansible-lint.git@9777f20aafd4be8706c9ce17005c981cb19a6a25#egg=ansible-lint
 https://github.com/blueboxgroup/ansible/archive/release1.7.2-bbg.tar.gz
+-e git://github.com/blueboxgroup/ursula-cli.git@master#egg=ursula-cli
