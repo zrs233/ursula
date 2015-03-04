@@ -34,7 +34,7 @@ Ursula comes bundled with Vagrant hooks to get started.  see [docs/vagrant.md](d
 
 ```bash
 # run the main playbook to install and configure all the things
-./bin/ursula /your/new/env site.yml
+ursula /your/new/env site.yml
 ```
 
 # Environments
