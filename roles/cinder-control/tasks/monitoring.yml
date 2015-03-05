@@ -13,4 +13,4 @@
   notify: restart sensu-client
 
 - include: nimble-monitoring.yml
-  when: sensu.numble_san_ip is defined
+  when: sensu.nimble_san_ip is defined
