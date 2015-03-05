@@ -14,6 +14,21 @@
         home=/nonexistent createhome=no
   when: not keystone_user|success
 
+- name: saml2 federation support packages
+  apt: name={{ item }} state=installed
+  with_items:
+    - libapache2-mod-shib2
+    - xmlsec1
+  when: keystone.federatedsp|bool
+
+- name: enable shlib2 module
+  apache2_module: name=shib2 state=present
+  when: keystone.federatedsp|bool
+
+- name: install python shlib2 module in keystone virtualenv
+  pip: name=pysaml2 virtualenv=/opt/openstack/current/keystone/
+  when: keystone.federatedsp|bool
+
 - name: keystone config dir
   file: dest=/etc/keystone state=directory
 
@@ -67,6 +82,14 @@
 
 - name: sync keystone database
   command: keystone-manage db_sync
+  when: database_create.changed or force_sync|default('false')|bool
+  run_once: true
+  changed_when: true
+  notify: reload apache
+  # we want this to always be changed so that it can notify the service restart
+
+- name: sync keystone database with federation extensions
+  command: keystone-manage db_sync --extension federation
   when: database_create.changed or force_sync|default('false')|bool
   run_once: true
   changed_when: true

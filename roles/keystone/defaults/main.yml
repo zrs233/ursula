@@ -4,6 +4,8 @@ keystone:
   token_expiration_in_seconds: 86400
   wsgi_processes: 3
   wsgi_threads: 10
+  federatedsp: false
+  idps: []
 
   source:
     rev: '8a7282bebd1ebfb92d9ccd87f85b8490a89da4e0'
