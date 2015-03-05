@@ -1,4 +1,9 @@
 ---
+- name: stop logstash-forwarder service
+  service: name=logstash-forwarder state=stopped enabled=yes
+  register: lsfstop
+  failed_when: lsfstop|failed and ("service not found" not in lsfstop.msg)
+
 - name: create logstash user
   user: name=logstash comment="Logstash Service User" shell=/sbin/nologin system=yes home=/var/lib/logstash
 
