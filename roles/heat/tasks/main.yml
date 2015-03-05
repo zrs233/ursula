@@ -41,7 +41,7 @@
   run_once: true
   changed_when: true
   notify:
-    - restart heat services 
+    - restart heat services
   # we want this to always be changed so that it can notify the service restart
 
 - meta: flush_handlers
