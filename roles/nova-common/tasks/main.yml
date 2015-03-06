@@ -41,10 +41,7 @@
     group=root
     mode=0440
 
-- name: set up log rotation for nova
-  logrotate: name=nova path=/var/log/nova/*.log
-  args:
-    options:
-      - daily
-      - missingok
-      - rotate 7
+- include: logging.yml
+  tags:
+    - logrotate
+    - logging

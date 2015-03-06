@@ -1,42 +1,99 @@
 ---
-- name: Install logging and dependencies
+- name: cleanup old configs
+  hosts: all
+  handlers:
+    - include: ../roles/cleanup/handlers/main.yml
+  tasks:
+    - name: stop logstash-forwarder service
+      service: name=logstash-forwarder state=stopped enabled=yes
+      register: lsfstop
+      failed_when: lsfstop|failed and ("service not found" not in lsfstop.msg)
+    - include: ../roles/cleanup/tasks/logging.yml
+
+- name: install or update logstash-forwarder
   hosts: all
   roles:
-    - ../roles/common
     - ../roles/logging
 
-- name: keystone code and config
-  hosts: controller:db
-  roles:
-    - ../roles/keystone-common
-
-- name: neutron code and config
-  hosts: controller:db:compute:network
+- name: keystone logging
+  hosts: controller
   vars_files:
-    - ../roles/rabbitmq/defaults/main.yml
+    - ../roles/keystone/defaults/main.yml
   roles:
-    - ../roles/neutron-common
+    - role: ../roles/logging-config
+      service: keystone
+      logdata: "{{ keystone.logs }}"
+  tasks:
+    - include: ../roles/keystone/tasks/logging.yml
 
-- name: nova code and config
-  hosts: controller:db:compute
+- name: glance logging
+  hosts: controller
   vars_files:
-    - ../roles/rabbitmq/defaults/main.yml
+    - ../roles/glance/defaults/main.yml
   roles:
-    - ../roles/nova-common
+    - role: ../roles/logging-config
+      service: glance
+      logdata: "{{ glance.logs }}"
+  tasks:
+    - include: ../roles/glance/tasks/logging.yml
 
-- name: swift common code and config
+- name: nova logging
+  hosts: controller:compute
+  vars_files:
+    - ../roles/nova-common/defaults/main.yml
+  roles:
+    - role: ../roles/logging-config
+      service: nova
+      logdata: "{{ nova.logs }}"
+  tasks:
+    - include: ../roles/nova-common/tasks/logging.yml
+
+- name: cinder logging
+  hosts: controller:compute
+  vars_files:
+    - ../roles/cinder-common/defaults/main.yml
+  roles:
+    - role: ../roles/logging-config
+      service: cinder
+      logdata: "{{ cinder.logs }}"
+  tasks:
+    - include: ../roles/cinder-common/tasks/logging.yml
+
+- name: neutron logging
+  hosts: network:compute
+  vars_files:
+    - ../roles/neutron-common/defaults/main.yml
+  roles:
+    - role: ../roles/logging-config
+      service: neutron
+      logdata: "{{ neutron.logs }}"
+  tasks:
+    - include: ../roles/neutron-common/tasks/logging.yml
+
+# TODO: These roles are missing logging configs!!!
+#- name: horizon logging
+#  hosts: controller
+#  roles:
+#  - role: ../roles/logging-config
+#    service: horizon
+#    logdata: "{{ horizon.logs }}"
+
+- name: swift logging
   hosts: swiftnode
-  roles:
-    - ../roles/swift-common
+  tasks:
+    - include: ../roles/swift-common/tasks/logging.yml
 
-- name: glance code and config
-  hosts: controller:db
+- name: heat logging
+  hosts: heatnode
   roles:
-    - ../roles/glance-common
+  - role: ../roles/logging-config
+    service: heat
+    logdata: "{{ heat.logs }}"
+  tasks:
+    - include: ../roles/heat/tasks/logging.yml
 
-- name: cinder code and config
-  hosts: controller:db:compute
-  vars_files:
-    - ../roles/rabbitmq/defaults/main.yml
-  roles:
-    - ../roles/cinder-common
+- name: start and check logstash-forwarder is running
+  hosts: all
+  tasks:
+    - name: start and enable logstash-forwarder service
+      service: name=logstash-forwarder state=started enabled=yes
