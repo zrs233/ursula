@@ -67,10 +67,7 @@
 
 - include: monitoring.yml tags=monitoring,common
 
-- name: set up log rotation for keystone
-  logrotate: name=keystone path=/var/log/keystone/*.log
-  args:
-    options:
-      - daily
-      - missingok
-      - rotate 7
+- include: logging.yml
+  tags:
+    - logrotate
+    - logging

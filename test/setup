@@ -55,6 +55,9 @@ eof
 cat ${CERT_DIR}/openstack.example.com.key | sed 's/^/    /' >> ${ROOT}/envs/test/group_vars/all.yml
 cat >> ${ROOT}/envs/test/defaults.yml <<eof
 logging:
+  follow:
+    global_fields:
+      cluster_name: "ci-test"
   forward:
     host: kibana.sea03.blueboxgrid.com
     port: 4560

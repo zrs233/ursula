@@ -1,9 +1,17 @@
 ---
-- name: cleanup old configs and install logstash-forwarder
+- name: cleanup old configs
   hosts: all
+  handlers:
+    - include: ../roles/cleanup/handlers/main.yml
   tasks:
+    - name: stop logstash-forwarder service
+      service: name=logstash-forwarder state=stopped enabled=yes
+      register: lsfstop
+      failed_when: lsfstop|failed and ("service not found" not in lsfstop.msg)
     - include: ../roles/cleanup/tasks/logging.yml
-    - include: ../roles/common/tasks/bbg-repo.yml
+
+- name: install or update logstash-forwarder
+  hosts: all
   roles:
     - ../roles/logging
 
@@ -15,6 +23,8 @@
     - role: ../roles/logging-config
       service: keystone
       logdata: "{{ keystone.logs }}"
+  tasks:
+    - include: ../roles/keystone/tasks/logging.yml
 
 - name: glance logging
   hosts: controller
@@ -24,6 +34,8 @@
     - role: ../roles/logging-config
       service: glance
       logdata: "{{ glance.logs }}"
+  tasks:
+    - include: ../roles/glance/tasks/logging.yml
 
 - name: nova logging
   hosts: controller:compute
@@ -33,6 +45,8 @@
     - role: ../roles/logging-config
       service: nova
       logdata: "{{ nova.logs }}"
+  tasks:
+    - include: ../roles/nova-common/tasks/logging.yml
 
 - name: cinder logging
   hosts: controller:compute
@@ -42,6 +56,8 @@
     - role: ../roles/logging-config
       service: cinder
       logdata: "{{ cinder.logs }}"
+  tasks:
+    - include: ../roles/cinder-common/tasks/logging.yml
 
 - name: neutron logging
   hosts: network:compute
@@ -51,7 +67,8 @@
     - role: ../roles/logging-config
       service: neutron
       logdata: "{{ neutron.logs }}"
-
+  tasks:
+    - include: ../roles/neutron-common/tasks/logging.yml
 
 # TODO: These roles are missing logging configs!!!
 #- name: horizon logging
@@ -60,13 +77,11 @@
 #  - role: ../roles/logging-config
 #    service: horizon
 #    logdata: "{{ horizon.logs }}"
-#
-#- name: swift logging
-#  hosts: swiftnode
-#  roles:
-#  - role: ../roles/logging-config
-#    service: swift
-#    logdata: "{{ swift.logs }}"
+
+- name: swift logging
+  hosts: swiftnode
+  tasks:
+    - include: ../roles/swift-common/tasks/logging.yml
 
 - name: heat logging
   hosts: heatnode
@@ -74,6 +89,8 @@
   - role: ../roles/logging-config
     service: heat
     logdata: "{{ heat.logs }}"
+  tasks:
+    - include: ../roles/heat/tasks/logging.yml
 
 - name: start and check logstash-forwarder is running
   hosts: all

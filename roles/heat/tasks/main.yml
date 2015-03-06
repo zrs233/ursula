@@ -41,7 +41,7 @@
   run_once: true
   changed_when: true
   notify:
-    - restart heat services 
+    - restart heat services
   # we want this to always be changed so that it can notify the service restart
 
 - meta: flush_handlers
@@ -55,10 +55,7 @@
 
 - include: monitoring.yml tags=monitoring,common
 
-- name: set up log rotation for heat
-  logrotate: name=heat path=/var/log/heat/*.log
-  args:
-    options:
-      - daily
-      - missingok
-      - rotate 7
+- include: logging.yml
+  tags:
+    - logrotate
+    - logging
