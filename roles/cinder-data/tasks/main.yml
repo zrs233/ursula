@@ -28,21 +28,9 @@
 - name: cinder volume group
   cinder_volume_group: file={{ cinder.volume_file }}
                        size={{ cinder.volume_file_size }}
-  when: cinder.passphrase is not defined
-
-- name: encrypted cinder volume group
-  cinder_volume_group: file={{ cinder.volume_file }}
-                       size={{ cinder.volume_file_size }}
-                       passphrase={{ cinder.passphrase }}
-  when: cinder.passphrase is defined
 
 - name: iscsi start
   service: name=open-iscsi state=started
-
-- name: create cinder-volumes crypttab entry
-  crypttab: state=present target=cinder-volumes source={{ cinder.volume_file }}
-            opts=luks,aes,noauto
-  when: cinder.passphrase is defined
 
 - name: install cinder-volume service
   upstart_service: name=cinder-volume user=cinder

@@ -108,7 +108,6 @@ nova:
 cinder:
   volume_file: /opt/stack/cinder-volumes
   volume_file_size: 5G
-  passphrase: asdf
   logging:
     debug: True
     verbose: True
