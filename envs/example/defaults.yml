@@ -176,6 +176,9 @@ neutron:
   service:
     envs:
       - "REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt"
+  tenant_nameservers:
+    - 8.8.4.4
+    - 8.8.8.8
 
 glance:
   api_workers: 1
