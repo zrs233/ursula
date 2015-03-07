@@ -64,10 +64,7 @@
   notify:
   - pip install ironicclient
 
-- name: set up log rotation for ironic
-  logrotate: name=ironic path=/var/log/ironic/*.log
-  args:
-    options:
-      - daily
-      - missingok
-      - rotate 7
+- include: logging.yml
+  tags:
+    - logrotate
+    - logging
