@@ -18,9 +18,6 @@ options:
       - The file path on the filesystem to create
     required: false
     aliases: ["dest"]
-  passphrase:
-    description:
-      - A passphrase to encrypt the file with LUKS (optional)
   vgname:
     description:
       - The name for the volume group
@@ -65,14 +62,12 @@ def main():
         argument_spec  = dict(
             size       = dict(required=True),
             file       = dict(required=True, aliases=['dest']),
-            passphrase = dict(),
             vgname     = dict(default='cinder-volumes'),
         ),
     )
 
     size = module.params.get('size')
     dest = module.params.get('file')
-    passphrase = module.params.get('passphrase')
     vgname = module.params.get('vgname')
 
     # see if we have this vg already
@@ -104,31 +99,6 @@ def main():
 
     cmd = ['losetup', device, dest]
     rc, out, err = module.run_command(cmd, check_rc=True)
-
-    # Crypt the device if desired
-    if passphrase:
-        for cryptmod in ['cryptoloop', 'aes']:
-            cmd = ['modprobe', cryptmod]
-            rc, out, err = module.run_command(cmd, check_rc=True)
-
-        luksfmt = ['cryptsetup', 'luksFormat', '--key-file=-',
-                   device]
-        luksopn = ['cryptsetup', 'luksOpen', '--key-file=-',
-                   device, vgname]
-
-        try:
-            # format
-            ps = subprocess.Popen(['echo', '-n', passphrase],
-                                   stdout=subprocess.PIPE)
-            output = subprocess.check_output(luksfmt, stdin=ps.stdout)
-            # open
-            ps = subprocess.Popen(['echo', '-n', passphrase],
-                                   stdout=subprocess.PIPE)
-            output = subprocess.check_output(luksopn, stdin=ps.stdout)
-        except Exception, e:
-            module.fail_json(msg="Failed to setup crypt device: %s" % e)
-
-        device = "/dev/mapper/%s" % vgname
 
     if is_luks('/dev/mapper/%s' % vgname, module):
         module.fail_json(msg="%s is a LUKS volume" % device)
