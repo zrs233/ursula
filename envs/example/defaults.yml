@@ -15,6 +15,7 @@ secrets:
   metadata_proxy_shared_secret: asdf
   horizon_secret_key:           asdf
   glance_sync:      ADQ64XUQLUWH75M634RVBLP55RKPGGOWG
+  monitor_password: asdf
 
 fqdn: openstack.example.com
 floating_ip: "{{ controller_primary }}"
@@ -70,6 +71,12 @@ monitoring:
   keepalive:
     handler: email
   scan_for_log_errors: true
+  openstack:
+    user:
+      username: monitor
+      password: "{{ secrets.monitor_password }}"
+      tenant: admin
+      role: monitor
 
 openstack:
   pypi_mirror: https://pypi.python.org/simple/
@@ -188,6 +195,9 @@ keystone:
     - name: heat
       password: "{{ secrets.service_password }}"
       tenant: service
+    - name: "{{ monitoring.openstack.user.username }}"
+      password: "{{ monitoring.openstack.user.password }}"
+      tenant: "{{ monitoring.openstack.user.tenant }}"
 
   user_roles:
     - user: admin
@@ -220,6 +230,9 @@ keystone:
     - user: heat
       tenant: service
       role: service
+    - user: "{{ monitoring.openstack.user.username }}"
+      tenant: "{{ monitoring.openstack.user.tenant }}"
+      role: "{{ monitoring.openstack.user.role }}"
 
   services:
     - name: keystone

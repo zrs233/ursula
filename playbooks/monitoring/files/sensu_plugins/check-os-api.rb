@@ -23,14 +23,12 @@ class CheckOSApi < Sensu::Plugin::Check::CLI
     when "nova"
       "nova list"
     when "glance"
-      "glance index"
+      "glance image-list"
     when "keystone"
       "keystone endpoint-list"
     when "heat"
       "heat stack-list"
     end
-
-    ". /root/stackrc; #{cmd}"
   end
 
   def run

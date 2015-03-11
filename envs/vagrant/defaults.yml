@@ -17,6 +17,7 @@ secrets:
   metadata_proxy_shared_secret: asdf
   horizon_secret_key:           asdf
   glance_sync:      ADQ64XUQLUWH75M634RVBLP55RKPGGOWG
+  monitor_password: asdf
 
 endpoints:
   main:     "{{ fqdn }}"
@@ -131,9 +132,12 @@ glance:
       url: https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img
 
 keystone:
+  logging:
+    debug: True
   tenants:
     - admin
     - service
+    - demo
 
   users:
     - name: admin
@@ -161,6 +165,9 @@ keystone:
     - name: heat
       password: "{{ secrets.service_password }}"
       tenant: service
+    - name: "{{ monitoring.openstack.user.username }}"
+      password: "{{ monitoring.openstack.user.password }}"
+      tenant: "{{ monitoring.openstack.user.tenant }}"
 
   user_roles:
     - user: admin
@@ -190,6 +197,9 @@ keystone:
     - user: heat
       tenant: service
       role: admin
+    - user: "{{ monitoring.openstack.user.username }}"
+      tenant: "{{ monitoring.openstack.user.tenant }}"
+      role: "{{ monitoring.openstack.user.role }}"
 
   services:
     - name: keystone
