@@ -1,3 +1,4 @@
+Defaults:sensu env_keep += "OS_AUTH_URL OS_USERNAME OS_PASSWORD OS_TENANT_NAME OS_NO_CACHE OS_CACERT"
 sensu ALL= NOPASSWD: /etc/sensu/plugins/check-log.rb
 sensu ALL= NOPASSWD: /etc/sensu/plugins/check-os-api.rb
 sensu ALL= NOPASSWD: /etc/sensu/plugins/percona-cluster-size.rb
