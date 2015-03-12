@@ -135,7 +135,7 @@ AVAILABLE_REGIONS = [
 OPENSTACK_HOST = "{{ endpoints.main }}"
 OPENSTACK_KEYSTONE_URL = "https://%s:5001/v{{horizon.keystone_api_version}}" % OPENSTACK_HOST
 OPENSTACK_KEYSTONE_DEFAULT_ROLE = "service"
-
+SESSION_TIMEOUT = {{ horizon.timeout }}
 # Disable SSL certificate checks (useful for self-signed certificates):
 OPENSTACK_SSL_NO_VERIFY = True
 
