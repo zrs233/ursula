@@ -15,7 +15,9 @@
   notify: restart sensu-client
 - sensu_process_check: service=glance-registry
   notify: restart sensu-client
-- sensu_check: name=check-glance-api plugin=check-os-api.rb use_sudo=true args="--service glance"
+- sensu_check: name=check-glance-api plugin=check-os-api.rb args="--service glance"
+  notify: restart sensu-client
+- sensu_check: name=check-glance-store plugin=check-glance-store.py
   notify: restart sensu-client
 
 # horizon
@@ -29,7 +31,7 @@
 
 - sensu_process_check: service=keystone-all
   notify: restart sensu-client
-- sensu_check: name=check-keystone-api plugin=check-os-api.rb use_sudo=true args="--service keystone"
+- sensu_check: name=check-keystone-api plugin=check-os-api.rb args="--service keystone"
   notify: restart sensu-client
 
 # neutron
@@ -37,7 +39,7 @@
 - sensu_process_check: service=neutron-server
   notify: restart sensu-client
 
-- sensu_check: name=check-neutron-agents plugin=check-neutron-agents.sh use_sudo=true
+- sensu_check: name=check-neutron-agents plugin=check-neutron-agents.sh
   notify: restart sensu-client
 
 # heat
@@ -61,7 +63,7 @@
     - nova-scheduler
   notify: restart sensu-client
 
-- sensu_check: name=check-nova-api plugin=check-os-api.rb use_sudo=true args="--service nova"
+- sensu_check: name=check-nova-api plugin=check-os-api.rb args="--service nova"
   notify: restart sensu-client
 
 - sensu_check: name=check-nova-services plugin=check-nova-services.sh use_sudo=true
