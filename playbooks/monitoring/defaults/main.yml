@@ -1,0 +1,9 @@
+---
+monitoring:
+  ursula_monitoring:
+    path: /opt/ursula-monitoring
+    method: git # git|tar
+    git_repo: https://github.com/blueboxgroup/ursula-monitoring.git
+    git_rev: RELEASE_1.1.x
+    tar_url: https://github.com/blueboxgroup/ursula-monitoring/archive/RELEASE_1.1.x.tar.gz
+    tar_version: RELEASE_1.1.x

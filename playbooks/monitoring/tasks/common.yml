@@ -1,9 +1,53 @@
 ---
 - file: dest=/etc/sensu/conf.d/checks state=directory owner=root mode=0755
 
-- file: dest=/etc/sensu/plugins state=directory owner=root
-- copy: src={{ item }} dest=/etc/sensu/plugins mode=0755
-  with_fileglob: ../files/sensu_plugins/*
+- name: fetch ursula_monitoring when install method is git
+  git: repo="{{ monitoring.ursula_monitoring.git_repo }}"
+       dest="{{ monitoring.ursula_monitoring.path }}"
+       version="{{ monitoring.ursula_monitoring.git_rev }}"
+       update=yes
+       force=yes
+  when: monitoring.ursula_monitoring.method == 'git'
+
+- name: ursula_monitoring directories
+  file: dest={{ item }} mode=0755 state=directory
+  with_items:
+    - "{{ monitoring.ursula_monitoring.path }}/archive"
+  when: monitoring.ursula_monitoring.method == 'tar'
+
+- name: fetch ursula_monitoring when install method is tar
+  get_url: url="{{ monitoring.ursula_monitoring.tar_url }}"
+           dest="{{ monitoring.ursula_monitoring.path }}/archive/ursula-monitoring-{{ monitoring.ursula_monitoring.tar_version  }}"
+           mode=0644
+  when: monitoring.ursula_monitoring.method == 'tar'
+
+- name: untar ursula_monitoring package
+  unarchive: src="{{ monitoring.ursula_monitoring.path }}/archive/ursula-monitoring-{{ monitoring.ursula_monitoring.tar_version  }}"
+             dest="{{ monitoring.ursula_monitoring.path }}" copy=no
+  when: monitoring.ursula_monitoring.method == 'tar'
+
+- name: ursula monitoring current symlink
+  file: src="{{ monitoring.ursula_monitoring.path }}/ursula-monitoring-{{ monitoring.ursula_monitoring.tar_version }}"
+        dest="{{ monitoring.ursula_monitoring.path }}/current" state=link force=true
+  when: monitoring.ursula_monitoring.method == 'tar'
+
+- name: check existing sensu plugins dir
+  stat: path=/etc/sensu/plugins
+  register: sensu_plugins_dir
+
+- name: remove sensu plugins dir if it exists
+  file: dest=/etc/sensu/plugins state=absent
+  when: sensu_plugins_dir.stat.isdir is defined and sensu_plugins_dir.stat.isdir
+  notify: restart sensu-client
+
+- name: sensu plugins dir
+  file: src="{{ monitoring.ursula_monitoring.path }}/sensu/plugins" dest=/etc/sensu/plugins state=link force=true
+  when: monitoring.ursula_monitoring.method == 'git'
+
+- name: sensu plugins dir
+  file: src="{{ monitoring.ursula_monitoring.path }}/ursula-monitoring-{{ monitoring.ursula_monitoring.tar_version }}/sensu/plugins"
+        dest=/etc/sensu/plugins state=link force=true
+  when: monitoring.ursula_monitoring.method == 'tar'
 
 - sensu_check: name=cpu  plugin=check-cpu.rb args='-w 80 -c 90 -p kvm'
   notify: restart sensu-client
