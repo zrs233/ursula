@@ -4,6 +4,9 @@
   roles:
     - role: common
       tags: ['common','common-base']
+    - role: collectd-client
+      tags: ['collectd-client','collectd']
+      when: collectd is defined and collectd.enabled|bool
 
 - name: security and errata
   hosts: all

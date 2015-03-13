@@ -1,3 +1,5 @@
 ---
 dependencies:
   - role: monitoring-common
+  - role: collectd-plugin
+    when: collectd is defined and collectd.enabled|bool

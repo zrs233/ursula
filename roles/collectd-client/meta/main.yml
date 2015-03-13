@@ -1,0 +1,8 @@
+---
+dependencies:
+  - role: apt-repos
+    repos:
+      - name: 'collectd package repo'
+        repo: 'deb {{ collectd.apt_repo }} precise main'
+        key_url: '{{ collectd.key_url }}'
+    when: ansible_distribution_version == "12.04"

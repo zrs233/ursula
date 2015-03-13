@@ -3,3 +3,5 @@ dependencies:
   - role: cinder-common
   - role: openstack-database
     database_name: cinder
+  - role: collectd-plugin
+    when: collectd is defined and collectd.enabled|bool

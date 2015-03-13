@@ -7,3 +7,9 @@
   sensu_check: name=check-keystone-api plugin=check-os-api.rb
                args="--service keystone"
   notify: restart sensu-client
+
+- name: keystone metrics
+  template: src=etc/collectd/plugins/keystone.conf dest=/etc/collectd/plugins/keystone.conf
+  notify: restart collectd
+  when: collectd is defined and collectd.enabled|bool
+  tags: collectd

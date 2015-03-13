@@ -1,0 +1,33 @@
+---
+- name: create collectd user
+  user: name=collectd comment=collectd shell=/bin/false
+        system=yes home=/nonexistent createhome=no
+
+- name: install collectd packages
+  apt: name={{ item }} state=present update_cache=yes
+  with_items:
+    - collectd
+    - collectd-utils
+    - collectd-core
+
+- name: create config dirs
+  file: dest={{ collectd.plugin_conf_dir }} state=directory owner=root mode=0755
+
+- name: configure collectd
+  template: src=etc/collectd/collectd.conf dest=/etc/collectd/collectd.conf
+  notify:
+    - restart collectd
+
+- name: configure base collectd plugins
+  template: src=etc/collectd/plugins/{{ item }}.conf dest={{ collectd.plugin_conf_dir }}/{{ item }}.conf
+  with_items:
+    - amqp
+    - system
+    - logfile
+  notify:
+    - restart collectd
+
+- meta: flush_handlers
+
+- name: ensure apache is running
+  service: name=collectd state=started

@@ -3,3 +3,5 @@ dependencies:
   - role: openstack-database
     database_name: neutron
   - role: neutron-common
+  - role: collectd-plugin
+    when: collectd is defined and collectd.enabled|bool
