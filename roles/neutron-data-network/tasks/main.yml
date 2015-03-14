@@ -6,6 +6,7 @@
     - dnsmasq-utils
     - iputils-arping
     - ucarp
+    - radvd
 
 - include: dnsmasq.yml
 
