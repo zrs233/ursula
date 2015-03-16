@@ -62,7 +62,7 @@
   file: dest=/etc/sensu/plugins state=directory owner=root
 
 - name: copy sensu plugins
-  copy: src={{ item }} dest=/etc/sensu/plugins mode=0755
+  copy: src={{ item }} dest=/etc/sensu/plugins mode=0755 owner=root
   with_fileglob: sensu_plugins/*
 
 - name: cpu check
