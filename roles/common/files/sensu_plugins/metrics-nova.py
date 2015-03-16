@@ -11,7 +11,7 @@ import socket
 import time
 import os
 
-from novaclient.v3 import Client
+from novaclient.v2 import Client
 
 DEFAULT_SCHEME = '{}.nova.hypervisors'.format(socket.gethostname())
 
