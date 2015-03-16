@@ -42,7 +42,9 @@ def main():
         changed = False
         plugin_path = '%s/%s' % (module.params['plugin_dir'], module.params['plugin'])
         check_path = '%s/%s.json' % (module.params['check_dir'], module.params['name'])
-        command = '%s %s %s' % ( module.params['prefix'], plugin_path, module.params['args'] )
+        command = '%s %s' % ( plugin_path, module.params['args'] )
+        if module.params['prefix']:
+            command = '%s %s' % (module.params['prefix'], command)
         if module.params['use_sudo']:
             command = "sudo %s" % (command)
         check=dict({
