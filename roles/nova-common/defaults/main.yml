@@ -36,7 +36,7 @@ nova:
       dest: /opt/stack/novadocker
 
   source:
-    rev: '8526a727dc20a96d7245ae836e81c29967166f77'
+    rev: 'd6683ba1b1af3b31b7260a51333295e8be68c470'
   package:
     console_scripts:
       - nova-all
