@@ -65,6 +65,11 @@
   copy: src={{ item }} dest=/etc/sensu/plugins mode=0755 owner=root
   with_fileglob: sensu_plugins/*
 
+- name: remove unwanted sensu plugins
+  file: dest=/etc/sensu/plugins/{{ item }} state=absent
+  with_items:
+    - check-neutron-fip.sh
+
 - name: cpu check
   sensu_check: name=cpu plugin=check-cpu.rb args='-w 80 -c 90 -p kvm'
   notify: restart sensu-client
