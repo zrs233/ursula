@@ -15,12 +15,6 @@
             owner=rabbitmq group=rabbitmq mode=0400
   register: erlang_cookie
 
-- name: add rabbitmq environment configuration
-  template: src=etc/rabbitmq/rabbitmq-env.conf
-            dest=/etc/rabbitmq/rabbitmq-env.conf
-            owner=root group=root mode=0644
-  register: cluster_configuration
-
 - name: add rabbitmq cluster configuration
   template: src=etc/rabbitmq/rabbitmq.config dest=/etc/rabbitmq/rabbitmq.config
             owner=root group=root mode=0644
@@ -54,15 +48,3 @@
                    node={{ rabbitmq.nodename }}
                    pattern='.*'
                    tags=ha-mode=all
-
-- name: install management plugin
-  rabbitmq_plugin: names=rabbitmq_management
-  notify: restart rabbitmq
-
-- meta: flush_handlers
-
-- name: install rabbitmqadmin
-  get_url: dest=/usr/local/bin/ url={{ rabbitmq.admin_cli_url }}
-
-- name: correct rabbitmqadmin modes
-  file: group=root owner=root mode=0755 path=/usr/local/bin/rabbitmqadmin

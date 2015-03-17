@@ -1,4 +1,15 @@
 ---
+# set up some pieces before installing rabbit so that mnesia data
+# doesn't need to be deleted
+
+- name: add rabbitmq config directory
+  file: dest=/etc/rabbitmq state=directory owner=root mode=0755
+
+- name: add rabbitmq environment configuration
+  template: src=etc/rabbitmq/rabbitmq-env.conf
+            dest=/etc/rabbitmq/rabbitmq-env.conf
+            owner=root group=root mode=0644
+
 - name: install erlang-solutions erlang
   apt: pkg={{ item }}
   with_items:
@@ -7,29 +18,30 @@
 
 # Create the cluster if desired
 - include: cluster.yml
-  when: rabbitmq.cluster
+  when: rabbitmq.cluster|bool
 
 # Backward compatibility with existing configurations.
 - name: remove default rabbit user
-  rabbitmq_user: user=guest state=absent
+  rabbitmq_user: user=guest state=absent  node={{ rabbitmq.nodename }}
   when: not rabbitmq.cluster
-
-- name: remove default rabbit user clustered
-  rabbitmq_user: user=guest state=absent node={{ rabbitmq.nodename }}
-  when: rabbitmq.cluster
 
 - name: openstack rabbit user
   rabbitmq_user: user={{ rabbitmq.user }}
-                 password={{ secrets.rabbit_password }} vhost=/
-                 tags=administrator configure_priv=.* read_priv=.*
-                 write_priv=.* state=present
-  when: not rabbitmq.cluster
-
-- name: openstack rabbit user clustered
-  rabbitmq_user: user={{ rabbitmq.user }}
                  password={{ secrets.rabbit_password }}
                  node={{ rabbitmq.nodename }} vhost=/ tags=administrator
-                 configure_priv=.* read_priv=.* write_priv=.* state=present
-  when: rabbitmq.cluster
+                 configure_priv=.* read_priv=.*
+                 write_priv=.* state=present
+
+- name: install management plugin
+  rabbitmq_plugin: names=rabbitmq_management
+  notify: restart rabbitmq
+
+- meta: flush_handlers
+
+- name: install rabbitmqadmin
+  get_url: dest=/usr/local/bin/ url={{ rabbitmq.admin_cli_url }}
+
+- name: correct rabbitmqadmin modes
+  file: group=root owner=root mode=0755 path=/usr/local/bin/rabbitmqadmin
 
 - include: monitoring.yml tags=monitoring,common
