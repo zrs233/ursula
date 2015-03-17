@@ -3,9 +3,10 @@
   sensu_process_check: service=neutron-server
   notify: restart sensu-client
 
-- name: neutron fips metrics
-  sensu_metrics_check: name=neutron-free-fips-metric plugin=check-neutron-fip.sh
-                       args='-s {{ monitoring.graphite.cluster_prefix }}.neutron -p  -m /root/.my.cnf'
-                       use_sudo=true
-                       interval=3600
+- name: neutron free fips check
+  sensu_check: name=check-neutron-free-fips plugin=check-neutron-fip.sh state=absent
+  notify: restart sensu-client
+
+- name: neutron free fips metrics check
+  sensu_metrics_check: name=neutron-free-fips-metric plugin=check-neutron-fip.sh state=absent
   notify: restart sensu-client
