@@ -43,7 +43,7 @@ endpoint = keystone.service_catalog.url_for(service_type='image',
                                             endpoint_type='publicURL')
 
 # logging.basicConfig(level=logging.DEBUG)
-glance = client.Client('1', endpoint=endpoint, token=auth_token)
+glance = client.Client('2', endpoint=endpoint, token=auth_token)
 glance.format = 'json'
 
 # Fetch the list of files in store_directory matching the UUID regex
@@ -59,7 +59,7 @@ files = [(x, os.path.getsize(p),
 glance_images = []
 for x in glance.images.list():
     if x.status == 'active':
-        tz_aware_time = pytz.utc.localize(parser.parse(x.created_at))
+        tz_aware_time = parser.parse(x.created_at)
         glance_images.append((x.id, x.size, tz_aware_time))
 
 # Check all active images 1 hour or older are present
