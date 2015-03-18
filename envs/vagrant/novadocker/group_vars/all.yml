@@ -1,0 +1,9 @@
+---
+stack_env: vagrant-standard
+floating_ip: 10.1.1.100
+
+xtradb:
+  sst_auth_password: asdf
+
+glance:
+  container_formats: ami,ari,aki,bare,ovf,docker

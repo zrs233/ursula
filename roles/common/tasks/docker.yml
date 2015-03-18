@@ -1,3 +1,0 @@
----
-- name: install docker
-  apt: pkg=lxc-docker
