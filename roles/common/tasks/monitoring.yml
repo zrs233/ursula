@@ -74,10 +74,6 @@
        force=yes
   when: common.ursula_monitoring.method == 'git'
 
-- name: sensu plugins dir
-  file: src="{{ common.ursula_monitoring.path }}/sensu/plugins" dest=/etc/sensu/plugins state=link force=true
-  when: common.ursula_monitoring.method == 'git'
-
 - name: ursula_monitoring directories
   file: dest={{ item }} mode=0755 state=directory
   with_items:
@@ -99,6 +95,19 @@
   file: src="{{ common.ursula_monitoring.path }}/ursula-monitoring-{{ common.ursula_monitoring.tar_version }}"
         dest="{{ common.ursula_monitoring.path }}/current" state=link force=true
   when: common.ursula_monitoring.method == 'tar'
+
+- name: check existing sensu plugins dir
+  stat: path=/etc/sensu/plugins
+  register: sensu_plugins_dir
+
+- name: remove sensu plugins dir if it exists
+  file: dest=/etc/sensu/plugins state=absent
+  when: sensu_plugins_dir.stat.isdir is defined and sensu_plugins_dir.stat.isdir
+  notify: restart sensu-client
+
+- name: sensu plugins dir
+  file: src="{{ common.ursula_monitoring.path }}/sensu/plugins" dest=/etc/sensu/plugins state=link force=true
+  when: common.ursula_monitoring.method == 'git'
 
 - name: sensu plugins dir
   file: src="{{ common.ursula_monitoring.path }}/ursula-monitoring-{{ common.ursula_monitoring.tar_version }}/sensu/plugins"
