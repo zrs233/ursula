@@ -62,6 +62,8 @@
   git: repo="{{ common.ursula_monitoring.git_repo }}"
        dest="{{ common.ursula_monitoring.path }}"
        version="{{ common.ursula_monitoring.git_rev }}"
+       update=yes
+       force=yes
   when: common.ursula_monitoring.method == 'git'
 
 - name: sensu plugins dir
@@ -83,6 +85,11 @@
 - name: untar ursula_monitoring package
   unarchive: src="{{ common.ursula_monitoring.path }}/archive/ursula-monitoring-{{ common.ursula_monitoring.tar_version  }}"
              dest="{{ common.ursula_monitoring.path }}" copy=no
+  when: common.ursula_monitoring.method == 'tar'
+
+- name: ursula monitoring current symlink
+  file: src="{{ common.ursula_monitoring.path }}/ursula-monitoring-{{ common.ursula_monitoring.tar_version }}"
+        dest="{{ common.ursula_monitoring.path }}/current" state=link force=true
   when: common.ursula_monitoring.method == 'tar'
 
 - name: sensu plugins dir
