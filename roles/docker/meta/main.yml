@@ -2,5 +2,5 @@
 dependencies:
   - role: apt-repos
     repos:
-    - repo: 'deb {{ apt_repos.docker.repo }} docker main'
-      key_url: '{{ apt_repos.docker.key_url }}'
+      - repo: 'deb {{ apt_repos.docker.repo }} docker main'
+        key_url: '{{ apt_repos.docker.key_url }}'
