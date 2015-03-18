@@ -3,7 +3,7 @@ rabbitmq:
   cluster: False
   erlang_cookie: 6IMgelGs3Ygu
   user: openstack
-  nodename: 'openstack@{{ ansible_hostname }}'
+  nodename: 'rabbit@{{ ansible_hostname }}'
   ip: '0.0.0.0'
   port: 5672
   management_port: 15672

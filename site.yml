@@ -30,7 +30,7 @@
   serial: 1 # serial because clustering
   roles:
     - role: rabbitmq
-      tags: ['infra']
+      tags: ['infra', 'rabbitmq']
 
 - name: install common percona components and gather facts
   gather_facts: force
