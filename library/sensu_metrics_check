@@ -34,46 +34,61 @@ def main():
             plugin_dir=dict(default='/etc/sensu/plugins', required=False),
             check_dir=dict(default='/etc/sensu/conf.d/checks', required=False),
             prefix=dict(default='', required=False),
-            interval=dict(default=20, reuired=False)
+            interval=dict(default=20, reuired=False),
+            state=dict(default='present', required=False, choices=['present','absent'])
         )
     )
 
-    try:
-        changed = False
-        plugin_path = '%s/%s' % (module.params['plugin_dir'], module.params['plugin'])
-        check_path = '%s/%s.json' % (module.params['check_dir'], module.params['name'])
-        command = '%s %s' % ( plugin_path, module.params['args'] )
-        if module.params['prefix']:
-            command = '%s %s' % (module.params['prefix'], command)
-        if module.params['use_sudo']:
-            command = "sudo %s" % (command)
-        check=dict({
-            'checks': {
-                module.params['name']: {
-                    'type': 'metric',
-                    'command': command,
-                    'standalone': True,
-                    'interval': int(module.params['interval']),
-                    'handlers': [ 'graphite' ]
+    if module.params['state'] == 'present':
+        try:
+            changed = False
+            plugin_path = '%s/%s' % (module.params['plugin_dir'], module.params['plugin'])
+            check_path = '%s/%s.json' % (module.params['check_dir'], module.params['name'])
+            command = '%s %s' % ( plugin_path, module.params['args'] )
+            if module.params['prefix']:
+                command = '%s %s' % (module.params['prefix'], command)
+            if module.params['use_sudo']:
+                command = "sudo %s" % (command)
+            check=dict({
+                'checks': {
+                    module.params['name']: {
+                        'type': 'metric',
+                        'command': command,
+                        'standalone': True,
+                        'interval': int(module.params['interval']),
+                        'handlers': [ 'graphite' ]
+                    }
                 }
-            }
-        })
+            })
 
-        if os.path.isfile(check_path):
-            with open(check_path) as fh:
-                if json.load(fh) == check:
-                    module.exit_json(changed=False, result="ok")
-                else:
-                    with open(check_path, "w") as fh:
-                        fh.write(json.dumps(check, indent=4))
-                    module.exit_json(changed=True, result="changed")
-        else:
-            with open(check_path, "w") as fh:
-                fh.write(json.dumps(check, indent=4))
-            module.exit_json(changed=True, result="created")
-    except Exception as e:
-        formatted_lines = traceback.format_exc()
-        module.fail_json(msg="creating the check failed: %s %s" % (e,formatted_lines))
+            if os.path.isfile(check_path):
+                with open(check_path) as fh:
+                    if json.load(fh) == check:
+                        module.exit_json(changed=False, result="ok")
+                    else:
+                        with open(check_path, "w") as fh:
+                            fh.write(json.dumps(check, indent=4))
+                        module.exit_json(changed=True, result="changed")
+            else:
+                with open(check_path, "w") as fh:
+                    fh.write(json.dumps(check, indent=4))
+                module.exit_json(changed=True, result="created")
+        except Exception as e:
+            formatted_lines = traceback.format_exc()
+            module.fail_json(msg="creating the check failed: %s %s" % (e,formatted_lines))
+
+    else:
+        try:
+            changed = False
+            check_path = '%s/%s.json' % (module.params['check_dir'], module.params['name'])
+            if os.path.isfile(check_path):
+                os.remove(check_path)
+                module.exit_json(changed=True, result="changed")
+            else:
+                module.exit_json(changed=False, result="ok")
+        except Exception as e:
+            formatted_lines = traceback.format_exc()
+            module.fail_json(msg="removing the check failed: %s %s" % (e,formatted_lines))
 
 # this is magic, see lib/ansible/module_common.py
 #<<INCLUDE_ANSIBLE_MODULE_COMMON>>
