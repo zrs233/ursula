@@ -338,6 +338,7 @@ heat:
     debug: True
 
 ironic:
+  virtualenv: /opt/openstack/current/ironic
   enabled: False
   logging:
     debug: True
@@ -401,3 +402,7 @@ stack_env: vagrant
 
 haproxy:
   enabled: True
+
+logging:
+  forward:
+    host: 172.16.0.13
