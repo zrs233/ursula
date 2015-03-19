@@ -6,6 +6,8 @@ dependencies:
         key_url: '{{ apt_repos.bbg_ubuntu.key_url }}'
       - repo: 'deb {{ apt_repos.hwraid.repo }} precise main'
         key_url: '{{ apt_repos.hwraid.key_url }}'
+      - repo: 'deb {{ apt_repos.tkraid.repo }} precise optional'
+        key_url: '{{ apt_repos.tkraid.key_url }}'
       - repo: 'deb {{ apt_repos.sensu.repo }} sensu main'
         key_url: '{{ apt_repos.sensu.key_url }}'
   - role: docker
