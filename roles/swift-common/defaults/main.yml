@@ -7,3 +7,30 @@ swift:
   disks:
     - sdb
   allow_versions: False
+
+  logs:
+    - paths:
+        - /var/log/swift/account.log
+      fields:
+        type: openstack
+        tags: swift,swift-acount
+    - paths:
+        - /var/log/swift/container.log
+      fields:
+        type: openstack
+        tags: swift,swift-container
+    - paths:
+        - /var/log/swift/object.log
+      fields:
+        type: openstack
+        tags: swift,swift-object
+    - paths:
+        - /var/log/swift/proxy.log
+      fields:
+        type: openstack
+        tags: swift,swift-proxy
+    - paths:
+        - /var/log/swift/swift.log
+      fields:
+        type: openstack
+        tags: swift
