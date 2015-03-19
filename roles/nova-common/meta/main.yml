@@ -12,6 +12,7 @@ dependencies:
   - role: openstack-source
     project_name: nova
     project_rev: "{{ nova.source.rev }}"
+    git_mirror: "{{ nova.source.git_mirror }}"
     rootwrap: True
     when: openstack_install_method == 'source'
   - role: openstack-package

@@ -36,7 +36,8 @@ nova:
       dest: /opt/stack/novadocker
 
   source:
-    rev: 'd6683ba1b1af3b31b7260a51333295e8be68c470'
+    rev: 'd67ce79795feb2dcc8e1f90e50a17f866febff69'
+    git_mirror: https://github.com/blueboxgroup
   package:
     console_scripts:
       - nova-all
