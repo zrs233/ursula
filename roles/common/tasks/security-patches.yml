@@ -1,5 +1,8 @@
 ---
-- name: Patch CVE-2014-0160
+- name: update apt index
+  apt: update_cache=yes cache_valid_time=3600
+
+- name: update SSL
   apt: pkg={{ item }} state=latest
   with_items:
   - libssl1.0.0
