@@ -1,4 +1,9 @@
 ---
+- name: configure rsyslog
+  template: src={{ item }} dest=/etc/rsyslog.d mode=0644
+  with_fileglob: ../templates/etc/rsyslog.d/*
+  notify: restart rsyslog
+
 - name: stop logstash-forwarder service
   service: name=logstash-forwarder state=stopped enabled=yes
   register: lsfstop
