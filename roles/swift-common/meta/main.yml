@@ -1,6 +1,9 @@
 ---
 dependencies:
   - role: monitoring-common
+  - role: logging-config
+    service: swift
+    logdata: "{{ swift.logs }}"
   - role: openstack-source
     project_name: swift
     python_requirements:
