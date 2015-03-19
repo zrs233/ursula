@@ -80,7 +80,10 @@
   serial: 10
   tasks:
   - name: Upgrade kernel to support VXLAN
-    apt: pkg=linux-generic-lts-raring
+    apt: pkg={{ item }}
+    with_items:
+      - linux-generic-lts-trusty
+      - linux-tools-lts-trusty
     when: neutron.plugin == 'ml2'
     notify: restart machine
 
