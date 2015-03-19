@@ -62,6 +62,6 @@
   hosts: controller
   tasks:
     - include: monitoring/tasks/nimble.yml
-      when: sensu.nimble_san_ip is defined 
+      when: sensu.nimble_san_ip is defined
   handlers:
     - include: ../handlers/main.yml

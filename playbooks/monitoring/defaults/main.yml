@@ -1,5 +1,5 @@
 ---
-monitoring:
+common:
   ursula_monitoring:
     path: /opt/ursula-monitoring
     method: git # git|tar
