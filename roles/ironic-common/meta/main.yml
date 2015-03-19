@@ -1,5 +1,8 @@
 ---
 dependencies:
+  - role: logging-config
+    service: ironic
+    logdata: "{{ ironic.logs }}"
   - role: openstack-source
     project_name: ironic
     project_rev: "{{ ironic.source.rev }}"
