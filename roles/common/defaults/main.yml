@@ -19,3 +19,11 @@ common:
     disable_dns: True
   pip_version: 1.4.1
   setuptools_version: system
+  ursula_monitoring:
+    path: /opt/ursula-monitoring
+    method: git # git|tar
+    git_repo: https://github.com/blueboxgroup/ursula-monitoring.git
+    git_rev: master
+    tar_url: https://github.com/blueboxgroup/ursula-monitoring/archive/master.tar.gz
+    tar_version: master
+
