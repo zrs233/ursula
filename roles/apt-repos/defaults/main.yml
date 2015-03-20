@@ -12,6 +12,9 @@ apt_repos:
   hwraid:
     repo: 'http://hwraid.le-vert.net/ubuntu'
     key_url: 'http://hwraid.le-vert.net/debian/hwraid.le-vert.net.gpg.key'
+  tkraid:
+    repo: 'http://archive.thomas-krenn.com/packages'
+    key_url: 'http://archive.thomas-krenn.com/tk-archive.gpg.pub'
   sensu:
     repo: 'http://repos.sensuapp.org/apt'
     key_url: 'http://repos.sensuapp.org/apt/pubkey.gpg'
