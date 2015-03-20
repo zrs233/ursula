@@ -80,6 +80,8 @@
 
 - name: swift logging
   hosts: swiftnode
+  vars_files:
+    - ../roles/swift-common/defaults/main.yml
   roles:
   - role: ../roles/logging-config
     service: swift
@@ -89,6 +91,8 @@
 
 - name: ironic logging
   hosts: controller
+  vars_files:
+    - ../roles/ironic-common/defaults/main.yml
   roles:
   - role: ../roles/logging-config
     service: ironic
@@ -98,6 +102,8 @@
 
 - name: heat logging
   hosts: controller
+  vars_files:
+    - ../roles/heat/defaults/main.yml
   roles:
   - role: ../roles/logging-config
     service: heat
