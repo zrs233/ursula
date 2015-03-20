@@ -27,9 +27,6 @@ apt_repos:
   rabbitmq:
     repo: 'http://www.rabbitmq.com/debian/'
     key_url: 'http://www.rabbitmq.com/rabbitmq-signing-key-public.asc'
-  btsync:
-    repo: 'http://ppa.launchpad.net/tuxpoldo/btsync/ubuntu'
-    key_url: 'http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0x4BF1FB3664ECB1143F8A53FFD6D9510DD294A752'
   cloud_archive:
     repo: 'http://ubuntu-cloud.archive.canonical.com/ubuntu'
   erlang:
