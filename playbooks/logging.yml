@@ -80,11 +80,30 @@
 
 - name: swift logging
   hosts: swiftnode
+  vars_files:
+    - ../roles/swift-common/defaults/main.yml
+  roles:
+  - role: ../roles/logging-config
+    service: swift
+    logdata: "{{ swift.logs }}"
   tasks:
     - include: ../roles/swift-common/tasks/logging.yml
 
+- name: ironic logging
+  hosts: controller
+  vars_files:
+    - ../roles/ironic-common/defaults/main.yml
+  roles:
+  - role: ../roles/logging-config
+    service: ironic
+    logdata: "{{ ironic.logs }}"
+  tasks:
+    - include: ../roles/ironic-common/tasks/logging.yml
+
 - name: heat logging
-  hosts: heatnode
+  hosts: controller
+  vars_files:
+    - ../roles/heat/defaults/main.yml
   roles:
   - role: ../roles/logging-config
     service: heat

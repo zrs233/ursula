@@ -5,7 +5,7 @@
 - name: swift-object service scripts
   template: src=roles/swift-common/templates/etc/init/swift-service.conf
             dest=/etc/init/swift-{{ item.service_name }}.conf mode=0644
-  with_dict:
+  with_items:
     - { service_name: object-auditor, conf: object-server }
     - { service_name: object, conf: object-server }
     - { service_name: object-replicator, conf: object-server }

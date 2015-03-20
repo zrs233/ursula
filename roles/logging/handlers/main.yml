@@ -4,3 +4,6 @@
 
 - name: restart logstash-forwarder
   service: name=logstash-forwarder state=restarted
+
+- name: restart rsyslog
+  service: name=rsyslog state=restarted

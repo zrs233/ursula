@@ -1,13 +1,13 @@
 ---
 stack_env: vagrant-swift
 swift_fqdn: swift.example.org
-undercloud_swift_floating_ip: "{{ hostvars[groups['swiftnode'][0]][primary_interface]['ipv4']['address'] }}"
+swift_floating_ip: "{{ hostvars[groups['swiftnode'][0]][primary_interface]['ipv4']['address'] }}"
 
 etc_hosts:
   - name: "{{ fqdn }}"
     ip: "{{ undercloud_floating_ip }}"
   - name: "{{ swift_fqdn }}"
-    ip: "{{ undercloud_swift_floating_ip }}"
+    ip: "{{ swift_floating_ip }}"
 
 endpoints:
   swift: "{{ swift_fqdn }}"

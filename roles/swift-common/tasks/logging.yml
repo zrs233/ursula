@@ -1,9 +1,24 @@
 ---
+- name: create swift log files directory
+  file: dest=/var/log/swift state=directory owner=syslog group=adm mode=0755
+
+- name: send swift logs to local files
+  copy: src=etc/rsyslog.d/{{ item }} dest=/etc/rsyslog.d/{{ item }} mode=0644
+  with_items:
+   - 49-swift.conf
+   - 10-swift-udp.conf
+  notify: restart rsyslog
+
 - name: set up log rotation for swift
-  logrotate: name=keystone path=/var/log/swift/*.log
+  logrotate: name=swift path=/var/log/swift/*.log
   args:
     options:
       - daily
       - missingok
       - rotate 7
       - compress
+      - notifempty
+      - nocreate
+      - postrotate
+      - reload rsyslog >/dev/null 2>&1 || true
+      - endscript
