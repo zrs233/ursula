@@ -79,4 +79,4 @@ This sets your proxy only for apt repositories:
 
 # More Docs
 
-See the `[/doc](https://github.com/blueboxgroup/ursula/tree/master/doc)` directory of this repo.
+See the [/doc](https://github.com/blueboxgroup/ursula/tree/master/doc) directory of this repo.
