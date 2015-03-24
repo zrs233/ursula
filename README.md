@@ -35,14 +35,14 @@ Add your hosts to the inventory:
 
 Ursula comes bundled with Vagrant hooks to get started.  see [docs/vagrant.md](docs/vagrant.md) for using it.
 
-# Basic Usage
+## Basic Usage
 
 ```bash
-# run the main playbook to install and configure all the things
+## Run the main playbook to install and configure all the things
 ursula /your/new/env site.yml
 ```
 
-# Environments
+## Environments
 
 An environment consists of two things:
 - `hosts`: a host inventory
@@ -55,7 +55,7 @@ cp -r envs/example /some/private/dir
 # edit /some/private/dir/hosts, /some/private/dir/group_vars/all.yml
 ```
 
-# support for proxy servers
+## Support for proxy servers
 
 There are a few attributes that allow you to use a proxy server in several different ways.
 
@@ -79,4 +79,4 @@ This sets your proxy only for apt repositories:
 
 # More Docs
 
-See the `/doc` directory of this repo.
+See the `[/doc](https://github.com/blueboxgroup/ursula/tree/master/doc)` directory of this repo.
