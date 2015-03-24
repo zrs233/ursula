@@ -1,4 +1,17 @@
 ---
+- name: Install prerequisites for acquiring crash dumps
+  apt: name={{ item }}
+  with_items:
+    - linux-crashdump
+    - kdump-tools
+    - makedumpfile
+    - crash
+
+- name: Enable kdump
+  lineinfile: dest=/etc/default/kdump-tools
+              regexp="^USE_KDUMP="
+              line="USE_KDUMP=1"
+
 - name: tune the kernel
   template: src=etc/sysctl.d/60-kernel-tuning.conf
             dest=/etc/sysctl.d/60-kernel-tuning.conf owner=root group=root
@@ -6,10 +19,24 @@
   notify:
     - apply-sysctl
 
-- name: "Kernel boot parameters: disable console screen blanking, enabled serial console on IPMI serial over LAN"
+- name: "Kernel boot parameters: disable quiet boot"
   lineinfile: dest=/etc/default/grub
               regexp="^GRUB_CMDLINE_LINUX_DEFAULT="
-              line="GRUB_CMDLINE_LINUX_DEFAULT=\"console=tty1{{ serial_console_cmdline|default('') }} consoleblank=0\""
+              line="GRUB_CMDLINE_LINUX_DEFAULT=\"\""
+  notify: update grub config
+
+#
+#  consoleblank=0   Disable console blanking, prevent VGA console from going into power save mode
+#  crashkernel=256M Reserve memory for crash dump kernel
+#  nmi_watchdog=1   Enable NMI watchdog timer
+#  serial_console_cmdline   Enable kernel messages on ttyS0 and any IPMI SOL if present
+#  console=tty0     Enable default VGA console as /dev/console (must be last console)
+#                   See https://www.kernel.org/doc/Documentation/serial-console.txt
+#
+- name: "Kernel boot parameters: disable console screen blanking, enabled serial console on IPMI serial over LAN"
+  lineinfile: dest=/etc/default/grub
+              regexp="^GRUB_CMDLINE_LINUX="
+              line="GRUB_CMDLINE_LINUX=\"consoleblank=0 crashkernel=256M nmi_watchdog=1 {{ serial_console_cmdline|default('') }} console=tty0\""
   notify: update grub config
 
 - name: "Disable GRUB OS prober so we don't try to boot instance's cinder volumes"
