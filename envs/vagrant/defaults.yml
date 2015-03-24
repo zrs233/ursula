@@ -132,6 +132,8 @@ monitoring:
     WRiRItwHQxTunlN0gK4qty2rczWIv/yzWALHJAOFLIyX0ynO4xY7x/3H9df9IuDe
     Gs1548GcEmUG0CWujFXsEJkjjBxT4/fabx4NOJjg9Ij1Mi3LYmB2
     -----END RSA PRIVATE KEY-----
+  # remove this line out if using a real CA supplied cert
+  cafile: /usr/local/share/ca-certificates/{{ endpoints.main }}.crt
 
 openstack:
   pypi_mirror: https://pypi.python.org/simple/

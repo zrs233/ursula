@@ -413,6 +413,8 @@ ssl:
     5Im92LzyPb58EoEcMB/T87pmawzogg+scOPh6UqGvShZit5OMINIjPKCoCM+nwPt
     U8i/S4ozAUKrGKLlEUVL1MgZeJkPMxd1IZ1Xxjq3PcEJxfVldJXWn/ROERE=
     -----END RSA PRIVATE KEY-----
+  # remove this line out if using a real CA supplied cert
+  cafile: /usr/local/share/ca-certificates/{{ endpoints.main }}.crt
 
 openstack_setup:
   add_users: True
