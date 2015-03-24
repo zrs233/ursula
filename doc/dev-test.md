@@ -13,14 +13,14 @@ Confirm that you have followed the [installation instructions for ursula](https:
 Vagrant support is built in. To get started, run:
 
 ```
-(env2) $ ./bin/run_vagrant
+$ ./bin/run_vagrant
 Usage: run_vagrant TYPE [minimal]
 Where type is one of the following:
 - allinone ( single monolithic openstack server )
 - standard ( two controllers and one compute )
 - swift ( object storage )
 
-(env2) $ ./bin/run_vagrant standard
+$ ./bin/run_vagrant standard
 ```
 
 ## Unit tests
