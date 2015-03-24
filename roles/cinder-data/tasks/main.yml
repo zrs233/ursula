@@ -39,6 +39,10 @@
 - name: iscsi start
   service: name=open-iscsi state=started
 
+- include: vnx.yml
+  when: cinder.vnx is defined
+  tags: cinder-vnx
+
 - name: create cinder-volumes crypttab entry
   crypttab: state=present target=cinder-volumes source={{ cinder.volume_file }}
             opts=luks,aes,noauto

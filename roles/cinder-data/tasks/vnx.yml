@@ -1,0 +1,13 @@
+---
+- name: create archive path for navcli packages
+  file: dest={{ cinder.vnx.navicli.archive_path }} state=directory mode=0755
+
+- name: download navicli package
+  get_url: url={{ cinder.vnx.navicli.url }} dest={{ cinder.vnx.navicli.archive_path }}/{{ cinder.vnx.navicli.archive_file }} mode=0640
+
+- name: install navicli package
+  apt: deb={{ cinder.vnx.navicli.archive_path }}/{{ cinder.vnx.navicli.archive_file }}
+
+- name: set navicli security to low ( the docs made me do it )
+  command: /opt/Navisphere/bin/naviseccli security -certificate -setLevel low
+           creates=/root/naviseccli_cert_store

@@ -10,3 +10,28 @@ percona:
 
 nova:
   scheduler_default_filters: AvailabilityZoneFilter,ComputeFilter
+
+# This is only here for developing vnx driver support
+# and should be moved to rubicon-envs once fully ready
+# and tested.
+cinder:
+  san_type: vnx
+  enabled_backends: vnx,lvm
+  default_backend: vnx
+  backends:
+    - name: lvm
+      volume_driver: cinder.volume.drivers.lvm.LVMISCSIDriver
+      volume_group: cinder-volumes
+    - name: vnx
+      volume_driver: cinder.volume.drivers.emc.emc_cli_iscsi.EMCCLIISCSIDriver
+      pool_name: Pool_01_SAS
+      san_ip: 10.230.14.240
+      san_login: admin
+      san_password: admin
+      authentication_type: local
+      naviseccli_path: /opt/Navisphere/bin/naviseccli
+  vnx:
+    navicli:
+      url: https://github.com/emc-openstack/naviseccli/raw/v7.33.2.0.51/navicli-linux-64-x86-en-us_7.33.2.0.51-1_all.deb
+      archive_file: navicli-linux-64-x86-en-us_7.33.2.0.51-1_all.deb
+      archive_path: /opt/archives/navicli
