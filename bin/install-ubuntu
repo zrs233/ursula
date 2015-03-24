@@ -5,7 +5,7 @@ set -ex
 BINDIR=$(dirname $0)
 
 if ! grep Ubuntu /etc/lsb-release; then
-  echo "this isn't ubuntu."
+  echo "This is not an Ubuntu system... Aborting."
   exit 1
 fi
 
@@ -14,3 +14,5 @@ DEBIAN_FRONTEND=noninteractive apt-get install --yes python-pip python-dev libxm
 apt-get remove --yes ansible || echo "ok"
 
 pip install -r -U $BINDIR/../requirements.txt
+
+echo -e "\nInstallation complete!\n"

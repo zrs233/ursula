@@ -1,29 +1,26 @@
 # How to set up a dev/test environment
 
-NOTE: Ursula comes setup for Vagrant to complete dev/test work within.  Please see the [Ursula Vagrant](https://github.com/blueboxgroup/ursula#vagrant) instructions for more details.
+NOTE: Ursula comes setup for Vagrant to complete dev/test work within.  Please see the [Ursula Vagrant](https://github.com/blueboxgroup/ursula/blob/master/doc/dev-test.md#vagrant) instructions for more details.
 
 Ursula also comes with scripts to automatically spin up a test environment inside of openstack vms (OpenStack on OpenStack).
 
 ## First-time workstation setup
 
-Confirm that you have followed the [installation instructions for ursula](https://github.com/blueboxgroup/ursula#installation), it should have installed the required packages:
+Confirm that you have followed the [installation instructions for ursula](https://github.com/blueboxgroup/ursula#installation).
 
-  - Ansible
-  - Nova client
-  - Keystone client
-  - Neutron client
-  - Glance client
-  - Cinder client
+## Vagrant Support
 
-  - openstack credentials in `$HOME/.stackrc` (t):
+Vagrant support is built in. To get started, run:
 
-```bash
-    $ cat $HOME/.stackrc
-    export OS_USERNAME="example-username"
-    export OS_PASSWORD="example-password"
-    export OS_TENANT_NAME="example-project-name"
-    export OS_AUTH_URL="https://openstack-example-domain.com:35357/v2.0/"
-    export SERVICE_TYPE="compute"
+```
+$ ./bin/run_vagrant
+Usage: run_vagrant TYPE [minimal]
+Where type is one of the following:
+- allinone ( single monolithic openstack server )
+- standard ( two controllers and one compute )
+- swift ( object storage )
+
+$ ./bin/run_vagrant standard
 ```
 
 ## Unit tests
@@ -34,21 +31,21 @@ You can invoke `tox` to run unit tests ( currently `pep8` and `ansible` in test 
     $ tox
 ```
 
-you can also run the tests outside of a virtual env like so:
+You can also run the tests outside of a virtual env like so:
 
 ```bash
     $ pep8 --show-source --show-pep8 .
     $ ursula -t -e envs/example -p site.yml
 ```
 
-## Spin up a new environment
+### Spin up a new environment
 
 ```bash
     $ ./test/setup       # boot vms and write an ansible inventory to envs/example/hosts
     $ ./test/run         # run site.yml and run all the tests
 ```
 
-## Iterate on an existing environment
+### Iterate on an existing environment
 
 You can save time on iterating by keeping your vms around for multiple ansible runs.
 
@@ -56,17 +53,17 @@ You can save time on iterating by keeping your vms around for multiple ansible r
     $ ./test/run         # re-run site.yml (much faster this time)
 ```
 
-## Re-run only a subset of tasks
+### Re-run only a subset of tasks
 
     TODO
 
-## Throw away the vms when you're done
+### Throw away the vms when you're done
 
 ```bash
     $ ./test/cleanup     # delete vms
 ```
 
-## DockerDockerDockerDockerDockerDocker
+## DockerDockerDockerDockerDockerDocker (Unsupported)
 
 If you're feeling a little frisky you can deploy a test/dev environment straight from our docker images.
 This will run `test/deploy && test/run` from inside the container and use the stackrc file that you've mapped in:
