@@ -2,7 +2,7 @@
 
 install_pip() {
   which brew >/dev/null || \
-    die "This script requires a homebrew installation to proceed.  http://mxcl.github.io/homebrew/"
+    die "This installation script requires a homebrew installation to proceed. Please see: http://mxcl.github.io/homebrew/"
   brew install python --with-brewed-openssl
 }
 
@@ -16,10 +16,10 @@ virtualenv() {
   sudo pip install virtualenv
 }
 
-uname | grep Darwin || die "this is not osx."
+uname | grep Darwin || die "This is not an OS X system... Aborting."
 
 which pip >/dev/null || install_pip
 
-sudo pip install ansible
+pip install -r requirements.txt
 
-echo -e "\nall set!\n"
+echo -e "\nInstallation complete!\n"

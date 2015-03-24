@@ -6,6 +6,8 @@ Ursula was originally created by a team at [Blue Box](https://www.bluebox.net) a
 
 # Installation
 
+We recommend using [virtualenv](http://virtualenv.readthedocs.org/en/latest/) or [virtualenvwrapper](https://virtualenvwrapper.readthedocs.org/en/latest/) to isolate your Pythong environment. Once that's complete, use the following:
+
 ```bash
 git clone git@github.com:blueboxgroup/ursula.git
 cd ursula
@@ -15,6 +17,9 @@ sudo bin/install-ubuntu || sudo bin/install-osx
 # Pre-Requisites
 
 Ursula requires that you have access to a minimum of 3 hosts running ubuntu 12.04, and you can ssh to them from your workstation.
+
+## Dev/Test Environment Running on VMs / Vagrant
+Please see [this doc](https://github.com/blueboxgroup/ursula/blob/master/doc/dev-test.md) for more information on getting started.
 
 # Setup
 
@@ -71,11 +76,6 @@ This sets the `http_proxy` environment variable in `/etc/environment` but does n
 This sets your proxy only for apt repositories:
 
 `common.apt_cache: http://10.230.7.181:3128`
-
-
-# Dev/Test Environment Running on VMs
-
-Please see [this doc](https://github.com/blueboxgroup/ursula/blob/master/doc/dev-test.md) for more information on getting started.
 
 # More Docs
 
