@@ -6,7 +6,7 @@ Ursula was originally created by a team at [Blue Box](https://www.bluebox.net) a
 
 # Installation
 
-We recommend using [virtualenv](http://virtualenv.readthedocs.org/en/latest/) or [virtualenvwrapper](https://virtualenvwrapper.readthedocs.org/en/latest/) to isolate your Pythong environment. Once that's complete, use the following:
+We recommend using [virtualenv](http://virtualenv.readthedocs.org/en/latest/) or [virtualenvwrapper](https://virtualenvwrapper.readthedocs.org/en/latest/) to isolate your Python environment. Once that's complete, use the following:
 
 ```bash
 git clone git@github.com:blueboxgroup/ursula.git
