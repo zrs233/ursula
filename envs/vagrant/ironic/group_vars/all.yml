@@ -15,7 +15,10 @@ ironic:
   enabled: True
   tftp_server: 172.16.255.100
   dns_server: 172.16.255.100
-  api_url: http://172.16.255.100:6385
+  api_url:
+    scheme: http
+    host: 172.16.255.100
+    port: 6385
 
 neutron:
   dhcp_dns_servers:
