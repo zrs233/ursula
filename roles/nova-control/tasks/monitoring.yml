@@ -39,3 +39,9 @@
                        args='-s {{ monitoring.graphite.cluster_prefix }}.nova.oversubscription'
                        interval=3600
   notify: restart sensu-client
+
+- name: nova metrics
+  template: src=etc/collectd/plugins/nova.conf dest=/etc/collectd/plugins/nova.conf
+  notify: restart collectd
+  when: collectd is defined and collectd.enabled|bool
+  tags: collectd

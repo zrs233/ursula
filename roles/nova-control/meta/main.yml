@@ -3,3 +3,5 @@ dependencies:
   - role: nova-common
   - role: openstack-database
     database_name: nova
+  - role: collectd-plugin
+    when: collectd is defined and collectd.enabled|bool

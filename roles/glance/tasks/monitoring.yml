@@ -15,3 +15,9 @@
 - name: glance-store check
   sensu_check: name=check-glance-store plugin=check-glance-store.py
   notify: restart sensu-client
+
+- name: glance metrics
+  template: src=etc/collectd/plugins/glance.conf dest=/etc/collectd/plugins/glance.conf
+  notify: restart collectd
+  when: collectd is defined and collectd.enabled|bool
+  tags: collectd

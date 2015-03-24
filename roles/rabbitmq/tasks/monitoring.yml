@@ -23,3 +23,9 @@
                      -c {{ cluster_node_count|int * 100 }}"
                use_sudo=true
   notify: restart sensu-client
+
+- name: rabbit metrics
+  template: src=etc/collectd/plugins/rabbitmq.conf dest=/etc/collectd/plugins/rabbitmq.conf
+  notify: restart collectd
+  when: collectd is defined and collectd.enabled|bool
+  tags: collectd

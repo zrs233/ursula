@@ -10,3 +10,9 @@
 - name: neutron free fips metrics check
   sensu_metrics_check: name=neutron-free-fips-metric plugin=check-neutron-fip.sh state=absent
   notify: restart sensu-client
+
+- name: neutron metrics
+  template: src=etc/collectd/plugins/neutron.conf dest=/etc/collectd/plugins/neutron.conf
+  notify: restart collectd
+  when: collectd is defined and collectd.enabled|bool
+  tags: collectd

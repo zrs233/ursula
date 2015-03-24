@@ -7,3 +7,5 @@ dependencies:
       - repo: 'deb {{ apt_repos.rabbitmq.repo }} testing main'
         key_url: '{{ apt_repos.rabbitmq.key_url }}'
   - role: monitoring-common
+  - role: collectd-plugin
+    when: collectd is defined and collectd.enabled|bool

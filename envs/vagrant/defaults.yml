@@ -72,9 +72,9 @@ monitoring:
   rabbit:
     host: 172.16.0.15
     port: 5671
-    user: rabbit
-    pass: rabbit
-    vhost: /rabbit
+    user: sensu
+    pass: sensu
+    vhost: /sensu
   keepalive:
     handler: email
   cluster_prefix:
@@ -406,3 +406,8 @@ haproxy:
 logging:
   forward:
     host: 172.16.0.13
+
+collectd:
+  enabled: True
+  graphite_prefix: "collectd.bbc.vagrant."
+
