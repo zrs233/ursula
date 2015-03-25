@@ -60,3 +60,4 @@ glance:
   logging:
     debug: False
     verbose: True
+  cafile: "{{ ssl.cafile|default('/etc/ssl/certs/ca-certificates.crt') }}"
