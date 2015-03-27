@@ -15,6 +15,7 @@
     - open-iscsi
     - libvirt-dev={{ nova.libvirt_bin_version }}
     - pkg-config
+    - genisoimage
   notify: restart nova services
   when: ansible_distribution_version == "12.04"
 
@@ -27,6 +28,7 @@
     - open-iscsi
     - libvirt-dev={{ nova.libvirt_bin_version }}
     - pkg-config
+    - genisoimage
   notify: restart nova services
   when: ansible_distribution_version == "14.04"
 
