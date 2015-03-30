@@ -17,3 +17,6 @@
     - cinder-api
     - cinder-scheduler
     - cinder-volume
+
+- name: restart multipath
+  service: name=multipath-tools state=restarted must_exist=false

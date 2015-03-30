@@ -1,4 +1,15 @@
 ---
+- name: install vnx required packages
+  apt: pkg={{ item }}
+  with_items:
+    - multipath-tools
+    - sysfsutils
+    - sg3-utils
+
+- name: configure multipath
+  template: src=etc/vnx_multipath.conf dest=/etc/multipath.conf
+  notify: restart multipath
+
 - name: create archive path for navcli packages
   file: dest={{ cinder.vnx.navicli.archive_path }} state=directory mode=0755
 
