@@ -4,7 +4,6 @@
 
 - name: update iproute2 to latest ppa
   apt: name=iproute2 state=latest
-  when: neutron.plugin == 'ml2' and 'vxlan' in neutron.tunnel_types
 
 - name: permit VXLAN traffic
   ufw: rule=allow to_port=4789 proto=udp
