@@ -27,6 +27,18 @@
   notify:
     - restart collectd
 
+- name: set up log rotation for collectd
+  logrotate: name=collectd path={{ collectd.plugins.logfile.file }}
+  args:
+    options:
+      - daily
+      - missingok
+      - rotate 7
+      - compress
+      - postrotate
+      - /bin/kill -HUP `cat /var/run/collectdmon.pid 2> /dev/null` 2> /dev/null || true
+      - endscript
+
 - meta: flush_handlers
 
 - name: ensure apache is running
