@@ -1,0 +1,23 @@
+---
+- hosts: network
+  tasks:
+  - include: ../roles/neutron-data-network/tasks/igmp-router.yml
+  handlers:
+  - include: ../roles/neutron-data-network/handlers/main.yml
+
+- hosts: network:compute
+  serial: 10
+  tasks:
+  - name: Add BlueBox OpenStack PPA
+    apt_repository: repo='ppa:blueboxgroup/openstack'
+
+  - name: Upgrade iproute to support VXLAN
+    apt: name=iproute=1:3.12.0-2~ubuntu12.04.1~ppa1
+
+  - name: Upgrade kernel to support VXLAN
+    apt: pkg=linux-generic-lts-raring
+    notify: tag for restart
+
+  handlers:
+  - name: tag for restart
+    set_fact: do_reboot=True
