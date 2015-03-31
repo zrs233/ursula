@@ -1,6 +1,11 @@
 ---
+- hosts: network
+  tasks:
+  - include: ../roles/neutron-data-network/tasks/igmp-router.yml
+  handlers:
+  - include: ../roles/neutron-data-network/handlers/main.yml
+
 - hosts: network:compute
-  serial: 10
   tasks:
   - name: Add BlueBox OpenStack PPA
     apt_repository: repo='ppa:blueboxgroup/openstack'
