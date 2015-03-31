@@ -16,11 +16,6 @@ source $(dirname $0)/common
 
 cd ${ROOT}
 
-if [ "${ACTION}" == "all" -o "${ACTION}" == "unit" ]; then
-  tox
-  ring_bell
-fi
-
 if [ "${ACTION}" == "all" -o "${ACTION}" == "deploy" ]; then
   time ursula "envs/test" site.yml -u ${LOGIN_USER} --sudo "$@"
   ring_bell
