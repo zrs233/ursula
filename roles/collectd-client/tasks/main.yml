@@ -9,6 +9,10 @@
     - collectd
     - collectd-utils
     - collectd-core
+    - lm-sensors
+
+- name: load sensors
+  command: sensors-detect < /dev/null
 
 - name: create config dirs
   file: dest={{ collectd.plugin_conf_dir }} state=directory owner=root mode=0755
@@ -19,11 +23,9 @@
     - restart collectd
 
 - name: configure base collectd plugins
-  template: src=etc/collectd/plugins/{{ item }}.conf dest={{ collectd.plugin_conf_dir }}/{{ item }}.conf
-  with_items:
-    - amqp
-    - system
-    - logfile
+  template: src=etc/collectd/plugins/{{ item.key }}.conf dest={{ collectd.plugin_conf_dir }}/{{ item.key }}.conf
+  with_dict: collectd.plugins
+  when: item.value.enabled|bool
   notify:
     - restart collectd
 
