@@ -20,5 +20,9 @@ collectd:
       pass: graphite
       exchange: metrics
     logfile:
+      enabled: True
       file: /var/log/collectd.log
       level: info
+    sensors:
+      enabled: True
+      skip: []
