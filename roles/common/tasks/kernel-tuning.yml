@@ -1,4 +1,7 @@
 ---
+#
+# NOTE: this file is included by the prereboot tag, as such it should work not include anything that will break older releases
+#
 - name: Install prerequisites for acquiring crash dumps
   apt: name={{ item }}
   with_items:

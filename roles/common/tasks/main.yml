@@ -54,7 +54,6 @@
 - include: ssh.yml
 
 - include: networking.yml
-  tags: ['prereboot']
 
 - include: ufw.yml
 
