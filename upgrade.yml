@@ -121,6 +121,30 @@
     - name: start cinder data services
       service: name=cinder-volume state=started
 
+- name: ensure cinder v2 endpoint
+  hosts: controller[0]
+  max_fail_percentage: 1
+  tags:
+    - cinder
+    - cinder-endpoint
+
+  tasks:
+    - name: cinder v2 endpoint
+      keystone_service: name={{ item.name }}
+                        type={{ item.type }}
+                        description='{{ item.description }}'
+                        public_url={{ item.public_url }}
+                        internal_url={{ item.internal_url }}
+                        admin_url={{ item.admin_url }}
+                        region=RegionOne
+                        auth_url={{ endpoints.auth_uri }}
+                        tenant_name=admin
+                        login_user=provider_admin
+                        login_password={{ secrets.provider_admin_password }}
+      with_items: keystone.services
+      when: endpoints[item.name] is defined and endpoints[item.name]
+            and item.name == 'cinderv2'
+
 # Nova block
 - name: stage nova compute
   hosts: compute
