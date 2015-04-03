@@ -11,6 +11,26 @@
     - percona-xtradb-cluster-common-5.5
     - percona-xtradb-cluster-client-5.5
 
+- name: configure my.cnf
+  template: src=roles/percona-server/templates/etc/my.cnf dest=/etc/my.cnf mode=0644
+  when: ansible_distribution_version == "12.04"
+  notify:
+    - restart mysql server
+
+- name: configure my.cnf
+  template: src=roles/percona-server/templates/etc/my.cnf dest=/etc/mysql/my.cnf mode=0644
+  when: ansible_distribution_version != "12.04"
+  notify:
+    - restart mysql server
+
+- name: install mysql config files
+  template: src=roles/percona-server/templates/etc/mysql/conf.d/{{ item }} dest=/etc/mysql/conf.d/{{ item }}
+            mode=0644
+  with_items:
+    - bind-inaddr-any.cnf
+    - tuning.cnf
+    - utf8.cnf
+
 - name: adjust replication for compatability and new features
   lineinfile: regexp="{{ item.value.regexp }}" line="{{ item.value.line }}"
               dest=/etc/mysql/conf.d/replication.cnf state=present
