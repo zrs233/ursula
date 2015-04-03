@@ -305,7 +305,7 @@
       restart: False
       database_create:
         changed: false
-      when: heat.enabled
+      when: heat.enabled|bool
 
 - name: upgrade swift
   hosts: swiftnode
