@@ -9,10 +9,6 @@
     - collectd
     - collectd-utils
     - collectd-core
-    - lm-sensors
-
-- name: load sensors
-  command: sensors-detect < /dev/null
 
 - name: create config dirs
   file: dest={{ collectd.plugin_conf_dir }} state=directory owner=root mode=0755

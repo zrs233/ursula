@@ -15,3 +15,6 @@
 
 - name: restart-ntp
   service: name=ntp state=restarted
+
+- name: load sensors
+  shell: /usr/sbin/sensors-detect < /dev/null
