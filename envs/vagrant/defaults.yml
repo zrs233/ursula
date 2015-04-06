@@ -412,4 +412,3 @@ logging:
 collectd:
   enabled: True
   graphite_prefix: "collectd.bbc.vagrant."
-

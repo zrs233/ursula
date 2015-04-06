@@ -29,3 +29,10 @@
     - cdpr
     - sysstat
     - logrotate
+
+- name: install lm-sensors package
+  apt: name=lm-sensors state=present update_cache=yes
+  notify:
+    - load sensors
+
+- meta: flush_handlers
