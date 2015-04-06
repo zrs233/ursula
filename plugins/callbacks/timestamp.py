@@ -35,7 +35,7 @@ def filled(msg, fchar="*"):
         msg = "%s " % msg
         width = 79 - len(msg)
     if width < 3:
-        width = 3 
+        width = 3
     filler = fchar * width
     return "%s%s " % (msg, filler)
 
@@ -59,7 +59,9 @@ class CallbackModule(object):
 
     example uses include: logging, emailing, storing info, etc
     """
-
+    def __init__(self):
+        self.stats = {}
+        self.current = None
 
     def on_any(self, *args, **kwargs):
         pass
@@ -105,6 +107,15 @@ class CallbackModule(object):
 
     def playbook_on_task_start(self, name, is_conditional):
         timestamp()
+
+        if self.current is not None:
+            # Record the running time of the last executed task
+            self.stats[self.current] = time.time() - self.stats[self.current]
+
+        # Record the start time of the current task
+        self.current = name
+        self.stats[self.current] = time.time()
+
         pass
 
     def playbook_on_vars_prompt(self, varname, private=True, prompt=None, encrypt=None, confirm=False, salt_size=None, salt=None, default=None):
@@ -128,5 +139,29 @@ class CallbackModule(object):
     def playbook_on_stats(self, stats):
         timestamp()
         display(filled("", fchar="="))
+        print "Slowest 25 Tasks"
+        display(filled("", fchar="="))
+        # Record the timing of the very last task
+        if self.current is not None:
+            self.stats[self.current] = time.time() - self.stats[self.current]
+
+        # Sort the tasks by their running time
+        results = sorted(
+            self.stats.items(),
+            key=lambda value: value[1],
+            reverse=True,
+        )
+
+        # Just keep the top 10
+        results = results[:25]
+
+        # Print the timings
+        for name, elapsed in results:
+            print(
+                "{0:-<70}{1:->9}".format(
+                    '{0} '.format(name),
+                    ' {0:.02f}s'.format(elapsed),
+                )
+            )
         pass
 
