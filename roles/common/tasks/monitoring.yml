@@ -1,10 +1,16 @@
 ---
+- name: create monitoring group
+  group: name=monitor state=present
+
 - name: install sensu
   apt: pkg=sensu
 
 - name: sensu sudoers
   template: src=monitoring/sensu-sudoers dest=/etc/sudoers.d/sensu owner=root
             group=root mode=0440
+
+- name: add sensu to monitoring group
+  user: name=sensu groups=monitor append=yes
 
 - name: ensure /etc/sudoers.d/sensu permissions are 0440
   file: path=/etc/sudoers.d/sensu mode=0440
