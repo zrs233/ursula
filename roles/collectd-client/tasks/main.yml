@@ -2,6 +2,7 @@
 - name: create collectd user
   user: name=collectd comment=collectd shell=/bin/false
         system=yes home=/nonexistent createhome=no
+        append=true groups=monitor
 
 - name: install collectd packages
   apt: name={{ item }} state=present update_cache=yes
