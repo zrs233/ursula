@@ -237,11 +237,11 @@
     - role: openstack-database
       database_name: heat
       tags: ['openstack', 'heat', 'control']
-#      when: heat.enabled|bool
+      when: heat.enabled|bool
 
     - role: heat
       tags: ['openstack', 'heat', 'control']
-#      when: heat.enabled|bool
+      when: heat.enabled|bool
 
 - name: ironic control plane
   gather_facts: force
