@@ -1,6 +1,7 @@
 ---
 - name: common role for all hosts
   hosts: all
+  gather_facts: force
   roles:
     - role: common
       tags: ['common','common-base']
