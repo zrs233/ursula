@@ -5,6 +5,7 @@
 
 - name: update apt index
   apt: update_cache=yes cache_valid_time=3600
+  tags: ['prereboot']
 
 - name: python dependencies
   apt: pkg={{ item }}
@@ -53,14 +54,20 @@
 
 # Include serial console before kernel-tuning to build serial_console_cmdline
 - include: serial-console.yml tty=ttyS0
+  tags: ['prereboot']
 
 - include: ipmi.yml
   when: common.ipmi.enabled
+  tags: ['prereboot']
+
+- include: security-patches.yml
 
 - include: kernel-tuning.yml
+  tags: ['prereboot']
+
 - include: system_tools.yml
-- include: security-patches.yml
-- include: disable_swap.yml
+
+- include: disable-swap.yml
 
 - include: hwraid.yml
   when: common.hwraid.enabled
