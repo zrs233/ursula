@@ -40,7 +40,7 @@
   hosts: db
   roles:
     - role: percona-common
-      tags: ['infra', 'percona']
+      tags: ['infra', 'percona', 'percona-facts']
 
 - name: install percona on primary
   gather_facts: force
@@ -49,7 +49,7 @@
     should_bootstrap_as_primary: True
   roles:
     - role: percona-server
-      tags: ['infra', 'percona']
+      tags: ['infra', 'percona', 'percona-primary']
 
 - name: install percona on secondaries
   gather_facts: force
@@ -58,7 +58,7 @@
     should_bootstrap_as_primary: False
   roles:
     - role: percona-server
-      tags: ['infra', 'percona']
+      tags: ['infra', 'percona', 'percona-secondary']
 
 - name: install percona arbiter
   gather_facts: force

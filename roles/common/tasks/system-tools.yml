@@ -29,6 +29,22 @@
     - cdpr
     - sysstat
     - logrotate
+    - ipmitool
+    - ntp
+    - vlan
+
+- name: load vlan module
+  lineinfile: dest=/etc/modules
+              line="8021q"
+  when: ansible_distribution_version == "14.04"
+
+# http://www.supermicro.com/support/faqs/faq.cfm?faq=14537
+- name: blacklist mei
+  lineinfile: dest=/etc/modprobe.d/blacklist.conf
+              line="blacklist {{ item }}"
+  with_items:
+    - mei
+    - mei_me
 
 - name: install lm-sensors package
   apt: name=lm-sensors state=present update_cache=yes

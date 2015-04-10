@@ -26,7 +26,7 @@
     - python-libvirt={{ nova.trusty.python_libvirt_version }}
     - qemu-kvm={{ nova.trusty.qemu_kvm_version }}
     - open-iscsi
-    - libvirt-dev={{ nova.libvirt_bin_version }}
+    - libvirt-dev={{ nova.trusty.libvirt_bin_version }}
     - pkg-config
     - genisoimage
   notify: restart nova services
