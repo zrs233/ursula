@@ -68,6 +68,16 @@
     - name: restart mysql
       service: name=mysql state=restarted
 
+- name: upgrade rabbitmq
+  gather_facts: force
+  hosts: controller
+  max_fail_percentage: 1
+  tags: rabbitmq
+  serial: 1
+
+  roles:
+    - role: rabbitmq
+
 - name: upgrade glance
   hosts: controller
   max_fail_percentage: 1
