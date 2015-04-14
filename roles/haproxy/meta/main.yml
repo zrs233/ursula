@@ -3,7 +3,7 @@ dependencies:
   - role: apt-repos
     repos:
       - name: 'haproxy package repo'
-        repo: 'deb {{ apt_repos.haproxy.repo }} precise main'
+        repo: 'deb {{ apt_repos.haproxy.repo }} {{ ansible_lsb.codename }} main'
         key_url: '{{ apt_repos.haproxy.key_url }}'
   - role: monitoring-common
   - role: collectd-plugin

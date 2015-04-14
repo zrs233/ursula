@@ -36,6 +36,11 @@
     - ucarp
   - apt: upgrade=dist
 
+  - name: load vlan module
+    lineinfile: dest=/etc/modules
+                line="8021q"
+    when: ansible_distribution_version == "14.04"
+
   # Set Locale
   - name: Generate locales
     command: /usr/sbin/locale-gen en_US

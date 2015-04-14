@@ -13,6 +13,8 @@
   apt: update_cache=yes cache_valid_time=3600
   tags: ['prereboot']
 
+- include: system-tools.yml
+
 - name: python dependencies
   apt: pkg={{ item }}
   with_items:
@@ -28,9 +30,6 @@
     - python-mysqldb
     - python-jinja2
     - cryptsetup
-    - ipmitool
-    - ntp
-    - vlan
     - libffi-dev
     - libssl-dev
     - libxml2-dev
@@ -69,8 +68,6 @@
 
 - include: kernel-tuning.yml
   tags: ['prereboot']
-
-- include: system-tools.yml
 
 - include: disable-swap.yml
 

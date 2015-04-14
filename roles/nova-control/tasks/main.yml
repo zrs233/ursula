@@ -42,6 +42,6 @@
 - name: permit access to nova api
   ufw: rule=allow to_port=8777 proto=tcp
 
-- include: novnc.yml
+- include: novnc.yml tags=novnc
 
 - include: monitoring.yml tags=monitoring,common

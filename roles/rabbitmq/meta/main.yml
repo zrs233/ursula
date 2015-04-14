@@ -2,7 +2,7 @@
 dependencies:
   - role: apt-repos
     repos:
-      - repo: 'deb {{ apt_repos.erlang.repo }} precise contrib'
+      - repo: 'deb {{ apt_repos.erlang.repo }} {{ ansible_lsb.codename }} contrib'
         key_url: '{{ apt_repos.erlang.key_url }}'
       - repo: 'deb {{ apt_repos.rabbitmq.repo }} testing main'
         key_url: '{{ apt_repos.rabbitmq.key_url }}'
