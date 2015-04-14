@@ -100,14 +100,6 @@
       tags: ['haproxy', 'infra']
       when: haproxy.enabled|bool
 
-- name: swift haproxy
-  gather_facts: force
-  hosts: swiftnode
-  roles:
-    - role: haproxy
-      haproxy_type: swift
-      tags: ['haproxy', 'infra']
-
 - name: iptables
   hosts: network
   roles:
@@ -208,10 +200,11 @@
 
 - name: swift code and config
   hosts: swiftnode
+  gather_facts: force
   roles:
     - role: haproxy
       haproxy_type: swift
-      tags: ['openstack', 'swift', 'control']
+      tags: ['openstack', 'swift', 'control', 'haproxy', 'infra']
 
     - role: swift-object
       tags: ['openstack', 'swift', 'data']
