@@ -4,6 +4,13 @@
 #
 # Assumes ml2 networking
 ---
+- name: Upgrade kernel to supported HWE
+  apt: pkg={{ item }}
+  with_items:
+    - linux-generic-lts-trusty
+    - linux-tools-lts-trusty
+  when: ansible_distribution_version == "12.04"
+
 - name: upgrade common bits first
   hosts: all
   max_fail_percentage: 1
