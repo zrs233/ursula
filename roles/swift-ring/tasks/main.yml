@@ -10,8 +10,6 @@
   when: not should_boostrap|success
 
 - name: setup swift rings
-  command: /usr/local/bin/swifttool -i /home/swiftops/.ssh/id_rsa
+  command: sudo -u swiftops /usr/local/bin/swifttool -i /home/swiftops/.ssh/id_rsa
            bootstrap --config /etc/swift/ring_definition.yml --outdir /etc/swift
-  sudo: yes
-  sudo_user: swiftops
   when: not should_boostrap|success

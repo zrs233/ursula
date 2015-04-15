@@ -199,6 +199,7 @@
       tags: ['openstack', 'horizon', 'control']
 
 - name: swift code and config
+  gather_facts: force
   hosts: swiftnode
   gather_facts: force
   roles:
@@ -222,7 +223,7 @@
   hosts: swiftnode_primary
   roles:
     - role: swift-ring
-      tags: ['openstack', 'swift', 'data']
+      tags: ['openstack', 'swift', 'swift-ring', 'data']
 
 - name: heat code and config
   gather_facts: force
