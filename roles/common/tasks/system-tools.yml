@@ -32,6 +32,7 @@
     - ipmitool
     - ntp
     - vlan
+    - sysdig
 
 - name: load vlan module
   lineinfile: dest=/etc/modules
