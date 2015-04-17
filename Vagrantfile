@@ -61,6 +61,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       v.customize ["modifyvm", :id, "--nicpromisc3", "allow-all"]
       v.customize ["modifyvm", :id, "--nicpromisc4", "allow-all"]
     end
+    allinone_config.vm.provider "libvirt" do |v|
+      v.memory = 6144
+      v.cpus = 2
+      v.nested = true
+    end
   end
 
   (1..NUM_CONTROLLERS).each do |i|
@@ -73,6 +78,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       controller_config.vm.provider "virtualbox" do |v|
         v.memory = 3072
         v.customize ["modifyvm", :id, "--nicpromisc3", "allow-all"]
+      end
+      controller_config.vm.provider "libvirt" do |v|
+        v.memory = 3072
+        v.nested = true
       end
     end
   end
@@ -87,6 +96,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       compute_config.vm.provider "virtualbox" do |v|
         v.memory = 1536
         v.customize ["modifyvm", :id, "--nicpromisc3", "allow-all"]
+      end
+      compute_config.vm.provider "libvirt" do |v|
+        v.memory = 1536
+        v.nested = true
       end
     end
   end
@@ -105,6 +118,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       swiftnode_config.vm.network :private_network, ip: "10.1.1.13#{i}", :netmask => "255.255.255.0"
       swiftnode_config.vm.provider "virtualbox" do |v|
         v.memory = 768
+      end
+      swiftnode_config.vm.provider "libvirt" do |v|
+        v.memory = 768
+        v.nested = true
       end
     end
   end
