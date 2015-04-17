@@ -9,6 +9,11 @@ function get_vagrant_hosts {
 
 TYPE=$1
 
+# This directory is used by ansible and needs to exist before the first ansible run
+if [ ! -d ~/.ssh/controlmasters ]; then
+    mkdir -p ~/.ssh/controlmasters
+fi
+
 if [[ -z ${TYPE} ]]; then
     echo "Usage: run_vagrant TYPE [minimal]"
     echo "Where type is one of the following:"
