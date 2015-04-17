@@ -4,6 +4,6 @@ horizon:
   favicon_url: https://s3.amazonaws.com/horizon-branding/bluebox.ico
   keystone_api_version: 2.0
   virtualenv: /opt/stack/horizon/.venv
-  session_timeout: 1800
+  session_timeout: 5400
   source:
     rev: e5a9037d2ff5f2fbd5bde8e073e90b8d290994d3
