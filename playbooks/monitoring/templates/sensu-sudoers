@@ -9,6 +9,7 @@ sensu ALL= NOPASSWD: /etc/sensu/plugins/check_megaraid_sas.pl
 sensu ALL= NOPASSWD: /etc/sensu/plugins/check-swift-dispersion.sh
 sensu ALL= NOPASSWD: /etc/sensu/plugins/check-nova-services.sh
 sensu ALL= NOPASSWD: /etc/sensu/plugins/check-cinder-services.sh
+sensu ALL= NOPASSWD: /etc/sensu/plugins/check-cinder-sessions.py
 sensu ALL= NOPASSWD: /etc/sensu/plugins/check-neutron-agents.sh
 sensu ALL= NOPASSWD: /etc/sensu/plugins/check-ucarp-procs.sh
 sensu ALL= NOPASSWD: /etc/sensu/plugins/nimble-check.py

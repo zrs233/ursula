@@ -10,9 +10,9 @@
   notify: restart sensu-client
 
 - name: nova cinder session check
-  sensu_metrics_check: name=check-cinder-sessions plugin=check-cinder-sessions.py
-                       interval=10
-                       use_sudo=true
+  sensu_check: name=check-cinder-sessions plugin=check-cinder-sessions.py
+               interval=10
+               use_sudo=true
   notify: restart sensu-client
 
 # ovs
