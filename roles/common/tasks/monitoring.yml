@@ -64,6 +64,10 @@
 - name: sensu conf dir
   file: dest=/etc/sensu/conf.d/checks state=directory owner=root mode=0755
 
+- name: create ursula_monitoring dir
+  file: dest="{{ common.ursula_monitoring.path }}"
+        state=directory mode=0755
+
 - name: fetch ursula_monitoring when install method is git
   git: repo="{{ common.ursula_monitoring.git_repo }}"
        dest="{{ common.ursula_monitoring.path }}"
