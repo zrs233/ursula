@@ -8,6 +8,7 @@ function get_vagrant_hosts {
 }
 
 TYPE=$1
+PROVIDER=${VAGRANT_DEFAULT_PROVIDER:-virtualbox}
 
 # This directory is used by ansible and needs to exist before the first ansible run
 if [ ! -d ~/.ssh/controlmasters ]; then
@@ -36,7 +37,7 @@ else
     exit -1
 fi
 
-vagrant up --provider=virtualbox ${BOXES}
+vagrant up --provider=${PROVIDER} ${BOXES}
 
 # Write the Vagrant SSH config to be used by ansible
 TEMPFILE=`mktemp 2>/dev/null || mktemp -t 'ursula-fifo'`
