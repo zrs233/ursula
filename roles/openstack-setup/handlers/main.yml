@@ -1,0 +1,4 @@
+---
+- name: ifup neutron external interface
+  command: ifup {{ neutron_external_interface }}
+  ignore_errors: yes

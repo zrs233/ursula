@@ -67,13 +67,11 @@
   - name: interfaces.d/eth0.cfg with NAT for floating IP pool
     template: src=../templates/etc/network/interfaces.d/eth0-controllers.cfg
               dest=/etc/network/interfaces.d/eth0.cfg
+    notify: bounce eth0
 
+  handlers:
   - name: bounce eth0
     shell: ifdown eth0; ifup eth0
-
-  - name: interfaces.d/br-ex.cfg for floating IP pool
-    template: src=../templates/etc/network/interfaces.d/br-ex.cfg
-              dest=/etc/network/interfaces.d/br-ex.cfg
 
 - name: compute and network tasks
   hosts: network:compute

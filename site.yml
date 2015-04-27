@@ -254,7 +254,7 @@
       when: ironic.enabled|bool
 
 - name: openstack base setup
-  hosts: controller[0]
+  hosts: controller
   roles:
     - role: 'openstack-setup'
       tags: ['openstack', 'setup']
