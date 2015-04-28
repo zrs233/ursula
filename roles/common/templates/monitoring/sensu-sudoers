@@ -14,3 +14,4 @@ sensu ALL= NOPASSWD: /etc/sensu/plugins/check-neutron-agents.sh
 sensu ALL= NOPASSWD: /etc/sensu/plugins/check-ucarp-procs.sh
 sensu ALL= NOPASSWD: /etc/sensu/plugins/nimble-check.py
 sensu ALL= NOPASSWD: /etc/sensu/plugins/check-neutron-fip.sh
+sensu ALL= NOPASSWD: /etc/sensu/plugins/check-for-large-files.sh
