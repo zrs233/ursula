@@ -1,0 +1,24 @@
+---
+stack_env: vagrant
+floating_ip: 10.1.1.100
+
+xtradb:
+  sst_auth_password: asdf
+
+percona:
+  replication: False
+
+nova:
+  scheduler_default_filters: AvailabilityZoneFilter,ComputeFilter
+
+keystone:
+  ldap:
+    enabled: True
+    server: 127.0.0.1
+    user: "cn=admin,dc=openstack,dc=org"
+    password: password
+    suffix: "dc=openstack,dc=org"
+    tree_dn: "dc=openstack,dc=org"
+    user_tree_dn: "ou=Users,dc=openstack,dc=org"
+    tenant_tree_dn: "ou=Groups,dc=openstack,dc=org"
+    role_tree_dn: "ou=Roles,dc=openstack,dc=org"

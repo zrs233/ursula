@@ -25,9 +25,25 @@
   upstart_service: name=keystone user=keystone cmd=/usr/local/bin/keystone-all
                    config_dirs=/etc/keystone
 
-- name: configure keystone
-  template: src={{ item }} dest=/etc/keystone/ mode=0644
-  with_fileglob: ../templates/etc/keystone/*
+- name: configure keystone.conf
+  template: src=etc/keystone/keystone.conf dest=/etc/keystone/keystone.conf mode=0644
+  when: not keystone.ldap.enabled|bool
+  notify:
+    - restart keystone services
+
+- name: configure keystone.conf
+  template: src=etc/keystone/keystone.ldap.conf dest=/etc/keystone/keystone.conf mode=0644
+  when: keystone.ldap.enabled|bool
+  notify:
+    - restart keystone services
+
+- name: configure keystone-paste.init
+  template: src=etc/keystone/keystone-paste.ini dest=/etc/keystone/keystone-paste.ini mode=0644
+  notify:
+    - restart keystone services
+
+- name: configure keystone policies
+  template: src=etc/keystone/policy.json dest=/etc/keystone/policy.json mode=0644
   notify:
     - restart keystone services
 
