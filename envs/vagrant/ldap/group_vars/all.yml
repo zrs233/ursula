@@ -22,3 +22,4 @@ keystone:
     user_tree_dn: "ou=Users,dc=openstack,dc=org"
     tenant_tree_dn: "ou=Groups,dc=openstack,dc=org"
     role_tree_dn: "ou=Roles,dc=openstack,dc=org"
+    user_enabled_emulation_dn: "cn=enabled_users,ou=Users,dc=openstack,dc=org"
