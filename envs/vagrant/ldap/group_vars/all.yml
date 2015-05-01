@@ -13,10 +13,10 @@ nova:
 
 keystone:
   ldap:
-    enabled: True
+    enabled: False
     server: 127.0.0.1
     user: "cn=admin,dc=openstack,dc=org"
-    password: password
+    password: asdf
     suffix: "dc=openstack,dc=org"
     tree_dn: "dc=openstack,dc=org"
     user_tree_dn: "ou=Users,dc=openstack,dc=org"

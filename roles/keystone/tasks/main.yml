@@ -47,6 +47,16 @@
   notify:
     - restart keystone services
 
+- name: install ldap pip reqs in package venv
+  command: "{{ 'keystone'|ursula_package_path(openstack_package_version) }}/bin/pip install {{ item }}"
+  register: pipout
+  changed_when: pipout.stdout|search("Successfully installed")
+  notify: restart keystone services
+  when: openstack_install_method == 'package' and keystone.ldap.enabled|bool
+  with_items:
+    - python-ldap
+    - ldappool
+
 - name: stop keystone service before db sync
   service: name=keystone state=stopped
   when: database_create.changed or force_sync|default('false')|bool
