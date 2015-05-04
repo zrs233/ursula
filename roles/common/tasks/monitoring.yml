@@ -175,7 +175,7 @@
 
 - name: log files greater than 1gb check
   sensu_check: name=log_file_size plugin=check-for-large-files.sh
-               args='-d /var/log -s 1048576'
+               args='-d /var/log -s 1048576' use_sudo=true
   notify: restart sensu-client
 
 - name: log scanning caching dir
