@@ -16,6 +16,7 @@
     - libvirt-dev={{ nova.libvirt_bin_version }}
     - pkg-config
     - genisoimage
+    - util-linux
   notify: restart nova services
   when: ansible_distribution_version == "12.04"
 
@@ -29,6 +30,7 @@
     - libvirt-dev={{ nova.trusty.libvirt_bin_version }}
     - pkg-config
     - genisoimage
+    - util-linux
   notify: restart nova services
   when: ansible_distribution_version == "14.04"
 
