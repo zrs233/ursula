@@ -32,6 +32,8 @@ elif [ "${TYPE}" == "standard" -o "${TYPE}" == "novadocker" ]; then
     BOXES="controller1 controller2 compute1"
 elif [ "${TYPE}" == "allinone" -o "${TYPE}" == "ironic" -o "${TYPE}" == "mirrors" ]; then
     BOXES="allinone"
+elif [ "${TYPE}" == "cinder" ]; then
+    BOXES="allinone cinder"
 else
     echo "I dont know how to provision '${TYPE}'"
     exit -1

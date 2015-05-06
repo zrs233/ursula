@@ -35,6 +35,12 @@
 - name: iscsi start
   service: name=open-iscsi state=started
 
+- name: cinder encryption key
+  template: src=etc/cinder/cinder.encryption.conf dest=/etc/cinder/cinder.encryption.conf mode=0640
+            owner=root group=cinder
+  notify: restart cinder services
+  when: cinder.fixed_key is defined
+
 - name: install cinder-volume service
   upstart_service: name=cinder-volume user=cinder
                    cmd=/usr/local/bin/cinder-volume

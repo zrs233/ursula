@@ -126,4 +126,18 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
   end
 
+  config.vm.define "cinder" do |cinder_config|
+    cinder_config.vm.box = "ursula-precise"
+    cinder_config.vm.box_url = BOX_URL
+    cinder_config.vm.hostname = "cinder"
+    cinder_config.vm.network :private_network, ip: "172.16.0.155", :netmask => "255.255.255.0"
+    cinder_config.vm.provider "virtualbox" do |v|
+      v.memory = 512
+    end
+    cinder_config.vm.provider "libvirt" do |v|
+      v.memory = 512
+      v.nested = true
+    end
+  end
+
 end

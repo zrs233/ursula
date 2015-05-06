@@ -21,6 +21,12 @@
 
 - modprobe: name=nbd state=present
 
+- name: cinder encryption key
+  template: src=etc/nova/nova.cinder_encryption.conf dest=/etc/nova/nova.cinder_encryption.conf mode=0640
+            owner=root group=nova
+  notify: restart nova services
+  when: cinder.fixed_key is defined
+
 - name: install nova-compute service
   upstart_service: name=nova-compute user=nova cmd=/usr/local/bin/nova-compute
                    config_dirs=/etc/nova

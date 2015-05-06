@@ -8,4 +8,7 @@
 - include: networks.yml
   when: openstack_setup.add_networks|bool or openstack_setup.add_networks is undefined
 
+- include: cinder.yml
+  tags: potato
+
 - include: flavors.yml
