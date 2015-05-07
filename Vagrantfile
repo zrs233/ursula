@@ -133,6 +133,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     cinder_config.vm.network :private_network, ip: "172.16.0.155", :netmask => "255.255.255.0"
     cinder_config.vm.provider "virtualbox" do |v|
       v.memory = 512
+      v.customize ['createhd', '--filename', 'cinder.1.vdi', '--size', 5120]
+      v.customize ['storagectl', :id, '--name', 'SATA Controller', '--add', 'sata']
+      v.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', 'cinder.1.vdi']
     end
     cinder_config.vm.provider "libvirt" do |v|
       v.memory = 512

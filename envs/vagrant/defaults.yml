@@ -33,6 +33,7 @@ endpoints:
   neutron:  "{{ fqdn }}"
   vnc:      "{{ fqdn }}"
   cinder:   "{{ fqdn }}"
+  cinderv2: "{{ fqdn }}"
   heat:     "{{ fqdn }}"
   heat-cfn: "{{ fqdn }}"
   ironic: "{{ fqdn }}"

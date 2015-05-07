@@ -1,0 +1,9 @@
+# TODO: allow for device-backed VGs in addition to file-backed VGs
+- name: file based cinder volume group
+  cinder_volume_group: file={{ cinder.volume_file }}
+                       size={{ cinder.volume_file_size }}
+  when: cinder.volume_type == "file"
+
+- name: device based cinder volume group
+  lvg:  vg=cinder-volumes pvs={{ cinder.volume_device }}
+  when: cinder.volume_type == "device"
