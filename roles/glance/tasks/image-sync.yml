@@ -38,6 +38,13 @@
 - name: start rsync
   service: name=rsync state=started enabled=yes
 
+- name: glance database credentials
+  template: src=etc/glance/.my.conf
+            dest=/etc/glance/.my.conf
+            mode=0600
+            owner=glance
+
 - name: glance image sync cron
-  template: src=etc/cron.d/glance-image-sync dest=/etc/cron.d/glance-image-sync
+  template: src=etc/cron.d/glance-image-sync
+            dest=/etc/cron.d/glance-image-sync
             mode=0640
