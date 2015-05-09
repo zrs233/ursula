@@ -39,8 +39,8 @@
   service: name=rsync state=started enabled=yes
 
 - name: glance database credentials
-  template: src=etc/glance/.my.conf
-            dest=/etc/glance/.my.conf
+  template: src=etc/glance/.my.cnf
+            dest=/etc/glance/.my.cnf
             mode=0600
             owner=glance
 
