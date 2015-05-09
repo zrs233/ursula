@@ -6,7 +6,7 @@ client:
     - python-glanceclient
     - python-novaclient==2.20.0
     - python-neutronclient
-    - python-cinderclient
+    - python-cinderclient==1.1.1
     - python-heatclient
     - python-ironicclient
     - python-swiftclient
