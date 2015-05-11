@@ -10,4 +10,4 @@ PATH=/bin:/usr/bin
 {% endif %}
 {% endfor %}
 # Remove all deleted glance images
-* * * * * glance  flock --timeout 60 /tmp/glance-image-sync.lock -c "mysql --user=glance --password='{{ secrets.db_password }}' --host='{{ endpoints.db }}' glance --batch -e \"SELECT value FROM image_locations WHERE value LIKE 'file:///var/lib/glance/images/\%' AND deleted_at IS NOT NULL;\" | egrep '^file://' | cut -c 8- | xargs rm -f"
+* * * * * glance  flock --timeout 60 /tmp/glance-image-sync.lock -c "mysql --defaults-file=/etc/glance/.my.cnf glance --batch -e \"SELECT value FROM image_locations WHERE value LIKE 'file:///var/lib/glance/images/\%' AND deleted_at IS NOT NULL;\" | egrep '^file://' | cut -c 8- | xargs rm -f"
