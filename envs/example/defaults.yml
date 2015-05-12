@@ -101,6 +101,7 @@ nova:
   conductor_workers: 1
   metadata_api_workers: 1
   reserved_host_disk_mb: 50
+  enable_ssh: true
   logging:
     debug: True
     verbose: True
