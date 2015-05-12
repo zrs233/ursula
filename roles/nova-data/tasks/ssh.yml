@@ -1,7 +1,8 @@
 ---
 - name: gather nova pubkeys
-  command: cat /var/lib/nova/.ssh/id_rsa.pub
-  register: nova_pubkey
+  user: name=nova
+        generate_ssh_key=yes
+  register: nova_user
 
 - name: nova authorized_keys
   template: src=var/lib/nova/ssh/authorized_keys
