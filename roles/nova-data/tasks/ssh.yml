@@ -3,10 +3,6 @@
   command: cat /var/lib/nova/.ssh/id_rsa.pub
   register: nova_pubkey
 
-- name: gather hostkeys
-  command: cat /etc/ssh/ssh_host_rsa_key.pub
-  register: ssh_hostkey
-
 - name: nova authorized_keys
   template: src=var/lib/nova/ssh/authorized_keys
             dest=/var/lib/nova/.ssh/authorized_keys owner=nova group=nova
