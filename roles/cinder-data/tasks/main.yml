@@ -24,16 +24,22 @@
 - name: ensure tgt service is running
   service: name=tgt state=started
 
-# TODO: allow for device-backed VGs in addition to file-backed VGs
-- name: cinder volume group
-  cinder_volume_group: file={{ cinder.volume_file }}
-                       size={{ cinder.volume_file_size }}
+- include: volume_group.yml
   when: cinder.fixed_key is not defined or (cinder.fixed_key is defined and "compute" not in group_names)
-  # a fixed_key cannot be used with a local cinder volume group on a compute
-  # node. This would be a security risk, DO NOT CHANGE.
 
 - name: iscsi start
   service: name=open-iscsi state=started
+
+- name: enable cinder encryption
+  template: src=etc/cinder/cinder.encryption.conf dest=/etc/cinder/cinder.encryption.conf mode=0640
+            owner=root group=cinder
+  notify: restart cinder services
+  when: cinder.fixed_key is defined
+
+- name: disable cinder encryption
+  file: dest=/etc/cinder/cinder.encryption.conf state=absent
+  notify: restart cinder services
+  when: cinder.fixed_key is not defined
 
 - name: install cinder-volume service
   upstart_service: name=cinder-volume user=cinder

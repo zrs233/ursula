@@ -88,7 +88,7 @@ EXAMPLES = '''
 
 try:
     from keystoneclient.v2_0 import client as ksclient
-    from cinderclient.v1 import client
+    from cinderclient.v2 import client
 except ImportError as e:
     print("failed=True msg='python-cinderclient is required'")
 
@@ -154,7 +154,11 @@ def _create_encrypted_volume_type(module, cinderclient, volume_type, provider,
                                   key_size=None):
     volume_type_id = _get_volume_type_id(cinderclient, volume_type)
     if not volume_type_id:
-        raise ValueError("volume type '%s' not found" % volume_type)
+        _create_volume_type(module, cinderclient, volume_type)
+
+    volume_type_id = _get_volume_type_id(cinderclient, volume_type)
+    if not volume_type_id:
+        raise ValueError("volume type '%s' not found and could not be created" % volume_type)
 
     enc_volume_type = _get_encrypted_volume_type_id_name(cinderclient,
                                                          volume_type_id)

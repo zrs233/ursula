@@ -33,6 +33,7 @@ endpoints:
   neutron:  "{{ fqdn }}"
   vnc:      "{{ fqdn }}"
   cinder:   "{{ fqdn }}"
+  cinderv2: "{{ fqdn }}"
   heat:     "{{ fqdn }}"
   heat-cfn: "{{ fqdn }}"
   ironic: "{{ fqdn }}"
@@ -309,6 +310,12 @@ keystone:
       public_url: https://{{ endpoints.main }}:8778/v1/%(tenant_id)s
       internal_url: https://{{ endpoints.main }}:8778/v1/%(tenant_id)s
       admin_url: https://{{ endpoints.main }}:8778/v1/%(tenant_id)s
+    - name: cinderv2
+      type: volumev2
+      description: 'Volume Service v2'
+      public_url: https://{{ endpoints.main }}:8778/v2/%(tenant_id)s
+      internal_url: https://{{ endpoints.main }}:8778/v2/%(tenant_id)s
+      admin_url: https://{{ endpoints.main }}:8778/v2/%(tenant_id)s
     - name: swift
       type: object-store
       description: 'Object Storage Service'
