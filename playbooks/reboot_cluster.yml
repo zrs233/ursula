@@ -1,0 +1,42 @@
+---
+- hosts: all:!db
+  tasks:
+  - command: shutdown -r now
+    async: 0
+    poll: 0
+    ignore_errors: true
+
+  - name: Wait for SSH to come back
+    wait_for: host={{ ansible_default_ipv4.address }}
+              port={{ ansible_ssh_port|default(22) }}
+              delay=15
+    delegate_to: "{{ groups['controller']|first }}"
+
+- hosts: db_arbiter
+  tasks:
+  - name: Ensure Garbd is up before rebooting database servers
+    wait_for: host={{ ansible_default_ipv4.address }}
+              port=4567
+              delay=15
+    delegate_to: "{{ groups['controller']|first }}"
+
+- hosts: db
+  serial: 1
+  tasks:
+  - command: shutdown -r now
+    async: 0
+    poll: 0
+    ignore_errors: true
+
+  - name: Wait for SSH to come back
+    local_action:
+      module: wait_for
+        host={{ ansible_default_ipv4.address }}
+        port={{ ansible_ssh_port|default(22) }}
+        delay=15
+
+  - name: Ensure Galera is up before rebooting next node
+    wait_for: host={{ ansible_default_ipv4.address }}
+              port=4567
+              delay=15
+    delegate_to: "{{ inventory_hostname }}"
