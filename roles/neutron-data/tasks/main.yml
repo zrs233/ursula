@@ -42,4 +42,9 @@
   service: name=neutron-linuxbridge-agent state=started
   when: neutron.plugin == 'ml2'
 
+- name: cleanup interface logs
+  template: src=etc/cron.daily/cleanup-neutron-interfaces
+            dest=/etc/cron.daily/cleanup-neutron-interfaces
+            mode=0755 owner=root
+
 - include: monitoring.yml tags=monitoring,common
