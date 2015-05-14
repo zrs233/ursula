@@ -3,13 +3,36 @@
 - name: enable nested kvm
   template: src=etc/modprobe.d/kvm-nested.conf dest=/etc/modprobe.d/kvm-nested.conf owner=root group=root mode=0644
 
+- name: Install key for Ubuntu Cloud Archive
+  apt: pkg=ubuntu-cloud-keyring update_cache=yes
+  when: ansible_distribution_version == "12.04"
+  tags: security
+
+- name: Ubuntu Cloud Archive Repository
+  apt_repository: repo='deb http://ubuntu-cloud.archive.canonical.com/ubuntu precise-updates/icehouse main'
+                  update_cache=yes
+  when: ansible_distribution_version == "12.04"
+  tags: security
+
 - name: install nova-compute packages
   action: apt pkg={{ item }}
   with_items:
     - libvirt-bin
     - python-libvirt
-    - qemu-kvm
+    - qemu-kvm=2.0.0+dfsg-2ubuntu1.11~cloud0
     - open-iscsi
+  tags: security
+  when: ansible_distribution_version == "12.04"
+
+- name: install nova-compute packages
+  action: apt pkg={{ item }}
+  with_items:
+    - libvirt-bin
+    - python-libvirt
+    - qemu-kvm=2.0.0+dfsg-2ubuntu1.11
+    - open-iscsi
+  tags: security
+  when: ansible_distribution_version == "14.04"
 
 - lineinfile: dest=/etc/libvirt/libvirtd.conf regexp="^listen_tcp\s*=" line="listen_tcp = 1"
   notify: restart libvirt-bin
