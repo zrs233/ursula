@@ -21,7 +21,7 @@ nova:
   scheduler_default_filters: AvailabilityZoneFilter,RamFilter,ComputeFilter,CoreFilter
   libvirt_bin_version: 1.2.2-0ubuntu13.1.9~cloud0
   python_libvirt_version: 1.2.2-0ubuntu2~cloud0
-  qemu_kvm_version: 2.0.0+dfsg-2ubuntu1.10~cloud0
+  qemu_kvm_version: 2.0.0+dfsg-2ubuntu1.11~cloud0
   librdb1_version: 0.80.9-0ubuntu0.14.04.1~cloud0
   glance_endpoint: http://{{ endpoints.glance }}:9292
   reserved_host_disk_mb: 51200
@@ -29,7 +29,7 @@ nova:
   trusty:
     libvirt_bin_version: 1.2.2-0ubuntu13.1.10
     python_libvirt_version: 1.2.2-0ubuntu2
-    qemu_kvm_version: 2.0.0+dfsg-2ubuntu1.10
+    qemu_kvm_version: 2.0.0+dfsg-2ubuntu1.11
   driver:
     docker:
       rev: 2f23a09ba49bfafedc712b82613417da7147c5a3
