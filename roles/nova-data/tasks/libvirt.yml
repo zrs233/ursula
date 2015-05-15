@@ -23,6 +23,7 @@
     - open-iscsi
   notify: restart nova services
   when: ansible_distribution_version == "12.04"
+  tags: security
 
 - name: install nova-compute packages (trusty)
   apt: pkg={{ item }}
@@ -33,6 +34,7 @@
     - open-iscsi
   notify: restart nova services
   when: ansible_distribution_version == "14.04"
+  tags: security
 
 - name: update various lines in libvirtd.conf
   lineinfile: dest=/etc/libvirt/libvirtd.conf regexp="{{ item.value.regexp }}"
