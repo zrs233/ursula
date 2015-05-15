@@ -18,6 +18,7 @@
     - genisoimage
   notify: restart nova services
   when: ansible_distribution_version == "12.04"
+  tags: security
 
 - name: install nova-compute packages (trusty)
   apt: pkg={{ item }}
@@ -31,6 +32,7 @@
     - genisoimage
   notify: restart nova services
   when: ansible_distribution_version == "14.04"
+  tags: security
 
 # in the case of packaging, we want to be sure that libvirt python
 # modules are built against the libvirt running on the host, so build
