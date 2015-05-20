@@ -107,6 +107,7 @@ nova:
     verbose: True
 
 cinder:
+  enabled: True
   volume_type: file
   volume_file: /opt/stack/cinder-volumes
   volume_file_size: 5G

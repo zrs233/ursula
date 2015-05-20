@@ -152,6 +152,7 @@ nova:
     debug: True
 
 cinder:
+  enabled: True
   api_workers: 1
   volume_file: /opt/stack/cinder-volumes
   volume_file_size: 2G

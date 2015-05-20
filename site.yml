@@ -164,6 +164,7 @@
   roles:
     - role: cinder-control
       tags: ['openstack', 'cinder', 'control']
+      when: cinder.enabled|bool
 
 - name: cinder data plane
   gather_facts: force
@@ -171,6 +172,7 @@
   roles:
     - role: cinder-data
       tags: ['openstack', 'cinder', 'data']
+      when: cinder.enabled|bool
 
 - name: neutron control plane
   gather_facts: force
