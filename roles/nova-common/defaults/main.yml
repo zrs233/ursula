@@ -26,6 +26,7 @@ nova:
   glance_endpoint: http://{{ endpoints.glance }}:9292
   reserved_host_disk_mb: 51200
   preallocate_images: space
+  floating_pool: external
   trusty:
     libvirt_bin_version: 1.2.2-0ubuntu13.1.10
     python_libvirt_version: 1.2.2-0ubuntu2
