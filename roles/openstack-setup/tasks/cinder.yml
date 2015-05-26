@@ -6,6 +6,7 @@
                       login_password={{ secrets.provider_admin_password }}
                       login_tenant_name=admin
   with_items: cinder.volume_types
+  run_once: true
 
 - name: create cinder encryption volume types
   cinder_volume_type: volume_type={{ item.volume_type }}
@@ -19,3 +20,4 @@
                       login_password={{ secrets.provider_admin_password }}
                       login_tenant_name=admin
   with_items: cinder.encrypted_volume_types
+  run_once: true

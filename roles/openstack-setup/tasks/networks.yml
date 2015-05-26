@@ -12,6 +12,7 @@
                    login_username=provider_admin
                    login_password={{ secrets.provider_admin_password }}
   with_items: neutron.networks
+  run_once: true
 
 - name: neutron subnets
   neutron_subnet: name={{ item.name }}
@@ -27,6 +28,7 @@
                   login_username=provider_admin
                   login_password={{ secrets.provider_admin_password }}
   with_items: neutron.subnets
+  run_once: true
 
 - name: neutron routers
   neutron_router: state=present
@@ -38,6 +40,7 @@
                   login_username=provider_admin
                   login_password={{ secrets.provider_admin_password }}
   with_items: neutron.routers
+  run_once: true
 
 - name: neutron routers gateways
   neutron_router_gateway: state=present
@@ -49,6 +52,7 @@
                           login_username=provider_admin
                           login_password={{ secrets.provider_admin_password }}
   with_items: neutron.routers
+  run_once: true
 
 - name: neutron router interfaces
   neutron_router_interface: router_name={{ item.router_name }}
@@ -60,3 +64,4 @@
                             login_username=provider_admin
                             login_password={{ secrets.provider_admin_password }}
   with_items: neutron.router_interfaces
+  run_once: true

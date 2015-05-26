@@ -254,9 +254,15 @@
       when: ironic.enabled|bool
 
 - name: openstack base setup
-  hosts: controller[0]
+  hosts: controller
   roles:
     - role: 'openstack-setup'
+      tags: ['openstack', 'setup']
+
+- name: openstack network setup
+  hosts: network
+  roles:
+    - role: 'openstack-network'
       tags: ['openstack', 'setup']
 
 - name: extra neutron setup

@@ -4,7 +4,9 @@
   failed_when: False
   changed_when: False
   register: resize_tiny_flavor
+  run_once: true
 
 - name: bump root disk size on m1.tiny
   shell: mysql -e "update nova.instance_types set root_gb=10 where name='m1.tiny';"
   when: resize_tiny_flavor|failed
+  run_once: true

@@ -13,3 +13,4 @@
                     login_password={{ secrets.provider_admin_password }}
   with_items: keystone.services
   when: endpoints[item.name] is defined and endpoints[item.name]
+  run_once: true

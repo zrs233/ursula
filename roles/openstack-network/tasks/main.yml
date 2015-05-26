@@ -1,0 +1,23 @@
+---
+- name: determine Neutron external interface name
+  neutron_network: name=external
+                   auth_url=https://{{ endpoints.main }}:5001/v2.0/
+                   login_tenant_name=admin
+                   login_username=provider_admin
+                   login_password={{ secrets.provider_admin_password }}
+  register: result
+  run_once: true
+
+- name: set neutron interface fact
+  set_fact: neutron_external_interface=brq{{ result.id|truncate(length=11,killwords=true,end='') }}
+
+- name: check for existing external interface config (which may contain additional routes)
+  stat: path=/etc/network/interfaces.d/{{ neutron_external_interface }}.cfg
+  register: neutron_external_ifcfg
+
+- name: neutron external interface config
+  template: src=neutron_external_interface.cfg
+            dest=/etc/network/interfaces.d/{{ neutron_external_interface }}.cfg
+            owner=root group=root mode=0644
+  when: not neutron_external_ifcfg.stat.exists
+  notify: ifup neutron external interface

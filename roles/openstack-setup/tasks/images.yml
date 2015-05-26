@@ -11,3 +11,4 @@
                 is_public=yes
                 timeout=12000
   with_items: glance.images
+  run_once: true
