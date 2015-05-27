@@ -1,5 +1,6 @@
 ---
 cinder:
+  enabled: True
   enabled_backends:
   default_backend:
   backends: []

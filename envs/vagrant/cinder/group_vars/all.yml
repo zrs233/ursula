@@ -12,6 +12,7 @@ nova:
   scheduler_default_filters: AvailabilityZoneFilter,ComputeFilter
 
 cinder:
+  enabled: True
   volume_type: device
   volume_device: /dev/sdb
   fixed_key: 6a5c55db5e250f234b6af7807dafda77433dddcf372b6d04801a45f578a35aa7
