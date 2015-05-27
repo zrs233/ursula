@@ -4,6 +4,16 @@
 #
 # Assumes ml2 networking
 ---
+- name: Remove existing package symlink
+  hosts: all
+  max_fail_percentage: 0
+
+  tasks:
+    - file:
+        dest: /opt/openstack/current
+        state: absent
+      when: openstack_install_method == 'package'
+
 - name: Upgrade kernel to supported HWE
   hosts: all
   max_fail_percentage: 1
