@@ -12,6 +12,7 @@ glance:
     device_name: image-cache
     dir: /var/lib/glance/images
   store_swift: False
+  show_multiple_locations: True
 
   source:
     rev: '0e355462833feeaa6f3124fda4bd5ff7064c8512'
