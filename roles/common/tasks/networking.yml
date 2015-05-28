@@ -45,6 +45,13 @@
       regex: '^net\.ipv6\.conf\.default\.use_tempaddr'
       line: "net.ipv6.conf.default.use_tempaddr = 0"
 
+- name: Disable IPv6 on all interfaces by default
+  copy: src=etc/sysctl.d/10-disable-ipv6-default.conf
+        dest=/etc/sysctl.d/10-disable-ipv6-default.conf
+        owner=root group=root mode=0644
+  notify:
+  - apply-sysctl
+
 - name: conntrack module
   template: src=etc/modprobe.d/conntrack.conf
             dest=/etc/modprobe.d/conntrack.conf owner=root group=root mode=0644
