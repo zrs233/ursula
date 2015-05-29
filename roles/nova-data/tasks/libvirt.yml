@@ -21,6 +21,7 @@
     - python-libvirt
     - qemu-kvm=2.0.0+dfsg-2ubuntu1.11~cloud0
     - open-iscsi
+    - librbd1=0.80.9-0ubuntu0.14.04.1~cloud0
   tags: security
   when: ansible_distribution_version == "12.04"
 
