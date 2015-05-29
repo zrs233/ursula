@@ -7,6 +7,7 @@
     - tgt
     - nbd-client
     - open-iscsi
+    - qemu-utils
 
 - name: iscsi target framework conf dir
   file: dest=/etc/tgt/conf.d state=directory
