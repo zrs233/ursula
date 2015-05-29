@@ -149,24 +149,38 @@ neutron:
       segmentation_id: ~
       provider_physical_network: ~
   subnets:
-    - name: internal
+    - name: internal_v4
       network_name: internal
+      ip_version: 4
       cidr: 172.16.255.0/24
       enable_dhcp: "true"
       gateway_ip: 172.16.255.1
-      ip_version: 4
+      dns_nameservers: '8.8.8.8,8.8.4.4'
+    - name: internal_v6
+      network_name: internal
+      ip_version: 6
+      cidr: 2db8:1::/64
+      enable_dhcp: "true"
+      gateway_ip: 2db8:1::1
+      ipv6_address_mode: dhcpv6-stateless
+      ipv6_ra_mode: dhcpv6-stateless
+      dns_nameservers: '2001:4860:4860::8888,2001:4860:4860::8844'
     - name: external
       network_name: external
+      ip_version: 4
       cidr: 192.168.255.0/24
       enable_dhcp: "false"
       gateway_ip: 192.168.255.1
-      ip_version: 4
+      dns_nameservers: '8.8.8.8,8.8.4.4'
   routers:
     - name: default
       tenant_name: admin
   router_interfaces:
     - router_name: default
-      subnet_name: internal
+      subnet_name: internal_v4
+      tenant_name: admin
+    - router_name: default
+      subnet_name: internal_v6
       tenant_name: admin
   service:
     envs:
@@ -194,7 +208,6 @@ keystone:
     - admin
     - service
     - demo
-
   users:
     - name: admin
       password: "{{ secrets.admin_password }}"
@@ -226,7 +239,6 @@ keystone:
     - name: "{{ monitoring.openstack.user.username }}"
       password: "{{ monitoring.openstack.user.password }}"
       tenant: "{{ monitoring.openstack.user.tenant }}"
-
   user_roles:
     - user: admin
       tenant: admin
