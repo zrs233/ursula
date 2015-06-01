@@ -185,10 +185,13 @@
 
     # This is manual for now, not keen on automated kernel panic
     - name: initiate a failover on controller 0
-      pause: prompt="On ucarp {{ inventory_hostname }} $ echo c > /proc/sysrq-trigger (press enter when done)"
+      hosts: controller[0]
+      command: /usr/bin/ipmitool chassis power reset
       when: master is defined
 
     - name: initiate a failover on controller 1
+      hosts: controller[1]
+      command: /usr/bin/ipmitool chassis power reset
       pause: prompt="On ucarp {{ groups['controller'][1] }} $ echo c > /proc/sysrq-trigger (press enter when done)"
       when: master is not defined
 
