@@ -183,17 +183,10 @@
       set_fact: master=true
       when: floating_ip in ansible_all_ipv4_addresses
 
-    # This is manual for now, not keen on automated kernel panic
+    # initiate hard reboot on the current master controller
     - name: initiate a failover on controller 0
-      hosts: controller[0]
       command: /usr/bin/ipmitool chassis power reset
       when: master is defined
-
-    - name: initiate a failover on controller 1
-      hosts: controller[1]
-      command: /usr/bin/ipmitool chassis power reset
-      pause: prompt="On ucarp {{ groups['controller'][1] }} $ echo c > /proc/sysrq-trigger (press enter when done)"
-      when: master is not defined
 
     - name: wait for the panic
       wait_for: host={{ inventory_hostname }} port=22 state=stopped delay=10
