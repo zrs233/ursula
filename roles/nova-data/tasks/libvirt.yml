@@ -15,7 +15,7 @@
   tags: security
 
 - name: install nova-compute packages
-  action: apt pkg={{ item }}
+  action: apt pkg={{ item }} update_cache=true
   with_items:
     - libvirt-bin
     - python-libvirt
@@ -26,12 +26,13 @@
   when: ansible_distribution_version == "12.04"
 
 - name: install nova-compute packages
-  action: apt pkg={{ item }}
+  action: apt pkg={{ item }} update_cache=true
   with_items:
     - libvirt-bin
     - python-libvirt
     - qemu-kvm=2.0.0+dfsg-2ubuntu1.11
     - open-iscsi
+    - librbd1=0.80.9-0ubuntu0.14.04.2
   tags: security
   when: ansible_distribution_version == "14.04"
 
