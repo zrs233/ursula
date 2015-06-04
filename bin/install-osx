@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+set -ex 
+
+BINDIR=$(dirname $0)
+
 install_pip() {
   which brew >/dev/null || \
     die "This installation script requires a homebrew installation to proceed. Please see: http://mxcl.github.io/homebrew/"
@@ -20,6 +24,6 @@ uname | grep Darwin || die "This is not an OS X system... Aborting."
 
 which pip >/dev/null || install_pip
 
-pip install -r -U $BINDIR/../requirements.txt
+pip install -U -r $BINDIR/../requirements.txt
 
 echo -e "\nInstallation complete!\n"

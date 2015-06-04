@@ -13,6 +13,6 @@ apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install --yes python-pip python-dev libxml2-dev libxslt-dev libffi-dev
 apt-get remove --yes ansible || echo "ok"
 
-pip install -r -U $BINDIR/../requirements.txt
+pip install -U -r $BINDIR/../requirements.txt
 
 echo -e "\nInstallation complete!\n"
