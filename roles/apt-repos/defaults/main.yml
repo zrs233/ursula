@@ -1,8 +1,9 @@
 ---
 apt_repos:
+  # All key_urls should be HTTPS to ensure we are retrieving the key we are expecting too
   docker:
     repo: 'https://get.docker.com/ubuntu'
-    key_url: 'http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xD8576A8BA88D21E9'
+    key_url: 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xD8576A8BA88D21E9'
   bbg_ubuntu:
     repo: 'http://repo.openstack.blueboxgrid.com/ubuntu/'
     key_url: 'http://repo.openstack.blueboxgrid.com/blue_box_cloud.gpg.key'
@@ -14,24 +15,24 @@ apt_repos:
     key_url: 'http://hwraid.le-vert.net/debian/hwraid.le-vert.net.gpg.key'
   tkraid:
     repo: 'http://archive.thomas-krenn.com/packages'
-    key_url: 'http://archive.thomas-krenn.com/tk-archive.gpg.pub'
+    key_url: 'https://archive.thomas-krenn.com/tk-archive.gpg.pub'
   sensu:
     repo: 'http://repos.sensuapp.org/apt'
-    key_url: 'http://repos.sensuapp.org/apt/pubkey.gpg'
+    key_url: 'https://repos.sensuapp.org/apt/pubkey.gpg'
   haproxy:
     repo: 'http://ppa.launchpad.net/vbernat/haproxy-1.5/ubuntu'
-    key_url: 'http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0xCFFB779AADC995E4F350A060505D97A41C61B9CD'
+    key_url: 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xCFFB779AADC995E4F350A060505D97A41C61B9CD'
   bbg_openstack_ppa:
     repo: 'http://ppa.launchpad.net/blueboxgroup/openstack/ubuntu'
-    key_url: 'http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0xC37BA5F849DE63CB'
+    key_url: 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xC37BA5F849DE63CB'
   percona:
     repo: 'http://repo.percona.com/apt'
-    key_url: 'http://www.percona.com/redir/downloads/RPM-GPG-KEY-percona'
+    key_url: 'https://www.percona.com/redir/downloads/RPM-GPG-KEY-percona'
   rabbitmq:
     repo: 'http://www.rabbitmq.com/debian/'
-    key_url: 'http://www.rabbitmq.com/rabbitmq-signing-key-public.asc'
+    key_url: 'https://www.rabbitmq.com/rabbitmq-signing-key-public.asc'
   cloud_archive:
     repo: 'http://ubuntu-cloud.archive.canonical.com/ubuntu'
   erlang:
     repo: 'http://packages.erlang-solutions.com/debian'
-    key_url: 'http://packages.erlang-solutions.com/debian/erlang_solutions.asc'
+    key_url: 'https://packages.erlang-solutions.com/debian/erlang_solutions.asc'

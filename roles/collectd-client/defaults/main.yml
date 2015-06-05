@@ -1,7 +1,7 @@
 ---
 collectd:
   apt_repo: http://ppa.launchpad.net/raravena80/collectd5/ubuntu
-  key_url: "http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xE97C3D97792BD34E"
+  key_url: "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xE97C3D97792BD34E"
   enabled: True
   client_name: "{{ ansible_hostname }}"
   plugin_conf_dir: /etc/collectd/plugins
