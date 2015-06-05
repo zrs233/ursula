@@ -16,21 +16,26 @@ ALLOWED_HOSTS = ['*']
 # and don't forget to strip it from the client's request.
 # For more information see:
 # https://docs.djangoproject.com/en/1.4/ref/settings/#secure-proxy-ssl-header
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
 
 # If Horizon is being served through SSL, then uncomment the following two
 # settings to better secure the cookies from security exploits
-#CSRF_COOKIE_SECURE = True
-#SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
 # Overrides for OpenStack API versions. Use this setting to force the
 # OpenStack dashboard to use a specfic API version for a given service API.
 # NOTE: The version should be formatted as it appears in the URL for the
 # service API. For example, The identity service APIs have inconsistent
 # use of the decimal point, so valid options would be "2.0" or "3".
-# OPENSTACK_API_VERSIONS = {
-#     "identity": 3
-# }
+OPENSTACK_API_VERSIONS = {
+{% if horizon.keystone_api_version == 3 -%}
+    "identity": 3,
+{% else %}
+#     "identity": 3,
+{% endif %}
+    "volume": 2
+}
 
 # Set this to True if running on multi-domain model. When this is enabled, it
 # will require user to enter the Domain name in addition to username for login.
@@ -129,6 +134,8 @@ AVAILABLE_REGIONS = [
 OPENSTACK_HOST = "{{ endpoints.main }}"
 OPENSTACK_KEYSTONE_URL = "https://%s:5001/v{{horizon.keystone_api_version}}" % OPENSTACK_HOST
 OPENSTACK_KEYSTONE_DEFAULT_ROLE = "service"
+SESSION_TIMEOUT = {{ horizon.session_timeout }}
+
 
 # Disable SSL certificate checks (useful for self-signed certificates):
 OPENSTACK_SSL_NO_VERIFY = True
