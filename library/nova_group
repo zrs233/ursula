@@ -21,11 +21,8 @@ import os
 import six
 
 try:
-    from novaclient.openstack.common import uuidutils
-    try:
-        from nova.openstack.common import strutils
-    except ImportError:
-        from novaclient.openstack.common import strutils
+    from oslo_utils import uuidutils
+    from oslo_utils import encodeutils
     from novaclient.v1_1 import client
     from novaclient.v1_1 import security_groups
     from novaclient.v1_1 import security_group_rules
@@ -134,7 +131,7 @@ class NovaGroup(object):
     # Taken from novaclient/v1_1/shell.py.
     def _get_secgroup(self, secgroup):
         # Check secgroup is an UUID
-        if uuidutils.is_uuid_like(strutils.safe_encode(secgroup)):
+        if uuidutils.is_uuid_like(encodeutils.safe_encode(secgroup)):
             try:
                 sg = self._sg.get(secgroup)
                 return sg
