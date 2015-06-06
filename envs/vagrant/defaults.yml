@@ -152,11 +152,14 @@ nova:
 
 cinder:
   enabled: True
+  volume_type: file
   api_workers: 1
   volume_file: /opt/stack/cinder-volumes
   volume_file_size: 2G
   logging:
     debug: True
+  volume_types: []
+  encrypted_volume_types: []
 
 neutron:
   network_vlan_ranges: physnet

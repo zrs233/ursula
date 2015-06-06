@@ -259,7 +259,7 @@
   hosts: controller
   roles:
     - role: 'openstack-setup'
-      tags: ['openstack', 'setup']
+      tags: ['openstack-setup', 'openstack', 'setup']
 
 - name: openstack network setup
   hosts: network
