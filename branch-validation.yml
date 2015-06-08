@@ -189,7 +189,7 @@
       when: master is defined
 
     - name: initiate a failover on controller 1
-      delegate_to: controller[1]
+      delegate_to: "{{ groups['controller'][1] }}"
       command: /usr/bin/ipmitool chassis power reset
       when: master is not defined
 
@@ -234,23 +234,20 @@
       delegate_to: localhost
       when: master is defined
 
-    - name: reboot downed controller
-      pause: prompt="Reboot downed controller, press enter when done"
-
     - name: wait for the reboot
       wait_for: host={{ inventory_hostname }} port=22 delay=10
-                timeout=300
+                timeout=600
       delegate_to: localhost
       when: master is defined
 
     - name: wait for the reboot
       wait_for: host={{ groups['controller'][1] }} port=22 delay=10
-                timeout=300
+                timeout=600
       delegate_to: localhost
       when: master is not defined
 
     - name: floating ips are reachable
-      command: ping -c 5 {{ item.public_ip }}
+      command: ping -c 60 {{ item.public_ip }}
       with_items: fip_controllers.results + fip_compute.results
       changed_when: false
       register: pings
