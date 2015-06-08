@@ -189,6 +189,7 @@
       when: master is defined
 
     - name: initiate a failover on controller 1
+      delegate_to: controller[1]
       command: /usr/bin/ipmitool chassis power reset
       when: master is not defined
 
