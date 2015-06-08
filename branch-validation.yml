@@ -188,6 +188,10 @@
       command: /usr/bin/ipmitool chassis power reset
       when: master is defined
 
+    - name: initiate a failover on controller 1
+      command: /usr/bin/ipmitool chassis power reset
+      when: master is not defined
+
     - name: wait for the panic
       wait_for: host={{ inventory_hostname }} port=22 state=stopped delay=10
                 timeout=30
