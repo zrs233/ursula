@@ -4,7 +4,7 @@ client:
   names:
     - python-keystoneclient
     - python-glanceclient
-    - python-novaclient==2.20.0
+    - python-novaclient
     - python-neutronclient
     - python-cinderclient==1.1.1
     - python-heatclient

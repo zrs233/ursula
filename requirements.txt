@@ -1,4 +1,4 @@
-python-novaclient==2.19.0
+python-novaclient
 python-neutronclient==2.3.6
 python-keystoneclient
 python-glanceclient
