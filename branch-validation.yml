@@ -236,13 +236,13 @@
 
     - name: wait for the reboot
       wait_for: host={{ inventory_hostname }} port=22 delay=10
-                timeout=600
+                timeout=300
       delegate_to: localhost
       when: master is defined
 
     - name: wait for the reboot
       wait_for: host={{ groups['controller'][1] }} port=22 delay=10
-                timeout=600
+                timeout=300
       delegate_to: localhost
       when: master is not defined
 
