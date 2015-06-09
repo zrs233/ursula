@@ -16,4 +16,4 @@
   template: src=etc/default/garbd dest=/etc/default/garbd mode=0644
 
 - name: ensure garbd running
-  service: name=garbd state=started enabled=on pattern=/usr/bin/garbd
+  service: name=garbd state=started enabled=yes pattern=/usr/bin/garbd
