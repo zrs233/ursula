@@ -104,6 +104,10 @@
                -o IdentityFile=/root/validate-key cirros@{{ fip.public_ip }}
                ping -c 5 {{ item.private_ip }}
       changed_when: false
+      register: pings
+      until: pings|success
+      delay: 1
+      retries: 5
       with_items: instances.results
 
     - name: instance internet connectivity test w/ floating-ip
@@ -111,6 +115,10 @@
                -o IdentityFile=/root/validate-key cirros@{{ fip.public_ip }}
                ping -c 5 google.com
       changed_when: false
+      register: pings
+      until: pings|success
+      delay: 1
+      retries: 5
 
     - name: wait for user to login
       pause: prompt="From {{ groups['controller'][0] }} ssh -o
@@ -165,6 +173,10 @@
       command: ping -c 5 {{ item.public_ip }}
       with_items: fip_controllers.results + fip_compute.results
       changed_when: false
+      register: pings
+      until: pings|success
+      delay: 1
+      retries: 5
       delegate_to: localhost
 
     - name: define ha master
@@ -195,21 +207,29 @@
     - name: check non-controller instance connectivity by way of floating IPs
       command: ping -c 5 {{ fip_compute.results[0].public_ip }}
       changed_when: false
-      delegate_to: localhost
-      register: comp_ping
-      until: comp_ping|success
+      register: pings
+      until: pings|success
+      delay: 1
       retries: 5
-      delay: 10
+      delegate_to: localhost
 
     - name: check remaining controller instance connectivity
       command: ping -c 5 {{ fip_controllers.results[0].public_ip }}
       changed_when: false
+      register: pings
+      until: pings|success
+      delay: 1
+      retries: 5
       delegate_to: localhost
       when: master is not defined
 
     - name: check remaining controller instance connectivity
       command: ping -c 5 {{ fip_controllers.results[1].public_ip }}
       changed_when: false
+      register: pings
+      until: pings|success
+      delay: 1
+      retries: 5
       delegate_to: localhost
       when: master is defined
 
@@ -232,11 +252,11 @@
       command: ping -c 5 {{ item.public_ip }}
       with_items: fip_controllers.results + fip_compute.results
       changed_when: false
-      delegate_to: localhost
-      register: last_ping
-      until: comp_ping|success
+      register: pings
+      until: pings|success
+      delay: 1
       retries: 5
-      delay: 10
+      delegate_to: localhost
 
 ### Tear down
 
