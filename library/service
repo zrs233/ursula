@@ -108,6 +108,7 @@ import shlex
 import select
 import time
 import string
+import glob
 
 class Service(object):
     """
@@ -662,44 +663,27 @@ class LinuxService(Service):
             else:
                 action = 'disable'
 
-            (rc, out, err) = self.execute_command("%s -n %s %s" \
-                                                  % (self.enable_cmd, self.name, action))
-            self.changed = False
-            for line in out.splitlines():
-                if line.startswith('rename'):
-                    self.changed = True
-                    break
-                elif self.enable and 'do not exist' in line:
-                    self.changed = True
-                    break
-                elif not self.enable and 'already exist' in line:
-                    self.changed = True
-                    break
+            enabled = False
+            links = glob.glob('/etc/rc?.d/S??' + self.name)
+            if links:
+                enabled = True
 
-            # Debian compatibility
-            for line in err.splitlines():
-                if self.enable and 'no runlevel symlinks to modify' in line:
-                    self.changed = True
-                    break
+            if self.enable != enabled:
+                self.changed = True
 
-            if self.module.check_mode:
-                self.module.exit_json(changed=self.changed)
+                if self.enable:
+                    action = 'enable'
+                else:
+                    action = 'disable'
 
-            if not self.changed:
-                return
-
-            if self.enable:
-                # make sure the init.d symlinks are created
-                # otherwise enable might not work
-                (rc, out, err) = self.execute_command("%s %s defaults" \
-                                                      % (self.enable_cmd, self.name))
+                (rc, out, err) = self.execute_command("%s %s %s"  % (self.enable_cmd, self.name, action))
                 if rc != 0:
-                    return (rc, out, err)
+                    if err:
+                        self.module.fail_json(msg=err)
+                    else:
+                        self.module.fail_json(msg=out) % (self.enable_cmd, self.name, action)
+            return
 
-                return self.execute_command("%s %s enable" % (self.enable_cmd, self.name))
-            else:
-                return self.execute_command("%s %s disable" % (self.enable_cmd,
-                                                               self.name))
 
         # we change argument depending on real binary used:
         # - update-rc.d and systemctl wants enable/disable
