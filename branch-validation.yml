@@ -185,12 +185,12 @@
 
     # initiate hard reboot on the current master controller
     - name: initiate a failover on controller 0
-      command: /usr/bin/ipmitool chassis power reset
+      shell: echo 'b' | tee /proc/sysrq-trigger
       when: master is defined
 
     - name: initiate a failover on controller 1
       delegate_to: "{{ groups['controller'][1] }}"
-      command: /usr/bin/ipmitool chassis power reset
+      shell: echo 'b' | tee /proc/sysrq-trigger
       when: master is not defined
 
     - name: wait for the panic
