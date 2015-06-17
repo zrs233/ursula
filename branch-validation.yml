@@ -205,6 +205,9 @@
       delegate_to: localhost
       when: master is not defined
 
+    - name: wait for the node to boot
+      pause: minutes=3
+
     - name: check non-controller instance connectivity by way of floating IPs
       command: ping -c 5 {{ fip_compute.results[0].public_ip }}
       changed_when: false
@@ -247,7 +250,7 @@
       when: master is not defined
 
     - name: floating ips are reachable
-      command: ping -c 60 {{ item.public_ip }}
+      command: ping -c 5 {{ item.public_ip }}
       with_items: fip_controllers.results + fip_compute.results
       changed_when: false
       register: pings
