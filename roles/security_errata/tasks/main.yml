@@ -9,5 +9,12 @@
   - openssl
   notify: reload haproxy
 
+- name: update python modules for true ssl context
+  pip: name={{ item }} state=latest
+  with_items:
+    - pyopenssl 
+    - pyasn1 
+    - ndg-httpsclient
+
 - include: CVE-2015-0235.yml
   tags: CVE-2015-0235
