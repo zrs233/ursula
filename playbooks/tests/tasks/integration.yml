@@ -48,6 +48,7 @@
                          login_password={{ secrets.provider_admin_password }}
                          network_name=external
                          instance_name=turtle-stack
+                         fixed_ip={{ turtle_stack.private_ips|ipv4|first }}
     register: floating_ip
 
   - name: nova can create a volume via cinder
