@@ -196,14 +196,14 @@
     - name: wait for the panic
       wait_for: host={{ inventory_hostname }} port=22 state=stopped delay=10
                 timeout=30
-      delegate_to: localhost
       when: master is defined
+      delegate_to: localhost
 
     - name: wait for the panic
       wait_for: host={{ groups['controller'][1] }} port=22 state=stopped
                 delay=10 timeout=30
-      delegate_to: localhost
       when: master is not defined
+      delegate_to: localhost
 
     - name: wait for the node to boot
       pause: minutes=3
@@ -224,8 +224,8 @@
       until: pings|success
       delay: 1
       retries: 5
-      delegate_to: localhost
       when: master is not defined
+      delegate_to: localhost
 
     - name: check remaining controller instance connectivity
       command: ping -c 5 {{ fip_controllers.results[1].public_ip }}
