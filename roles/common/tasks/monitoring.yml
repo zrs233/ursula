@@ -3,7 +3,10 @@
   group: name=monitor state=present
 
 - name: install sensu
-  apt: pkg=sensu
+  apt: pkg={{ item }}
+  with_items:
+  - sensu
+  - libfile-which-perl
 
 - name: sensu sudoers
   template: src=monitoring/sensu-sudoers dest=/etc/sudoers.d/sensu owner=root
