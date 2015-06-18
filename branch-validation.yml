@@ -206,7 +206,7 @@
       delegate_to: localhost
 
     - name: wait for the node to boot
-      pause: minutes=3
+      pause: seconds=30
 
     - name: check non-controller instance connectivity by way of floating IPs
       command: ping -c 5 {{ fip_compute.results[0].public_ip }}
