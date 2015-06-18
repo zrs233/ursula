@@ -183,26 +183,30 @@
       set_fact: master=true
       when: floating_ip in ansible_all_ipv4_addresses
 
-    # This is manual for now, not keen on automated kernel panic
+    # initiate hard reboot on the current master controller
     - name: initiate a failover on controller 0
-      pause: prompt="On ucarp {{ inventory_hostname }} $ echo c > /proc/sysrq-trigger (press enter when done)"
+      shell: echo 'b' | tee /proc/sysrq-trigger
       when: master is defined
 
     - name: initiate a failover on controller 1
-      pause: prompt="On ucarp {{ groups['controller'][1] }} $ echo c > /proc/sysrq-trigger (press enter when done)"
+      delegate_to: "{{ groups['controller'][1] }}"
+      shell: echo 'b' | tee /proc/sysrq-trigger
       when: master is not defined
 
     - name: wait for the panic
       wait_for: host={{ inventory_hostname }} port=22 state=stopped delay=10
                 timeout=30
-      delegate_to: localhost
       when: master is defined
+      delegate_to: localhost
 
     - name: wait for the panic
       wait_for: host={{ groups['controller'][1] }} port=22 state=stopped
                 delay=10 timeout=30
-      delegate_to: localhost
       when: master is not defined
+      delegate_to: localhost
+
+    - name: wait for the node to boot
+      pause: seconds=30
 
     - name: check non-controller instance connectivity by way of floating IPs
       command: ping -c 5 {{ fip_compute.results[0].public_ip }}
@@ -220,8 +224,8 @@
       until: pings|success
       delay: 1
       retries: 5
-      delegate_to: localhost
       when: master is not defined
+      delegate_to: localhost
 
     - name: check remaining controller instance connectivity
       command: ping -c 5 {{ fip_controllers.results[1].public_ip }}
@@ -232,9 +236,6 @@
       retries: 5
       delegate_to: localhost
       when: master is defined
-
-    - name: reboot downed controller
-      pause: prompt="Reboot downed controller, press enter when done"
 
     - name: wait for the reboot
       wait_for: host={{ inventory_hostname }} port=22 delay=10
