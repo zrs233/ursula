@@ -3,10 +3,8 @@ common:
   bbg_openstack_repo: 'deb http://apt.openstack.blueboxgrid.com/ubuntu/ precise main'
   hwraid:
     enabled: True
-    add_clients:
+    clients:
       - tw-cli
-      - storcli
-    remove_clients:
       - megacli
   ipmi:
     enabled: True

@@ -1,8 +1,4 @@
 ---
 - name: install raid utilities
   apt: pkg={{ item }}
-  with_items: common.hwraid.add_clients
-
-- name: install raid utilities
-  apt: pkg={{ item }} state=absent
-  with_items: common.hwraid.remove_clients
+  with_items: common.hwraid.clients
