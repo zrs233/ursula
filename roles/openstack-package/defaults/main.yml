@@ -1,4 +1,4 @@
-openstack_package_version: 10.0-bbc66
+openstack_package_version: 10.0-bbc68
 openstack_package:
   package_name: 'openstack-{{ project_name }}-{{ openstack_package_version }}'
   repo: 'deb http://repo.openstack.blueboxgrid.com/bbc precise main'
