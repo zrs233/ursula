@@ -1,0 +1,4 @@
+PATH=/usr/local/bin/
+
+# Drop the tokens every 5 minutes
+*/5 * * * * root keystone-manage token_flush
