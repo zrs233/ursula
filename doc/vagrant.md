@@ -46,11 +46,14 @@ Vagrant can be used to stand up three types of environments:  allinone, standard
 
 Do not use `vagrant up` directly we have wrapped a tool around it called `./bin/run_vagrant`.
 
-The `run_vagrant` tool will bootstrap and provision your nodes in three steps.
+The `run_vagrant` tool will bootstrap and provision your nodes.
 
 1. It runs vagrant up on the required machines described in the Vagrantfile.
-2. It runs `ursula` against the nodes to provision openstack.
-3. It does any final post-provisioning steps required.
+2. Vagrant reads `envs/vagrant/TYPE/vagrant.yml` for VM configuration for that stack.
+3. It runs `ursula` against the nodes to provision openstack.
+4. It does any final post-provisioning steps required.
+
+
 
 allinone
 --------
@@ -58,7 +61,9 @@ allinone
 This will stand up a single monolithic Openstack VM.  It's much quicker than standard, but sacrifices HA and multi-node:
 
 ```
-$ ./bin/run_vagrant allinone
+$ ./bin/run_vagrant up allinone
+$ ./bin/run_vagrant ssh allinone allinone
+$ ./bin/run_vagrant destroy allinone
 ```
 
 standard
@@ -67,7 +72,7 @@ standard
 This will stand up two controllers and a compute node.  It includes all the appropriate HA pieces and is a fairly good facsimile of a production install:
 
 ```
-$ ./bin/run_vagrant standard
+$ ./bin/run_vagrant up standard
 ```
 
 swift
@@ -76,5 +81,5 @@ swift
 This will stand up a multi-node swift cluster:
 
 ```
-$ ./bin/run_vagrant swift
+$ ./bin/run_vagrant up swift
 ```

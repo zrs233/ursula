@@ -8,8 +8,24 @@ NUM_CONTROLLERS = ENV['URSULA_NUM_CONTROLLERS'] || 2
 NUM_COMPUTES = ENV['URSULA_NUM_COMPUTES'] || 1
 NUM_SWIFT_NODES = ENV['URSULA_NUM_SWIFT_NODES'] || 3
 BOX_URL = ENV['URSULA_BOX_URL'] || 'http://apt.openstack.blueboxgrid.com/vagrant/ursula-precise.box'
+BOX_NAME = ENV['URSULA_BOX_NAME'] || 'ursula-precise'
+
+if File.file?('.vagrant/vagrant.yml')
+  SETTINGS_FILE = ENV['SETTINGS_FILE'] || '.vagrant/vagrant.yml'
+else
+  SETTINGS_FILE = ENV['SETTINGS_FILE'] || 'vagrant.yml'
+end
+
+SETTINGS = YAML.load_file SETTINGS_FILE
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  config.vm.box = BOX_NAME
+  config.vm.box_url = BOX_URL
+  config.vm.provider "virtualbox" do |v|
+    v.memory = SETTINGS['default']['memory']
+    v.cpus = SETTINGS['default']['cpus']
+  end
 
   if Vagrant.has_plugin?('vagrant-openstack-provider')
     require 'vagrant-openstack-provider'
@@ -31,11 +47,57 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.ssh.forward_agent = true
 
+  SETTINGS['vms'].each do |name, vm|
+    config.vm.define name do |c|
+      c.vm.hostname = "#{name}.ursula"
+      if vm.has_key?('ip_address')
+        if vm['ip_address'].kind_of?(Array)
+          vm['ip_address'].each do |ip|
+            c.vm.network :private_network, ip: ip
+          end
+        else
+          c.vm.network :private_network, ip: vm['ip_address']
+        end
+      end
+      if vm.has_key?('memory') || vm.has_key?('cpus')
+        c.vm.provider "virtualbox" do |v|
+          v.memory = vm['memory'] if vm.has_key?('memory')
+          v.cpus = vm['cpus'] if vm.has_key?('cpus')
+          if vm.has_key?('custom')
+            if vm['custom'].kind_of?(Array)
+              vm['custom'].each do |custom|
+                v.customize eval(custom)
+              end
+            else
+              v.customize eval(vm['custom'])
+            end
+          end
+        end
+        c.vm.provider "libvirt" do |v|
+          v.memory = vm['memory'] if vm.has_key?('memory')
+          v.cpus = vm['cpus'] if vm.has_key?('cpus')
+          if vm.has_key?('custom')
+            if vm['custom'].kind_of?(Array)
+              vm['custom'].each do |custom|
+                v.customize eval(custom)
+              end
+            else
+              v.customize eval(vm['custom'])
+            end
+          end
+          v.nested = true
+        end
+
+      end
+    end
+  end
+
   config.vm.define "workstation" do |workstation_config|
-    workstation_config.vm.box = "ursula-precise"
-    workstation_config.vm.box_url = BOX_URL
     workstation_config.vm.hostname = "workstation.ursula"
     workstation_config.vm.provider "virtualbox" do |v|
+      v.memory = 1024
+    end
+    workstation_config.vm.provider "libvirt" do |v|
       v.memory = 1024
     end
     if File.exist?("#{ENV['HOME']}/.stackrc")
@@ -45,101 +107,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       ansible.playbook = "playbooks/vagrant/predeploy.yml"
       ansible.sudo = true
       ansible.groups = { "workstation" => ["workstation"] }
-    end
-  end
-
-  config.vm.define "allinone" do |allinone_config|
-    allinone_config.vm.box = "ursula-precise"
-    allinone_config.vm.box_url = BOX_URL
-    allinone_config.vm.hostname = "allinone.ursula"
-    allinone_config.vm.network :private_network, ip: "172.16.0.100", :netmask => "255.255.255.0"
-    allinone_config.vm.network :private_network, ip: "172.16.255.100", :netmask => "255.255.255.0"
-    allinone_config.vm.network :private_network, ip: "192.168.255.100", :netmask => "255.255.255.0"
-    allinone_config.vm.provider "virtualbox" do |v|
-      v.memory = 6144
-      v.cpus = 2
-      v.customize ["modifyvm", :id, "--nicpromisc3", "allow-all"]
-      v.customize ["modifyvm", :id, "--nicpromisc4", "allow-all"]
-    end
-    allinone_config.vm.provider "libvirt" do |v|
-      v.memory = 6144
-      v.cpus = 2
-      v.nested = true
-    end
-  end
-
-  (1..NUM_CONTROLLERS).each do |i|
-    config.vm.define "controller#{i}" do |controller_config|
-      controller_config.vm.box = "ursula-precise"
-      controller_config.vm.box_url = BOX_URL
-      controller_config.vm.hostname = "controller#{i}.ursula"
-      controller_config.vm.network :private_network, ip: "172.16.0.10#{i}", :netmask => "255.255.255.0"
-      controller_config.vm.network :private_network, ip: "192.168.254.10#{i}", :netmask => "255.255.255.0"
-      controller_config.vm.provider "virtualbox" do |v|
-        v.memory = 3072
-        v.customize ["modifyvm", :id, "--nicpromisc3", "allow-all"]
-      end
-      controller_config.vm.provider "libvirt" do |v|
-        v.memory = 3072
-        v.nested = true
-      end
-    end
-  end
-
-  (1..NUM_COMPUTES).each do |i|
-    config.vm.define "compute#{i}" do |compute_config|
-      compute_config.vm.box = "ursula-precise"
-      compute_config.vm.box_url = BOX_URL
-      compute_config.vm.hostname = "compute#{i}.ursula"
-      compute_config.vm.network :private_network, ip: "172.16.0.11#{i}", :netmask => "255.255.255.0"
-      compute_config.vm.network :private_network, ip: "192.168.254.11#{i}", :netmask => "255.255.255.0"
-      compute_config.vm.provider "virtualbox" do |v|
-        v.memory = 1536
-        v.customize ["modifyvm", :id, "--nicpromisc3", "allow-all"]
-      end
-      compute_config.vm.provider "libvirt" do |v|
-        v.memory = 1536
-        v.nested = true
-      end
-    end
-  end
-
-  (1..NUM_SWIFT_NODES).each do |i|
-    file_to_disk = "proxy#{i}.1.vdi"
-    config.vm.define "swiftnode#{i}" do |swiftnode_config|
-      swiftnode_config.vm.provider "virtualbox" do |v|
-        v.customize ['createhd', '--filename', file_to_disk, '--size', 1024]
-        v.customize ['storagectl', :id, '--name', 'SATA Controller', '--add', 'sata']
-        v.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', file_to_disk]
-      end
-      swiftnode_config.vm.box = "ursula-precise"
-      swiftnode_config.vm.box_url = BOX_URL
-      swiftnode_config.vm.hostname = "swift#{i}"
-      swiftnode_config.vm.network :private_network, ip: "10.1.1.13#{i}", :netmask => "255.255.255.0"
-      swiftnode_config.vm.provider "virtualbox" do |v|
-        v.memory = 768
-      end
-      swiftnode_config.vm.provider "libvirt" do |v|
-        v.memory = 768
-        v.nested = true
-      end
-    end
-  end
-
-  config.vm.define "cinder" do |cinder_config|
-    cinder_config.vm.box = "ursula-precise"
-    cinder_config.vm.box_url = BOX_URL
-    cinder_config.vm.hostname = "cinder"
-    cinder_config.vm.network :private_network, ip: "172.16.0.155", :netmask => "255.255.255.0"
-    cinder_config.vm.provider "virtualbox" do |v|
-      v.memory = 512
-      v.customize ['createhd', '--filename', 'cinder.1.vdi', '--size', 5120]
-      v.customize ['storagectl', :id, '--name', 'SATA Controller', '--add', 'sata']
-      v.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', 'cinder.1.vdi']
-    end
-    cinder_config.vm.provider "libvirt" do |v|
-      v.memory = 512
-      v.nested = true
     end
   end
 

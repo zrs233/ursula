@@ -1,6 +1,6 @@
 ---
-stack_env: vagrant
-floating_ip: 10.1.1.100
+stack_env: example_mirrors
+floating_ip: 172.16.0.100
 
 xtradb:
   sst_auth_password: asdf
