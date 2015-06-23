@@ -1,6 +1,8 @@
 ---
 - name: add any dependent repository keys from url
-  apt_key: url="{{ item.key_url }}"
+  apt_key:
+    url: "{{ item.key_url }}"
+    validate_certs: "{{ item.validate_certs|default(omit) }}"
   with_items: repos
   when: repos is defined and item.key_url is defined
 
@@ -11,6 +13,9 @@
   when: repos is defined and item.key_package is defined
 
 - name: add any dependent repositories
-  apt_repository: repo="{{ item.repo }}" update_cache=yes
+  apt_repository:
+    repo: "{{ item.repo }}"
+    update_cache: yes
+    validate_certs: "{{ item.validate_certs|default(omit) }}"
   with_items: repos
   when: repos is defined
