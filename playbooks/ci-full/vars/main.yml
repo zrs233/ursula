@@ -1,5 +1,4 @@
 ---
-testenv_instance_prefix: test
 testenv_instance_names:
   - "{{ testenv_instance_prefix }}-controller-0"
   - "{{ testenv_instance_prefix }}-controller-1"
