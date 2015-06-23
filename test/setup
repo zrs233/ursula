@@ -27,9 +27,6 @@ echo "testenv_instance_prefix: ${testenv_instance_prefix}" >> ${ROOT}/envs/test/
 echo "destroying: ${VMS}"
 ${ROOT}/test/cleanup
 
-echo "booting ${VMS}"
-ursula "envs/test" ${ROOT}/playbooks/testenv/tasks/create.yml
-
 echo "building config"
 CONTROLLER_IP=$(private_ip ${testenv_instance_prefix}-controller-0)
 rm -rf ${ROOT}/envs/test/group_vars/
@@ -69,28 +66,31 @@ rm -rf ${CERT_DIR}
 echo "writing inventory file"
 cat > ${ROOT}/envs/test/hosts <<eof
 [db]
-$(public_ip "${testenv_instance_prefix}-controller-0")
-$(public_ip "${testenv_instance_prefix}-controller-1")
+${testenv_instance_prefix}-controller-0
+${testenv_instance_prefix}-controller-1
 
 [db_arbiter]
-$(public_ip "${testenv_instance_prefix}-compute-0")
+${testenv_instance_prefix}-compute-0
 
 [controller]
-$(public_ip "${testenv_instance_prefix}-controller-0")
-$(public_ip "${testenv_instance_prefix}-controller-1")
+${testenv_instance_prefix}-controller-0
+${testenv_instance_prefix}-controller-1
 
 [compute]
-$(public_ip "${testenv_instance_prefix}-compute-0")
-$(public_ip "${testenv_instance_prefix}-controller-0")
-$(public_ip "${testenv_instance_prefix}-controller-1")
+${testenv_instance_prefix}-compute-0
+${testenv_instance_prefix}-controller-0
+${testenv_instance_prefix}-controller-1
 
 [network]
-$(public_ip "${testenv_instance_prefix}-controller-0")
-$(public_ip "${testenv_instance_prefix}-controller-1")
+${testenv_instance_prefix}-controller-0
+${testenv_instance_prefix}-controller-1
 
 [cinder_volume]
-$(public_ip "${testenv_instance_prefix}-compute-0")
+${testenv_instance_prefix}-compute-0
 eof
+
+echo "booting ${VMS}"
+ursula "envs/test" ${ROOT}/playbooks/testenv/tasks/create.yml
 
 echo "copying files"
 ursula "envs/test" ${ROOT}/playbooks/testenv/tasks/pre-deploy.yml -u ${LOGIN_USER} --sudo

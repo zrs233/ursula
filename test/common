@@ -32,10 +32,6 @@ die() {
   echo "[ERROR] $*"; exit 1
 }
 
-# Given a vm name, return its public ip
-public_ip() {
-  nova list | grep "$1" | awk '{print $13}'
-}
 
 private_ip() {
   nova list | grep "$1" | awk '{print $12}' | awk -F= '{print $2}' | awk -F, '{print $1}'

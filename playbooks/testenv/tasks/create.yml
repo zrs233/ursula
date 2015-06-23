@@ -1,54 +1,80 @@
 ---
-- name: provision test instances
-  hosts: local
-  connection: local
-  vars_files:
-  - ../vars/main.yml
+- name: Provision test environment
+  hosts: all
+  gather_facts: no
   tasks:
-    - include: keypair.yml
+  - name: Gather local facts
+    local_action: setup
+    run_once: true
 
-    - name: create the security group and rules
-      nova_group:
-        name: "{{ testenv_security_groups }}"
-        description: "{{ testenv_instance_prefix }} {{ testenv_security_groups_description }}"
-        rules:
-          - ip_protocol: "{{ item.proto }}"
-            from_port: "{{ item.port }}"
-            to_port: "{{ item.port }}"
-            cidr: 0.0.0.0/0
-            state: "{{ item.state }}"
-      with_items: testenv_security_group_rules
-      register: testenv_security_group
+  - name: Generate nova key-pair
+    local_action: nova_keypair name={{ ansible_user_id }}-key
+                               auth_url={{ lookup('env', 'OS_AUTH_URL') }}
+                               login_tenant_name={{ lookup('env', 'OS_TENANT_NAME') }}
+                               login_username={{ lookup('env', 'OS_USERNAME') }}
+                               login_password={{ lookup('env', 'OS_PASSWORD') }}
+                               public_key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+    run_once: true
 
-    - name: create security group rules
-      command: neutron security-group-rule-create --ethertype={{ item }}
-               --remote-group-id={{ testenv_security_group.results[0].group_id }}
-               {{ testenv_security_group.results[0].group_id }}
-      register: security_group_rule_create_result
-      failed_when: "security_group_rule_create_result.rc != 0 and '409' not in security_group_rule_create_result.stderr"
-      changed_when: security_group_rule_create_result.rc == 0
-      with_items:
-      - IPv4
-      - IPv6
-      when: testenv_security_group.results[0].group_id
+  - name: generate test security group
+    local_action:
+      module: nova_group
+      name: "ursula-sec"
+      description: "ursula-ci-secgroup"
+      rules:
+      - ip_protocol: "tcp"
+        cidr: 0.0.0.0/0
+        from_port: 1
+        to_port: 65535
+        state: "present"
+      - ip_protocol: "udp"
+        cidr: 0.0.0.0/0
+        from_port: 1
+        to_port: 65535
+        state: "present"
+    run_once: true
 
-    - name: create instances
-      nova_compute:
-        name: "{{ item }}"
-        image_id: "{{ testenv_image_id }}"
-        key_name: "{{ testenv_keypair_name }}"
-        security_groups: "{{ testenv_security_group.results[0].group_id }}"
-        wait_for: 200
-        flavor_id: 3
-        nics:
-          - net-id: "{{ testenv_net_id }}"
-      with_items: testenv_instance_names
+  - name: Determine Neutron internal interface ID
+    local_action: shell neutron net-show internal | awk '/ id / {print $4}'
+    changed_when: False
+    register: internal_net
+    run_once: true
 
-    - name: associate a floating IP to instances
-      nova_fip: server={{ item }}
-      with_items: testenv_instance_names
-      register: testenv_floating_ips
+  - name: provision test instances
+    local_action:
+      module: nova_compute
+      name: "{{ inventory_hostname }}"
+      auth_url: "{{ lookup('env', 'OS_AUTH_URL') }}"
+      login_tenant_name: "{{ lookup('env', 'OS_TENANT_NAME') }}"
+      login_username: "{{ lookup('env', 'OS_USERNAME') }}"
+      login_password: "{{ lookup('env', 'OS_PASSWORD') }}"
+      flavor_id: 3
+      image_name: ubuntu-14.04
+      security_groups: "ursula-sec"
+      key_name: "{{ ansible_user_id }}-key"
+      nics:
+      - net-id: "{{ internal_net.stdout }}"
+    register: nova_instance
 
-    - name: wait for instances to boot
-      wait_for: port=22 delay=5 timeout=600 host={{ item.floating_ip }}
-      with_items: testenv_floating_ips.results
+  - name: associate a floating IP with first instance
+    local_action: nova_fip server={{ inventory_hostname }}
+                           auth_url={{ lookup('env', 'OS_AUTH_URL') }}
+                           login_tenant_name={{ lookup('env', 'OS_TENANT_NAME') }}
+                           login_username={{ lookup('env', 'OS_USERNAME') }}
+                           login_password={{ lookup('env', 'OS_PASSWORD') }}
+    register: floating_ip
+    run_once: true
+
+  - name: write out ssh_config
+    local_action: template src=../templates/ssh_config
+                           dest="{{ lookup('env', 'ROOT') }}/envs/test/ssh_config"
+    run_once: true
+
+  - name: wait for first instance
+    local_action: wait_for port=22 timeout=300 host={{ floating_ip.floating_ip }}
+    run_once: true
+
+  - name: wait for all instances
+    wait_for: port=22 timeout=300 host={{ nova_instance.private_ip }}
+    delegate_to: "{{ floating_ip.floating_ip }}"
+    remote_user: ubuntu

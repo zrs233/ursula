@@ -1,0 +1,16 @@
+Host {{ floating_ip.floating_ip }}
+  User ubuntu
+  PasswordAuthentication no
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+
+{% for host in groups['all'] %}
+Host {{ host }}
+  Hostname {{ hostvars[host].nova_instance.private_ip }}
+  User ubuntu
+  ProxyCommand ssh -o PasswordAuthentication=no -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ubuntu@{{ hostvars[host].floating_ip.floating_ip }} nc %h %p
+  PasswordAuthentication no
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+
+{% endfor %}
