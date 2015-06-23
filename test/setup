@@ -18,7 +18,7 @@ mkdir -p ${ROOT}/envs/test
 cat > ${ROOT}/envs/test/hosts <<eof
 [local]
 # Tell ansible to use the python in PATH instead of /usr/bin/python
-127.0.0.1 ansible_python_interpreter=python
+localhost ansible_python_interpreter=python ansible_connection=local
 eof
 cp ${ROOT}/envs/example/defaults.yml ${ROOT}/envs/test/defaults.yml
 
