@@ -42,6 +42,16 @@
 
   - include: ../../../roles/common/tasks/proxy.yml
 
+  - name: add pip
+    apt:
+      update_cache: yes
+      cache_valid_time: 3600
+      name: python-pip
+
+  - name: get backports.ssl_match_hostname for apt repo installs
+    pip:
+      name: backports.ssl_match_hostname
+
   - name: Add BlueBox OpenStack PPA
     apt_repository: repo='ppa:blueboxgroup/openstack'
 
