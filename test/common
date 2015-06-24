@@ -26,7 +26,12 @@ else
   export testenv_instance_prefix=$(git rev-parse --abbrev-ref HEAD)
 fi
 
-VMS="${testenv_instance_prefix}-controller-0 ${testenv_instance_prefix}-controller-1 ${testenv_instance_prefix}-compute-0"
+if [[ $TEST_ENV == "ci-allinone" ]]; then
+  VMS="${testenv_instance_prefix}-allinone"
+else
+  TEST_ENV="ci-full"
+  VMS="${testenv_instance_prefix}-controller-0 ${testenv_instance_prefix}-controller-1 ${testenv_instance_prefix}-compute-0"
+fi
 
 die() {
   echo "[ERROR] $*"; exit 1

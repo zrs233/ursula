@@ -1,15 +1,15 @@
 [db]
-db.example.com
-db2.example.com
+PREFIX-db.example.com
+PREFIX-db2.example.com
 
 [db_arbiter]
-bar.example.com
+PREFIX-bar.example.com
 
 [controller]
-foo.example.com
+PREFIX-foo.example.com
 
 [compute]
-bar.example.com
+PREFIX-bar.example.com
 
 [network]
-baz.example.com
+PREFIX-baz.example.com
