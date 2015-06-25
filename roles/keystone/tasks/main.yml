@@ -55,15 +55,18 @@
     - 35358
 
 - name: add cron job to clean up expired tokens
-  template: src=etc/cron.hourly/drop-expired-keystone-tokens
-            dest=/etc/cron.hourly/drop-expired-keystone-tokens
-            owner=root group=root mode=0755
+  template:
+    src: etc/cron.d/drop-expired-keystone-tokens
+    dest: /etc/cron.d/drop-expired-keystone-tokens
+    owner: root
+    group: root
+    mode: 0640
   run_once: true
 
-- name: ensure only one token flush cron job
-  file: path=/etc/cron.hourly/drop-expired-keystone-tokens
-        state=absent
-  when: inventory_hostname != play_hosts[0]
+- name: delete old token flush job
+  file:
+    path: /etc/cron.hourly/drop-expired-keystone-tokens
+    state: absent
 
 - include: monitoring.yml tags=monitoring,common
 

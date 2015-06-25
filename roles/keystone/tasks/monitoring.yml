@@ -8,6 +8,14 @@
                args="--service keystone"
   notify: restart sensu-client
 
+- name: keystone token buildup check
+  sensu_check:
+    name: check-keystone-expired-tokens
+    plugin: check-keystone-expired-tokens.py
+    interval: 10
+    use_sudo: true
+  notify: restart sensu-client
+
 - name: keystone metrics
   template: src=etc/collectd/plugins/keystone.conf dest=/etc/collectd/plugins/keystone.conf
   notify: restart collectd
