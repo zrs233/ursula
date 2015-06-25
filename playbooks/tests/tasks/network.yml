@@ -24,27 +24,27 @@
     shell: . /root/stackrc; neutron net-show internal | grep
            router:external | grep False
 
-  - name: neutron has a network with internal_subnet
-    shell: . /root/stackrc; neutron net-list | grep internal | grep
-           172.16.255.0/24
-
   - name: neutron has the internal subnet
-    shell: . /root/stackrc; neutron subnet-list | grep internal
+    shell: . /root/stackrc; neutron subnet-list | grep internal_v4
 
   - name: neutron has the internal subnet with cidr
-    shell: . /root/stackrc; neutron subnet-show internal | grep cidr | grep
+    shell: . /root/stackrc; neutron subnet-show internal_v4 | grep cidr | grep
            172.16.255.0/24
 
+  - name: neutron has the internal subnet with cidr
+    shell: . /root/stackrc; neutron subnet-show internal_v6 | grep cidr | grep
+           2db8:1::/64
+
   - name: neutron has the internal_subnet with cidr start/end addresses
-    shell: . /root/stackrc; neutron subnet-show internal | grep
+    shell: . /root/stackrc; neutron subnet-show internal_v4 | grep
            allocation_pools | egrep '172.16.255.2.*172.16.255.254'
 
   - name: neutron has the internal_subnet with enable_dhcp True
-    shell: . /root/stackrc; neutron subnet-show internal | grep
+    shell: . /root/stackrc; neutron subnet-show internal_v4 | grep
            enable_dhcp | grep True
 
   - name: neutron has the internal_subnet with gateway_ip
-    shell: . /root/stackrc; neutron subnet-show internal | grep
+    shell: . /root/stackrc; neutron subnet-show internal_v4 | grep
            gateway | grep gateway_ip
 
   - name: neutron has the default router
