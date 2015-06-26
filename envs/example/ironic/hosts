@@ -1,14 +1,14 @@
 [controller]
-allinone
+PREFIX-allinone
 
 [network]
-allinone
+PREFIX-allinone
 
 [db]
-allinone
+PREFIX-allinone
 
 [compute]
-allinone
+PREFIX-allinone
 
 [cinder_volume]
-allinone
+PREFIX-allinone

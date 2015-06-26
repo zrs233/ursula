@@ -28,17 +28,16 @@ echo "destroying: ${VMS}"
 ${ROOT}/test/cleanup
 
 echo "booting ${VMS}"
-ursula "envs/test" ${ROOT}/playbooks/testenv/tasks/create.yml
+ursula "envs/test" ${ROOT}/playbooks/${TEST_ENV}/tasks/create.yml
 
 echo "building config"
 CONTROLLER_IP=$(private_ip ${testenv_instance_prefix}-controller-0)
 rm -rf ${ROOT}/envs/test/group_vars/
 rm -f ${ROOT}/envs/test/hosts
-mkdir -p ${ROOT}/envs/test/
+mkdir -p ${ROOT}/envs/test/group_vars
 cp ${ROOT}/envs/example/defaults.yml ${ROOT}/envs/test/defaults.yml
 cp -r ${ROOT}/envs/example/ci/* ${ROOT}/envs/test
 echo "---" > ${ROOT}/envs/test/group_vars/all.yml
-echo "controller_primary: ${CONTROLLER_IP}" >> ${ROOT}/envs/test/group_vars/all.yml
 echo "testenv_instance_prefix: ${testenv_instance_prefix}" >> ${ROOT}/envs/test/group_vars/all.yml
 
 echo "generating ssl cert for openstack.example.com"
@@ -67,7 +66,9 @@ popd
 rm -rf ${CERT_DIR}
 
 echo "writing inventory file"
-cat > ${ROOT}/envs/test/hosts <<eof
+if [[ ${TEST_ENV} == "ci-full" ]]; then
+  CONTROLLER_IP=$(private_ip ${testenv_instance_prefix}-controller-0)
+  cat > ${ROOT}/envs/test/hosts <<eof
 [db]
 $(public_ip "${testenv_instance_prefix}-controller-0")
 $(public_ip "${testenv_instance_prefix}-controller-1")
@@ -91,9 +92,33 @@ $(public_ip "${testenv_instance_prefix}-controller-1")
 [cinder_volume]
 $(public_ip "${testenv_instance_prefix}-compute-0")
 eof
+else
+  CONTROLLER_IP=$(private_ip ${testenv_instance_prefix}-allinone)
+  cat > ${ROOT}/envs/test/hosts <<eof
+[db]
+$(public_ip "${testenv_instance_prefix}-allinone")
+
+[db_arbiter]
+$(public_ip "${testenv_instance_prefix}-allinone")
+
+[controller]
+$(public_ip "${testenv_instance_prefix}-allinone")
+
+[compute]
+$(public_ip "${testenv_instance_prefix}-allinone")
+
+[network]
+$(public_ip "${testenv_instance_prefix}-allinone")
+
+[cinder_volume]
+$(public_ip "${testenv_instance_prefix}-allinone")
+eof
+fi
+
+echo "controller_primary: ${CONTROLLER_IP}" >> ${ROOT}/envs/test/group_vars/all.yml
 
 echo "copying files"
-ursula "envs/test" ${ROOT}/playbooks/testenv/tasks/pre-deploy.yml -u ${LOGIN_USER} --sudo
+ursula "envs/test" ${ROOT}/playbooks/${TEST_ENV}/tasks/pre-deploy.yml -u ${LOGIN_USER} --sudo
 
 ring_bell
 echo "vms are up: ${VMS} !!"
