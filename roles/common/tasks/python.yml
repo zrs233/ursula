@@ -10,3 +10,6 @@
 - name: install drivers
   command: python setup.py install chdir=/opt/stack/{{ item.name }}
   with_items: common.python_extra_packages
+
+- name: install shade for ansible modules
+  pip: name=shade
