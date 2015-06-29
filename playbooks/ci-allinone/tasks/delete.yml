@@ -9,7 +9,9 @@
 
   tasks:
     - name: delete test instances
-      local_action: nova_compute name={{ item }} state=absent
+      os_server:
+        name: "{{ item }}"
+        state: absent
       with_items: testenv_instance_names
 
     - name: remove security group

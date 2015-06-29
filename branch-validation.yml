@@ -58,26 +58,22 @@
             cidr: 0.0.0.0/0
             state: present
 
-    - name: discover internal network id
-      shell: . /root/stackrc; nova net-list | awk '/ internal / {print $2}'
-      changed_when: false
-      register: internal_net
-
     - name: launch instances in each host az
-      nova_compute:
-        login_username: provider_admin
-        login_tenant_name: admin
-        login_password: "{{ secrets.provider_admin_password }}"
-        auth_url: "http://127.0.0.1:35357/v2.0"
-        flavor_id: 1
-        image_name: cirros
+      os_server:
+        auth:
+          username: provider_admin
+          project_name: admin
+          password: "{{ secrets.provider_admin_password }}"
+          auth_url: "http://127.0.0.1:35357/v2.0"
+        flavor: 1
+        image: cirros
         key_name: validate
-        #auto_floating_ip: yes
+        auto_floating_ip: no
         security_groups: default,validate_ssh
         #floating_ip_pools:
         #  - external
         nics:
-          - net-id: "{{ internal_net.stdout }}"
+          - net-name: internal
         availability_zone: "nova:{{ item }}"
         name: validate-{{ item }}
         wait: "yes"
@@ -262,21 +258,12 @@
 ### Tear down
 
     - name: delete instances
-      nova_compute:
-        login_username: provider_admin
-        login_tenant_name: admin
-        login_password: "{{ secrets.provider_admin_password }}"
-        auth_url: "http://127.0.0.1:35357/v2.0"
-        flavor_id: 1
-        image_name: cirros
-        key_name: validate
-        #auto_floating_ip: yes
-        security_groups: default,validate_ssh
-        #floating_ip_pools:
-        #  - external
-        nics:
-          - net-id: "{{ internal_net.stdout }}"
-        availability_zone: "nova:{{ item }}"
+      os_server:
+        auth:
+          username: provider_admin
+          project_name: admin
+          password: "{{ secrets.provider_admin_password }}"
+          auth_url: "http://127.0.0.1:35357/v2.0"
         name: validate-{{ item }}
         state: absent
         wait: "yes"
