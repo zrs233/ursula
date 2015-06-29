@@ -70,6 +70,7 @@
             from_port: -1
             to_port: -1
             cidr: 0.0.0.0/0
+            state: present
 
     - name: launch instances in each host az
       os_server:
