@@ -33,15 +33,17 @@
       when: testenv_security_group.results[0].group_id
 
     - name: create instances
-      nova_compute:
+      os_server:
         name: "{{ item }}"
-        image_id: "{{ testenv_image_id }}"
+        image: "{{ testenv_image_id }}"
         key_name: "{{ testenv_keypair_name }}"
         security_groups: "{{ testenv_security_group.results[0].group_id }}"
-        wait_for: 200
-        flavor_id: 3
+        wait: yes
+        timeout: 200
+        flavor: 3
         nics:
-          - net-id: "{{ testenv_net_id }}"
+          - net-name: internal
+        auto_floating_ip: false
       with_items: testenv_instance_names
 
     - name: associate a floating IP to instances

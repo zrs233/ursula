@@ -6,7 +6,6 @@ testenv_instance_names:
 testenv_keypair_name: int-test
 testenv_keypair_path: "{{ ansible_env.ROOT }}/envs/test/{{ testenv_keypair_name }}.pem"
 testenv_image_id: "{{ ansible_env.IMAGE_ID }}"
-testenv_net_id: "{{ ansible_env.NET_ID }}"
 testenv_security_groups_description: Rules for testing
 testenv_security_groups: "{{ testenv_instance_prefix }}_ursula"
 testenv_security_group_rules:

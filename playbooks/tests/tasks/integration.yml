@@ -19,26 +19,21 @@
            neutron security-group-rule-create turtle-sec --remote-ip-prefix
            0.0.0.0/0
 
-  - name: determine Neutron internal interface ID
-    neutron_network: name=internal
-                     auth_url={{ endpoints.auth_uri }}
-                     login_tenant_name=admin
-                     login_username=provider_admin
-                     login_password={{ secrets.provider_admin_password }}
-    register: internal_net
-
   - name: nova can boot an instance
-    nova_compute:
+    os_server:
         name: turtle-stack
-        auth_url: "{{ endpoints.auth_uri }}"
-        login_tenant_name: admin
-        login_username: provider_admin
-        login_password: "{{ secrets.provider_admin_password }}"
-        image_name: cirros
+        auth:
+          auth_url: "{{ endpoints.auth_uri }}"
+          project_name: admin
+          username: provider_admin
+          password: "{{ secrets.provider_admin_password }}"
+        image: cirros
         security_groups: turtle-sec
         key_name: turtle-key
+        flavor: 1
+        auto_floating_ip: no
         nics:
-        - net-id: "{{ internal_net.id }}"
+          - net-name: internal
     register: turtle_stack
 
   - name: nova can associate floating IP with test instance
