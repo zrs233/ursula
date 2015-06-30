@@ -17,9 +17,23 @@
       public_key: "{{ rootuser.ssh_public_key }}"
 
   - name: generate test security group
-    shell: . /root/stackrc; neutron security-group-create turtle-sec &&
-           neutron security-group-rule-create turtle-sec --remote-ip-prefix
-           0.0.0.0/0
+    os_security_group:
+      auth:
+        auth_url: "{{ endpoints.auth_uri }}"
+        project_name: admin
+        username: provider_admin
+        password: "{{ secrets.provider_admin_password }}"
+      name: turtle-sec
+
+  - name: test security group rule
+    os_security_group_rule:
+      auth:
+        auth_url: "{{ endpoints.auth_uri }}"
+        project_name: admin
+        username: provider_admin
+        password: "{{ secrets.provider_admin_password }}"
+      security_group: turtle-sec
+      remote_ip_prefix: 0.0.0.0/0
 
   - name: nova can boot an instance
     os_server:

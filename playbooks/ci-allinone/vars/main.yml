@@ -9,16 +9,18 @@ testenv_net_id: "{{ ansible_env.NET_ID }}"
 testenv_security_groups_description: Rules for testing
 testenv_security_groups: "{{ testenv_instance_prefix }}_ursula"
 testenv_security_group_rules:
-  - { proto: 'tcp', port: 22, state: 'present' }     # SSH (Ansible)
-  - { proto: 'tcp', port: 80, state: 'present' }     # HTTPS redirect
-  - { proto: 'tcp', port: 443, state: 'present' }    # Horizon SSL
-  - { proto: 'tcp', port: 5001, state: 'present' }   # Keystone SSL
-  - { proto: 'tcp', port: 6080, state: 'present' }   # NoVNC proxy
-  - { proto: 'tcp', port: 8777, state: 'present' }   # Nova SSL
-  - { proto: 'tcp', port: 8778, state: 'present' }   # Cinder SSL
-  - { proto: 'tcp', port: 9292, state: 'present' }   # Glance
-  - { proto: 'tcp', port: 9393, state: 'present' }   # Glance SSL
-  - { proto: 'tcp', port: 9797, state: 'present' }   # Neutron SSL
-  - { proto: 'tcp', port: 9798, state: 'present' }   # Cinder SSL
-  - { proto: 'icmp', port: -1, state: 'present' }
+  - { proto: 'tcp', port: 22, cidr: '0.0.0.0/0' }     # SSH (Ansible)
+  - { proto: 'tcp', port: 80, cidr: '0.0.0.0/0' }     # HTTPS redirect
+  - { proto: 'tcp', port: 443, cidr: '0.0.0.0/0' }    # Horizon SSL
+  - { proto: 'tcp', port: 5001, cidr: '0.0.0.0/0' }   # Keystone SSL
+  - { proto: 'tcp', port: 6080, cidr: '0.0.0.0/0' }   # NoVNC proxy
+  - { proto: 'tcp', port: 8777, cidr: '0.0.0.0/0' }   # Nova SSL
+  - { proto: 'tcp', port: 8778, cidr: '0.0.0.0/0' }   # Cinder SSL
+  - { proto: 'tcp', port: 9292, cidr: '0.0.0.0/0' }   # Glance
+  - { proto: 'tcp', port: 9393, cidr: '0.0.0.0/0' }   # Glance SSL
+  - { proto: 'tcp', port: 9797, cidr: '0.0.0.0/0' }   # Neutron SSL
+  - { proto: 'tcp', port: 9798, cidr: '0.0.0.0/0' }   # Cinder SSL
+  - { proto: 'icmp', port: -1, cidr: '0.0.0.0/0' }
+  - { ethertype: 'IPv4', group: "{{ testenv_security_group.id }}" }
+  - { ethertype: 'IPv6', group: "{{ testenv_security_group.id }}" }
 testenv_security_groups_cleanup: True

@@ -17,26 +17,14 @@
     - name: create security group rules
       os_security_group_rule:
         security_group: "{{ testenv_security_groups }}"
-        protocol: "{{ item.proto }}"
-        port_range_min: "{{ item.port }}"
-        port_range_max: "{{ item.port }}"
-        remote_ip_prefix: 0.0.0.0/0
-        state: "{{ item.state }}"
+        protocol: "{{ item.proto | default(omit) }}"
+        port_range_min: "{{ item.port | default(omit) }}"
+        port_range_max: "{{ item.port | default(omit) }}"
+        remote_ip_prefix: "{{ item.cidr | default(omit) }}"
+        remote_group: "{{ item.group | default(omit) }}"
+        ethertype: "{{ item.ethertype | default(omit) }}"
+        state: present
       with_items: testenv_security_group_rules
-
-      # This uses the cli client until the module allows for no protocol
-      # and no port range.
-    - name: create security group rules
-      command: neutron security-group-rule-create --ethertype={{ item }}
-               --remote-group-id={{ testenv_security_group.id }}
-               {{ testenv_security_group.id }}
-      register: security_group_rule_create_result
-      failed_when: "security_group_rule_create_result.rc != 0 and '409' not in security_group_rule_create_result.stderr"
-      changed_when: security_group_rule_create_result.rc == 0
-      with_items:
-      - IPv4
-      - IPv6
-      when: testenv_security_group.id
 
     - name: create instances
       os_server:

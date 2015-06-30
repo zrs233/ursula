@@ -13,8 +13,7 @@
       with_items: testenv_instance_names
 
     - name: remove security group
-      nova_group:
+      os_security_group:
         name: "{{ testenv_security_groups }}"
-        description: "{{ testenv_instance_prefix }} {{ testenv_security_groups_description }}"
         state: absent
       when: testenv_security_groups_cleanup
