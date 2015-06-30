@@ -39,24 +39,38 @@
       when: keypair.changed
 
     - name: create security group
-      nova_group:
-        login_username: provider_admin
-        login_tenant_name: admin
-        login_password: "{{ secrets.provider_admin_password }}"
-        auth_url: "http://127.0.0.1:35357/v2.0"
+      os_security_group:
+        auth:
+          username: provider_admin
+          project_name: admin
+          password: "{{ secrets.provider_admin_password }}"
+          auth_url: "http://127.0.0.1:35357/v2.0"
         name: validate_ssh
         description: "validate group allowing ssh, icmp ipv4 ingress"
-        rules:
+        state: present
+
+    - name: create security group rules
+      os_security_group_rule:
+        auth:
+          username: provider_admin
+          project_name: admin
+          password: "{{ secrets.provider_admin_password }}"
+          auth_url: "http://127.0.0.1:35357/v2.0"
+        security_group: validate_ssh
+        protocol: "{{ item.ip_protocol }}"
+        port_range_min: "{{ item.from_port }}"
+        port_range_max: "{{ item.to_port }}"
+        remote_ip_prefix: "{{ item.cidr }}"
+        state: present
+        with_items:
           - ip_protocol: tcp
             from_port: 22
             to_port: 22
             cidr: 0.0.0.0/0
-            state: present
           - ip_protocol: icmp
             from_port: -1
             to_port: -1
             cidr: 0.0.0.0/0
-            state: present
 
     - name: launch instances in each host az
       os_server:
@@ -271,13 +285,13 @@
       tags: delete
 
     - name: delete security group
-      nova_group:
-        login_username: provider_admin
-        login_tenant_name: admin
-        login_password: "{{ secrets.provider_admin_password }}"
-        auth_url: "http://127.0.0.1:35357/v2.0"
+      os_security_group:
+        auth:
+          username: provider_admin
+          project_name: admin
+          password: "{{ secrets.provider_admin_password }}"
+          auth_url: "http://127.0.0.1:35357/v2.0"
         name: validate_ssh
-        description: "validate group allowing ssh ipv4 ingress"
         state: absent
       tags: delete
 
