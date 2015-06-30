@@ -7,37 +7,43 @@
   tasks:
     - include: keypair.yml
 
-    - name: create the security group and rules
-      nova_group:
+    - name: create the security group
+      os_security_group:
         name: "{{ testenv_security_groups }}"
         description: "{{ testenv_instance_prefix }} {{ testenv_security_groups_description }}"
-        rules:
-          - ip_protocol: "{{ item.proto }}"
-            from_port: "{{ item.port }}"
-            to_port: "{{ item.port }}"
-            cidr: 0.0.0.0/0
-            state: "{{ item.state }}"
-      with_items: testenv_security_group_rules
+        state: present
       register: testenv_security_group
 
     - name: create security group rules
+      os_security_group_rule:
+        security_group: "{{ testenv_security_groups }}"
+        protocol: "{{ item.proto }}"
+        port_range_min: "{{ item.port }}"
+        port_range_max: "{{ item.port }}"
+        remote_ip_prefix: 0.0.0.0/0
+        state: "{{ item.state }}"
+      with_items: testenv_security_group_rules
+
+      # This uses the cli client until the module allows for no protocol
+      # and no port range.
+    - name: create security group rules
       command: neutron security-group-rule-create --ethertype={{ item }}
-               --remote-group-id={{ testenv_security_group.results[0].group_id }}
-               {{ testenv_security_group.results[0].group_id }}
+               --remote-group-id={{ testenv_security_group.id }}
+               {{ testenv_security_group.id }}
       register: security_group_rule_create_result
       failed_when: "security_group_rule_create_result.rc != 0 and '409' not in security_group_rule_create_result.stderr"
       changed_when: security_group_rule_create_result.rc == 0
       with_items:
       - IPv4
       - IPv6
-      when: testenv_security_group.results[0].group_id
+      when: testenv_security_group.id
 
     - name: create instances
       os_server:
         name: "{{ item }}"
         image: "{{ testenv_image_id }}"
         key_name: "{{ testenv_keypair_name }}"
-        security_groups: "{{ testenv_security_group.results[0].group_id }}"
+        security_groups: "{{ testenv_security_groups }}"
         wait: yes
         timeout: 200
         flavor: 3
