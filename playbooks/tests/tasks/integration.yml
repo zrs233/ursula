@@ -7,12 +7,14 @@
     register: rootuser
 
   - name: generate nova key-pair
-    nova_keypair: name=turtle-key
-                  auth_url={{ endpoints.auth_uri }}
-                  login_tenant_name=admin
-                  login_username=provider_admin
-                  login_password={{ secrets.provider_admin_password }}
-                  public_key="{{ rootuser.ssh_public_key }}"
+    os_keypair:
+      name: turtle-key
+      auth:
+        auth_url: "{{ endpoints.auth_uri }}"
+        project_name: admin
+        username: provider_admin
+        password: "{{ secrets.provider_admin_password }}"
+      public_key: "{{ rootuser.ssh_public_key }}"
 
   - name: generate test security group
     shell: . /root/stackrc; neutron security-group-create turtle-sec &&
