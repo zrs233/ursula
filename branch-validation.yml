@@ -20,20 +20,19 @@
   tasks:
 ### Build up
     - name: create keypair
-      nova_keypair:
-        login_username: provider_admin
-        login_tenant_name: admin
-        login_password: "{{ secrets.provider_admin_password }}"
-        auth_url: "http://127.0.0.1:35357/v2.0"
-        login_tenant_name: admin
-        login_password: "{{ secrets.provider_admin_password }}"
+      os_keypair:
+        auth:
+          username: provider_admin
+          project_name: admin
+          password: "{{ secrets.provider_admin_password }}"
+          auth_url: "http://127.0.0.1:35357/v2.0"
         name: validate
         state: present
       register: keypair
 
     - name: persist private key
       copy:
-        content: "{{ keypair.key }}"
+        content: "{{ keypair.key.private_key }}"
         dest: /root/validate-key
         mode: 0600
       when: keypair.changed
@@ -302,13 +301,12 @@
       tags: delete
 
     - name: delete keypair
-      nova_keypair:
-        login_username: provider_admin
-        login_tenant_name: admin
-        login_password: "{{ secrets.provider_admin_password }}"
-        auth_url: "http://127.0.0.1:35357/v2.0"
-        login_tenant_name: admin
-        login_password: "{{ secrets.provider_admin_password }}"
+      os_keypair:
+        auth:
+          username: provider_admin
+          project_name: admin
+          password: "{{ secrets.provider_admin_password }}"
+          auth_url: "http://127.0.0.1:35357/v2.0"
         name: validate
         state: absent
       tags: delete
