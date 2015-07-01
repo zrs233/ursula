@@ -95,23 +95,30 @@
       register: instances
 
     - name: associate a floating ip
-      neutron_floating_ip:
-        login_username: provider_admin
-        login_tenant_name: admin
-        login_password: "{{ secrets.provider_admin_password }}"
-        auth_url: "http://127.0.0.1:35357/v2.0"
-        network_name: external
-        instance_name: validate-{{ groups['compute'][0] }}
+      os_floating_ip:
+        auth:
+          username: provider_admin
+          project_name: admin
+          password: "{{ secrets.provider_admin_password }}"
+          auth_url: "http://127.0.0.1:35357/v2.0"
+        network: external
+        server: validate-{{ groups['compute'][0] }}
+        reuse: true
       register: fip
 
     - name: wait for instances to be reachable
-      wait_for: port=22 delay=5 timeout=300 host={{ fip.public_ip }}
+      wait_for:
+        port: 22
+        delay: 5
+        timeout: 300
+        host: "{{ fip.floating_ip.floating_ip_address }}"
 
 ### Node connectivity tests
 
     - name: cross-node inter-instance connectivity test
       command: ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
-               -o IdentityFile=/root/validate-key cirros@{{ fip.public_ip }}
+               -o IdentityFile=/root/validate-key
+               cirros@{{ fip.floating_ip.floating_ip_address }}
                ping -c 5 {{ item.private_ip }}
       changed_when: false
       register: pings
@@ -122,7 +129,8 @@
 
     - name: instance internet connectivity test w/ floating-ip
       command: ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
-               -o IdentityFile=/root/validate-key cirros@{{ fip.public_ip }}
+               -o IdentityFile=/root/validate-key
+               cirros@{{ fip.floating_ip.floating_ip_address }}
                ping -c 5 google.com
       changed_when: false
       register: pings
@@ -134,16 +142,19 @@
       pause: prompt="From {{ groups['controller'][0] }} ssh -o
                      UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
                      -o IdentityFile=/root/validate-key
-                     cirros@{{ fip.public_ip }} (press enter when done)"
+                     cirros@{{ fip.floating_ip.floating_ip_address }}
+                     (press enter when done)"
 
     - name: disassociate the floating ip
-      neutron_floating_ip:
-        login_username: provider_admin
-        login_tenant_name: admin
-        login_password: "{{ secrets.provider_admin_password }}"
-        auth_url: "http://127.0.0.1:35357/v2.0"
-        network_name: external
-        instance_name: validate-{{ groups['compute'][0] }}
+      os_floating_ip:
+        auth:
+          username: provider_admin
+          project_name: admin
+          password: "{{ secrets.provider_admin_password }}"
+          auth_url: "http://127.0.0.1:35357/v2.0"
+        network: external
+        server: validate-{{ groups['compute'][0] }}
+        floating_ip_address: "{{ fip.floating_ip.floating_ip_address }}"
         state: absent
 
     - name: instance internet connectivity test w/out floating-ip
@@ -157,30 +168,34 @@
 ### HA testing
 
     - name: add floating IPs to instances on controllers
-      neutron_floating_ip:
-        login_username: provider_admin
-        login_tenant_name: admin
-        login_password: "{{ secrets.provider_admin_password }}"
-        auth_url: "http://127.0.0.1:35357/v2.0"
-        network_name: external
-        instance_name: validate-{{ item }}
+      os_floating_ip:
+        auth:
+          username: provider_admin
+          project_name: admin
+          password: "{{ secrets.provider_admin_password }}"
+          auth_url: "http://127.0.0.1:35357/v2.0"
+        network: external
+        server: validate-{{ item }}
+        reuse: true
       register: fip_controllers
       with_items: groups['controller']
 
     - name: add floating ip to a non-controller instance
-      neutron_floating_ip:
-        login_username: provider_admin
-        login_tenant_name: admin
-        login_password: "{{ secrets.provider_admin_password }}"
-        auth_url: "http://127.0.0.1:35357/v2.0"
-        network_name: external
-        instance_name: validate-{{ item }}
+      os_floating_ip:
+        auth:
+          username: provider_admin
+          project_name: admin
+          password: "{{ secrets.provider_admin_password }}"
+          auth_url: "http://127.0.0.1:35357/v2.0"
+        network: external
+        server: validate-{{ item }}
+        reuse: true
       register: fip_compute
       with_items:
         - "{{ (groups['compute']|difference(groups['controller']))[0] }}"
 
     - name: floating ips are reachable
-      command: ping -c 5 {{ item.public_ip }}
+      command: ping -c 5 {{ item.floating_ip.floating_ip_address }}
       with_items: fip_controllers.results + fip_compute.results
       changed_when: false
       register: pings
@@ -219,7 +234,8 @@
       pause: seconds=30
 
     - name: check non-controller instance connectivity by way of floating IPs
-      command: ping -c 5 {{ fip_compute.results[0].public_ip }}
+      command: ping -c 5
+               {{ fip_compute.results[0].floating_ip.floating_ip_address }}
       changed_when: false
       register: pings
       until: pings|success
@@ -228,7 +244,8 @@
       delegate_to: localhost
 
     - name: check remaining controller instance connectivity
-      command: ping -c 5 {{ fip_controllers.results[0].public_ip }}
+      command: ping -c 5
+               {{ fip_controllers.results[0].floating_ip.floating_ip_address }}
       changed_when: false
       register: pings
       until: pings|success
@@ -238,7 +255,8 @@
       delegate_to: localhost
 
     - name: check remaining controller instance connectivity
-      command: ping -c 5 {{ fip_controllers.results[1].public_ip }}
+      command: ping -c 5
+               {{ fip_controllers.results[1].floating_ip.floating_ip_address }}
       changed_when: false
       register: pings
       until: pings|success
@@ -260,7 +278,7 @@
       when: master is not defined
 
     - name: floating ips are reachable
-      command: ping -c 5 {{ item.public_ip }}
+      command: ping -c 5 {{ item.floating_ip.floating_ip_address }}
       with_items: fip_controllers.results + fip_compute.results
       changed_when: false
       register: pings
