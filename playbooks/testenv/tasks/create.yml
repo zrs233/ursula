@@ -41,10 +41,17 @@
       with_items: testenv_instance_names
 
     - name: associate a floating IP to instances
-      nova_fip: server={{ item }}
+      os_floating_ip:
+        server: "{{ item }}"
+        network: external
+        reuse: true
       with_items: testenv_instance_names
       register: testenv_floating_ips
 
     - name: wait for instances to boot
-      wait_for: port=22 delay=5 timeout=600 host={{ item.floating_ip }}
+      wait_for:
+        port: 22
+        delay: 5
+        timeout: 600
+        host: "{{ item.floating_ip.floating_ip_address }}"
       with_items: testenv_floating_ips.results
