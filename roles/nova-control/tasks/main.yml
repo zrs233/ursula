@@ -10,6 +10,12 @@
     - nova-consoleauth
     - nova-scheduler
 
+- name: install nova-quota-sync script
+  copy: src=nova-quota-sync
+        dest=/usr/local/sbin/nova-quota-sync
+        mode=0755
+        owner=root
+
 - name: stop nova services before db sync
   service: name={{ item }} state=stopped
   with_items:
