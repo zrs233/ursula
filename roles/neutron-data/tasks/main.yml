@@ -1,6 +1,9 @@
 ---
-- name: install ipset
-  apt: name=ipset
+- name: install required packages and diagnostic tools
+  apt: name={{ items }}
+  with_items:
+  - bwm-ng
+  - ipset
 
 - name: update iproute2 to latest ppa
   apt: name=iproute2 state=latest
