@@ -8,6 +8,9 @@
 - include: docker.yml
   when: nova.compute_driver == "novadocker.virt.docker.DockerDriver"
 
+- name: install nova data plan requirements
+  apt: pkg=sysfsutils
+
 - name: nova instances directory
   file: dest=/var/lib/nova/instances state=directory owner=nova
 
