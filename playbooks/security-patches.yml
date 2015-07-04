@@ -11,4 +11,12 @@
   handlers:
   - name: restart haproxy
     shell: service haproxy status && service haproxy restart || true
-
+- hosts: controller
+  tasks:
+  - apt: update_cache=yes cach_valid_time=3600
+  - name Patch CVE 2015-3281
+    apt: pkg=haproxy state=latest
+    notify: restart haproxy
+  handlers:
+  - name: restart haproxy
+    shell: service haproxy status && service haproxy restart || true
