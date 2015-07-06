@@ -1,81 +1,147 @@
 # Ursula
 
-Ursula provides a series of Ansible playbooks for installing, managing and maintaining OpenStack powered clouds.
+Ursula provides a series of Ansible playbooks for installing, managing and
+maintaining OpenStack powered clouds.
 
-Ursula was originally created by a team at [Blue Box](https://www.bluebox.net) and is released under the MIT License (MIT).
+Ursula was originally created by a team at [Blue Box](https://www.bluebox.net) and is 
+released under the MIT License (MIT).
 
 # Installation
 
-We recommend using [virtualenv](http://virtualenv.readthedocs.org/en/latest/) or [virtualenvwrapper](https://virtualenvwrapper.readthedocs.org/en/latest/) to isolate your Python environment. Once that's complete, use the following:
+## System Dependencies
+
+The following system packages ( or their equivalents for your OS ) are
+required to run `ursula`: 
+
+* python-pip 
+* python-dev 
+* libxml2-dev 
+* libxslt-dev 
+* libffi-dev
+
+## Python Environment
+
+We recommend using [virtualenv](http://virtualenv.readthedocs.org/en/latest/)or [virtualenvwrapper](https://virtualenvwrapper.readthedocs.org/en/latest/) to isolate your Python environment. 
+
+If you're new to python the following will install `virtualenvwrapper` and set
+up a `virtualenv` for ursula.
 
 ```bash
-git clone git@github.com:blueboxgroup/ursula.git
-cd ursula
-sudo bin/install-ubuntu || sudo bin/install-osx
+$ pip install virtualenvwrapper
+$ mkvirtualenv ursula
 ```
 
-# Pre-Requisites
+From now on to work with ursula you can run `$ workon ursula` to 
+enter the `virtualenv`
 
-Ursula requires that you have access to a minimum of 3 hosts running ubuntu 12.04, and you can ssh to them from your workstation.
+## Install ursula and dependencies:
 
-## Dev/Test Environment Running on VMs / Vagrant
-Please see [this doc](https://github.com/blueboxgroup/ursula/blob/master/doc/dev-test.md) for more information on getting started.
-
-# Setup
-
-Create a new environment, keep it somewhere outside this repo:
-
-    cp envs/example /your/env
-
-Add your hosts to the inventory:
-
-    $editor /your/new/env/hosts
-
-# Getting Started
-
-Ursula comes bundled with Vagrant hooks to get started.  see [docs/vagrant.md](docs/vagrant.md) for using it.
-
-## Basic Usage
+now that your python environment is ready you can clone ursula and install
+it's prerequisites:
 
 ```bash
-## Run the main playbook to install and configure all the things
-ursula /your/new/env site.yml
+$ cd ~/development
+$ git clone git@github.com:blueboxgroup/ursula.git
+$ cd ursula
+$ pip install -r requirements.txt
 ```
 
-## Environments
+This will have installed `ursula-cli`, the various openstack clients, and our
+patched fork of `Ansible`.
 
-An environment consists of two things:
-- `hosts`: a host inventory
-- `group_vars`: a directory of env-specific vars
+# ursula-cli
 
-To create a new env, copy the example env directory, and edit it to suit your needs:
+Ursula was designed by [Blue Box](https://www.bluebox.net) to manage a large
+number of OpenStack deployments. In order to do this efficiently we've made
+some changes to how `ansible` works. As part of these changes we have a
+wrapper tool called `ursula-cli` which was installed during the 
+`pip install -r requirements.txt` above.
+
+Make sure `ursula-cli` is installed in your environment:
+
+```
+ursula -h
+usage: ursula [-h] [--ursula-forward] [--ursula-test] [--ursula-debug]
+              environment playbook
+
+A CLI wrapper for ansible
+...
+...
+```
+
+There are two mandatory fields required by `ursula-cli`.  the first is 
+`environment` which will require some further explanation.  
+The second is `playbook` which will almost always be `site.yml`.
+
+## openstack-envs
+
+One of the modifications that we have made to `Ansible` is the ability to have
+a seperate path that includes all of the configuration options for your
+OpenStack deployment[s].   An example of this can be found in `/envs/example`
+
+If you look in the `/envs/example` path you'll see a `defaults.yml` file and a
+series of directories each representing a different OpenStack deployment.
+
+We then utilize the standard `Ansible` features by having `group_vars`, 
+`host_vars`, and a `hosts` file.
+
+There are also some `vagrant.yml` files scattered around.  These are helper
+files to make using `Vagrant` even easier with `ursula` to test your
+environments in VMs.
+
+### allinone
+
+The simplest example deployment is `allinone` which is a single server
+deployment that acts as both a `controller` and a `compute` node.
+
+Whether or not you're using `Vagrant` If you look in the 
+`envs/example/allinone/vagrant.yml` file it will give you some hints on what
+your server should look like.  If you do not wish to use `Vagrant` then you
+should install Ubuntu 12.04 on a server and configure its networking as
+described in the `vagrant.yml` file.
+
+Next look in the `hosts` file.  It's very simple in this case due to the fact
+we have only a single server.  This file combined with the `site.yml` playbook
+tells Ansible what roles to apply to which servers.
+
+Finally we have the `group_vars/all.yml` file.  This contains values that will
+override the `defaults.yml` in the parent directory.  For example we're
+disabling Percona replication by setting `percona.replication: False`.
+
+## Performing a deployment:
+
+For the sake of simplicity for your first install I recommend using `Vagrant`
+rather than `Manual`
+
+### Manually
+
+If you're not running `Vagrant` and have installed ubuntu onto a server and
+configured the networking then we need to tell our system how to talk to this
+new server.  The easiest way is via an entry in your ssh config file in 
+`~/.ssh/config`.
+
+```
+Host allinone
+  HostName 172.16.0.100
+  User ubuntu
+  IdentityFile ~/.ssh/private_key
+```
 
 ```bash
-cp -r envs/example /some/private/dir
-# edit /some/private/dir/hosts, /some/private/dir/group_vars/all.yml
+$ ursula envs/example/allinone site.yml
 ```
 
-## Support for proxy servers
+### Vagrant
 
-There are a few attributes that allow you to use a proxy server in several different ways.
+If you're running `Vagrant` we have a wrapper script that stands up the
+appropriate vagrant environment, saves it as an ssh config and then calls
+`ursula` for you.
 
-### Enable proxy only during the ansible run
+To deploy your `allinone` environment via `Vagrant` simply run:
 
-This sets the `http_proxy` environment variable in `/etc/environment` for the duration of the ansible run.
-
-`common.ansible_proxy: http://10.230.7.181:3128`
-
-### Set proxy during ansible run and leave it there
-
-This sets the `http_proxy` environment variable in `/etc/environment` but does not remove it like the above.
-
-`common.global_proxy: http://10.230.7.181:3128`
-
-### Enable proxy only for APT
-
-This sets your proxy only for apt repositories:
-
-`common.apt_cache: http://10.230.7.181:3128`
+```bash
+$ bin/run_vagrant up allinone
+```
 
 # More Docs
 
