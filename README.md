@@ -69,7 +69,7 @@ A CLI wrapper for ansible
 ...
 ```
 
-There are two mandatory fields required by `ursula-cli`.  the first is 
+There are two mandatory fields required by `ursula-cli`.  The first is 
 `environment` which will require some further explanation.  
 The second is `playbook` which will almost always be `site.yml`.
 
