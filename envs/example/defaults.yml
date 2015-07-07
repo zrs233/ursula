@@ -101,6 +101,7 @@ nova:
   metadata_api_workers: 1
   reserved_host_disk_mb: 50
   enable_ssh: true
+  preallocate_images: false
   logging:
     debug: True
     verbose: True
