@@ -1,6 +1,9 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+
+require 'yaml'
+
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 
@@ -17,6 +20,7 @@ else
 end
 
 require 'yaml'
+
 SETTINGS = YAML.load_file SETTINGS_FILE
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
