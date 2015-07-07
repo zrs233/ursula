@@ -7,9 +7,9 @@ apt_repos:
   bbg_ubuntu:
     repo: 'http://repo.openstack.blueboxgrid.com/ubuntu/'
     key_url: 'http://repo.openstack.blueboxgrid.com/blue_box_cloud.gpg.key'
-  bbg_bbc:
-    repo: 'http://repo.openstack.blueboxgrid.com/bbc/'
-    key_url: 'http://repo.openstack.blueboxgrid.com/blue_box_cloud.gpg.key'
+  blueboxcloud_giftwrap:
+    repo: 'https://packagecloud.io/blueboxcloud/giftwrap/ubuntu/'
+    key_url: 'https://packagecloud.io/gpg.key'
   hwraid:
     repo: 'http://hwraid.le-vert.net/ubuntu'
     key_url: 'http://hwraid.le-vert.net/debian/hwraid.le-vert.net.gpg.key'
