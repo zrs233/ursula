@@ -21,7 +21,9 @@ required to run `ursula`:
 
 ## Python Environment
 
-We recommend using [virtualenv](http://virtualenv.readthedocs.org/en/latest/)or [virtualenvwrapper](https://virtualenvwrapper.readthedocs.org/en/latest/) to isolate your Python environment. 
+We recommend using [virtualenv](http://virtualenv.readthedocs.org/en/latest/) or
+[virtualenvwrapper](https://virtualenvwrapper.readthedocs.org/en/latest/) 
+to isolate your Python environment. 
 
 If you're new to python the following will install `virtualenvwrapper` and set
 up a `virtualenv` for ursula.
