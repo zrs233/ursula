@@ -36,7 +36,7 @@ fi
 
 if [[ -e envs/example/${TYPE}/vagrant.yml ]]; then
     export SETTINGS_FILE=envs/example/${TYPE}/vagrant.yml
-    cp envs/example/${TYPE}/vagrant.yml .vagrant/vagrant.yml
+    mkdir -p .vagrant && cp envs/example/${TYPE}/vagrant.yml .vagrant/vagrant.yml
 fi
 
 if [[ ${ACTION} == "up" || ${ACTION} == "provision" ]]; then
