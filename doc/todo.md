@@ -41,3 +41,5 @@ it should be set and persisted.
 
 
 ## default m1.tiny flavor "root disk" size is too small to boot ubuntu.
+
+## add Ansible style docs
