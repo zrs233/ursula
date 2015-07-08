@@ -1,6 +1,6 @@
 ---
 - name: install required packages and diagnostic tools
-  apt: name={{ items }}
+  apt: name={{ item }}
   with_items:
   - bwm-ng
   - ipset
