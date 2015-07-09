@@ -4,7 +4,7 @@
         createhome=yes generate_ssh_key=yes ssh_key_bits=4096
 
 - name: nova packages
-  apt: pkg=python-numpy
+  apt: pkg={{ nova.install_packages }}
 
 - file: dest=/etc/nova state=directory
 - file: dest=/var/lib/nova state=directory owner=nova
@@ -29,6 +29,3 @@
   tags:
     - logrotate
     - logging
-
-- name: install virt-top
-  apt: pkg=virt-top
