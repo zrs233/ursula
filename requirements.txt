@@ -1,5 +1,5 @@
 python-novaclient
-python-neutronclient==2.3.6
+python-neutronclient
 python-keystoneclient
 python-glanceclient
 python-cinderclient
@@ -7,5 +7,6 @@ oslo.utils
 tox
 pep8
 -e git://github.com/willthames/ansible-lint.git@9777f20aafd4be8706c9ce17005c981cb19a6a25#egg=ansible-lint
-https://github.com/blueboxgroup/ansible/archive/release1.7.2-bbg.tar.gz
+-e git://github.com/blueboxgroup/ansible.git@stable-1.9-bb#egg=ansible
 -e git://github.com/blueboxgroup/ursula-cli.git@master#egg=ursula-cli
+-e git://github.com/openstack-infra/shade.git@ab1c566cb8afbf477492180e2cc8257817a06893#egg=shade
