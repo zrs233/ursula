@@ -13,6 +13,10 @@ neutron:
   enable_flat_networks: False
   alembic_version: 0.7.0
 
+  # Tunneling encapsulations enabled e.g. gre, vxlan
+  # Including any tunnels will enable tunnling
+  tunnel_types: []
+
   service:
     envs: []
 
