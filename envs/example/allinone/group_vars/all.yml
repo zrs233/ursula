@@ -10,3 +10,6 @@ percona:
 
 nova:
   scheduler_default_filters: AvailabilityZoneFilter,ComputeFilter
+
+heat:
+ enabled: true
