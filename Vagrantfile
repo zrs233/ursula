@@ -17,6 +17,7 @@ else
 end
 
 require 'yaml'
+
 SETTINGS = YAML.load_file SETTINGS_FILE
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
