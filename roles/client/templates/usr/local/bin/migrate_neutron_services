@@ -67,26 +67,3 @@ if dest_node in host_agents.keys() and 'L3 agent' in host_agents[dest_node].keys
 
 else:
     print "No L3 agent exists on %s" % (dest_node)
-
-#
-# Move DHCP servers between L3 agents
-#
-if dest_node in host_agents.keys() and 'DHCP agent' in host_agents[dest_node].keys():
-    dest_dhcp_agent = host_agents[dest_node]['DHCP agent']
-
-    for src_agent in [ host_agents[host]['DHCP agent'] for host in host_agents.keys() if 'DHCP agent' in host_agents[host].keys() and host != dest_node ]:
-        networks = neutron.list_networks_on_dhcp_agent(src_agent)
-
-        for network in networks['networks']:
-            neutron.remove_network_from_dhcp_agent(src_agent, network['id'])
-            for attempt in range(3):
-                try:
-                    neutron.add_network_to_dhcp_agent(dest_dhcp_agent, {'network_id': network['id']})
-                    print "Moved DHCP for %s (%s) network" % (network['name'], network['id'])
-                except neutronclient.common.exceptions.NeutronClientException:
-                    time.sleep(1)
-                    continue
-                break
-
-else:
-    print "No DHCP agent exists on %s" % (dest_node)
