@@ -1,5 +1,6 @@
 ---
 neutron:
+  l2_population: False
   api_workers: 3
   metadata_workers: 3
   agent_down_time: 20
