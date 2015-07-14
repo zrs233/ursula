@@ -7,8 +7,8 @@ VAGRANTFILE_API_VERSION = "2"
 NUM_CONTROLLERS = ENV['URSULA_NUM_CONTROLLERS'] || 2
 NUM_COMPUTES = ENV['URSULA_NUM_COMPUTES'] || 1
 NUM_SWIFT_NODES = ENV['URSULA_NUM_SWIFT_NODES'] || 3
-BOX_URL = ENV['URSULA_BOX_URL'] || 'http://apt.openstack.blueboxgrid.com/vagrant/ursula-precise.box'
-BOX_NAME = ENV['URSULA_BOX_NAME'] || 'ursula-precise'
+BOX_URL = ENV['URSULA_BOX_URL'] || 'http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_ubuntu-14.04_chef-provisionerless.box'
+BOX_NAME = ENV['URSULA_BOX_NAME'] || 'ubuntu-trusty'
 
 if File.file?('.vagrant/vagrant.yml')
   SETTINGS_FILE = ENV['SETTINGS_FILE'] || '.vagrant/vagrant.yml'
