@@ -23,11 +23,11 @@
 - name: install nova-compute packages (trusty)
   apt: pkg={{ item }}
   with_items:
-    - libvirt-bin={{ nova.trusty.libvirt_bin_version }}
-    - python-libvirt={{ nova.trusty.python_libvirt_version }}
-    - qemu-kvm={{ nova.trusty.qemu_kvm_version }}
+    - libvirt-bin
+    - python-libvirt
+    - qemu-kvm
     - open-iscsi
-    - libvirt-dev={{ nova.trusty.libvirt_bin_version }}
+    - libvirt-dev
     - pkg-config
     - genisoimage
     - util-linux

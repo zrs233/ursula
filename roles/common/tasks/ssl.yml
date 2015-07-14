@@ -16,15 +16,15 @@
 # ugly hack: some python http libs don't honor the system ca-certs, and ship with
 # their own list, instead.
 # pre-install these client libs, and force them to use the system cert list.
-- name: httplib2
+- name: pip install httplib2 - precise
   pip: name=httplib2 version=0.8
   when: ansible_distribution_version == "12.04"
 
-- name: requests
+- name: pip install requests - precise
   pip: name=requests version=1.2.3
   when: ansible_distribution_version == "12.04"
 
-- name: force our ssl cert for python libs
+- name: force our ssl cert for python libs on precise
   file: src=/etc/ssl/certs/ca-certificates.crt dest={{ item }} owner=root
         mode=0644 state=link force=yes
   with_items:
@@ -38,7 +38,7 @@
   with_items:
     - python-httplib2
     - python-requests
-  when: ansible_distribution_version != "12.04"
+  when: ansible_distribution_version == "14.04"
 
 - meta: flush_handlers
 

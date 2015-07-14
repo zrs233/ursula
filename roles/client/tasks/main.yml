@@ -8,6 +8,14 @@
   notify:
     - update ca certs
 
+- name: fix ssl certs for requests for keystone-client on trusty
+  file: src=/etc/ssl/certs/ca-certificates.crt
+        dest=/usr/local/lib/python2.7/dist-packages/requests/cacert.pem
+        owner=root
+        mode=0644 state=link force=yes
+  when: ansible_distribution_version == "14.04"
+
+
 - name: migrate neutron services script
   template: src=usr/local/bin/migrate_neutron_services
             dest=/usr/local/bin/migrate_neutron_services mode=0755
