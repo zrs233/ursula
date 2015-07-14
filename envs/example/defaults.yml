@@ -125,17 +125,14 @@ cinder:
 
 neutron:
   plugin: ml2
-  physical_bridge: br-ex
-  physical_network: br-ex
-  tenant_network_type: vxlan
-  enable_tunneling: True
-  network_vlan_ranges: ''
   bridge_mappings: ''
+  network_vlan_ranges: ''
+  tenant_network_type: vxlan
+  tunnel_types:
+    - vxlan
   logging:
     debug: True
     verbose: True
-  tunnel_types:
-    - vxlan
   networks:
     - name: internal
       shared: true
