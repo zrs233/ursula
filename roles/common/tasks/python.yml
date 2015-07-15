@@ -10,3 +10,6 @@
 - name: install drivers
   command: python setup.py install chdir=/opt/stack/{{ item.name }}
   with_items: common.python_extra_packages
+
+- name: install shade for ansible modules
+  pip: name=git+https://github.com/openstack-infra/shade.git@ab1c566cb8afbf477492180e2cc8257817a06893#egg=shade

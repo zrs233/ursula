@@ -16,7 +16,6 @@ SSH_ARGS=\
 export ANSIBLE_SSH_ARGS="${SSH_ARGS}"
 export ANSIBLE_VAR_DEFAULTS_FILE="${ROOT}/envs/test/defaults.yml"
 export IMAGE_ID=${IMAGE_ID:=014f8214-37b0-4920-b7ce-ec05edc253fb}
-export NET_ID=${NET_ID:=ba0fdd03-72b5-41eb-bb67-fef437fd6cb4}
 
 if [[ -n ${BUILD_TAG} ]]; then
   export testenv_instance_prefix=${BUILD_TAG}

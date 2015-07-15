@@ -8,6 +8,7 @@ dependencies:
         key_url: '{{ apt_repos.hwraid.key_url }}'
       - repo: 'deb {{ apt_repos.sensu.repo }} sensu main'
         key_url: '{{ apt_repos.sensu.key_url }}'
+        validate_certs: no
   - role: docker
     when: docker.enabled is defined and docker.enabled|bool
   - role: monitoring-common

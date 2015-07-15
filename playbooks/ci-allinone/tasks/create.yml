@@ -7,48 +7,50 @@
   tasks:
     - include: keypair.yml
 
-    - name: create the security group and rules
-      nova_group:
+    - name: create the security group
+      os_security_group:
         name: "{{ testenv_security_groups }}"
         description: "{{ testenv_instance_prefix }} {{ testenv_security_groups_description }}"
-        rules:
-          - ip_protocol: "{{ item.proto }}"
-            from_port: "{{ item.port }}"
-            to_port: "{{ item.port }}"
-            cidr: 0.0.0.0/0
-            state: "{{ item.state }}"
-      with_items: testenv_security_group_rules
       register: testenv_security_group
 
     - name: create security group rules
-      command: neutron security-group-rule-create --ethertype={{ item }}
-               --remote-group-id={{ testenv_security_group.results[0].group_id }}
-               {{ testenv_security_group.results[0].group_id }}
-      register: security_group_rule_create_result
-      failed_when: "security_group_rule_create_result.rc != 0 and '409' not in security_group_rule_create_result.stderr"
-      changed_when: security_group_rule_create_result.rc == 0
-      with_items:
-      - IPv4
-      - IPv6
-      when: testenv_security_group.results[0].group_id
+      os_security_group_rule:
+        security_group: "{{ testenv_security_groups }}"
+        protocol: "{{ item.proto | default(omit) }}"
+        port_range_min: "{{ item.port | default(omit) }}"
+        port_range_max: "{{ item.port | default(omit) }}"
+        remote_ip_prefix: "{{ item.cidr | default(omit) }}"
+        remote_group: "{{ item.group | default(omit) }}"
+        ethertype: "{{ item.ethertype | default(omit) }}"
+        state: present
+      with_items: testenv_security_group_rules
 
     - name: create instances
-      nova_compute:
+      os_server:
         name: "{{ item }}"
-        image_id: "{{ testenv_image_id }}"
+        image: "{{ testenv_image_id }}"
         key_name: "{{ testenv_keypair_name }}"
-        security_groups: "{{ testenv_security_group.results[0].group_id }}"
-        wait_for: 200
-        flavor_id: 4
+        security_groups: "{{ testenv_security_groups }}"
+        wait: yes
+        timeout: 200
+        flavor: 4
         nics:
-          - net-id: "{{ testenv_net_id }}"
+          - net-id: internal
+        auto_floating_ip: false
       with_items: testenv_instance_names
 
     - name: associate a floating IP to instances
-      nova_fip: server={{ item }}
+      os_floating_ip:
+        server: "{{ item }}"
+        network: external
+        reuse: true
       with_items: testenv_instance_names
       register: testenv_floating_ips
 
     - name: wait for instances to boot
-      wait_for: port=22 delay=5 timeout=600 host={{ item.floating_ip }}
+      wait_for:
+        port: 22
+        delay: 5
+        timeout: 600
+        host: "{{ item.floating_ip.floating_ip_address }}"
       with_items: testenv_floating_ips.results

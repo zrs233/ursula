@@ -20,64 +20,74 @@
   tasks:
 ### Build up
     - name: create keypair
-      nova_keypair:
-        login_username: provider_admin
-        login_tenant_name: admin
-        login_password: "{{ secrets.provider_admin_password }}"
-        auth_url: "http://127.0.0.1:35357/v2.0"
-        login_tenant_name: admin
-        login_password: "{{ secrets.provider_admin_password }}"
+      os_keypair:
+        auth:
+          username: provider_admin
+          project_name: admin
+          password: "{{ secrets.provider_admin_password }}"
+          auth_url: "http://127.0.0.1:35357/v2.0"
         name: validate
         state: present
       register: keypair
 
     - name: persist private key
       copy:
-        content: "{{ keypair.key }}"
+        content: "{{ keypair.key.private_key }}"
         dest: /root/validate-key
         mode: 0600
       when: keypair.changed
 
     - name: create security group
-      nova_group:
-        login_username: provider_admin
-        login_tenant_name: admin
-        login_password: "{{ secrets.provider_admin_password }}"
-        auth_url: "http://127.0.0.1:35357/v2.0"
+      os_security_group:
+        auth:
+          username: provider_admin
+          project_name: admin
+          password: "{{ secrets.provider_admin_password }}"
+          auth_url: "http://127.0.0.1:35357/v2.0"
         name: validate_ssh
         description: "validate group allowing ssh, icmp ipv4 ingress"
-        rules:
+        state: present
+
+    - name: create security group rules
+      os_security_group_rule:
+        auth:
+          username: provider_admin
+          project_name: admin
+          password: "{{ secrets.provider_admin_password }}"
+          auth_url: "http://127.0.0.1:35357/v2.0"
+        security_group: validate_ssh
+        protocol: "{{ item.ip_protocol }}"
+        port_range_min: "{{ item.from_port }}"
+        port_range_max: "{{ item.to_port }}"
+        remote_ip_prefix: "{{ item.cidr }}"
+        state: present
+        with_items:
           - ip_protocol: tcp
             from_port: 22
             to_port: 22
             cidr: 0.0.0.0/0
-            state: present
           - ip_protocol: icmp
             from_port: -1
             to_port: -1
             cidr: 0.0.0.0/0
             state: present
 
-    - name: discover internal network id
-      shell: . /root/stackrc; nova net-list | awk '/ internal / {print $2}'
-      changed_when: false
-      register: internal_net
-
     - name: launch instances in each host az
-      nova_compute:
-        login_username: provider_admin
-        login_tenant_name: admin
-        login_password: "{{ secrets.provider_admin_password }}"
-        auth_url: "http://127.0.0.1:35357/v2.0"
-        flavor_id: 1
-        image_name: cirros
+      os_server:
+        auth:
+          username: provider_admin
+          project_name: admin
+          password: "{{ secrets.provider_admin_password }}"
+          auth_url: "http://127.0.0.1:35357/v2.0"
+        flavor: 1
+        image: cirros
         key_name: validate
-        #auto_floating_ip: yes
+        auto_floating_ip: no
         security_groups: default,validate_ssh
         #floating_ip_pools:
         #  - external
         nics:
-          - net-id: "{{ internal_net.stdout }}"
+          - net-name: internal
         availability_zone: "nova:{{ item }}"
         name: validate-{{ item }}
         wait: "yes"
@@ -85,23 +95,30 @@
       register: instances
 
     - name: associate a floating ip
-      neutron_floating_ip:
-        login_username: provider_admin
-        login_tenant_name: admin
-        login_password: "{{ secrets.provider_admin_password }}"
-        auth_url: "http://127.0.0.1:35357/v2.0"
-        network_name: external
-        instance_name: validate-{{ groups['compute'][0] }}
+      os_floating_ip:
+        auth:
+          username: provider_admin
+          project_name: admin
+          password: "{{ secrets.provider_admin_password }}"
+          auth_url: "http://127.0.0.1:35357/v2.0"
+        network: external
+        server: validate-{{ groups['compute'][0] }}
+        reuse: true
       register: fip
 
     - name: wait for instances to be reachable
-      wait_for: port=22 delay=5 timeout=300 host={{ fip.public_ip }}
+      wait_for:
+        port: 22
+        delay: 5
+        timeout: 300
+        host: "{{ fip.floating_ip.floating_ip_address }}"
 
 ### Node connectivity tests
 
     - name: cross-node inter-instance connectivity test
       command: ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
-               -o IdentityFile=/root/validate-key cirros@{{ fip.public_ip }}
+               -o IdentityFile=/root/validate-key
+               cirros@{{ fip.floating_ip.floating_ip_address }}
                ping -c 5 {{ item.private_ip }}
       changed_when: false
       register: pings
@@ -112,7 +129,8 @@
 
     - name: instance internet connectivity test w/ floating-ip
       command: ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
-               -o IdentityFile=/root/validate-key cirros@{{ fip.public_ip }}
+               -o IdentityFile=/root/validate-key
+               cirros@{{ fip.floating_ip.floating_ip_address }}
                ping -c 5 google.com
       changed_when: false
       register: pings
@@ -124,16 +142,19 @@
       pause: prompt="From {{ groups['controller'][0] }} ssh -o
                      UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
                      -o IdentityFile=/root/validate-key
-                     cirros@{{ fip.public_ip }} (press enter when done)"
+                     cirros@{{ fip.floating_ip.floating_ip_address }}
+                     (press enter when done)"
 
     - name: disassociate the floating ip
-      neutron_floating_ip:
-        login_username: provider_admin
-        login_tenant_name: admin
-        login_password: "{{ secrets.provider_admin_password }}"
-        auth_url: "http://127.0.0.1:35357/v2.0"
-        network_name: external
-        instance_name: validate-{{ groups['compute'][0] }}
+      os_floating_ip:
+        auth:
+          username: provider_admin
+          project_name: admin
+          password: "{{ secrets.provider_admin_password }}"
+          auth_url: "http://127.0.0.1:35357/v2.0"
+        network: external
+        server: validate-{{ groups['compute'][0] }}
+        floating_ip_address: "{{ fip.floating_ip.floating_ip_address }}"
         state: absent
 
     - name: instance internet connectivity test w/out floating-ip
@@ -147,30 +168,34 @@
 ### HA testing
 
     - name: add floating IPs to instances on controllers
-      neutron_floating_ip:
-        login_username: provider_admin
-        login_tenant_name: admin
-        login_password: "{{ secrets.provider_admin_password }}"
-        auth_url: "http://127.0.0.1:35357/v2.0"
-        network_name: external
-        instance_name: validate-{{ item }}
+      os_floating_ip:
+        auth:
+          username: provider_admin
+          project_name: admin
+          password: "{{ secrets.provider_admin_password }}"
+          auth_url: "http://127.0.0.1:35357/v2.0"
+        network: external
+        server: validate-{{ item }}
+        reuse: true
       register: fip_controllers
       with_items: groups['controller']
 
     - name: add floating ip to a non-controller instance
-      neutron_floating_ip:
-        login_username: provider_admin
-        login_tenant_name: admin
-        login_password: "{{ secrets.provider_admin_password }}"
-        auth_url: "http://127.0.0.1:35357/v2.0"
-        network_name: external
-        instance_name: validate-{{ item }}
+      os_floating_ip:
+        auth:
+          username: provider_admin
+          project_name: admin
+          password: "{{ secrets.provider_admin_password }}"
+          auth_url: "http://127.0.0.1:35357/v2.0"
+        network: external
+        server: validate-{{ item }}
+        reuse: true
       register: fip_compute
       with_items:
         - "{{ (groups['compute']|difference(groups['controller']))[0] }}"
 
     - name: floating ips are reachable
-      command: ping -c 5 {{ item.public_ip }}
+      command: ping -c 5 {{ item.floating_ip.floating_ip_address }}
       with_items: fip_controllers.results + fip_compute.results
       changed_when: false
       register: pings
@@ -209,7 +234,8 @@
       pause: seconds=30
 
     - name: check non-controller instance connectivity by way of floating IPs
-      command: ping -c 5 {{ fip_compute.results[0].public_ip }}
+      command: ping -c 5
+               {{ fip_compute.results[0].floating_ip.floating_ip_address }}
       changed_when: false
       register: pings
       until: pings|success
@@ -218,7 +244,8 @@
       delegate_to: localhost
 
     - name: check remaining controller instance connectivity
-      command: ping -c 5 {{ fip_controllers.results[0].public_ip }}
+      command: ping -c 5
+               {{ fip_controllers.results[0].floating_ip.floating_ip_address }}
       changed_when: false
       register: pings
       until: pings|success
@@ -228,7 +255,8 @@
       delegate_to: localhost
 
     - name: check remaining controller instance connectivity
-      command: ping -c 5 {{ fip_controllers.results[1].public_ip }}
+      command: ping -c 5
+               {{ fip_controllers.results[1].floating_ip.floating_ip_address }}
       changed_when: false
       register: pings
       until: pings|success
@@ -250,7 +278,7 @@
       when: master is not defined
 
     - name: floating ips are reachable
-      command: ping -c 5 {{ item.public_ip }}
+      command: ping -c 5 {{ item.floating_ip.floating_ip_address }}
       with_items: fip_controllers.results + fip_compute.results
       changed_when: false
       register: pings
@@ -262,21 +290,12 @@
 ### Tear down
 
     - name: delete instances
-      nova_compute:
-        login_username: provider_admin
-        login_tenant_name: admin
-        login_password: "{{ secrets.provider_admin_password }}"
-        auth_url: "http://127.0.0.1:35357/v2.0"
-        flavor_id: 1
-        image_name: cirros
-        key_name: validate
-        #auto_floating_ip: yes
-        security_groups: default,validate_ssh
-        #floating_ip_pools:
-        #  - external
-        nics:
-          - net-id: "{{ internal_net.stdout }}"
-        availability_zone: "nova:{{ item }}"
+      os_server:
+        auth:
+          username: provider_admin
+          project_name: admin
+          password: "{{ secrets.provider_admin_password }}"
+          auth_url: "http://127.0.0.1:35357/v2.0"
         name: validate-{{ item }}
         state: absent
         wait: "yes"
@@ -284,13 +303,13 @@
       tags: delete
 
     - name: delete security group
-      nova_group:
-        login_username: provider_admin
-        login_tenant_name: admin
-        login_password: "{{ secrets.provider_admin_password }}"
-        auth_url: "http://127.0.0.1:35357/v2.0"
+      os_security_group:
+        auth:
+          username: provider_admin
+          project_name: admin
+          password: "{{ secrets.provider_admin_password }}"
+          auth_url: "http://127.0.0.1:35357/v2.0"
         name: validate_ssh
-        description: "validate group allowing ssh ipv4 ingress"
         state: absent
       tags: delete
 
@@ -301,13 +320,12 @@
       tags: delete
 
     - name: delete keypair
-      nova_keypair:
-        login_username: provider_admin
-        login_tenant_name: admin
-        login_password: "{{ secrets.provider_admin_password }}"
-        auth_url: "http://127.0.0.1:35357/v2.0"
-        login_tenant_name: admin
-        login_password: "{{ secrets.provider_admin_password }}"
+      os_keypair:
+        auth:
+          username: provider_admin
+          project_name: admin
+          password: "{{ secrets.provider_admin_password }}"
+          auth_url: "http://127.0.0.1:35357/v2.0"
         name: validate
         state: absent
       tags: delete

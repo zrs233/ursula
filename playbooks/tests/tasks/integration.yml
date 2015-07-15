@@ -1,75 +1,107 @@
 ---
 - name: integration testing
   hosts: controller[0]
+
   tasks:
-  - name: generate ssh key for root
-    user: name=root generate_ssh_key=yes
-    register: rootuser
+    - name: generate ssh key for root
+      user: name=root generate_ssh_key=yes
+      register: rootuser
 
-  - name: generate nova key-pair
-    nova_keypair: name=turtle-key
-                  auth_url={{ endpoints.auth_uri }}
-                  login_tenant_name=admin
-                  login_username=provider_admin
-                  login_password={{ secrets.provider_admin_password }}
-                  public_key="{{ rootuser.ssh_public_key }}"
+    - name: generate nova key-pair
+      os_keypair:
+        name: turtle-key
+        auth:
+          auth_url: "{{ endpoints.auth_uri }}"
+          project_name: admin
+          username: provider_admin
+          password: "{{ secrets.provider_admin_password }}"
+        public_key: "{{ rootuser.ssh_public_key }}"
 
-  - name: generate test security group
-    shell: . /root/stackrc; neutron security-group-create turtle-sec &&
-           neutron security-group-rule-create turtle-sec --remote-ip-prefix
-           0.0.0.0/0
+    - name: generate test security group
+      os_security_group:
+        auth:
+          auth_url: "{{ endpoints.auth_uri }}"
+          project_name: admin
+          username: provider_admin
+          password: "{{ secrets.provider_admin_password }}"
+        name: turtle-sec
 
-  - name: determine Neutron internal interface ID
-    neutron_network: name=internal
-                     auth_url={{ endpoints.auth_uri }}
-                     login_tenant_name=admin
-                     login_username=provider_admin
-                     login_password={{ secrets.provider_admin_password }}
-    register: internal_net
+    - name: test security group rule
+      os_security_group_rule:
+        auth:
+          auth_url: "{{ endpoints.auth_uri }}"
+          project_name: admin
+          username: provider_admin
+          password: "{{ secrets.provider_admin_password }}"
+        security_group: turtle-sec
+        remote_ip_prefix: 0.0.0.0/0
 
-  - name: nova can boot an instance
-    nova_compute:
-        name: turtle-stack
-        auth_url: "{{ endpoints.auth_uri }}"
-        login_tenant_name: admin
-        login_username: provider_admin
-        login_password: "{{ secrets.provider_admin_password }}"
-        image_name: cirros
-        security_groups: turtle-sec
-        key_name: turtle-key
-        nics:
-        - net-id: "{{ internal_net.id }}"
-    register: turtle_stack
+    - name: nova can boot an instance
+      os_server:
+          name: turtle-stack
+          auth:
+            auth_url: "{{ endpoints.auth_uri }}"
+            project_name: admin
+            username: provider_admin
+            password: "{{ secrets.provider_admin_password }}"
+          image: cirros
+          security_groups: turtle-sec
+          key_name: turtle-key
+          flavor: 1
+          auto_floating_ip: no
+          nics:
+            - net-name: internal
+      register: turtle_stack
 
-  - name: nova can associate floating IP with test instance
-    neutron_floating_ip: auth_url={{ endpoints.auth_uri }}
-                         login_tenant_name=admin
-                         login_username=provider_admin
-                         login_password={{ secrets.provider_admin_password }}
-                         network_name=external
-                         instance_name=turtle-stack
-                         fixed_ip={{ turtle_stack.private_ips|ipv4|first }}
-    register: floating_ip
+    - name: nova can associate floating IP with test instance
+      os_floating_ip:
+        auth:
+          auth_url: "{{ endpoints.auth_uri }}"
+          project_name: admin
+          username: provider_admin
+          password: "{{ secrets.provider_admin_password }}"
+        network: external
+        server: turtle-stack
+        reuse: true
+        fixed_address: "{{ item.addr }}"
+      register: floating_ip
+      with_items: turtle_stack.openstack.addresses.internal
+      when: item.version == 4
 
-  - name: nova can create a volume via cinder
-    shell: . /root/stackrc; nova volume-create --display-name=turtle-vol 2
+    - name: nova can create a volume via cinder
+      os_volume:
+        auth:
+          auth_url: "{{ endpoints.auth_uri }}"
+          project_name: admin
+          username: provider_admin
+          password: "{{ secrets.provider_admin_password }}"
+        display_name: turtle-vol
+        size: 2
 
-  - name: discover volume id
-    shell: . /root/stackrc; nova volume-list |awk '/turtle-vol/ {print $2}'
-    register: turtle_vol
+    - name: nova can attach cinder volume
+      os_server_volume:
+        auth:
+          auth_url: "{{ endpoints.auth_uri }}"
+          project_name: admin
+          username: provider_admin
+          password: "{{ secrets.provider_admin_password }}"
+        server: turtle-stack
+        volume: turtle-vol
 
-  - name: nova can attach cinder volume
-    shell: . /root/stackrc; nova volume-attach
-           turtle-stack {{ turtle_vol.stdout }} auto
+    - name: wait for instance to boot
+      wait_for:
+        host: "{{ item.floating_ip.floating_ip_address }}"
+        port: 22
+        timeout: 180
+      with_items: floating_ip.results
+      when: item.floating_ip is defined
 
-  - name: wait for instance to boot
-    wait_for: host={{ floating_ip.public_ip }}
-              port=22
-              timeout=180
-
-# (due to 1450 MTU on VXLAN this doesn't work with recent version of SSH)
-  - name: test instance can ping Google
-    command: ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
-             -i /root/.ssh/id_rsa cirros@{{ floating_ip.public_ip }}
-             ping -c 5 www.google.com
-    when: ansible_distribution_version == "12.04"
+    # (due to 1450 MTU on VXLAN this doesn't work with recent version of SSH)
+    - name: test instance can ping Google
+      command: ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
+               -i /root/.ssh/id_rsa
+               cirros@{{ item.floating_ip.floating_ip_address }}
+               ping -c 5 www.google.com
+      with_items: floating_ip.results
+      when: item.floating_ip is defined and
+            ansible_distribution_version == "12.04"

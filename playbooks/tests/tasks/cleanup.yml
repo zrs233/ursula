@@ -1,19 +1,48 @@
 ---
 - name: clean up the test stuff
   hosts: controller[0]
+
   tasks:
-  - name: cleanup test instance, key-pair and security group
-    shell: . /root/stackrc; nova delete turtle-stack && sleep 30
-    failed_when: False
+    - name: cleanup test instance
+      os_server:
+        auth:
+          auth_url: "{{ endpoints.auth_uri }}"
+          project_name: admin
+          username: provider_admin
+          password: "{{ secrets.provider_admin_password }}"
+        name: turtle-stack
+        state: absent
+      failed_when: False
 
-  - name: clean up test volume
-    shell: . /root/stackrc; cinder delete turtle-vol
-    failed_when: False
+    - name: cleanup test security group
+      os_security_group:
+        auth:
+          auth_url: "{{ endpoints.auth_uri }}"
+          project_name: admin
+          username: provider_admin
+          password: "{{ secrets.provider_admin_password }}"
+        name: turtle-sec
+        state: absent
+      failed_when: False
 
-  - name: cleanup test instance, key-pair and security group
-    shell: . /root/stackrc; nova secgroup-delete turtle-sec
-    failed_when: False
+    - name: cleanup test key-pair
+      os_keypair:
+        auth:
+          auth_url: "{{ endpoints.auth_uri }}"
+          project_name: admin
+          username: provider_admin
+          password: "{{ secrets.provider_admin_password }}"
+        name: turtle-key
+        state: absent
+      failed_when: False
 
-  - name: cleanup test instance, key-pair and security group
-    shell: . /root/stackrc; nova keypair-delete turtle-key
-    failed_when: False
+    - name: clean up test volume
+      os_volume:
+        auth:
+          auth_url: "{{ endpoints.auth_uri }}"
+          project_name: admin
+          username: provider_admin
+          password: "{{ secrets.provider_admin_password }}"
+        display_name: turtle-vol
+        state: absent
+      failed_when: False
