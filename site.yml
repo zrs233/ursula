@@ -265,7 +265,7 @@
   hosts: network
   roles:
     - role: 'openstack-network'
-      tags: ['openstack', 'setup']
+      tags: ['openstack', 'setup', 'openstack-network']
 
 - name: extra neutron setup
   hosts: network:compute

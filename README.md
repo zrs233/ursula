@@ -145,6 +145,10 @@ To deploy your `allinone` environment via `Vagrant` simply run:
 $ bin/run_vagrant up allinone
 ```
 
+Note: The default OS for ursula is Ubuntu Trusty, if you want Precise set
+the env var `URSULA_BOX_NAME` to the name of your precise vagrant
+box before running vagrant.
+
 # More Docs
 
 See the [/doc](https://github.com/blueboxgroup/ursula/tree/master/doc) directory of this repo.

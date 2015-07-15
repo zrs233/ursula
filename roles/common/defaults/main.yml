@@ -1,6 +1,5 @@
 ---
 common:
-  bbg_openstack_repo: 'deb http://apt.openstack.blueboxgrid.com/ubuntu/ precise main'
   hwraid:
     enabled: True
     clients:
