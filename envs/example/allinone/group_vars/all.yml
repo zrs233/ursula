@@ -10,3 +10,7 @@ percona:
 
 heat:
  enabled: true
+
+magnum:
+  enabled: True
+  debug: True

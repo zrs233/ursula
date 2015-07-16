@@ -37,7 +37,6 @@ nova:
       rev: 'stable/kilo'
       git_mirror: https://github.com/stackforge/nova-docker.git
       dest: /opt/stack/novadocker
-
   source:
     rev: 'stable/kilo'
   package:

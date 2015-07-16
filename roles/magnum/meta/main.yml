@@ -1,0 +1,18 @@
+---
+dependencies:
+  - role: monitoring-common
+  - role: logging-config
+    service: magnum
+    logdata: "{{ magnum.logs }}"
+  - role: openstack-source
+    project_name: magnum
+    project_rev: "{{ magnum.source.rev }}"
+    # is this even required anymore with Juno?
+    python_requirements: []
+    when: openstack_install_method == 'source'
+  - role: openstack-package
+    project_name: magnum
+    package_alternatives: "{{ magnum.package.console_scripts }}"
+    when: openstack_install_method == 'package'
+  - role: collectd-plugin
+    when: collectd is defined and collectd.enabled|bool
