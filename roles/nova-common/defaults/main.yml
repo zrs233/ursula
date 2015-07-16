@@ -46,8 +46,6 @@ nova:
       - nova-api-ec2
       - nova-api-metadata
       - nova-api-os-compute
-      - nova-baremetal-deploy-helper
-      - nova-baremetal-manage
       - nova-cells
       - nova-cert
       - nova-compute
@@ -73,8 +71,6 @@ nova:
       - nova-api-ec2
       - nova-api-metadata
       - nova-api-os-compute
-      - nova-baremetal-deploy-helper
-      - nova-baremetal-manage
       - nova-cells
       - nova-cert
       - nova-compute
