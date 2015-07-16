@@ -92,7 +92,7 @@
   shell: "{{ item }}"
   with_items:
     - "{{ 'horizon'|ursula_package_path(openstack_package_version) }}/bin/django-admin.py collectstatic --noinput"
-    - "{{ 'horizon'|ursula_package_path(openstack_package_version) }}/bin/django-admin.py compress"
+#    - "{{ 'horizon'|ursula_package_path(openstack_package_version) }}/bin/django-admin.py compress"
   when: openstack_install_method == 'package'
 
 - name: gather static assets from openstack source install
@@ -104,6 +104,7 @@
     - "{{ horizon.virtualenv }}/bin/django-admin.py collectstatic --noinput"
     - "{{ horizon.virtualenv }}/bin/django-admin.py compress"
   when: openstack_install_method == 'source'
+  tags: FIXME
 
 - name: ensure apache started
   service: name=apache2 state=started

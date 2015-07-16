@@ -57,11 +57,13 @@ endpoints:
   neutron:  "{{ fqdn }}"
   vnc:      "{{ fqdn }}"
   cinder:   "{{ fqdn }}"
+  keystonev3: "{{ fqdn }}"
   cinderv2: "{{ fqdn }}"
   heat:     "{{ fqdn }}"
   heat-cfn: "{{ fqdn }}"
   ironic: "{{ fqdn }}"
   swift: "{{ swift.haproxy_vip }}"
+  magnum: "{{ fqdn }}"
   identity_uri: https://{{ fqdn }}:35358
   auth_uri: https://{{ fqdn }}:5001/v2.0
 
@@ -259,12 +261,16 @@ keystone:
     - name: heat
       password: "{{ secrets.service_password }}"
       tenant: service
+
     - name: ironic
+      password: "{{ secrets.service_password }}"
+      tenant: service
+    - name: magnum
       password: "{{ secrets.service_password }}"
       tenant: service
     - name: "{{ monitoring.openstack.user.username }}"
       password: "{{ monitoring.openstack.user.password }}"
-      tenant: "{{ monitoring.openstack.user.tenant }}"     
+      tenant: "{{ monitoring.openstack.user.tenant }}"
     - name: swift
       password: "{{ secrets.service_password }}"
       tenant: service
@@ -297,6 +303,9 @@ keystone:
       tenant: service
       role: admin
     - user: heat
+      tenant: service
+      role: service
+    - user: magnum
       tenant: service
       role: service
     - user: ironic
@@ -370,12 +379,17 @@ keystone:
       internal_url: https://{{ endpoints.main }}:6384
       admin_url: https://{{ endpoints.main }}:6384
     - name: swift
-      type: object-store       
+      type: object-store
       description: 'Object Storage Service'
       public_url: https://{{ endpoints.swift }}:{{ swift.haproxy_port}}/v1/%(tenant_id)s
       internal_url: https://{{ endpoints.swift }}:{{ swift.haproxy_port}}/v1/%(tenant_id)s
       admin_url: https://{{ endpoints.swift }}:{{ swift.haproxy_port}}/v1/%(tenant_id)s
-
+    - name: magnum
+      type: container
+      description: 'Magnum Container Service'
+      public_url: https://{{ endpoints.main }}:9511
+      internal_url: https://{{ endpoints.main }}:9511
+      admin_url: https://{{ endpoints.main }}:9511
 ssl:
   crt: |
     -----BEGIN CERTIFICATE-----
