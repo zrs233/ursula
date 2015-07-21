@@ -142,7 +142,7 @@
 
 - name: vmstat metrics check
   sensu_metrics_check: name=vmstat-metrics plugin=vmstat-metrics.rb
-                       args='--scheme {{ monitoring.graphite.host_prefix }}'
+                       args='--scheme {{ monitoring.graphite.host_prefix }}.vmstat'
   notify: restart sensu-client
 
 - name: load metrics check
@@ -169,12 +169,12 @@
 
 - name: memory metrics check
   sensu_metrics_check: name=memory-metrics plugin=memory-metrics.rb
-                       args='--scheme {{ monitoring.graphite.host_prefix }}'
+                       args='--scheme {{ monitoring.graphite.host_prefix }}.memory'
   notify: restart sensu-client
 
 - name: network metrics check
   sensu_metrics_check: name=network-metrics plugin=metrics-net.rb
-                       args='--scheme {{ monitoring.graphite.host_prefix }}'
+                       args='--scheme {{ monitoring.graphite.host_prefix }}.network'
   notify: restart sensu-client
 
 - name: add sensu to adm group so it can read log files
