@@ -35,3 +35,4 @@
   ufw: rule=allow to_port=8778 proto=tcp
 
 - include: monitoring.yml tags=monitoring,common
+  when: monitoring.enabled is not defined or monitoring.enabled|bool

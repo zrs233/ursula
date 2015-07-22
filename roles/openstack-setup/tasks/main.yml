@@ -9,5 +9,6 @@
   when: openstack_setup.add_networks|bool or openstack_setup.add_networks is undefined
 
 - include: cinder.yml
+  when: cinder.enabled is not defined or cinder.enabled|bool
 
 - include: flavors.yml

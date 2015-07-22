@@ -4,28 +4,28 @@
 
 # swiftops requires a shell and a home in order to build/distribute rings
 - name: create swiftops user
-  user: name=swiftops comment=swiftops shell=/bin/bash system=yes 
+  user: name=swiftops comment=swiftops shell=/bin/bash system=yes
         home=/home/swiftops
 
 - name: create swiftops .ssh directory
-  file: dest=/home/swiftops/.ssh state=directory owner=swiftops 
+  file: dest=/home/swiftops/.ssh state=directory owner=swiftops
         group=swiftops mode=0755
 
 - name: drop a swiftops public key
-  template: src=home/swiftops/.ssh/id_rsa dest=/home/swiftops/.ssh/id_rsa 
+  template: src=home/swiftops/.ssh/id_rsa dest=/home/swiftops/.ssh/id_rsa
             owner=swiftops group=swiftops mode=0600
 
 - name: drop a swiftops private key
-  template: src=home/swiftops/.ssh/id_rsa.pub 
-            dest=/home/swiftops/.ssh/id_rsa.pub owner=swiftops 
+  template: src=home/swiftops/.ssh/id_rsa.pub
+            dest=/home/swiftops/.ssh/id_rsa.pub owner=swiftops
             group=swiftops mode=0600
 
 - name: setup swiftops authorized hosts
-  file: src=/home/swiftops/.ssh/id_rsa.pub 
+  file: src=/home/swiftops/.ssh/id_rsa.pub
         dest=/home/swiftops/.ssh/authorized_keys state=link
 
 - name: setup swiftops sudoers
-  template: src=etc/sudoers.d/swiftops dest=/etc/sudoers.d/swiftops 
+  template: src=etc/sudoers.d/swiftops dest=/etc/sudoers.d/swiftops
             owner=root group=root mode=0440
 
 - name: get swifttool repo
@@ -38,15 +38,15 @@
     - pip install swifttool
 
 - name: create swift configuration diectory
-  file: dest=/etc/swift state=directory owner=swiftops 
+  file: dest=/etc/swift state=directory owner=swiftops
         group=swiftops mode=0755
 
 - name: configure swift
-  template: src=etc/swift/swift.conf dest=/etc/swift/swift.conf 
+  template: src=etc/swift/swift.conf dest=/etc/swift/swift.conf
             owner=root group=root mode=0644
 
 - name: create swift cache directory
-  file: dest=/var/cache/swift state=directory owner=swift 
+  file: dest=/var/cache/swift state=directory owner=swift
         group=swift mode=0755
 
 - name: create swift node directory
@@ -55,7 +55,7 @@
 - name: install rsync
   apt: pkg=rsync
 
-- template: src=etc/rsyncd.conf dest=/etc/rsyncd.conf owner=root 
+- template: src=etc/rsyncd.conf dest=/etc/rsyncd.conf owner=root
             group=root mode=0644
   notify: restart rsync
 
@@ -64,15 +64,17 @@
   notify: restart rsync
 
 - name: configure dispersion tools
-  template: src=etc/swift/dispersion.conf dest=/etc/swift/dispersion.conf 
+  template: src=etc/swift/dispersion.conf dest=/etc/swift/dispersion.conf
             owner=root group=root mode=0644
 
 - include: monitoring.yml tags=monitoring,common
+  when: monitoring.enabled is not defined or monitoring.enabled|bool
 
 - include: logging.yml
   tags:
     - logrotate
     - logging
+  when: logging.enabled is not defined or logging.enabled|bool
 
 - name: include swift warning in message of the day
   lineinfile: dest=/etc/motd.tail

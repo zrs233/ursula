@@ -51,3 +51,4 @@
             mode=0755 owner=root
 
 - include: monitoring.yml tags=monitoring,common
+  when: monitoring.enabled is not defined or monitoring.enabled|bool

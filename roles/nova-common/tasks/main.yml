@@ -4,7 +4,7 @@
         createhome=yes generate_ssh_key=yes ssh_key_bits=4096
 
 - name: nova packages
-  apt: 
+  apt:
     pkg="{{ item }}"
   with_items: nova.install_packages
 
@@ -31,3 +31,4 @@
   tags:
     - logrotate
     - logging
+  when: logging.enabled is not defined or logging.enabled|bool

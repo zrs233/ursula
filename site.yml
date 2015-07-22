@@ -20,6 +20,7 @@
   roles:
     - role: logging
       tags: ['common', 'logging']
+      when: logging.enabled|bool or logging.enabled is not defined
 
 - name: setup IPv6 router advertisements
   gather_facts: force

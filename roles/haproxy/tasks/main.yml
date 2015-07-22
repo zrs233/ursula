@@ -28,3 +28,4 @@
   service: name=haproxy state=started enabled=yes
 
 - include: monitoring.yml tags=monitoring,common
+  when: monitoring.enabled is not defined or monitoring.enabled|bool
