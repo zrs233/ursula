@@ -1,9 +1,9 @@
 ---
-# These are effectively duplicate handlers while we wait for ansible 1.8
-# support. As 'virtualenv' is optional, we would need the default(omit)
-# syntax provided by ansible 1.8 to do this cleanly.
 - name: "pip install {{ project_name }}"
-  pip: name="/opt/stack/{{ project_name }}" extra_args="-i {{ openstack_source.pypi_mirror }}"
+  pip:
+    name: "/opt/stack/{{ project_name }}"
+    extra_args: "-i {{ openstack_source.pypi_mirror }}"
+    virtualenv: "{{ virtualenv|default(omit) }}"
   register: pip_result
   until: pip_result|success
   retries: 3
@@ -11,18 +11,6 @@
   notify:
     - update ca-certs
   when: virtualenv is not defined
-
-- name: "pip install {{ project_name }} in virtualenv"
-  pip: name="/opt/stack/{{ project_name }}"
-       extra_args="-i {{ openstack_source.pypi_mirror }}"
-       virtualenv="{{ virtualenv }}"
-  register: pip_venv_result
-  until: pip_venv_result|success
-  retries: 3
-  delay: 10
-  notify:
-    - update ca-certs
-  when: virtualenv is defined
 
 - name: update ca-certs
   command: "update-ca-certificates"
