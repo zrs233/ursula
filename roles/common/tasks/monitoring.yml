@@ -128,6 +128,10 @@
   sensu_check: name=cpu plugin=check-cpu.rb args='-w 80 -c 90 -p kvm'
   notify: restart sensu-client
 
+- name: network interface traffic check
+  sensu_check: name=network_interface_traffic_{{ item }} plugin=check-netif.rb args="-c 500 -w 350 --interfaces eth0,eth1,bond0,bond1 --interval"
+  notify: restart sensu-client
+
 - name: disk check
   sensu_check: name=disk plugin=check-disk.rb
   notify: restart sensu-client
@@ -148,6 +152,11 @@
 - name: load metrics check
   sensu_metrics_check: name=load-metrics plugin=load-metrics.rb
                        args='--scheme {{ monitoring.graphite.host_prefix }}'
+  notify: restart sensu-client
+
+- name: network interface traffic metrics check
+  sensu_metrics_check: name=network-interface-traffic-metrics plugin=metrics-netif.rb
+                       args='--scheme {{ monitoring.graphite.host_prefix }}.network --interface eth0,eth1,bond0,bond1'
   notify: restart sensu-client
 
 - name: syslog check
