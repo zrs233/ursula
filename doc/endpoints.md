@@ -18,13 +18,13 @@ connect to HAProxy over SSL for internal API requests. This avoids the
 complexity of having third port for each API service for HAProxy listen on for
 plain text request, or binding HAProxy and API services each to specific IPs.
 
-Since we using SSL for internal communication we need to connect via hostname
-rather than IP so the clients can validate the certificate. Rather than using
-split-horizon DNS or similar so the internal API clients connect to the
-internal floating IP, we went ahead and had the internal API clients connect
-the same public address as external clients. One disadvantage with this choice,
-is lose log visibility into which internal node the API request originated
-from since we NAT the internal requests.
+Since we are using SSL for internal communication, clients require connections
+via hostname rather than IP to allow certificate validation. Rather than using
+split-horizon DNS or similar technology to allow the internal API clients to
+connect to the internal floating IP, we routed the internal API clients to the
+same public address as the external clients. One disadvantage from using this
+NAT is the loss of logging information regarding the originating node of the API
+request.
 
 
 | Service        | Clients  | Protocol | Port  | IP                     |
