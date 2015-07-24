@@ -7,7 +7,7 @@
       tags: ['common','common-base']
     - role: collectd-client
       tags: ['collectd-client','collectd']
-      when: collectd is defined and collectd.enabled|bool
+      when: collectd.enabled|default('False')|bool
 
 - name: security and errata
   hosts: all
@@ -20,7 +20,7 @@
   roles:
     - role: logging
       tags: ['common', 'logging']
-      when: logging.enabled|bool or logging.enabled is not defined
+      when: logging.enabled|default('True')|bool
 
 - name: setup IPv6 router advertisements
   gather_facts: force

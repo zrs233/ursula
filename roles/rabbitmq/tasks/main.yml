@@ -45,4 +45,4 @@
   file: group=root owner=root mode=0755 path=/usr/local/bin/rabbitmqadmin
 
 - include: monitoring.yml tags=monitoring,common
-  when: monitoring.enabled is not defined or monitoring.enabled|bool
+  when: monitoring.enabled|default('True')|bool

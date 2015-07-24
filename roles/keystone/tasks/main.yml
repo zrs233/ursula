@@ -69,11 +69,11 @@
     state: absent
 
 - include: monitoring.yml tags=monitoring,common
-  when: monitoring.enabled is not defined or monitoring.enabled|bool
+  when: monitoring.enabled|default('True')|bool
 
 
 - include: logging.yml
   tags:
     - logrotate
     - logging
-  when: logging.enabled is not defined or logging.enabled|bool
+  when: logging.enabled|default('True')|bool
