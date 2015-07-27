@@ -109,3 +109,4 @@
     - "{{ ansible_hostname }}"
 
 - include: monitoring.yml tags=monitoring,common
+  when: monitoring.enabled|default('True')|bool

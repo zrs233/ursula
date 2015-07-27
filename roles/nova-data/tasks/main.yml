@@ -43,5 +43,5 @@
   service: name=nova-compute state=started
 
 - include: monitoring.yml tags=monitoring,common
-
+  when: monitoring.enabled|default('True')|bool
 
