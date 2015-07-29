@@ -1,6 +1,7 @@
 ---
 glance:
   api_workers: 5
+  rbd_store_chunk_size: 8
   registry_workers: 5
   sync:
     enabled: true
@@ -12,6 +13,7 @@ glance:
     device_name: image-cache
     dir: /var/lib/glance/images
   store_swift: False
+  store_ceph: False
   show_multiple_locations: True
 
   source:
