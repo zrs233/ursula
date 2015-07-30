@@ -6,7 +6,7 @@ swift:
   allow_versions: False
 
   source:
-    rev: '4765537cba6a6970110953f11f4e1b419d0730d3'
+    rev: 'stable/kilo'
   package:
     console_scripts:
       - swift-account-audit

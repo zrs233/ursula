@@ -34,12 +34,12 @@ nova:
     - virt-top
   driver:
     docker:
-      rev: 2f23a09ba49bfafedc712b82613417da7147c5a3
+      rev: 'stable/kilo'
       git_mirror: https://github.com/stackforge/nova-docker.git
       dest: /opt/stack/novadocker
 
   source:
-    rev: 'd67ce79795feb2dcc8e1f90e50a17f866febff69'
+    rev: 'stable/kilo'
     git_mirror: https://github.com/blueboxgroup
   package:
     console_scripts:
