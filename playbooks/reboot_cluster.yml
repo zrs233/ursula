@@ -39,3 +39,8 @@
 
   - name: Ensure Galera is up before rebooting next node
     wait_for: port=4567
+
+  - name: Ensure mysql is running
+    service:
+      name: mysql
+      state: started
