@@ -1,0 +1,10 @@
+---
+- name: restart ceph mons
+  service: name=ceph-mon-all state=restarted
+  when: socket.stat.exists and
+        mon_group_name in group_names
+
+- name: restart ceph osds
+  service: name=ceph-osd-all state=restarted
+  when: socket.stat.exists and
+        osd_group_name in group_names

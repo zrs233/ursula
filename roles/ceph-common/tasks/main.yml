@@ -1,0 +1,30 @@
+---
+- include: tasks/checks/check_system.yml
+
+- include: tasks/checks/check_mandatory_vars.yml
+
+- include: tasks/installs/install_on_debian.yml
+  when: ansible_os_family == 'Debian'
+
+- name: check for a ceph socket
+  stat: path=/var/run/ceph/*.asok
+  changed_when: false
+  failed_when: false
+  register: socket
+
+- name: generate ceph configuration file
+  template: src=ceph.conf.j2
+            dest=/etc/ceph/ceph.conf
+            owner=root
+            group=root
+            mode=0644
+  notify:
+    - restart ceph mons
+    - restart ceph osds
+
+- name: create rbd client directory
+  file: path={{ rbd_client_admin_socket_path }}
+        state=directory
+        owner=root
+        group=root
+        mode=0644
