@@ -1,0 +1,53 @@
+---
+- name: create ceph directory
+  file:
+    path: /etc/ceph
+    state: directory
+
+- name: install dependencies
+  apt: pkg={{ item }}
+       state=present
+       update_cache=yes
+       cache_valid_time=3600
+  with_items: ceph_common.debian_pkgs
+
+- name: install ceph
+  apt: pkg={{ item }}
+       state=present
+  with_items: ceph_common.ceph_pkgs
+
+- name: check for a ceph socket
+  shell: "stat /var/run/ceph/*.asok > /dev/null 2>&1"
+  changed_when: false
+  failed_when: false
+  register: socket
+
+# we're storing the fsid in a file on the first monitor node
+# truncate is to get rid of the newline
+- name: generate fsid file if we don't have one
+  shell: uuidgen > /etc/ceph/fsid && truncate -s -1 /etc/ceph/fsid
+         creates=/etc/ceph/fsid
+  run_once: true
+  delegate_to:  "{{ groups[ceph.monitor_group_name][0] }}"
+
+- name: fetch contents of fsid file
+  slurp: path=/etc/ceph/fsid
+  run_once: true
+  delegate_to: "{{ groups[ceph.monitor_group_name][0] }}"
+  register: fsid_file
+
+# for redundancy, and if the hosts in mons get reordered
+- name: copy fsid to all hosts
+  copy:
+    dest: "{{ fsid_file['source'] }}"
+    content: "{{ fsid_file['content'] | b64decode }}"
+
+- name: generate ceph configuration file
+  template: src=etc/ceph/ceph.conf
+            dest=/etc/ceph/ceph.conf
+            owner=root
+            group=root
+            mode=0644
+  notify:
+    - restart ceph mons
+    - restart ceph osds
