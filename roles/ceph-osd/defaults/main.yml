@@ -1,0 +1,18 @@
+---
+ceph_osd:
+
+  pkgs:
+    - parted
+
+  # ONLY SET THIS TO TRUE IF YOU KNOW WHAT YOU'RE DOING.
+  # This will likely only be used on a fresh install.
+  destroy_devices_no_matter_what: false
+
+  #devices:
+  #  - /dev/sdb
+  #  - /dev/sdc
+
+  raw_multi_journal: true
+  #raw_journal_devices:
+  #  - /dev/sda
+  #  - /dev/sda
