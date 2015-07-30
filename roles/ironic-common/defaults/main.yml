@@ -18,7 +18,7 @@ ironic:
     - pxe_ipmitool
 
   source:
-    rev: '53171f75a64a26dcec91facbdec95b2ed7f74338'
+    rev: 'stable/kilo'
   package:
     console_scripts:
       - ironic-api
