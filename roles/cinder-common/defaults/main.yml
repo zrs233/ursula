@@ -5,6 +5,7 @@ cinder:
   default_backend:
   backends: []
   api_workers: 5
+  volume_type: file
   volume_group: cinder-volumes
   create_vg: true
 
