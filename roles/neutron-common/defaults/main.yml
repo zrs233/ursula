@@ -21,7 +21,7 @@ neutron:
     envs: []
 
   source:
-    rev: '679246d7280e9fb374f8db0972b21b3653724c42'
+    rev: 'stable/kilo'
   package:
     console_scripts:
       - neutron-cisco-apic-host-agent

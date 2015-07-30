@@ -10,7 +10,7 @@ cinder:
   create_vg: true
 
   source:
-    rev: '7b1d7a31335bd8723551c9af5c270927ad830c3f'
+    rev: 'stable/kilo'
   package:
     console_scripts:
       - cinder-all
