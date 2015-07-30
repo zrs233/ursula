@@ -1,0 +1,6 @@
+---
+- include: deploy_monitors.yml
+
+- include: start_monitor.yml
+
+- include: ceph_keys.yml
