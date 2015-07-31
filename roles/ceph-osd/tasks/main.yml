@@ -1,13 +1,27 @@
 ---
+- name: check for correct scenario input
+  fail: msg="Please select only one OSD scenario!"
+  when: (ceph_osd.journal_collocation and ceph_osd.raw_multi_journal) or 
+        (ceph_osd.journal_collocation and ceph_osd.osd_directory) or
+        (ceph_osd.raw_multi_journal and ceph_osd.osd_directory)
 
-- include: pre_requisite.yml
-  when: not ceph_containerized_deployment
+- name: install dependencies
+  apt: pkg=parted
+       state=present
 
-- include: ./scenarios/journal_collocation.yml
-  when: journal_collocation and not ceph_containerized_deployment
+- name: copy osd bootstrap key
+  copy: src=fetch/{{ ceph_common.fsid }}/var/lib/ceph/bootstrap-osd/ceph.keyring
+        dest=/var/lib/ceph/bootstrap-osd/ceph.keyring
+        owner=root
+        group=root
+        mode=600
+  when: ceph_common.cephx
 
-- include: ./scenarios/raw_multi_journal.yml
-  when: raw_multi_journal and not ceph_containerized_deployment
+- include: tasks/scenarios/journal_collocation.yml
+  when: ceph_osd.journal_collocation
 
-- include: ./scenarios/osd_directory.yml
-  when: osd_directory and not ceph_containerized_deployment
+- include: tasks/scenarios/raw_multi_journal.yml
+  when: ceph_osd.raw_multi_journal
+
+- include: tasks/scenarios/osd_directory.yml
+  when: ceph_osd.osd_directory

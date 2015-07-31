@@ -1,5 +1,5 @@
 ---
-# NOTE (leseb): some devices might miss partition label which which will result
+# NOTE: some devices might miss partition label which which will result
 # in ceph-disk failing to prepare OSD. Thus zapping them prior to prepare the OSD
 # ensures that the device will get successfully prepared.
 - name: erasing partitions and labels from osd disk(s)
@@ -8,12 +8,12 @@
   with_together:
     - parted.results
     - ispartition.results
-    - devices
+    - ceph_osd.devices
   when:
     item.0.rc != 0 and
     item.1.rc != 0 and
-    zap_devices and
-    (journal_collocation or raw_multi_journal)
+    ceph_osd.zap_devices and
+    (ceph_osd.journal_collocation or ceph_osd.raw_multi_journal)
 
 - name: erasing partitions and labels from the journal device(s)
   command: ceph-disk zap {{ item.2 }}
@@ -21,9 +21,9 @@
   with_together:
     - parted.results
     - ispartition.results
-    - raw_journal_devices
+    - ceph_osd.raw_journal_devices
   when:
     item.0.rc != 0 and
     item.1.rc != 0 and
-    zap_devices and
-    raw_multi_journal
+    ceph_osd.zap_devices and
+    ceph_osd.raw_multi_journal
