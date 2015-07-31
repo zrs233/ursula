@@ -2,30 +2,30 @@
 # {{ ansible_managed }}
 
 [global]
-{% if cephx %}
+{% if ceph_common.cephx %}
   auth cluster required = cephx
   auth service required = cephx
   auth client required = cephx
-  cephx require signatures = {{ cephx_require_signatures }} # Kernel RBD does NOT support signatures!
-  cephx cluster require signatures = {{ cephx_cluster_require_signatures }}
-  cephx service require signatures = {{ cephx_service_require_signatures }}
+  cephx require signatures = {{ ceph_common.cephx_require_signatures }} # Kernel RBD does NOT support signatures!
+  cephx cluster require signatures = {{ ceph_common.cephx_cluster_require_signatures }}
+  cephx service require signatures = {{ ceph_common.cephx_service_require_signatures }}
 {% else %}
   auth cluster required = none
   auth service required = none
   auth client required = none
   auth supported = none
 {% endif %}
-  fsid = {{ fsid }}
-  max open files = {{ max_open_files }}
-  osd pool default pg num = {{ pool_default_pg_num }}
-  osd pool default pgp num = {{ pool_default_pgp_num }}
-  osd pool default size = {{ pool_default_size }}
-  osd pool default min size = {{ pool_default_min_size }}
-  osd pool default crush rule = {{ pool_default_crush_rule }}
-{% if common_single_host_mode is defined %}
+  fsid = {{ ceph_common.fsid }}
+  max open files = {{ ceph_common.max_open_files }}
+  osd pool default pg num = {{ ceph_common.pool_default_pg_num }}
+  osd pool default pgp num = {{ ceph_common.pool_default_pgp_num }}
+  osd pool default size = {{ ceph_common.pool_default_size }}
+  osd pool default min size = {{ ceph_common.pool_default_min_size }}
+  osd pool default crush rule = {{ ceph_common.pool_default_crush_rule }}
+{% if ceph_common.common_single_host_mode is defined %}
   osd crush chooseleaf type = 0
 {% endif %}
-{% if disable_in_memory_logs %}
+{% if ceph_common.disable_in_memory_logs %}
   # Disable in-memory logs
   debug_lockdep = 0/0
   debug_context = 0/0
@@ -57,37 +57,37 @@
   debug_paxos = 0/0
   debug_rgw = 0/0
 {% endif %}
-{% if enable_debug_global %}
-  debug ms = {{ debug_global_level }}
+{% if ceph_common.enable_debug_global %}
+  debug ms = {{ ceph_common.debug_global_level }}
 {% endif %}
 
 [client]
-  rbd cache = {{ rbd_cache }}
+  rbd cache = {{ ceph_common.rbd_cache }}
   rbd cache writethrough until flush = true
-  rbd concurrent management ops = {{ rbd_concurrent_management_ops }}
-  admin socket = {{ rbd_client_admin_socket_path }}/$cluster-$type.$id.$pid.$cctid.asok # must be writable by QEMU and allowed by SELinux or AppArmor
-  log file = {{ rbd_client_log_file }} # must be writable by QEMU and allowed by SELinux or AppArmor
-  rbd default map options = {{ rbd_default_map_options }}
-  rbd default features = {{ rbd_default_features }} # sum features digits
-  rbd default format = {{ rbd_default_format }}
+  rbd concurrent management ops = {{ ceph_common.rbd_concurrent_management_ops }}
+  admin socket = {{ ceph_common.rbd_client_admin_socket_path }}/$cluster-$type.$id.$pid.$cctid.asok # must be writable by QEMU and allowed by SELinux or AppArmor
+  log file = {{ ceph_common.rbd_client_log_file }} # must be writable by QEMU and allowed by SELinux or AppArmor
+  rbd default map options = {{ ceph_common.rbd_default_map_options }}
+  rbd default features = {{ ceph_common.rbd_default_features }} # sum features digits
+  rbd default format = {{ ceph_common.rbd_default_format }}
 
 [mon]
-  mon osd down out interval = {{ mon_osd_down_out_interval }}
-  mon osd min down reporters = {{ mon_osd_min_down_reporters }}
-  mon clock drift allowed = {{ mon_clock_drift_allowed }}
-  mon clock drift warn backoff = {{ mon_clock_drift_warn_backoff }}
-  mon osd full ratio = {{ mon_osd_full_ratio }}
-  mon osd nearfull ratio = {{ mon_osd_nearfull_ratio }}
-  mon osd report timeout = {{ mon_osd_report_timeout }}
-  mon pg warn max per osd = {{ mon_pg_warn_max_per_osd }}
-  mon osd allow primary affinity = {{ mon_osd_allow_primary_affinity }}
+  mon osd down out interval = {{ ceph_common.mon_osd_down_out_interval }}
+  mon osd min down reporters = {{ ceph_common.mon_osd_min_down_reporters }}
+  mon clock drift allowed = {{ ceph_common.mon_clock_drift_allowed }}
+  mon clock drift warn backoff = {{ ceph_common.mon_clock_drift_warn_backoff }}
+  mon osd full ratio = {{ ceph_common.mon_osd_full_ratio }}
+  mon osd nearfull ratio = {{ ceph_common.mon_osd_nearfull_ratio }}
+  mon osd report timeout = {{ ceph_common.mon_osd_report_timeout }}
+  mon pg warn max per osd = {{ ceph_common.mon_pg_warn_max_per_osd }}
+  mon osd allow primary affinity = {{ ceph_common.mon_osd_allow_primary_affinity }}
 
-{% if enable_debug_mon %}
-  debug mon = {{ debug_mon_level }}
-  debug paxos = {{ debug_mon_level }}
-  debug auth = {{ debug_mon_level }}
+{% if ceph_common.enable_debug_mon %}
+  debug mon = {{ ceph_common.debug_mon_level }}
+  debug paxos = {{ ceph_common.debug_mon_level }}
+  debug auth = {{ ceph_common.debug_mon_level }}
 {% endif %}
-{% for host in groups[mon_group_name] %}
+{% for host in groups[ceph_common.mon_group_name] %}
   {% if hostvars[host]['ansible_hostname'] is defined %}
   [mon.{{ hostvars[host]['ansible_hostname'] }}]
     host = {{ hostvars[host]['ansible_hostname'] }}
@@ -96,41 +96,41 @@
 {% endfor %}
 
 [osd]
-  osd mkfs type = {{ osd_mkfs_type }}
-  osd mkfs options xfs = {{ osd_mkfs_options_xfs }}
-  osd mount options xfs = {{ osd_mount_options_xfs }}
-  osd journal size = {{ journal_size }}
-{% if cluster_network is defined %}
-  cluster_network = {{ cluster_network }}
+  osd mkfs type = {{ ceph_common.osd_mkfs_type }}
+  osd mkfs options xfs = {{ ceph_common.osd_mkfs_options_xfs }}
+  osd mount options xfs = {{ ceph_common.osd_mount_options_xfs }}
+  osd journal size = {{ ceph_common.journal_size }}
+{% if ceph_common.cluster_network is defined %}
+  cluster_network = {{ ceph_common.cluster_network }}
 {% endif %}
-{% if public_network is defined %}
-  public_network = {{ public_network }}
+{% if ceph_common.public_network is defined %}
+  public_network = {{ ceph_common.public_network }}
 {% endif %}
-  osd mon heartbeat interval = {{ osd_mon_heartbeat_interval }}
+  osd mon heartbeat interval = {{ ceph_common.osd_mon_heartbeat_interval }}
   # Performance tuning
-  filestore merge threshold = {{ filestore_merge_threshold }}
-  filestore split multiple = {{ filestore_split_multiple }}
-  osd op threads = {{ osd_op_threads }}
-  filestore op threads = {{ filestore_op_threads }}
-  filestore max sync interval = {{ filestore_max_sync_interval }}
-  osd max scrubs = {{ osd_max_scrubs }}
+  filestore merge threshold = {{ ceph_common.filestore_merge_threshold }}
+  filestore split multiple = {{ ceph_common.filestore_split_multiple }}
+  osd op threads = {{ ceph_common.osd_op_threads }}
+  filestore op threads = {{ ceph_common.filestore_op_threads }}
+  filestore max sync interval = {{ ceph_common.filestore_max_sync_interval }}
+  osd max scrubs = {{ ceph_common.osd_max_scrubs }}
   # Recovery tuning
-  osd recovery max active = {{ osd_recovery_max_active }}
-  osd max backfills = {{ osd_max_backfills }}
-  osd recovery op priority = {{ osd_recovery_op_priority }}
-  osd recovery max chunk = {{ osd_recovery_max_chunk }}
-  osd recovery threads = {{ osd_recovery_threads }}
-  osd objectstore = {{ osd_objectstore }}
-  osd crush update on start = {{ osd_crush_update_on_start }}
-{% if enable_debug_osd %}
-  debug osd = {{ debug_osd_level }}
-  debug filestore = {{ debug_osd_level }}
-  debug journal = {{ debug_osd_level }}
-  debug monc = {{ debug_osd_level }}
+  osd recovery max active = {{ ceph_common.osd_recovery_max_active }}
+  osd max backfills = {{ ceph_common.osd_max_backfills }}
+  osd recovery op priority = {{ ceph_common.osd_recovery_op_priority }}
+  osd recovery max chunk = {{ ceph_common.osd_recovery_max_chunk }}
+  osd recovery threads = {{ ceph_common.osd_recovery_threads }}
+  osd objectstore = {{ ceph_common.osd_objectstore }}
+  osd crush update on start = {{ ceph_common.osd_crush_update_on_start }}
+{% if ceph_common.enable_debug_osd %}
+  debug osd = {{ ceph_common.debug_osd_level }}
+  debug filestore = {{ ceph_common.debug_osd_level }}
+  debug journal = {{ ceph_common.debug_osd_level }}
+  debug monc = {{ ceph_common.debug_osd_level }}
 {% endif %}
   # Deep scrub impact
-  osd scrub sleep = {{ osd_scrub_sleep }}
-  osd disk thread ioprio class = {{ osd_disk_thread_ioprio_class }}
-  osd disk thread ioprio priority = {{ osd_disk_thread_ioprio_priority }}
-  osd scrub chunk max = {{ osd_scrub_chunk_max }}
-  osd deep scrub stride = {{ osd_deep_scrub_stride }}
+  osd scrub sleep = {{ ceph_common.osd_scrub_sleep }}
+  osd disk thread ioprio class = {{ ceph_common.osd_disk_thread_ioprio_class }}
+  osd disk thread ioprio priority = {{ ceph_common.osd_disk_thread_ioprio_priority }}
+  osd scrub chunk max = {{ ceph_common.osd_scrub_chunk_max }}
+  osd deep scrub stride = {{ ceph_common.osd_deep_scrub_stride }}

@@ -3,8 +3,36 @@
 
 - include: tasks/checks/check_mandatory_vars.yml
 
-- include: tasks/installs/install_on_debian.yml
-  when: ansible_os_family == 'Debian'
+- name: install dependencies
+  apt: pkg={{ item }}
+       state=present
+       update_cache=yes
+       cache_valid_time=3600
+  with_items: ceph_common.debian_pkgs
+
+- name: install the ceph repository stable key
+  apt_key: data="{{ lookup('file', '../../files/cephstable.asc') }}"
+           state=present
+  when: ceph_common.ceph_stable
+
+- name: add ceph stable repository
+  apt_repository: repo="deb http://ceph.com/debian-{{ ceph_stable_release }}/ {{ ceph_stable_distro_source | default(ansible_lsb.codename) }} main"
+                  state=present
+  when: ceph_common.ceph_stable
+
+- name: install ceph
+  apt: pkg={{ item }}
+       state=present
+  with_items: ceph_common.ceph_pkgs
+
+- name: configure rbd clients directories
+  file: path={{ item }}
+        state=directory
+        owner=libvirt-qemu
+        group=kvm
+        mode=0755
+  with_items: ceph_common.rbd_client_paths
+  when: ceph_common.rbd_client_directories
 
 - name: check for a ceph socket
   stat: path=/var/run/ceph/*.asok
