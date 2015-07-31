@@ -1,0 +1,96 @@
+---
+- name: create monitor initial keyring
+  command: ceph-authtool /var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }} --create-keyring --name=mon. --add-key={{ ceph_monitor.monitor_secret }} --cap mon 'allow *'
+           creates=/var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
+
+- name: set initial monitor key permissions
+  file: path=/var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
+        mode=0600
+        owner=root
+        group=root
+
+- name: create monitor directory
+  file: path=/var/lib/ceph/mon/ceph-{{ ansible_hostname }}
+        state=directory
+        owner=root
+        group=root
+        mode=0755
+
+- name: ceph monitor mkfs
+  command: ceph-mon --mkfs -i {{ ansible_hostname }} --fsid {{ ceph_monitor.fsid }} --keyring /var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
+           creates=/var/lib/ceph/mon/ceph-{{ ansible_hostname }}/keyring
+
+- name: activate monitor with upstart
+  file: path=/var/lib/ceph/mon/ceph-{{ ansible_hostname }}/{{ item }}
+        state=touch
+        owner=root
+        group=root
+        mode=0600
+  with_items:
+    - done
+    - upstart
+  changed_when: false
+
+- name: ensure ceph-mon service enabled and started
+  service: name=ceph-mon
+           state=started
+           enabled=yes
+           args=id={{ ansible_hostname }}
+
+- name: create monitor initial keyring
+  command: ceph-authtool /var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }} --create-keyring --name=mon. --add-key={{ ceph_monitor.monitor_secret }} --cap mon 'allow *'
+           creates=/var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
+
+- name: set initial monitor key permissions
+  file: path=/var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
+        mode=0600
+        owner=root
+        group=root
+
+- name: create monitor directory
+  file: path=/var/lib/ceph/mon/ceph-{{ ansible_hostname }}
+        state=directory
+        owner=root
+        group=root
+        mode=0755
+
+- name: ceph monitor mkfs
+  command: ceph-mon --mkfs -i {{ ansible_hostname }} --fsid {{ ceph_monitor.fsid }} --keyring /var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
+           creates=/var/lib/ceph/mon/ceph-{{ ansible_hostname }}/keyring
+
+# NOTE (leseb): wait for mon discovery and quorum resolution
+# the admin key is not instantanely created so we have to wait a bit
+- name: wait for client.admin key exists
+  wait_for: path=/etc/ceph/ceph.client.admin.keyring
+
+- name: create openstack pool
+  command: rados mkpool {{ item }}
+  with_items:
+    - "{{ ceph_monitor.openstack_block_storage_pool }}"
+  failed_when: false
+
+- name: create openstack keys
+  command: ceph auth get-or-create {{ item.name }} {{ item.value }} -o /etc/ceph/ceph.{{ item.name }}.keyring
+           creates=/etc/ceph/ceph.{{ item.name }}.keyring
+  with_items: ceph_monitor.openstack_keys
+
+- name: find ceph keys
+  shell: ls -1 /etc/ceph/*.keyring
+  changed_when: false
+  register: ceph_keys
+  when: ceph_monitor.cephx
+
+- name: set keys permissions
+  file: path={{ item }}
+        mode=0600
+        owner=root
+        group=root
+  with_items:
+    - "{{ ceph_keys.stdout_lines }}"
+
+- name: drop in a motd script to report status when logging in
+  template: src=92-ceph
+            dest=/etc/update-motd.d/92-ceph
+            owner=root
+            group=root
+            mode=0755
