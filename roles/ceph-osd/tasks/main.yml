@@ -1,10 +1,4 @@
 ---
-- name: check for correct scenario input
-  fail: msg="Please select only one OSD scenario!"
-  when: (ceph_osd.journal_collocation and ceph_osd.raw_multi_journal) or 
-        (ceph_osd.journal_collocation and ceph_osd.osd_directory) or
-        (ceph_osd.raw_multi_journal and ceph_osd.osd_directory)
-
 - name: install dependencies
   apt: pkg=parted
        state=present
