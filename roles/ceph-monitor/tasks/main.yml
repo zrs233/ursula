@@ -89,7 +89,7 @@
     - "{{ ceph_keys.stdout_lines }}"
 
 - name: drop in a motd script to report status when logging in
-  template: src=92-ceph
+  template: src=etc/update-motd.d/92-ceph
             dest=/etc/update-motd.d/92-ceph
             owner=root
             group=root
