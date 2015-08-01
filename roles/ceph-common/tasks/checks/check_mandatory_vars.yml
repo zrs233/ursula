@@ -26,6 +26,13 @@
         not ceph_osd.raw_multi_journal and
         not ceph_osd.osd_directory
 
+- name: verify only one osd scenario was chosen
+  fail: msg="please select only one osd scenario"
+  when: ceph_common.osd_group_name is defined and
+        ((ceph_osd.journal_collocation and ceph_osd.raw_multi_journal) or
+        (ceph_osd.journal_collocation and ceph_osd.osd_directory) or
+        (ceph_osd.raw_multi_journal and ceph_osd.osd_directory))
+
 - name: verify devices have been provided
   fail: msg="please provide devices to your osd scenario"
   when: osd_group_name is defined and
