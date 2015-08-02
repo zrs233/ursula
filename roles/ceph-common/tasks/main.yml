@@ -1,7 +1,7 @@
 ---
-- include: tasks/checks/check_system.yml
+- include: checks/check_system.yml
 
-- include: tasks/checks/check_mandatory_vars.yml
+- include: checks/check_mandatory_vars.yml
 
 - name: install dependencies
   apt: pkg={{ item }}
@@ -11,12 +11,12 @@
   with_items: ceph_common.debian_pkgs
 
 - name: install the ceph repository stable key
-  apt_key: url="https://ceph.com/git/?p=ceph.git;a=blob_plain;f=keys/release.asc"
+  apt_key: url={{ ceph_common.ceph_stable_key }}
            state=present
   when: ceph_common.ceph_stable
 
 - name: add ceph stable repository
-  apt_repository: repo="deb http://ceph.com/debian-{{ ceph_stable_release }}/ {{ ceph_stable_distro_source | default(ansible_lsb.codename) }} main"
+  apt_repository: repo="deb http://ceph.com/debian-{{ ceph_common.ceph_stable_release }}/ {{ ansible_lsb.codename }} main"
                   state=present
   when: ceph_common.ceph_stable
 
@@ -51,7 +51,7 @@
     - restart ceph osds
 
 - name: create rbd client directory
-  file: path={{ rbd_client_admin_socket_path }}
+  file: path={{ ceph_common.rbd_client_admin_socket_path }}
         state=directory
         owner=root
         group=root

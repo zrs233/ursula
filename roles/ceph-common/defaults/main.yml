@@ -3,44 +3,43 @@ ceph_common:
 
   ###########
   # INSTALL #
-  ###########  
+  ###########
 
   mon_group_name: mons
-  osd_group_name: osds  
+  osd_group_name: osds
 
   debian_pkgs:
     - python-pycurl
     - ntp
-    - hdparm  
+    - hdparm
 
   ceph_pkgs:
     - ceph
-    - ceph-common  
+    - ceph-common
 
   rbd_client_paths:
     - rbd_client_log_path
-    - rbd_client_admin_socket_path  
-
+    - rbd_client_admin_socket_path
 
   # STABLE COMMUNITY VERSION
-  ceph_stable: false # use ceph stable branch
+  ceph_stable: true # use ceph stable branch
   ceph_stable_key: https://ceph.com/git/?p=ceph.git;a=blob_plain;f=keys/release.asc
-  ceph_stable_release: hammer # ceph stable release  
+  ceph_stable_release: hammer # ceph stable release
 
 
   ######################
   # CEPH CONFIGURATION #
-  ######################  
+  ######################
 
   ## Ceph options
   #
-  fsid: "{{ cluster_uuid }}"
+  fsid: 68e1ee8e-d4f0-43fc-892a-0944b5b22acf
   cephx: true
   cephx_require_signatures: true # Kernel RBD does NOT support signatures for Kernels < 3.18!
   cephx_cluster_require_signatures: true
   cephx_service_require_signatures: false
   max_open_files: 131072
-  disable_in_memory_logs: true # set this to false while enabling the options below  
+  disable_in_memory_logs: true # set this to false while enabling the options below
 
   # Debug logs
   enable_debug_global: false
@@ -50,7 +49,7 @@ ceph_common:
   enable_debug_osd: false
   debug_osd_level: 20
   enable_debug_mds: false
-  debug_mds_level: 20  
+  debug_mds_level: 20
 
   ## Client options
   #
@@ -63,11 +62,11 @@ ceph_common:
   rbd_client_admin_socket_path: /var/run/ceph/rbd-clients # must be writable by QEMU and allowed by SELinux or AppArmor
   rbd_default_features: 3
   rbd_default_map_options: rw
-  rbd_default_format: 2  
+  rbd_default_format: 2
 
   ## Monitor options
   #
-  monitor_interface: interface
+  monitor_interface: bond0
   mon_osd_down_out_interval: 600
   mon_osd_min_down_reporters: 7 # number of OSDs per host + 1
   mon_clock_drift_allowed: .15
@@ -76,7 +75,7 @@ ceph_common:
   mon_osd_nearfull_ratio: .85
   mon_osd_report_timeout: 300
   mon_pg_warn_max_per_osd: 0 # disable complains about low pgs numbers per osd
-  mon_osd_allow_primary_affinity: "true"  
+  mon_osd_allow_primary_affinity: "true"
 
   ## OSD options
   #
@@ -85,19 +84,19 @@ ceph_common:
   pool_default_pgp_num: 128
   pool_default_size: 2
   pool_default_min_size: 1
-  public_network: 0.0.0.0/0
-  cluster_network: "{{ public_network }}"
+  public_network: 10.142.239.224/27
+  cluster_network: 10.142.239.224/27
   osd_mkfs_type: xfs
   osd_mkfs_options_xfs: -f -i size=2048
   osd_mount_options_xfs: noatime,largeio,inode64,swalloc
-  osd_mon_heartbeat_interval: 30  
+  osd_mon_heartbeat_interval: 30
 
   # CRUSH
   pool_default_crush_rule: 0
-  osd_crush_update_on_start: "true"  
+  osd_crush_update_on_start: "true"
 
   # Object backend
-  osd_objectstore: filestore  
+  osd_objectstore: filestore
 
   # Performance tuning
   filestore_merge_threshold: 40
@@ -105,14 +104,14 @@ ceph_common:
   osd_op_threads: 8
   filestore_op_threads: 8
   filestore_max_sync_interval: 5
-  osd_max_scrubs: 1  
+  osd_max_scrubs: 1
 
   # Recovery tuning
   osd_recovery_max_active: 1
   osd_max_backfills: 1
   osd_recovery_op_priority: 2
   osd_recovery_max_chunk: 1048576
-  osd_recovery_threads: 1  
+  osd_recovery_threads: 1
 
   # Deep scrub
   osd_scrub_sleep: .1
