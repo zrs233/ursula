@@ -11,11 +11,55 @@
         mode=600
   when: ceph_common.cephx
 
-- include: tasks/scenarios/journal_collocation.yml
-  when: ceph_osd.journal_collocation
+- name: check if the device is a partition or a disk
+  shell: "echo '{{ item }}' | egrep '/dev/(([a-z]{3,4}[0-9]$)|(cciss/c[0-9]{1}d[0-9]{1}p[0-9]$))'"
+  with_items: ceph_osd.devices
+  changed_when: false
+  failed_when: false
+  register: ispartition
 
-- include: tasks/scenarios/raw_multi_journal.yml
-  when: ceph_osd.raw_multi_journal
+- name: if partition named 'ceph' exists
+  shell: "parted --script {{ item }} print | egrep -sq '^ 1.*ceph'"
+  with_items: ceph_osd.devices
+  changed_when: false
+  failed_when: false
+  register: parted
 
-- include: tasks/scenarios/osd_directory.yml
-  when: ceph_osd.osd_directory
+- name: erasing partitions and labels from osd disk(s)
+  command: ceph-disk zap {{ item.2 }}
+  changed_when: false
+  with_together:
+    - parted.results
+    - ispartition.results
+    - ceph_osd.devices
+  when:
+    item.0.rc != 0 and
+    item.1.rc != 0 and
+    ceph_osd.zap_devices
+
+- name: erasing partitions and labels from the journal device(s)
+  command: ceph-disk zap {{ item.2 }}
+  changed_when: false
+  with_together:
+    - parted.results
+    - ispartition.results
+    - ceph_osd.raw_journal_devices
+  when:
+    item.0.rc != 0 and
+    item.1.rc != 0 and
+    ceph_osd.zap_devices
+
+- name: prepare osd disk(s)
+  command: "ceph-disk prepare {{ item.2 }} {{ item.3 }}"
+  with_together:
+    - parted.results
+    - ispartition.results
+    - ceph_osd.devices
+    - ceph_osd.raw_journal_devices
+  changed_when: false
+  failed_when: false
+  when:
+    item.0.rc != 0 and
+    item.1.rc != 0
+
+- include: activate_osds.yml

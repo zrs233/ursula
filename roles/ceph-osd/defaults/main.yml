@@ -15,31 +15,31 @@ ceph_osd:
   # To match the following 'osd_crush_location' option the inventory must look like:
   #
   # [osds]
-  # osd0 ceph_crush_root=foo ceph_crush_rack=bar  
+  # osd0 ceph_crush_root=foo ceph_crush_rack=bar
 
   crush_location: false
-  osd_crush_location: "'root={{ ceph_crush_root }} rack={{ ceph_crush_rack }} host={{ ansible_hostname }}'"  
+  osd_crush_location: "'root={{ ceph_crush_root }} rack={{ ceph_crush_rack }} host={{ ansible_hostname }}'"
 
   ##############
   # CEPH OPTIONS
-  ##############  
+  ##############
 
   # Devices to be used as OSDs
   # You can pre-provision disks that are not present yet.
   # Ansible will just skip them. Newly added disk will be
   # automatically configured during the next run.
-  #  
+  #
 
   # USE WITH CAUTION
   # Erase partitions structure and layout of the given devices below prior to prepare them
-  zap_devices: false  
+  zap_devices: false
 
   # Declare devices
   # All the scenarii inherit from the following device declaration
   #
   # devices:
   #  - /dev/sdb
-  #  - /dev/sdc  
+  #  - /dev/sdc
 
   # Device discovery is based on the Ansible fact 'ansible_devices'
   # which reports all the devices on a system. If chosen all the disks
@@ -48,42 +48,16 @@ ceph_osd:
   # Thus devices with existing partition tables will not be used.
   # This mode prevents you from filling out the 'devices' variable above.
   #
-  osd_auto_discovery: false  
+  osd_auto_discovery: false
 
-
-  # CHOOSE ONE OF THE FOLLOWING THREE SCENARIOS
-
-
-  # I. First scenario: journal and osd_data on the same device
-  # Use 'true' to enable this scenario
-  # This will collocate both journal and data on the same disk
-  # creating a partition at the beginning of the device  
-
-  journal_collocation: false  
-
-
-  # II. Second scenario: N journal devices for N OSDs
-  # Use 'true' to enable this scenario
-  #
-  # In the following example:
-  # * sdd and sde will get sdb as a journal
-  # * sdf and sdg will get sdc as a journal
-  # While starting you have 2 options:
+  # N journal devices for N OSDs
+  # While starting we have 2 options:
   # 1. Pre-allocate all the devices
-  # 2. Progressively add new devices  
+  # 2. Progressively add new devices
 
-  raw_multi_journal: false
+  raw_multi_journal: true
   #raw_journal_devices:
   #  - /dev/sdb
   #  - /dev/sdb
   #  - /dev/sdc
-  #  - /dev/sdc  
-
-
-  # III. Third scenario: use directory instead of disk for OSDs
-  # Use 'true' to enable this scenario  
-
-  osd_directory: false
-  #osd_directories:
-  #  - /var/lib/ceph/osd/mydir1
-  #  - /var/lib/ceph/osd/mydir2
+  #  - /dev/sdc
