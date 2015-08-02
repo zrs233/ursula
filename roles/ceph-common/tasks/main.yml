@@ -1,7 +1,5 @@
 ---
-- include: checks/check_system.yml
-
-- include: checks/check_mandatory_vars.yml
+- include: check_system_and_vars.yml
 
 - name: install dependencies
   apt: pkg={{ item }}
