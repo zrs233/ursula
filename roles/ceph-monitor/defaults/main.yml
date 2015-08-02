@@ -4,8 +4,8 @@
 ###########
 ceph_monitor:
   # ACTIVATE BOTH FSID AND MONITOR_SECRET VARIABLES FOR NON-VAGRANT DEPLOYMENT
-  fsid: "{{ cluster_uuid }}"
-  monitor_secret: "{{ monitor_keyring }}"
+  fsid: 68e1ee8e-d4f0-43fc-892a-0944b5b22acf 
+  monitor_secret: AQBQn8tUiHXoIxAAi5u4x3fk/kGEPTzV5d4sNw== 
   cephx: true
 
   #############
@@ -16,5 +16,5 @@ ceph_monitor:
   openstack_block_storage_pool: block_storage_pool
 
   openstack_keys:
-    - { name: client.glance, value: "mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx pool={{ openstack_block_storage_pool }}'" }
-    - { name: client.cinder, value: "mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx pool={{ openstack_block_storage_pool }}'"  }
+    - { name: client.glance, value: "mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx pool=block_storage_pool'" }
+    - { name: client.cinder, value: "mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx pool=block_storage_pool'"  }
