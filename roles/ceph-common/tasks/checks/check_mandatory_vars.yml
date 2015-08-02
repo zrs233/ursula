@@ -19,24 +19,15 @@
   fail: msg="public_network must be configured. Ceph public network"
   when: ceph_common.public_network == '0.0.0.0/0'
 
-- name: make sure an osd scenario was chosen
+- name: make sure raw_multi_journal was chosen
   fail: msg="please choose an osd scenario"
   when: ceph_common.osd_group_name is defined and
-        not ceph_osd.journal_collocation and
-        not ceph_osd.raw_multi_journal and
-        not ceph_osd.osd_directory
-
-- name: verify only one osd scenario was chosen
-  fail: msg="please select only one osd scenario"
-  when: ceph_common.osd_group_name is defined and
-        ((ceph_osd.journal_collocation and ceph_osd.raw_multi_journal) or
-        (ceph_osd.journal_collocation and ceph_osd.osd_directory) or
-        (ceph_osd.raw_multi_journal and ceph_osd.osd_directory))
+        not ceph_osd.raw_multi_journal
 
 - name: verify devices have been provided
   fail: msg="please provide devices to your osd scenario"
   when: osd_group_name is defined and
-        (ceph_osd.journal_collocation or ceph_osd.raw_multi_journal) and
+        ceph_osd.raw_multi_journal and
         ceph_osd.devices is not defined
 
 - name: verify journal devices have been provided
@@ -44,10 +35,3 @@
   when: osd_group_name is defined and
         ceph_osd.raw_multi_journal and
         ceph_osd.raw_journal_devices is not defined
-
-- name: verify directories have been provided
-  fail: msg="please provide directories to your osd scenario"
-  when: osd_group_name is defined and
-        ceph_common.osd_group_name in group_names and
-        ceph_osd.osd_directory and
-        ceph_osd.osd_directories is not defined
