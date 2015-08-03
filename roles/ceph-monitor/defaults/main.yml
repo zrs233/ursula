@@ -1,16 +1,7 @@
 ---
-###########
-# GENERAL #
-###########
 ceph_monitor:
-  # ACTIVATE BOTH FSID AND MONITOR_SECRET VARIABLES FOR NON-VAGRANT DEPLOYMENT
-  fsid: f3451e6a-f352-4a8a-bdeb-e97fde48de9e 
-  monitor_secret: AQAin8tU4FRGFhAAmftBPgcpG/OLZ2qxkaMqMA== 
-  cephx: true
 
-  #############
-  # OPENSTACK #
-  #############
+  monitor_secret: AQAin8tU4FRGFhAAmftBPgcpG/OLZ2qxkaMqMA== 
 
   openstack_config: true
   openstack_block_storage_pool: block_storage_pool
