@@ -15,7 +15,7 @@
   auth client required = none
   auth supported = none
 {% endif %}
-  fsid = {{ ceph_common.fsid }}
+  fsid = {{ fsid }}
   max open files = {{ ceph_common.max_open_files }}
   osd pool default pg num = {{ ceph_common.pool_default_pg_num }}
   osd pool default pgp num = {{ ceph_common.pool_default_pgp_num }}

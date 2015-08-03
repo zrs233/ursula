@@ -33,7 +33,7 @@ ceph_common:
 
   ## Ceph options
   #
-  fsid: 68e1ee8e-d4f0-43fc-892a-0944b5b22acf
+  # fsid: 68e1ee8e-d4f0-43fc-892a-0944b5b22acf
   cephx: true
   cephx_require_signatures: true # Kernel RBD does NOT support signatures for Kernels < 3.18!
   cephx_cluster_require_signatures: true

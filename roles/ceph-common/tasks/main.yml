@@ -38,6 +38,19 @@
   failed_when: false
   register: socket
 
+- name: fetch and register existing fsid if possible
+  slurp: src=/etc/ceph/fsid
+  register: fsid
+  run_once: true
+  delegate_to: mons[0]
+
+- name: generate fsid
+  shell: uuidgen | tee /etc/ceph/fsid
+  register: fsid
+  run_once: true
+  delegate_to: mons[0]
+  when: fsid is not defined
+
 - name: generate ceph configuration file
   template: src=ceph.conf.j2
             dest=/etc/ceph/ceph.conf
