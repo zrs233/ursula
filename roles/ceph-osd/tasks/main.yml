@@ -4,8 +4,9 @@
        state=present
 
 - name: write out bootstrap keyring
-  copy: dest: "{{ hostvars[groups['mons'][0]]['keyrings']['source'] }}"
-        content: "{{ hostvars[groups['mons'][0]]['keyrings']['content'] | b64decode }}"
+  copy:
+    dest: "{{ hostvars[groups['mons'][0]]['keyrings']['source'] }}"
+    content: "{{ hostvars[groups['mons'][0]]['keyrings']['content'] | b64decode }}"
 
 - name: check if the device is a partition or a disk
   shell: "echo '{{ item }}' | egrep '/dev/(([a-z]{3,4}[0-9]$)|(cciss/c[0-9]{1}d[0-9]{1}p[0-9]$))'"
