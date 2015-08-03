@@ -4,8 +4,8 @@
 ###########
 ceph_monitor:
   # ACTIVATE BOTH FSID AND MONITOR_SECRET VARIABLES FOR NON-VAGRANT DEPLOYMENT
-  fsid: 68e1ee8e-d4f0-43fc-892a-0944b5b22acf 
-  monitor_secret: AQBQn8tUiHXoIxAAi5u4x3fk/kGEPTzV5d4sNw== 
+  fsid: f3451e6a-f352-4a8a-bdeb-e97fde48de9e 
+  monitor_secret: AQAin8tU4FRGFhAAmftBPgcpG/OLZ2qxkaMqMA== 
   cephx: true
 
   #############

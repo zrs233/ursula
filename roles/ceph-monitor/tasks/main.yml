@@ -88,6 +88,11 @@
   with_items:
     - "{{ ceph_keys.stdout_lines }}"
 
+- name: save bootstrap-osd ceph.keyring for OSD nodes to use
+  slurp: src=/var/lib/ceph/bootstrap-osd/ceph.keyring
+  register: keyrings
+  run_once: true
+
 - name: drop in a motd script to report status when logging in
   template: src=../files/etc/update-motd.d/92-ceph
             dest=/etc/update-motd.d/92-ceph
