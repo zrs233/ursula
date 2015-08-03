@@ -20,9 +20,6 @@
   failed_when: false
   when: item.0.rc == 0
 
-- include: osd_fragment.yml
-  when: ceph_osd.crush_location
-
 - name: start and add that the osd service(s) to the init sequence
   service: name=ceph
            state=started
