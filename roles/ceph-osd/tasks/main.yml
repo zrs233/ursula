@@ -3,13 +3,9 @@
   apt: pkg=parted
        state=present
 
-- name: copy osd bootstrap key
-  copy: src=fetch/{{ ceph_common.fsid }}/var/lib/ceph/bootstrap-osd/ceph.keyring
-        dest=/var/lib/ceph/bootstrap-osd/ceph.keyring
-        owner=root
-        group=root
-        mode=600
-  when: ceph_common.cephx
+- name: write out bootstrap keyring
+  copy: dest: "{{ hostvars[groups['mons'][0]]['keyrings']['source'] }}"
+        content: "{{ hostvars[groups['mons'][0]]['keyrings']['content'] | b64decode }}"
 
 - name: check if the device is a partition or a disk
   shell: "echo '{{ item }}' | egrep '/dev/(([a-z]{3,4}[0-9]$)|(cciss/c[0-9]{1}d[0-9]{1}p[0-9]$))'"
