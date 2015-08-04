@@ -78,7 +78,7 @@ ceph_common:
 
   ## OSD options
   #
-  journal_size: 10000 # 1 GB
+  journal_size: 10000 # 10 GB
   pool_default_pg_num: 128
   pool_default_pgp_num: 128
   pool_default_size: 2
