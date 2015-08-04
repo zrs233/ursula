@@ -38,18 +38,25 @@
   failed_when: false
   register: socket
 
-- name: fetch and register existing fsid if possible
-  slurp: src=/etc/ceph/fsid
-  register: fsid
+# we're storing the fsid in a file on the first monitor node
+- name: check if fsid file exists
+  stat: path=/etc/ceph/fsid
   run_once: true
-  delegate_to: mons[0]
+  delegate_to: "{{ groups['mons'][0] }}"
+  failed_when: false
+  register: fsid_file_check
 
-- name: generate fsid
-  shell: uuidgen | tee /etc/ceph/fsid
-  register: fsid
+- name: generate fsid file if we don't have one
+  shell: uuidgen > /etc/ceph/fsid
   run_once: true
-  delegate_to: mons[0]
-  when: fsid is not defined
+  delegate_to:  "{{ groups['mons'][0] }}"
+  when: fsid_file_check.stat.exists == false
+
+- name: fetch contents of fsid file
+  slurp: path=/etc/ceph/fsid
+  run_once: true
+  delegate_to: "{{ groups['mons'][0] }}"
+  register: fsid_file
 
 - name: generate ceph configuration file
   template: src=ceph.conf.j2
