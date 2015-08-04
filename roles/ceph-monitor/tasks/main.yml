@@ -1,7 +1,29 @@
 ---
+# we're storing the monitor_secret in a file on the first monitor node
+- name: check if mon_secrets file exists
+  stat: path=/var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
+  run_once: true
+  delegate_to: "{{ groups['mons'][0] }}"
+  failed_when: false
+  register: mon_file_check
+
 - name: create monitor initial keyring
-  command: ceph-authtool /var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }} --create-keyring --name=mon. --add-key={{ ceph_monitor.monitor_secret }} --cap mon 'allow *'
+  command: ceph-authtool /var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }} --create-keyring --name=mon. --gen-key --cap mon 'allow *'
            creates=/var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
+  run_once: true
+  delegate_to:  "{{ groups['mons'][0] }}"
+  when: mon_file_check.stat.exists == false
+
+- name: fetch contents of mon_secret file
+  slurp: path=/var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
+  run_once: true
+  delegate_to: "{{ groups['mons'][0] }}"
+  register: mon_secret_file
+
+- name: copy mon_secret to all hosts
+  copy:
+    dest: /var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
+    content: "{{ hostvars[groups['mons'][0]]['mon_secret_file']['content'] | b64decode }}"
 
 - name: set initial monitor key permissions
   file: path=/var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
@@ -17,7 +39,7 @@
         mode=0755
 
 - name: ceph monitor mkfs
-  command: ceph-mon --mkfs -i {{ ansible_hostname }} --fsid {{ ceph_common.fsid }} --keyring /var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
+  command: ceph-mon --mkfs -i {{ ansible_hostname }} --fsid {{ fsid_file.content | b64decode }} --keyring /var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
            creates=/var/lib/ceph/mon/ceph-{{ ansible_hostname }}/keyring
 
 - name: activate monitor with upstart

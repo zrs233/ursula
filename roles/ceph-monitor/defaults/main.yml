@@ -1,8 +1,6 @@
 ---
 ceph_monitor:
 
-  monitor_secret: AQAin8tU4FRGFhAAmftBPgcpG/OLZ2qxkaMqMA== 
-
   openstack_config: true
   openstack_block_storage_pool: block_storage_pool
 
