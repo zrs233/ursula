@@ -1,36 +1,22 @@
 ---
-
 ceph_osd:
-
-  ##############
-  # CEPH OPTIONS
-  ##############
 
   # Devices to be used as OSDs
   # You can pre-provision disks that are not present yet.
   # Ansible will just skip them. Newly added disk will be
   # automatically configured during the next run.
-  #
 
   # USE WITH CAUTION
-  # Erase partitions structure and layout of the given devices below prior to prepare them
+  # ONLY SET TO TRUE IF YOU KNOW WHAT YOU'RE DOING
+  # Erase partitions structure and layout of the given devices.
+  # Devices will also be cleared using 'dd'.
   zap_devices: false
 
   # Declare devices
-  # All the scenarii inherit from the following device declaration
   #
-  # devices:
+  #devices:
   #  - /dev/sdb
   #  - /dev/sdc
-
-  # Device discovery is based on the Ansible fact 'ansible_devices'
-  # which reports all the devices on a system. If chosen all the disks
-  # found will be passed to ceph-disk. You should not be worried on using
-  # this option since ceph-disk has a built-in check which looks for empty devices.
-  # Thus devices with existing partition tables will not be used.
-  # This mode prevents you from filling out the 'devices' variable above.
-  #
-  osd_auto_discovery: false
 
   # N journal devices for N OSDs
   # While starting we have 2 options:
