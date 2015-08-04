@@ -58,6 +58,12 @@
   delegate_to: "{{ groups['mons'][0] }}"
   register: fsid_file
 
+# for redundancy, and if the hosts in mons get reordered
+- name: copy fsid to all hosts
+  copy:
+    dest: "{{ hostvars[groups['mons'][0]]['fsid_file']['source'] }}"
+    content: "{{ hostvars[groups['mons'][0]]['fsid_file']['content'] | b64decode }}"
+
 - name: generate ceph configuration file
   template: src=ceph.conf.j2
             dest=/etc/ceph/ceph.conf
