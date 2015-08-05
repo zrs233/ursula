@@ -1,0 +1,20 @@
+---
+- name: clear osd devices
+  shell: dd if=/dev/zero of={{ item }} bs=1M count=512
+  changed_when: false
+  with_items: ceph_osd.devices
+
+- name: clear journal devices
+  shell: dd if=/dev/zero of={{ item }} bs=1M count=512
+  changed_when: false
+  with_items: ceph_osd.raw_journal_devices
+
+- name: erasing partitions and labels from osd disk(s)
+  command: ceph-disk zap {{ item }}
+  changed_when: false
+  with_items: ceph_osd.devices
+
+- name: erasing partitions and labels from the journal device(s)
+  command: ceph-disk zap {{ item }}
+  changed_when: false
+  with_items: ceph_osd.raw_journal_devices

@@ -1,27 +1,9 @@
 ---
 ceph_osd:
 
-  # Devices to be used as OSDs
-  # You can pre-provision disks that are not present yet.
-  # Ansible will just skip them. Newly added disk will be
-  # automatically configured during the next run.
-
-  # USE WITH CAUTION
-  # ONLY SET TO TRUE IF YOU KNOW WHAT YOU'RE DOING
-  # Erase partitions structure and layout of the given devices.
-  # Devices will also be cleared using 'dd'.
-  zap_devices: false
-
-  # Declare devices
-  #
   #devices:
   #  - /dev/sdb
   #  - /dev/sdc
-
-  # N journal devices for N OSDs
-  # While starting we have 2 options:
-  # 1. Pre-allocate all the devices
-  # 2. Progressively add new devices
 
   raw_multi_journal: true
   #raw_journal_devices:
