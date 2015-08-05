@@ -64,6 +64,12 @@
     dest: "{{ hostvars[groups['mons'][0]]['fsid_file']['source'] }}"
     content: "{{ hostvars[groups['mons'][0]]['fsid_file']['content'] | b64decode }}"
 
+- name: detect and register public and cluster network
+  shell: ip addr | grep {{ ceph_common.monitor_interface }} | grep inet | awk '{print $2}'
+  run_once: true
+  delegate_to: "{{ groups['mons'][0] }}"
+  register: network
+
 - name: generate ceph configuration file
   template: src=ceph.conf.j2
             dest=/etc/ceph/ceph.conf

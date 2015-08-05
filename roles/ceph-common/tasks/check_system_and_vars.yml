@@ -23,14 +23,6 @@
   fail: msg="monitor_interface must be configured. Interface for the monitor to listen on"
   when: ceph_common.monitor_interface == 'interface'
 
-- name: make sure cluster_network configured
-  fail: msg="cluster_network must be configured. Ceph replication network"
-  when: ceph_common.cluster_network == '0.0.0.0/0'
-
-- name: make sure public_network configured
-  fail: msg="public_network must be configured. Ceph public network"
-  when: ceph_common.public_network == '0.0.0.0/0'
-
 - name: make sure raw_multi_journal was chosen
   fail: msg="please choose an osd scenario"
   when: ceph_common.osd_group_name is defined and
