@@ -22,30 +22,6 @@
   failed_when: false
   register: parted
 
-- name: erasing partitions and labels from osd disk(s)
-  command: ceph-disk zap {{ item.2 }}
-  changed_when: false
-  with_together:
-    - parted.results
-    - ispartition.results
-    - ceph_osd.devices
-  when:
-    item.0.rc != 0 and
-    item.1.rc != 0 and
-    ceph_osd.zap_devices
-
-- name: erasing partitions and labels from the journal device(s)
-  command: ceph-disk zap {{ item.2 }}
-  changed_when: false
-  with_together:
-    - parted.results
-    - ispartition.results
-    - ceph_osd.raw_journal_devices
-  when:
-    item.0.rc != 0 and
-    item.1.rc != 0 and
-    ceph_osd.zap_devices
-
 - name: clear osd devices
   shell: dd if=/dev/zero of={{ item.2 }} bs=1M count=512
   changed_when: false
@@ -60,6 +36,30 @@
 
 - name: clear journal devices
   shell: dd if=/dev/zero of={{ item.2 }} bs=1M count=512
+  changed_when: false
+  with_together:
+    - parted.results
+    - ispartition.results
+    - ceph_osd.raw_journal_devices
+  when:
+    item.0.rc != 0 and
+    item.1.rc != 0 and
+    ceph_osd.zap_devices
+
+- name: erasing partitions and labels from osd disk(s)
+  command: ceph-disk zap {{ item.2 }}
+  changed_when: false
+  with_together:
+    - parted.results
+    - ispartition.results
+    - ceph_osd.devices
+  when:
+    item.0.rc != 0 and
+    item.1.rc != 0 and
+    ceph_osd.zap_devices
+
+- name: erasing partitions and labels from the journal device(s)
+  command: ceph-disk zap {{ item.2 }}
   changed_when: false
   with_together:
     - parted.results
