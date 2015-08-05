@@ -30,7 +30,7 @@
   ufw: rule=allow to_port={{ item }} proto=tcp
   with_items:
     - 9292
-    - 9293
+    - 9393
 
 - name: install glance services
   upstart_service: name={{ item }}
