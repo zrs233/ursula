@@ -111,7 +111,7 @@
       mysql_db:
         name: glance
         state: dump
-        target: /var/lib/mysql/glance-preupgrade.sql
+        target: /backup/glance-preupgrade.sql
       run_once: True
       tags: dbdump
 
@@ -150,7 +150,7 @@
       mysql_db:
         name: cinder
         state: dump
-        target: /var/lib/mysql/cinder-preupgrade.sql
+        target: /backup/cinder-preupgrade.sql
       run_once: True
       tags: dbdump
 
@@ -226,7 +226,7 @@
       mysql_db:
         name: nova
         state: dump
-        target: /var/lib/mysql/nova-preupgrade.sql
+        target: /backup/nova-preupgrade.sql
       run_once: True
       tags: dbdump
 
@@ -311,7 +311,7 @@
       mysql_db:
         name: neutron
         state: dump
-        target: /var/lib/mysql/neutron-preupgrade.sql
+        target: /backup/neutron-preupgrade.sql
       run_once: True
       tags: dbdump
 
@@ -407,7 +407,7 @@
       mysql_db:
         name: keystone
         state: dump
-        target: /var/lib/mysql/keystone-preupgrade.sql
+        target: /backup/keystone-preupgrade.sql
       run_once: True
       tags: dbdump
 
