@@ -13,13 +13,10 @@
   with_together:
     - ceph_osd.devices
     - ceph_osd.raw_journal_devices
-  changed_when: false
-  failed_when: false
 
 - name: activate osd(s)
   command: ceph-disk activate {{ item | regex_replace('^(\/dev\/cciss\/c[0-9]{1}d[0-9]{1})$', '\\1p') }}1
   with_items: ceph_osd.devices
-  failed_when: false
 
 - name: start and add that the osd service(s) to the init sequence
   service: name=ceph
