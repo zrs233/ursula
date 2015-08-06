@@ -39,18 +39,11 @@
   register: socket
 
 # we're storing the fsid in a file on the first monitor node
-- name: check if fsid file exists
-  stat: path=/etc/ceph/fsid
-  run_once: true
-  delegate_to: "{{ groups['mons'][0] }}"
-  failed_when: false
-  register: fsid_file_check
-
 - name: generate fsid file if we don't have one
   shell: uuidgen > /etc/ceph/fsid
+         creates=/etc/ceph/fsid
   run_once: true
   delegate_to:  "{{ groups['mons'][0] }}"
-  when: fsid_file_check.stat.exists == false
 
 - name: fetch contents of fsid file
   slurp: path=/etc/ceph/fsid
@@ -61,14 +54,14 @@
 # for redundancy, and if the hosts in mons get reordered
 - name: copy fsid to all hosts
   copy:
-    dest: "{{ hostvars[groups['mons'][0]]['fsid_file']['source'] }}"
-    content: "{{ hostvars[groups['mons'][0]]['fsid_file']['content'] | b64decode }}"
+    dest: "{{ fsid_file['source'] }}"
+    content: "{{ fsid_file['content'] | b64decode }}"
 
 - name: detect and register public and cluster network
   shell: ip addr | grep {{ ceph_common.monitor_interface }} | grep inet | awk '{print $2}'
   run_once: true
   delegate_to: "{{ groups['mons'][0] }}"
-  register: network
+  register: public_and_cluster_network
 
 - name: generate ceph configuration file
   template: src=ceph.conf.j2

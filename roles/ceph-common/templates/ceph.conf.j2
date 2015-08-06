@@ -100,8 +100,8 @@
   osd mkfs options xfs = {{ ceph_common.osd_mkfs_options_xfs }}
   osd mount options xfs = {{ ceph_common.osd_mount_options_xfs }}
   osd journal size = {{ ceph_common.journal_size }}
-  public_network = {{ network.stdout }}
-  cluster_network = {{ network.stdout }}
+  public_network = {{ public_and_cluster_network.stdout }}
+  cluster_network = {{ public_and_cluster_network.stdout }}
   osd mon heartbeat interval = {{ ceph_common.osd_mon_heartbeat_interval }}
   # Performance tuning
   filestore merge threshold = {{ ceph_common.filestore_merge_threshold }}
