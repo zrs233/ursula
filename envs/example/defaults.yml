@@ -20,6 +20,8 @@ secrets:
   horizon_secret_key:           asdf
   glance_sync:      ADQ64XUQLUWH75M634RVBLP55RKPGGOWG
   monitor_password: asdf
+  cloud_admin_password: asdf
+  project_admin_password: asdf
 
 fqdn: openstack.example.com
 floating_ip: "{{ controller_primary }}"
@@ -238,6 +240,12 @@ keystone:
     - name: "{{ monitoring.openstack.user.username }}"
       password: "{{ monitoring.openstack.user.password }}"
       tenant: "{{ monitoring.openstack.user.tenant }}"
+    - name: cloud_admin
+      password: "{{ secrets.cloud_admin_password }}"
+      tenant: admin
+    - name: project_admin
+      password: "{{ secrets.project_admin_password }}"
+      tenant: demo
   user_roles:
     - user: admin
       tenant: admin
@@ -251,6 +259,9 @@ keystone:
     - user: provider_admin
       tenant: demo
       role: admin
+    - user: provider_admin
+      tenant: admin
+      role: Cloud_Admin
     - user: nova
       tenant: service
       role: service
@@ -275,6 +286,12 @@ keystone:
     - user: "{{ monitoring.openstack.user.username }}"
       tenant: "{{ monitoring.openstack.user.tenant }}"
       role: "{{ monitoring.openstack.user.role }}"
+    - user: cloud_admin
+      tenant: admin
+      role: Cloud_Admin
+    - user: project_admin
+      tenant: demo
+      role: Project_Admin
 
   services:
     - name: keystone
