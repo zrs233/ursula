@@ -6,4 +6,4 @@ horizon:
   virtualenv: /opt/stack/horizon/.venv
   session_timeout: 5400
   source:
-    rev: 'stable/kilo'
+    rev: 'kilo-bbg'
