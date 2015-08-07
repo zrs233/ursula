@@ -68,4 +68,3 @@
     "software_deployments:delete": "rule:deny_stack_user",
     "software_deployments:metadata": ""
 }
-

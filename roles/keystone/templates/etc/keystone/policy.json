@@ -85,7 +85,7 @@
 
     "identity:check_grant": "rule:admin_or_cloudadmin or (rule:projectadmin_role and project_id:%(project_id)s)",
     "identity:list_grants": "rule:admin_or_cloudadmin or (rule:projectadmin_role and project_id:%(project_id)s)",
-	"identity:create_grant": "is_admin:1 or (role:admin and not 'admin':%(target.role.name)s) or (rule:cloud_admin_role and not 'admin':%(target.role.name)s) or (rule:projectadmin_role and project_id:%(project_id)s and not 'Cloud_Admin':%(target.role.name)s and not 'admin':%(target.role.name)s)",
+    "identity:create_grant": "is_admin:1 or (role:admin and not 'admin':%(target.role.name)s) or (rule:cloud_admin_role and not 'admin':%(target.role.name)s) or (rule:projectadmin_role and project_id:%(project_id)s and not 'Cloud_Admin':%(target.role.name)s and not 'admin':%(target.role.name)s)",
     "identity:revoke_grant": "rule:admin_required or (rule:cloud_admin_role and not 'admin':%(target.role.name)s) or (rule:projectadmin_role and project_id:%(project_id)s and not 'Cloud_Admin':%(target.role.name)s and not 'admin':%(target.role.name)s)",
 
     "identity:list_role_assignments": "rule:admin_or_cloudadmin or (rule:projectadmin_role and (project_id:%(scope.project.id)s or user_id:%(user.id)s))",
