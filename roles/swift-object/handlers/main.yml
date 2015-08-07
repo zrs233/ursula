@@ -1,3 +1,6 @@
 ---
 - name: restart swift-object service
   service: name=swift-object state=restarted
+
+- name: restart swift-object-expirer service
+  service: name=swift-object-expirer state=restarted
