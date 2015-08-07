@@ -22,7 +22,7 @@
   osd pool default size = {{ ceph_common.pool_default_size }}
   osd pool default min size = {{ ceph_common.pool_default_min_size }}
   osd pool default crush rule = {{ ceph_common.pool_default_crush_rule }}
-{% if ceph_common.common_single_host_mode is defined %}
+{% if ceph_common.common_single_host_mode %}
   osd crush chooseleaf type = 0
 {% endif %}
 {% if ceph_common.disable_in_memory_logs %}
