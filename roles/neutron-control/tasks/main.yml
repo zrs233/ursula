@@ -38,6 +38,6 @@
   service: name=neutron-server state=started
 
 - name: Permit access to Neutron
-  ufw: rule=allow to_port=9797 proto=tcp
+  ufw: rule=allow to_port=9696 proto=tcp
 
 - include: monitoring.yml tags=monitoring,common

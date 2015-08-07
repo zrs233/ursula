@@ -32,6 +32,6 @@
     - cinder-scheduler
 
 - name: Permit access to Cinder
-  ufw: rule=allow to_port=8778 proto=tcp
+  ufw: rule=allow to_port=8776 proto=tcp
 
 - include: monitoring.yml tags=monitoring,common
