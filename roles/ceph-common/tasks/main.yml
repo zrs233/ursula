@@ -33,7 +33,7 @@
   when: ceph_common.rbd_client_directories
 
 - name: check for a ceph socket
-  stat: path=/var/run/ceph/*.asok
+  shell: "stat /var/run/ceph/*.asok > /dev/null 2>&1"
   changed_when: false
   failed_when: false
   register: socket
