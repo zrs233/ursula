@@ -1,6 +1,6 @@
 keystone:
   ldap:
-    enabled: True 
+    enabled: False
     # ldap server settings
     url: ldap://0.0.0.0:389
     dc: "example"
