@@ -29,6 +29,25 @@
     - role: ipv6ra
       tags: ['infra']
 
+- name: openldap used by keystone base config
+  gather_facts: force
+  hosts: ldap
+  serial: 1 # serial because clustering
+  roles:
+    - role: openldap
+      tags: ['auth']
+      when: openldap.enabled|default('False')|bool
+
+- name: openldap replication post both controllers have basic config
+  gather_facts: force
+  hosts: ldap
+  serial: 1 # serial because clustering
+  roles:
+    - role: openldap-replication
+      tags: ['auth']
+      when: openldap.enabled|default('False')|bool and
+            groups['ldap'] | length > 1
+
 - name: rabbitmq used by openstack
   gather_facts: force
   hosts: controller
@@ -144,6 +163,12 @@
       keystone_configured: false
       tags: ['openstack', 'setup', 'keystone-setup']
       #when: not keystone_configured
+
+- name: run remove password policy role
+  hosts: ldap[0]
+  roles:
+    - role: openldap-remove-password-policy
+      when: openldap.enabled
 
 - name: glance code and config
   gather_facts: force

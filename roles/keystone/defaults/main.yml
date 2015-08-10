@@ -26,3 +26,7 @@ keystone:
   logging:
     debug: False
     verbose: True
+
+  ldap:
+    url: ldap://127.0.0.1:389
+

@@ -1,0 +1,13 @@
+dn: olcDatabase={1}hdb,cn=config
+changetype: modify
+replace: olcSuffix
+olcsuffix: {{ openldap.suffix }}
+-
+replace: olcRootDN
+olcRootDN: {{ openldap.root_dn }}
+-
+replace: olcRootPW
+olcRootPW: {{ openldap.root_password }}
+-
+add: olcDbIndex
+olcDbIndex: cn,sn pres,eq

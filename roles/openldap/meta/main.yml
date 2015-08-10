@@ -1,0 +1,5 @@
+---
+dependencies:
+  - role: logging-config
+    service: openldap
+    logdata: "{{ openldap.logs }}"

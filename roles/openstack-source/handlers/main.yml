@@ -1,4 +1,10 @@
 ---
+- name: "apt requirements for {{ project_name }}"
+  apt:
+    name: "{{ item.name }}"
+  with_items: apt_requirements
+  when: apt_requirements is defined
+
 - name: "python requirements for {{ project_name }}"
   pip:
     name: "{{ item.name }}"

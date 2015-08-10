@@ -1,0 +1,8 @@
+- name: Run remove policy for service users
+  command: "{{openldap_password_policy.config_dir}}password_policy_util.sh -r {{ item.name }}"
+  with_items: "{{ keystone.users }}"
+  when: item.tenant == "service"
+
+- name: Remove password policy for keystone_user
+  command: "{{openldap_password_policy.config_dir}}password_policy_util.sh -r {{openldap_password_policy.openldap_user_name}}"
+

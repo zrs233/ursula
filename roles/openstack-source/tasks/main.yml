@@ -8,6 +8,7 @@
   until: git_result|success
   retries: 3
   notify:
+    - "apt requirements for {{ project_name }}"
     - "python requirements for {{ project_name }}"
     - "pip install {{ project_name }}"
     - "ensure project config directory exists"

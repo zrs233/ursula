@@ -1,0 +1,4 @@
+openldap_password_policy:
+  config_dir: "/etc/openldap/"
+  openldap_user_name: "keystone_user"
+

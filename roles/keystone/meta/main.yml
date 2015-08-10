@@ -11,6 +11,12 @@ dependencies:
     python_requirements:
       - { name: babel, version: "{{ keystone.babel_version }}" }
       - { name: functools32 }
+      - { name: python-ldap }
+      - { name: ldappool }
+    apt_requirements:
+      - { name: python-dev }
+      - { name: libldap2-dev }
+      - { name: libsasl2-dev }
     when: openstack_install_method == 'source'
   - role: openstack-package
     project_name: keystone
