@@ -1,6 +1,6 @@
 keystone:
   ldap:
-    enabled: False
+    enabled: False 
     # ldap server settings
     url: ldap://0.0.0.0:389
     dc: "example"
@@ -13,6 +13,7 @@ keystone:
     groups_ou: "groups"
     users_dn: "ou=users,ou=openstack,dc=example,dc=org"
     groups_dn: "ou=groups,ou=openstack,dc=example,dc=org"
+    password_policy_enabled: False 
     password_policy_ou: "policies"
     password_policy_ou_dn: "ou=policies,ou=openstack,dc=example,dc=org"
     password_policy_cn: "default"

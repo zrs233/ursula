@@ -63,4 +63,15 @@
   ignore_errors: yes
   when: keystone_user_access.stdout.count("{{ keystone.ldap.keystone_user_name }}") < 1
 
+- name: create log directory for openldap
+  file: path=/var/log/openldap state=directory owner=syslog group=adm mode=0640
+
+- name: touch log file for openldap
+  file: path=/var/log/openldap/openldap.log state=touch owner=syslog group=adm mode=0640
+
+- name: set up rsyslog for openldap
+  copy: src=100-slapd.conf dest=/etc/rsyslog.d/100-slapd.conf owner=syslog group=adm mode=0640
+  notify:
+  - restart rsyslog
+
 
