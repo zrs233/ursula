@@ -1,0 +1,47 @@
+- name: template config ldif files for replication
+  template: src={{ item }}
+            dest={{ openldap.config_dir }}
+  with_fileglob: ../templates/{{ openldap.config_dir }}/*
+
+- name: set both oid
+  shell: ldapmodify -Y EXTERNAL -H ldapi:/// -f {{ openldap.config_dir }}/set_both_oid.ldif
+
+- name: check if sync repl is registered for config
+  shell: ldapsearch -Y EXTERNAL -H ldapi:/// -s sub -b olcDatabase={0}config,cn=config
+  register: syncrepl_config_out
+  changed_when: False
+  ignore_errors: yes
+
+- name: set sync repl config for config db
+  shell: ldapmodify -Y EXTERNAL -H ldapi:/// -f {{ openldap.config_dir }}/config_repl_db.ldif
+  when: syncrepl_config_out.stdout.count("syncprov") < 1
+
+- name: check sync repl settings for config databse
+  shell: ldapsearch -Y EXTERNAL -H ldapi:/// -s sub -b olcDatabase={0}config,cn=config
+  register: syncrepl_config_out
+  changed_when: False
+  ignore_errors: yes
+
+- name: set sync repl settings for config db
+  shell: ldapmodify -Y EXTERNAL -H ldapi:/// -f {{ openldap.config_dir }}/syncrepl_config0.ldif
+  when: syncrepl_config_out.stdout.count("olcSyncrepl") < 1
+
+- name: check syncrepl settings for hdb1
+  shell: ldapsearch -L -Y EXTERNAL -H ldapi:/// -s sub -b olcDatabase={1}hdb,cn=config olcSyncrepl
+  register: syncrepl_config_out
+  changed_when: False
+  ignore_errors: yes
+
+- name: set sync repl settings for hdb1
+  shell: ldapmodify -Y EXTERNAL -H ldapi:/// -f {{ openldap.config_dir }}/syncrepl_hdb1.ldif
+  when: syncrepl_config_out.stdout.count("olcSyncrepl:") < 1
+
+- name: check if sync repl is registered for hdb1
+  shell: ldapsearch -Y EXTERNAL -H ldapi:/// -s sub -b olcDatabase={1}hdb,cn=config
+  register: syncrepl_config_out
+  changed_when: False
+  ignore_errors: yes
+
+- name: set sync repl config for hdb1
+  shell: ldapmodify -Y EXTERNAL -H ldapi:/// -f {{ openldap.config_dir }}/mod_hdb1_syncprov.ldif
+  when: syncrepl_config_out.stdout.count("syncprov") < 1

@@ -1,0 +1,24 @@
+dn: {{openldap.suffix}}
+objectClass: top
+objectClass: dcObject
+objectclass: organization
+o: {{openldap.dc}}
+dc: {{openldap.dc}}
+
+dn: {{openldap.root_dn}}
+objectClass: organizationalRole
+cn: admin
+description: Directory admin
+
+dn: {{openldap.organizationalUnit}}
+objectClass: organizationalUnit
+ou: {{openldap.company_ou}}
+
+dn: {{openldap.users_dn}}
+objectClass: organizationalUnit
+ou: {{openldap.users_ou}}
+
+dn: {{openldap.groups_dn}}
+objectClass: organizationalUnit
+ou: {{openldap.groups_ou}}
+

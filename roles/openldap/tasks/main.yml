@@ -1,0 +1,75 @@
+---
+- include: logging.yml
+  tags:
+    - logging
+  when: logging.enabled|default('True')|bool
+
+- name: install the openldap packages
+  apt: name={{ item }} state=installed
+  with_items: openldap.ldap_pkgs
+
+- name: create directory for config ldif files
+  file: path={{ openldap.config_dir }}
+        state=directory
+        owner=root
+        group=root
+        mode=0755
+
+- name: template config ldif files
+  template: src={{ item }}
+            dest={{ openldap.config_dir }}
+  with_fileglob: ../templates/{{ openldap.config_dir }}/*
+
+- name: ensure admin/suffix is created
+  shell: ldapmodify -Y EXTERNAL -H ldapi:///
+    -f {{ openldap.config_dir }}/set_admin.ldif
+  register: set_admin
+  failed_when: set_admin.rc != 0 and set_admin.rc != 20
+
+
+- name: ensure base domain is created
+  shell: ldapadd -D {{ openldap.root_dn }} -w {{ openldap.root_password }}
+    -f {{ openldap.config_dir }}/base_domain.ldif
+  register: base_domain
+  failed_when: base_domain.rc != 0 and base_domain.rc != 68
+
+- name: ensure keystone_user is created
+  shell: ldapadd -D {{ openldap.root_dn }} -w {{ openldap.root_password }}
+    -f {{ openldap.config_dir }}/keystone_user.ldif
+  register: keystone_user
+  failed_when: keystone_user.rc != 0 and keystone_user.rc != 68
+
+- name: ensure keystone_users access is created
+  shell: ldapmodify -Y EXTERNAL -H ldapi:///
+    -f {{ openldap.config_dir }}/keystone_user_access.ldif
+
+- name: set openldap log level
+  shell: ldapmodify -Q -Y EXTERNAL -H ldapi:/// -f {{ openldap.config_dir }}/logging.ldif
+
+- name: slapd config
+  template: src=etc/default/slapd
+            dest=/etc/default/slapd
+            owner=root
+            group=root
+            mode=0644
+
+- name: create upstart config for slapd
+  template: src=etc/init/slapd.conf
+            dest=/etc/init/slapd.conf
+
+  #slapd is setup not to use upstart
+  #so this step is needed
+- name: stop using init.d for slapd
+  shell: /etc/init.d/slapd stop && initctl reload-configuration slapd && service slapd restart
+
+- name: delete the policy if policy is changed from enabled to disabled.
+  command: ldapdelete -x -D {{openldap.root_dn }} -w {{ openldap.root_password }} {{ openldap.password_policy_dn }}
+  register: command_result
+  when: openldap.password_policy_enabled|bool == False
+  failed_when: command_result.rc != 32 and command_result.rc!=0
+
+- include: password_policy.yml
+  when: openldap.password_policy_enabled|bool
+
+- include: sync_provider.yml
+  when: groups['ldap'] | length > 1

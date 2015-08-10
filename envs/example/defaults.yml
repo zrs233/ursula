@@ -356,6 +356,27 @@ keystone:
       public_url: https://{{ endpoints.swift }}:{{ swift.haproxy_port}}/v1/%(tenant_id)s
       internal_url: https://{{ endpoints.swift }}:{{ swift.haproxy_port}}/v1/%(tenant_id)s
       admin_url: https://{{ endpoints.swift }}:{{ swift.haproxy_port}}/v1/%(tenant_id)s
+#ldap url used by identity ldap driver in case enabled 
+  ldap:
+    url: ldap://{{ undercloud_floating_ip }}:390
+
+openldap:
+  enabled: False 
+
+  # openldap server settings
+  suffix: "dc=example,dc=org"
+  users_dn: "ou=users,ou=openstack,dc=example,dc=org"
+  groups_dn: "ou=groups,ou=openstack,dc=example,dc=org"
+
+  # keystone user settings, this is used by the keystone ldap driver to
+  # connect to the ldap server, it needs to have read and write access
+  # to the user and group sub trees as set by openldap.users_dn
+  # and openldap.groups_dn respectively
+  openldap_user_name: keystone_user
+  openldap_user_password: aq1sw2de
+  openldap_user_dn: "cn=keystone_user,ou=openstack,dc=example,dc=org"
+  root_password: aq1sw2de
+  config_root_password: aq1sw2de_c
 
 ssl:
   crt: |

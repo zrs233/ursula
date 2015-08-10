@@ -1,0 +1,3 @@
+openldap:
+ config_dir: /etc/openldap/ldif_config_files
+ root_dn: "cn=admin,dc=example,dc=org"

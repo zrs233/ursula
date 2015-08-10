@@ -1,0 +1,11 @@
+dn: {{ openldap.password_policy_dn }}
+changetype: modify
+add: objectClass
+objectClass: pwdPolicyChecker
+-
+add: pwdCheckModule
+pwdCheckModule: check_password.so
+-
+replace: pwdCheckQuality
+pwdCheckQuality: 2
+

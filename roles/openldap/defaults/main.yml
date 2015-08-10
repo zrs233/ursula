@@ -1,0 +1,62 @@
+openldap:
+  enabled: False
+  # ldap server settings
+  slapd_services: "ldap://127.0.0.1:389 ldap://{{ ansible_default_ipv4.address }}/ ldapi:///"
+  dc: "example"
+  suffix: "dc=example,dc=org"
+  root_cn: "admin"
+  root_dn: "cn=admin,dc=example,dc=org"
+  company_ou: "openstack"
+  organizationalUnit: "ou=openstack,dc=example,dc=org"
+  users_ou: "users"
+  groups_ou: "groups"
+  users_dn: "ou=users,ou=openstack,dc=example,dc=org"
+  groups_dn: "ou=groups,ou=openstack,dc=example,dc=org"
+  password_policy_enabled: False 
+  password_policy_ou: "policies"
+  password_policy_ou_dn: "ou=policies,ou=openstack,dc=example,dc=org"
+  password_policy_cn: "default"
+  password_policy_dn: "cn=default,ou=policies,ou=openstack,dc=example,dc=org"
+  password_attribute: userPassword
+  # keystone user settings, this is the user to be
+  # to connect to the openldap server
+  openldap_user_name: keystone_user
+  openldap_user_dn: "cn=keystone_user,ou=openstack,dc=example,dc=org"    
+  # ldap password policy settings
+  pwdAllowUserChange: "TRUE"
+  pwdCheckQuality: 2
+  pwdExpireWarning: 600
+  pwdFailureCountInterval: 30
+  pwdGraceAuthNLimit: 5
+  pwdInHistory: 8
+  pwdLockout: "TRUE"
+  pwdLockoutDuration: 21600 #6 hours
+  pwdMaxAge: 7776000 #90 days
+  pwdMaxFailure: 5
+  pwdMinAge: 0
+  pwdMinLength: 8
+  pwdMustChange: "FALSE"
+  pwdSafeModify: "FALSE"
+  dir: /var/lib/ldap
+  config_dir: /etc/openldap/ldif_config_files
+  ldap_pkgs:
+    - slapd
+    - ldap-utils
+  #syntax rules for check password module
+  check_password:
+    use_cracklib: 0
+    min_points: 4
+    min_upper: 1
+    min_lower: 1
+    min_digit: 1
+    min_punct: 1
+  logs:
+    - paths:
+      - /var/log/openldap/openldap.log
+      fields:
+        type: syslog
+        tags: ldap,slapd,openldap
+  # default of none is a misnomer
+  # it will log errors.
+  logging:
+    log_level: none

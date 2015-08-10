@@ -1,0 +1,9 @@
+dn: {{openldap.openldap_user_dn}}
+userPassword: {{openldap.openldap_user_password}}
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: top
+sn: {{openldap.openldap_user_name}}
+cn: {{openldap.openldap_user_name}}
+

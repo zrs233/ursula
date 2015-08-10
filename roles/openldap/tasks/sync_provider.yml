@@ -1,0 +1,27 @@
+- name: check oid is set
+  shell: ldapsearch -L -Y EXTERNAL -H ldapi:/// -b cn=config -s base olcServerId
+  register: oid_stdout
+  ignore_errors: yes
+  changed_when: False
+
+- name: ensure oid is set
+  shell: ldapmodify -Y EXTERNAL -H ldapi:/// -f {{ openldap.config_dir }}/set_oid.ldif
+  when: oid_stdout.stdout.count("olcServerID:") < 1
+
+- name: check if syncprov is enabled
+  shell: ldapsearch -Y EXTERNAL -H ldapi:/// -b cn=module{0},cn=config
+  register: sync_prov
+  changed_when: False
+
+- name: ensure syncprov is registered
+  shell: ldapmodify -Y EXTERNAL -H ldapi:/// -f {{ openldap.config_dir }}/mod_cfg_syncprov.ldif
+  when: sync_prov.stdout.count("syncprov.la") < 1
+
+- name: check if config pass is set
+  shell: ldapsearch -Y EXTERNAL -H ldapi:/// -b olcDatabase={0}config,cn=config -s base olcRootPW
+  register: olcroot_pass
+  changed_when: False
+
+- name: set config root pass
+  shell: ldapmodify -Y EXTERNAL -H ldapi:/// -f {{ openldap.config_dir }}/set_config_password.ldif
+  when: olcroot_pass.stdout.count("olcRootPW:") < 1
