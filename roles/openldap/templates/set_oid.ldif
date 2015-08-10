@@ -1,0 +1,5 @@
+#ldapmodify -Y EXTERNAL -H ldapi:/// -f set_oid.ldif
+dn: cn=config
+changetype: modify
+add: olcServerID
+olcServerID: {{ oid }} 

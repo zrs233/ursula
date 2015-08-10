@@ -1,0 +1,66 @@
+- name: Install the openldap packages
+  apt: name={{ item }} state=installed
+  with_items:
+   - slapd 
+   - ldap-utils
+
+- name: Create directory for ldif files
+  file: path={{ keystone.ldap.config_dir }} state=directory owner=root group=root mode=0400
+
+- name: Copy templates
+  template: src={{ item }} dest={{ keystone.ldap.config_dir }}/{{ item }}
+  with_items:
+    - set_suffix.ldif
+    - set_admin.ldif
+    - base_domain.ldif
+    - keystone_user.ldif
+    - keystone_user_access.ldif
+    - other_access_add.ldif
+
+- name: Get admin/suffix dn
+  shell:  ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -s sub -b "{{ keystone.ldap.suffix  }}" cn=admin
+  register: admin_name
+  ignore_errors: yes
+  changed_when: False
+
+- name: Ensure admin/suffix is created
+  shell: ldapmodify -Y EXTERNAL -H ldapi:/// -f {{ keystone.ldap.config_dir }}/set_admin.ldif
+  when: admin_name.stdout.count("cn={{ keystone.ldap.root_cn }}") < 1
+
+- name: Get base domain 
+  shell:  ldapsearch  -D {{ keystone.ldap.root_dn }} -w {{ keystone.ldap.root_password }}  -s sub -b "{{ keystone.ldap.suffix  }}" objectclass=*
+  register: base_domain
+  ignore_errors: yes
+  changed_when: False
+
+- name: Ensure base domain is created
+  shell: ldapadd -D {{ keystone.ldap.root_dn }} -w {{ keystone.ldap.root_password }} -f {{ keystone.ldap.config_dir }}/base_domain.ldif
+  when: base_domain.stdout.count("ou={{ keystone.ldap.company_ou }}") < 1
+
+- name: Get keystone_user
+  shell:  ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -s sub -b "{{ keystone.ldap.suffix  }}" cn=keystone_user
+  register: keystone_user
+  ignore_errors: yes
+  changed_when: False
+
+- name: Ensure keystone_user is created
+  shell: ldapadd -D {{ keystone.ldap.root_dn }} -w {{ keystone.ldap.root_password }} -f {{ keystone.ldap.config_dir }}/keystone_user.ldif
+  when: base_domain.stdout.count("cn={{ keystone.ldap.keystone_user_name }}") < 1
+
+- name: Check keystone_user access
+  shell: ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -s sub -b  olcDatabase={1}hdb,cn=config objectclass=* olcAccess 
+  register: keystone_user_access
+  ignore_errors: yes
+  changed_when: False
+
+- name: Ensure keystone_users access is created
+  shell: ldapmodify  -Y EXTERNAL -H ldapi:/// -f {{ keystone.ldap.config_dir }}/keystone_user_access.ldif
+  ignore_errors: yes
+  when: keystone_user_access.stdout.count("{{ keystone.ldap.keystone_user_name }}") < 1
+
+- name: Ensure other access is restored
+  shell: ldapmodify  -Y EXTERNAL -H ldapi:/// -f {{ keystone.ldap.config_dir }}/other_access_add.ldif
+  ignore_errors: yes
+  when: keystone_user_access.stdout.count("{{ keystone.ldap.keystone_user_name }}") < 1
+
+

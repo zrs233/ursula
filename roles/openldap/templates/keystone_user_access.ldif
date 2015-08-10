@@ -1,0 +1,17 @@
+#ldapmodify  -Y EXTERNAL -H ldapi:/// -f keystone_user_access.ldif
+
+dn: olcDatabase={1}hdb,cn=config
+changetype: modify
+replace: olcAccess
+olcAccess: {0}to dn.subtree="{{keystone.ldap.organizationalUnit}}" attrs=entry,children  by dn="{{keystone.ldap.keystone_user_dn}}" write
+-
+add: olcAccess
+olcAccess: {1}to attrs=userPassword,shadowLastChange by self write by anonymou
+ s auth by dn="cn=admin,dc=nodomain" write by * none
+-
+add: olcAccess
+olcAccess: {2}to dn.base="" by * read
+-
+add: olcAccess
+olcAccess: {3}to * by self write by dn="{{ keystone.ldap.root_dn }}" write by * read
+

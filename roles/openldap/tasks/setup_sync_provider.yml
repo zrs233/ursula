@@ -1,0 +1,35 @@
+- name: Copy templates for replication
+  template: src={{ item }} dest={{ keystone.ldap.config_dir }}/{{ item }}
+  with_items:
+    - set_oid.ldif
+    - mod_cfg_syncprov.ldif
+    - set_config_password.ldif
+
+- name: Check oid is set 
+  shell:  ldapsearch -L  -Y EXTERNAL -H ldapi:/// -b cn=config -s base olcServerId
+  register: oid_stdout
+  ignore_errors: yes
+  changed_when: False
+
+- name: Ensure oid is set
+  shell: ldapmodify  -Y EXTERNAL -H ldapi:/// -f {{ keystone.ldap.config_dir }}/set_oid.ldif
+  when: oid_stdout.stdout.count("olcServerID:") < 1
+
+- name: Check if syncprov isd enabled
+  shell: ldapsearch -Y EXTERNAL -H ldapi:/// -b cn=module{0},cn=config
+  register: sync_prov
+  changed_when: False
+
+
+- name: Ensure syncprov is registered
+  shell:  ldapmodify  -Y EXTERNAL -H ldapi:/// -f {{ keystone.ldap.config_dir }}/mod_cfg_syncprov.ldif
+  when: sync_prov.stdout.count("syncprov.la") < 1
+
+- name: Check if config pass is set
+  shell: ldapsearch -Y EXTERNAL -H ldapi:/// -b olcDatabase={0}config,cn=config -s base olcRootPW
+  register: olcroot_pass
+  changed_when: False
+
+- name: Set config root pass
+  shell: ldapmodify  -Y EXTERNAL -H ldapi:/// -f {{ keystone.ldap.config_dir }}/set_config_password.ldif
+  when: olcroot_pass.stdout.count("olcRootPW:") < 1

@@ -1,0 +1,18 @@
+# ldapadd -Y EXTERNAL -H ldapi:/// -f  ppolicy_module.ldif
+
+dn: cn=module,cn=config
+cn: module
+objectclass: olcModuleList
+objectclass: top
+olcmoduleload: ppolicy.la
+olcmodulepath: /usr/lib/ldap/
+
+dn: olcOverlay={0}ppolicy,olcDatabase={1}hdb,cn=config
+objectClass: olcOverlayConfig
+objectClass: olcPPolicyConfig
+olcOverlay: {0}ppolicy
+olcPPolicyDefault: {{ keystone.ldap.password_policy_dn }}
+olcPPolicyHashCleartext: TRUE
+olcPPolicyUseLockout: FALSE
+olcPPolicyForwardUpdates: FALSE
+

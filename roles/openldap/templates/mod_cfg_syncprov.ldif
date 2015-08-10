@@ -1,0 +1,5 @@
+#ldapmodify -Y EXTERNAL -H ldapi:/// -f mod_cfg_syncprov.la
+dn: cn=module{0},cn=config
+changetype: modify
+add: olcModuleLoad
+olcModuleLoad: {1}syncprov.la

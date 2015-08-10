@@ -1,0 +1,4 @@
+---
+- include: install-configure.yml
+- include: password_policy.yml
+- include: setup_sync_provider.yml

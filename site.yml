@@ -29,6 +29,25 @@
     - role: ipv6ra
       tags: ['infra']
 
+- name: openldap used by keystone base config
+  gather_facts: force
+  hosts: ldap
+  serial: 1 # serial because clustering
+  roles:
+    - role: openldap
+      tags: ['auth']
+      when: keystone.ldap.enabled|default('False')|bool 
+
+- name: openldap replication post both controllers have basic config
+  gather_facts: force
+  hosts: ldap
+  serial: 1 # serial because clustering
+  roles:
+    - role: openldap-replication
+      tags: ['auth']
+      when: keystone.ldap.enabled|default('False')|bool and groups['ldap'] | length > 1
+
+
 - name: rabbitmq used by openstack
   gather_facts: force
   hosts: controller

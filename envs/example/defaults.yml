@@ -200,6 +200,52 @@ glance:
       url: http://download.cirros-cloud.net/0.3.3/cirros-0.3.3-x86_64-disk.img
 
 keystone:
+  ldap:
+    enabled: False 
+    # ldap server settings
+    url: ldap://{{ undercloud_floating_ip }}:390
+    dc: "example"
+    suffix: "dc=example,dc=org"
+    root_cn: "admin"
+    root_dn: "cn=admin,dc=example,dc=org"
+    company_ou: "openstack"
+    organizationalUnit: "ou=openstack,dc=example,dc=org"
+    users_ou: "users"
+    groups_ou: "groups"
+    users_dn: "ou=users,ou=openstack,dc=example,dc=org"
+    groups_dn: "ou=groups,ou=openstack,dc=example,dc=org"
+    password_policy_ou: "policies"
+    password_policy_ou_dn: "ou=policies,ou=openstack,dc=example,dc=org"
+    password_policy_cn: "default"
+    password_policy_dn: "cn=default,ou=policies,ou=openstack,dc=example,dc=org"
+    password_attribute: userPassword
+
+    #keystone user  settings
+    keystone_user_name: keystone_user
+    keystone_user_password: aq1sw2de
+    keystone_user_dn: "cn=keystone_user,ou=openstack,dc=example,dc=org"
+
+    #ldap password policy settings
+    pwdAllowUserChange: "TRUE"
+    pwdCheckQuality: 2
+    pwdExpireWarning: 600
+    pwdFailureCountInterval: 30
+    pwdGraceAuthNLimit: 5
+    pwdInHistory: 5
+    pwdLockout: "TRUE"
+    pwdLockoutDuration: 0
+    pwdMaxAge: 0
+    pwdMaxFailure: 5
+    pwdMinAge: 0
+    pwdMinLength: 5
+    pwdMustChange: "FALSE"
+    pwdSafeModify: "FALSE"
+    root_password: aq1sw2de
+    config_root_password: aq1sw2de_c
+    dir: /var/lib/ldap
+    config_dir: /root/ldif_files_config
+
+
   token_expiration_in_seconds: 86400
   logging:
     debug: True

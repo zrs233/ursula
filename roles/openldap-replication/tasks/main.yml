@@ -1,0 +1,53 @@
+- name: Copy templates - replication post oid
+  template: src={{ item }} dest={{ keystone.ldap.config_dir }}/{{ item }}
+  with_items:
+    - set_both_oid.ldif
+    - config_repl_db.ldif
+    - syncrepl_config0.ldif
+    - syncrepl_hdb1.ldif
+    - mod_hdb1_syncprov.ldif
+
+- name: Set both oid
+  shell:  ldapmodify  -Y EXTERNAL -H ldapi:/// -f {{ keystone.ldap.config_dir }}/set_both_oid.ldif
+
+- name: Check if sync repl is registered for config
+  shell: ldapsearch -Y EXTERNAL -H ldapi:/// -s sub -b olcDatabase={0}config,cn=config
+  register: syncrepl_config_out
+  changed_when: False
+  ignore_errors: yes
+
+- name: Set sync repl config for config db
+  shell:  ldapmodify  -Y EXTERNAL -H ldapi:/// -f {{ keystone.ldap.config_dir }}/config_repl_db.ldif
+  when: syncrepl_config_out.stdout.count("syncprov") < 1
+
+- name: Check sync repl settings for config databse
+  shell: ldapsearch -Y EXTERNAL -H ldapi:/// -s sub -b olcDatabase={0}config,cn=config
+  register: syncrepl_config_out
+  changed_when: False
+  ignore_errors: yes
+
+- name: Set sync repl settings for config db
+  shell:  ldapmodify  -Y EXTERNAL -H ldapi:/// -f {{ keystone.ldap.config_dir }}/syncrepl_config0.ldif
+  when: syncrepl_config_out.stdout.count("olcSyncrepl") < 1
+
+- name: Check syncrepl settings for hdb1
+  shell: ldapsearch -L -Y EXTERNAL -H ldapi:/// -s sub -b olcDatabase={1}hdb,cn=config olcSyncrepl
+  register: syncrepl_config_out
+  changed_when: False
+  ignore_errors: yes
+
+- name: Set sync repl settings for hdb1
+  shell: ldapmodify -Y EXTERNAL -H ldapi:/// -f {{ keystone.ldap.config_dir }}/syncrepl_hdb1.ldif
+  when: syncrepl_config_out.stdout.count("olcSyncrepl:") < 1
+
+- name: Check if sync repl is registered for hdb1
+  shell: ldapsearch -Y EXTERNAL -H ldapi:/// -s sub -b olcDatabase={1}hdb,cn=config
+  register: syncrepl_config_out
+  changed_when: False
+  ignore_errors: yes
+
+- name: Set sync repl config for hdb1
+  shell:  ldapmodify  -Y EXTERNAL -H ldapi:/// -f {{ keystone.ldap.config_dir }}/mod_hdb1_syncprov.ldif
+  when: syncrepl_config_out.stdout.count("syncprov") < 1
+
+

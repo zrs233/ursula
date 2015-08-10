@@ -1,0 +1,24 @@
+dn: {{keystone.ldap.suffix}}
+objectClass: top
+objectClass: dcObject
+objectclass: organization
+o: {{keystone.ldap.dc}}
+dc: {{keystone.ldap.dc}}
+
+dn: {{keystone.ldap.root_dn}}
+objectClass: organizationalRole
+cn: admin
+description: Directory admin
+
+dn: {{keystone.ldap.organizationalUnit}}
+objectClass: organizationalUnit
+ou: {{keystone.ldap.company_ou}}
+
+dn: {{keystone.ldap.users_dn}}
+objectClass: organizationalUnit
+ou: {{keystone.ldap.users_ou}}
+
+dn: {{keystone.ldap.groups_dn}}
+objectClass: organizationalUnit
+ou: {{keystone.ldap.groups_ou}}
+
