@@ -1,14 +1,17 @@
 - name: Install the openldap packages
   apt: name={{ item }} state=installed
-  with_items:
-   - slapd 
-   - ldap-utils
+  with_items: "{{ keystone.ldap.ldap_pkgs }}"
 
 - name: Create directory for ldif files
-  file: path={{ keystone.ldap.config_dir }} state=directory owner=root group=root mode=0400
+  file: path={{ keystone.ldap.config_dir }} 
+        state=directory 
+        owner=root 
+        group=root 
+        mode=0400
 
 - name: Copy templates
-  template: src={{ item }} dest={{ keystone.ldap.config_dir }}/{{ item }}
+  template: src={{ item }} 
+            dest={{ keystone.ldap.config_dir }}/{{ item }}
   with_items:
     - set_suffix.ldif
     - set_admin.ldif
@@ -64,13 +67,25 @@
   when: keystone_user_access.stdout.count("{{ keystone.ldap.keystone_user_name }}") < 1
 
 - name: create log directory for openldap
-  file: path=/var/log/openldap state=directory owner=syslog group=adm mode=0640
+  file: path=/var/log/openldap 
+        state=directory 
+        owner=syslog 
+        group=adm 
+        mode=0640
 
 - name: touch log file for openldap
-  file: path=/var/log/openldap/openldap.log state=touch owner=syslog group=adm mode=0640
+  file: path=/var/log/openldap/openldap.log 
+        state=touch 
+        owner=syslog 
+        group=adm 
+        mode=0640
 
 - name: set up rsyslog for openldap
-  copy: src=100-slapd.conf dest=/etc/rsyslog.d/100-slapd.conf owner=syslog group=adm mode=0640
+  copy: src=100-slapd.conf 
+        dest=/etc/rsyslog.d/100-slapd.conf 
+        owner=syslog 
+        group=adm 
+        mode=0640
   notify:
   - restart rsyslog
 

@@ -11,6 +11,9 @@ keystone:
     console_scripts:
       - keystone-manage
       - keystone-all
+    ldap_python:
+      - python-ldap
+      - ldappool
 
   logs:
     - paths:
@@ -26,3 +29,4 @@ keystone:
   logging:
     debug: False
     verbose: True
+

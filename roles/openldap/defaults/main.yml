@@ -1,6 +1,7 @@
 keystone:
   ldap:
     enabled: False 
+
     # ldap server settings
     url: ldap://0.0.0.0:389
     dc: "example"
@@ -20,13 +21,12 @@ keystone:
     password_policy_dn: "cn=default,ou=policies,ou=openstack,dc=example,dc=org"
     password_attribute: userPassword
     
-    #keystone user  settings
+    # keystone user settings
     keystone_user_name: keystone_user
     keystone_user_password: aq1sw2de
     keystone_user_dn: "cn=keystone_user,ou=openstack,dc=example,dc=org"    
     
-    
-    #ldap password policy settings
+    # ldap password policy settings
     pwdAllowUserChange: "TRUE"
     pwdCheckQuality: 2
     pwdExpireWarning: 600
@@ -45,5 +45,7 @@ keystone:
     config_root_password: aq1sw2de_c
     dir: /var/lib/ldap
     config_dir: /root/ldif_files_config
-    
+    ldap_pkgs:
+      - slapd
+      - ldap-utils
 

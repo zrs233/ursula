@@ -1,5 +1,6 @@
 - name: Copy templates for replication
-  template: src={{ item }} dest={{ keystone.ldap.config_dir }}/{{ item }}
+  template: src={{ item }} 
+            dest={{ keystone.ldap.config_dir }}/{{ item }}
   with_items:
     - set_oid.ldif
     - mod_cfg_syncprov.ldif
@@ -19,7 +20,6 @@
   shell: ldapsearch -Y EXTERNAL -H ldapi:/// -b cn=module{0},cn=config
   register: sync_prov
   changed_when: False
-
 
 - name: Ensure syncprov is registered
   shell:  ldapmodify  -Y EXTERNAL -H ldapi:/// -f {{ keystone.ldap.config_dir }}/mod_cfg_syncprov.ldif

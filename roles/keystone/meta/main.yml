@@ -17,3 +17,5 @@ dependencies:
     when: openstack_install_method == 'package'
   - role: collectd-plugin
     when: collectd is defined and collectd.enabled|bool
+  - role: openldap
+    when: keystone.ldap.enabled|default('False')|bool

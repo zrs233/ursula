@@ -45,8 +45,8 @@
   roles:
     - role: openldap-replication
       tags: ['auth']
-      when: keystone.ldap.enabled|default('False')|bool and groups['ldap'] | length > 1
-
+      when: keystone.ldap.enabled|default('False')|bool and 
+            groups['ldap'] | length > 1
 
 - name: rabbitmq used by openstack
   gather_facts: force
