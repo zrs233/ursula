@@ -41,6 +41,11 @@
               line=EMBEDDED_RUBY=true
   notify: restart sensu-client
 
+- name: ensure PATH contains /usr/local/bin (OpenStack clients)
+  lineinfile: dest=/etc/default/sensu regexp=^PATH
+              line="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+  notify: restart sensu-client
+
 - name: sensu client config
   template: src=monitoring/config.json dest=/etc/sensu/config.json owner=root
             group=root
