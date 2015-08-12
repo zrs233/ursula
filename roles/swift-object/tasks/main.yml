@@ -10,17 +10,11 @@
     - { service_name: object, conf: object-server }
     - { service_name: object-replicator, conf: object-server }
     - { service_name: object-updater, conf: object-server }
-    - { service_name: object-expirer, conf: object-expirer }
 
 - name: object-server config
   template: src=etc/swift/object-server.conf dest=/etc/swift/object-server.conf
             owner=root group=root mode=0644
   notify: restart swift-object service
-
-- name: object-expirer config
-  template: src=etc/swift/object-expirer.conf dest=/etc/swift/object-expirer.conf
-            owner=root group=root mode=0644
-  notify: restart swift-object-expirer service
 
 - meta: flush_handlers
 
@@ -30,7 +24,6 @@
     - swift-object-replicator
     - swift-object-updater
     - swift-object
-    - swift-object-expirer
 
 - name: configure disks
   swift_disk: dev={{ item }}
