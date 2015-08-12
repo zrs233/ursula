@@ -1,11 +1,7 @@
 - name: Copy templates - replication post oid
-  template: src={{ item }} dest={{ keystone.ldap.config_dir }}/{{ item }}
-  with_items:
-    - set_both_oid.ldif
-    - config_repl_db.ldif
-    - syncrepl_config0.ldif
-    - syncrepl_hdb1.ldif
-    - mod_hdb1_syncprov.ldif
+  template: src={{ item }} 
+            dest={{ keystone.ldap.config_dir }}/{{ item | basename }}
+  with_fileglob: ../templates/*
 
 - name: Set both oid
   shell: ldapmodify -Y EXTERNAL -H ldapi:/// -f {{ keystone.ldap.config_dir }}/set_both_oid.ldif

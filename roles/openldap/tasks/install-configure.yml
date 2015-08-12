@@ -11,14 +11,8 @@
 
 - name: Copy templates
   template: src={{ item }} 
-            dest={{ keystone.ldap.config_dir }}/{{ item }}
-  with_items:
-    - set_suffix.ldif
-    - set_admin.ldif
-    - base_domain.ldif
-    - keystone_user.ldif
-    - keystone_user_access.ldif
-    - other_access_add.ldif
+            dest={{ keystone.ldap.config_dir }}/{{ item | basename }}
+  with_fileglob: ../templates/install_configure/*
 
 - name: Get admin/suffix dn
   shell: ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -s sub -b "{{ keystone.ldap.suffix  }}" cn=admin
