@@ -7,13 +7,13 @@
     - set_config_password.ldif
 
 - name: Check oid is set 
-  shell:  ldapsearch -L  -Y EXTERNAL -H ldapi:/// -b cn=config -s base olcServerId
+  shell: ldapsearch -L -Y EXTERNAL -H ldapi:/// -b cn=config -s base olcServerId
   register: oid_stdout
   ignore_errors: yes
   changed_when: False
 
 - name: Ensure oid is set
-  shell: ldapmodify  -Y EXTERNAL -H ldapi:/// -f {{ keystone.ldap.config_dir }}/set_oid.ldif
+  shell: ldapmodify -Y EXTERNAL -H ldapi:/// -f {{ keystone.ldap.config_dir }}/set_oid.ldif
   when: oid_stdout.stdout.count("olcServerID:") < 1
 
 - name: Check if syncprov isd enabled
@@ -22,7 +22,7 @@
   changed_when: False
 
 - name: Ensure syncprov is registered
-  shell:  ldapmodify  -Y EXTERNAL -H ldapi:/// -f {{ keystone.ldap.config_dir }}/mod_cfg_syncprov.ldif
+  shell: ldapmodify -Y EXTERNAL -H ldapi:/// -f {{ keystone.ldap.config_dir }}/mod_cfg_syncprov.ldif
   when: sync_prov.stdout.count("syncprov.la") < 1
 
 - name: Check if config pass is set
@@ -31,5 +31,5 @@
   changed_when: False
 
 - name: Set config root pass
-  shell: ldapmodify  -Y EXTERNAL -H ldapi:/// -f {{ keystone.ldap.config_dir }}/set_config_password.ldif
+  shell: ldapmodify -Y EXTERNAL -H ldapi:/// -f {{ keystone.ldap.config_dir }}/set_config_password.ldif
   when: olcroot_pass.stdout.count("olcRootPW:") < 1

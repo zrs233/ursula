@@ -220,12 +220,10 @@ keystone:
     password_policy_cn: "default"
     password_policy_dn: "cn=default,ou=policies,ou=openstack,dc=example,dc=org"
     password_attribute: userPassword
-
     #keystone user  settings
     keystone_user_name: keystone_user
     keystone_user_password: aq1sw2de
     keystone_user_dn: "cn=keystone_user,ou=openstack,dc=example,dc=org"
-
     #ldap password policy settings
     pwdAllowUserChange: "TRUE"
     pwdCheckQuality: 2
@@ -245,7 +243,6 @@ keystone:
     config_root_password: aq1sw2de_c
     dir: /var/lib/ldap
     config_dir: /root/ldif_files_config
-
 
   token_expiration_in_seconds: 86400
   logging:
