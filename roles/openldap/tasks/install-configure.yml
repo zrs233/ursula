@@ -15,7 +15,7 @@
   with_fileglob: ../templates/install_configure/*
 
 - name: Get admin/suffix dn
-  shell: ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -s sub -b "{{ keystone.ldap.suffix  }}" cn=admin
+  shell: ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -s sub -b "{{ keystone.ldap.suffix }}" cn=admin
   register: admin_name
   ignore_errors: yes
   changed_when: False
@@ -25,7 +25,7 @@
   when: admin_name.stdout.count("cn={{ keystone.ldap.root_cn }}") < 1
 
 - name: Get base domain 
-  shell: ldapsearch -D {{ keystone.ldap.root_dn }} -w {{ keystone.ldap.root_password }}  -s sub -b "{{ keystone.ldap.suffix  }}" objectclass=*
+  shell: ldapsearch -D {{ keystone.ldap.root_dn }} -w {{ keystone.ldap.root_password }}  -s sub -b "{{ keystone.ldap.suffix }}" objectclass=*
   register: base_domain
   ignore_errors: yes
   changed_when: False
@@ -35,7 +35,7 @@
   when: base_domain.stdout.count("ou={{ keystone.ldap.company_ou }}") < 1
 
 - name: Get keystone_user
-  shell: ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -s sub -b "{{ keystone.ldap.suffix  }}" cn=keystone_user
+  shell: ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -s sub -b "{{ keystone.ldap.suffix }}" cn=keystone_user
   register: keystone_user
   ignore_errors: yes
   changed_when: False
@@ -45,7 +45,7 @@
   when: base_domain.stdout.count("cn={{ keystone.ldap.keystone_user_name }}") < 1
 
 - name: Check keystone_user access
-  shell: ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -s sub -b  olcDatabase={1}hdb,cn=config objectclass=* olcAccess 
+  shell: ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -s sub -b olcDatabase={1}hdb,cn=config objectclass=* olcAccess 
   register: keystone_user_access
   ignore_errors: yes
   changed_when: False

@@ -1,4 +1,4 @@
-# do ldapadd -Y EXTERNAL -H ldapi:/// -f  /etc/ldap/schema/ppolicy.ldif to get object class pwdPolicy first
+# do ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/ldap/schema/ppolicy.ldif to get object class pwdPolicy first
 #ldapadd -x -D cn=admin,dc=ibm,dc=com -w aq1sw2de -f ppolicy_container.ldif
 dn: {{ keystone.ldap.password_policy_ou_dn }}
 objectClass: organizationalUnit

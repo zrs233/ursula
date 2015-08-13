@@ -1,4 +1,4 @@
-# ldapadd -Y EXTERNAL -H ldapi:/// -f  ppolicy_module.ldif
+# ldapadd -Y EXTERNAL -H ldapi:/// -f ppolicy_module.ldif
 
 dn: cn=module,cn=config
 cn: module
