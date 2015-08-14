@@ -5,3 +5,4 @@ envs/test/group_vars/all.yml
 .vagrant
 .tox
 build
+*.DS_Store
