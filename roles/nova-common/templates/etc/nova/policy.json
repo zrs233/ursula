@@ -244,14 +244,15 @@
     "compute_extension:v3:os-server-diagnostics": "rule:admin_api",
     "compute_extension:v3:os-server-diagnostics:discoverable": "",
     "compute_extension:server_groups": "",
-    "compute_extension:v3:os-server-groups:discoverable": "",
-    "compute_extension:services": "rule:admin_api",
     "compute_extension:server_password": "",
     "compute_extension:v3:os-server-password": "",
     "compute_extension:v3:os-server-password:discoverable": "",
     "compute_extension:server_usage": "",
     "compute_extension:v3:os-server-usage": "",
     "compute_extension:v3:os-server-usage:discoverable": "",
+    "compute_extension:v3:os-server-groups": "",
+    "compute_extension:v3:os-server-groups:discoverable": "",
+    "compute_extension:services": "rule:admin_api",
     "compute_extension:services": "rule:admin_or_projAdmin_or_cloudAdmin",
 
 
@@ -362,6 +363,6 @@
     "network:get_dns_entries_by_name": "",
     "network:create_private_dns_domain": "",
     "network:create_public_dns_domain": "",
-    "network:delete_dns_domain": ""
+    "network:delete_dns_domain": "",
     "network:attach_external_network": "rule:admin_api"
 }
