@@ -2,8 +2,8 @@
 ceph_monitor:
 
   openstack_config: true
-  openstack_block_storage_pool: block_storage_pool
+  openstack_block_storage_pool: default
 
   openstack_keys:
-    - { name: client.glance, value: "mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx pool=block_storage_pool'" }
-    - { name: client.cinder, value: "mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx pool=block_storage_pool'"  }
+    - { name: client.glance, value: "mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx pool=default'" }
+    - { name: client.cinder, value: "mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx pool=default'"  }
