@@ -5,6 +5,20 @@
   failed_when: false
   register: ceph_on_system
 
+- name: erasing partitions and labels from osd devices
+  command: sgdisk --zap {{ item }}
+  ignore_errors: true
+  with_items: ceph_osd.devices
+  when: ceph_on_system.rc == 1 or
+        ceph_purge.destroy_devices_no_matter_what
+
+- name: erasing partitions and labels from the journal devices
+  command: sgdisk --zap {{ item }}
+  ignore_errors: true
+  with_items: ceph_osd.raw_journal_devices
+  when: ceph_on_system.rc == 1 or
+        ceph_purge.destroy_devices_no_matter_what
+
 - name: clear osd devices
   shell: dd if=/dev/zero of={{ item }} bs=1M count=512
   with_items: ceph_osd.devices
@@ -13,18 +27,6 @@
 
 - name: clear journal devices
   shell: dd if=/dev/zero of={{ item }} bs=1M count=512
-  with_items: ceph_osd.raw_journal_devices
-  when: ceph_on_system.rc == 1 or
-        ceph_purge.destroy_devices_no_matter_what
-
-- name: erasing partitions and labels from osd devices
-  command: ceph-disk zap {{ item }}
-  with_items: ceph_osd.devices
-  when: ceph_on_system.rc == 1 or
-        ceph_purge.destroy_devices_no_matter_what
-
-- name: erasing partitions and labels from the journal devices
-  command: ceph-disk zap {{ item }}
   with_items: ceph_osd.raw_journal_devices
   when: ceph_on_system.rc == 1 or
         ceph_purge.destroy_devices_no_matter_what
