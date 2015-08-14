@@ -8,16 +8,6 @@
        cache_valid_time=3600
   with_items: ceph_common.debian_pkgs
 
-- name: install the ceph repository stable key
-  apt_key: url={{ ceph_common.ceph_stable_key }}
-           state=present
-  when: ceph_common.ceph_stable
-
-- name: add ceph stable repository
-  apt_repository: repo="deb http://ceph.com/debian-{{ ceph_common.ceph_stable_release }}/ {{ ansible_lsb.codename }} main"
-                  state=present
-  when: ceph_common.ceph_stable
-
 - name: install ceph
   apt: pkg={{ item }}
        state=present

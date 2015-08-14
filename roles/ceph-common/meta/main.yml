@@ -1,0 +1,6 @@
+---
+dependencies:
+  - role: apt-repos
+    repos:
+      - repo: 'deb {{ apt_repos.ceph.repo }}{{ ceph_common.ceph_stable_release }}/ {{ ansible_lsb.codename }} main'
+        key_url: '{{ apt_repos.ceph.key_url }}'
