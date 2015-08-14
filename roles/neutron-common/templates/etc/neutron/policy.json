@@ -42,6 +42,7 @@
     "update_network:provider:network_type": "rule:admin_only",
     "update_network:provider:physical_network": "rule:admin_only",
     "update_network:provider:segmentation_id": "rule:admin_only",
+    "update_network:router:external": "rule:admin_only",
     "delete_network": "rule:admin_or_admin_owner",
 
     "create_port": "",
@@ -82,15 +83,29 @@
     "update_quota": "rule:admin_or_admin_owner",
     "delete_quota": "rule:admin_or_admin_owner",
     "get_quota": "rule:rule:admin_or_owner",
- 
+
     "create_router:external_gateway_info:enable_snat": "rule:admin_only",
+    "create_router:distributed": "rule:admin_only",
+    "create_router:ha": "rule:admin_only",
+    "get_router": "rule:admin_or_owner",
+    "get_router:distributed": "rule:admin_only",
     "update_router:external_gateway_info:enable_snat": "rule:admin_only",
+    "update_router:distributed": "rule:admin_only",
+    "update_router:ha": "rule:admin_only",
+    "delete_router": "rule:admin_or_owner",
+
+	
+	"add_router_interface": "rule:admin_or_owner",
+    "remove_router_interface": "rule:admin_or_owner",
+
+    "create_firewall": "",
 
     "create_firewall": "rule:admin_only",
     "get_firewall": "rule:admin_only",
     "create_firewall:shared": "rule:admin_only",
     "get_firewall:shared": "rule:admin_only",
     "update_firewall": "rule:admin_only",
+    "update_firewall:shared": "rule:admin_only",
     "delete_firewall": "rule:admin_only",
 
     "create_firewall_policy": "rule:admin_only",
@@ -134,7 +149,7 @@
     "update_floatingip": "rule:admin_or_admin_owner",
     "delete_floatingip": "rule:admin_or_admin_owner",
     "get_floatingip": "rule:admin_or_owner",
-    
+
     "create_network_profile": "rule:admin_only",
     "update_network_profile": "rule:admin_only",
     "delete_network_profile": "rule:admin_only",
