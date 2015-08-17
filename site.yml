@@ -178,13 +178,37 @@
       tags: ['openstack', 'nova', 'data']
       when: not ironic.enabled|bool
 
+- name: ceph monitors
+  gather_facts: force
+  hosts: ceph_monitors
+  roles:
+    - role: ceph-common
+      tags: ['ceph', 'ceph-common']
+      when: ceph.enabled|bool
+
+    - role: ceph-monitor
+      tags: ['ceph', 'ceph-monitor']
+      when: ceph.enabled|bool
+
+- name: ceph osds
+  gather_facts: force
+  hosts: ceph_osds
+  roles:
+    - role: ceph-common
+      tags: ['ceph', 'ceph-common']
+      when: ceph.enabled|bool
+
+    - role: ceph-osd
+      tags: ['ceph', 'ceph-osd']
+      when: ceph.enabled|bool
+
 - name: cinder control plane
   gather_facts: force
   hosts: controller
   roles:
     - role: cinder-control
       tags: ['openstack', 'cinder', 'control']
-      when: cinder.enabled|bool
+      when: ceph.enabled|bool
 
 - name: cinder data plane
   gather_facts: force
@@ -192,7 +216,7 @@
   roles:
     - role: cinder-data
       tags: ['openstack', 'cinder', 'data', 'cinder-data']
-      when: cinder.enabled|bool
+      when: ceph.enabled|bool
 
 - name: neutron control plane
   gather_facts: force
