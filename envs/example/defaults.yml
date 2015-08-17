@@ -109,7 +109,7 @@ nova:
     verbose: True
 
 ceph:
-  enabled: true
+  enabled: false
 
 cinder:
   enabled: {{ ceph.enabled }}
