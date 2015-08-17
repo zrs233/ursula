@@ -14,6 +14,9 @@
             dest={{ keystone.ldap.config_dir }}/{{ item | basename }}
   with_fileglob: ../templates/install_configure/*
 
+- name: Set log level
+  shell: ldapmodify -Q -Y EXTERNAL -H ldapi:/// -f {{ keystone.ldap.config_dir }}/logging.ldif
+
 - name: Get admin/suffix dn
   shell: ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -s sub -b "{{ keystone.ldap.suffix }}" cn=admin
   register: admin_name
@@ -60,25 +63,11 @@
   ignore_errors: yes
   when: keystone_user_access.stdout.count("{{ keystone.ldap.keystone_user_name }}") < 1
 
-- name: create log directory for openldap
-  file: path=/var/log/openldap 
-        state=directory 
-        owner=syslog 
-        group=adm 
-        mode=0640
-
-- name: touch log file for openldap
-  file: path=/var/log/openldap/openldap.log 
-        state=touch 
-        owner=syslog 
-        group=adm 
-        mode=0640
-
-- name: set up rsyslog for openldap
-  copy: src=100-slapd.conf 
-        dest=/etc/rsyslog.d/100-slapd.conf 
-        owner=syslog 
-        group=adm 
-        mode=0640
+- name: configure rsyslog for openldap
+  copy: src=45-slapd.conf 
+        dest=/etc/rsyslog.d/45-slapd.conf 
+        owner=root 
+        group=root 
+        mode=0644
   notify:
   - restart rsyslog

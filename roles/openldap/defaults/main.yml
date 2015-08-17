@@ -45,6 +45,7 @@ keystone:
     config_root_password: aq1sw2de_c
     dir: /var/lib/ldap
     config_dir: /root/ldif_files_config
+    openldap_log_level: none 
     ldap_pkgs:
       - slapd
       - ldap-utils

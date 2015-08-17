@@ -1,0 +1,4 @@
+dn: cn=config
+changetype: modify
+replace: olcLogLevel
+olcLogLevel: {{ keystone.ldap.openldap_log_level }} 
