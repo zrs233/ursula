@@ -14,3 +14,5 @@ dependencies:
     rootwrap: True
     package_alternatives: "{{ cinder.package.console_scripts }}"
     when: openstack_install_method == 'package'
+  - role: ceph-common
+    when: ceph.enabled
