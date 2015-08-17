@@ -1,0 +1,14 @@
+---
+- name: fetch glance keyring
+  slurp: path=/etc/ceph/ceph.client.glance.keyring
+  run_once: true
+  delegate_to: "{{ groups[ceph.monitor_group_name][0] }}"
+  register: glance_keyring
+
+- name: write glance keyring
+  copy:
+    dest: "{{ glance_keyring['source'] }}"
+    content: "{{ glance_keyring['content'] | b64decode }}"
+    mode: 0644
+    owner: glance
+    group: glance
