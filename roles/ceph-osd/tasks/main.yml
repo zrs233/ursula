@@ -15,6 +15,44 @@
   failed_when: false
   register: ceph_partition
 
+# only do the next four tasks when:
+#   1. no ceph partitions were found on the disk OR
+#   2. user explicitly chooses to destroy disks
+
+- name: erasing partitions and labels from osd devices
+  command: sgdisk --zap {{ item.1 }}
+  ignore_errors: true
+  with_together:
+    - ceph_partition.results
+    - ceph_osd.devices
+  when: item.0.rc != 0 or
+        ceph_osd.destroy_devices_no_matter_what
+
+- name: erasing partitions and labels from journal devices
+  command: sgdisk --zap {{ item.1 }}
+  ignore_errors: true
+  with_together:
+    - ceph_partition.results
+    - ceph_osd.raw_journal_devices
+  when: item.0.rc != 0 or
+        ceph_osd.destroy_devices_no_matter_what
+
+- name: clear osd devices
+  shell: dd if=/dev/zero of={{ item.1 }} bs=1M count=512
+  with_together:
+    - ceph_partition.results
+    - ceph_osd.devices
+  when: item.0.rc != 0 or
+        ceph_osd.destroy_devices_no_matter_what
+
+- name: clear journal devices
+  shell: dd if=/dev/zero of={{ item.1 }} bs=1M count=512
+  with_together:
+    - ceph_partition.results
+    - ceph_osd.raw_journal_devices
+  when: item.0.rc != 0 or
+        ceph_osd.destroy_devices_no_matter_what
+
 # only do this when no ceph paritions were found on the disk
 - name: prepare osd disk(s)
   command: "ceph-disk prepare {{ item.1 }} {{ item.2 }}"

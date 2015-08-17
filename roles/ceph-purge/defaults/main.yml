@@ -1,6 +1,0 @@
----
-ceph_purge:
-
-  # ONLY SET THIS TO TRUE IF YOU KNOW WHAT YOU'RE DOING.
-  # This will likely only be used on a fresh install.
-  destroy_devices_no_matter_what: false
