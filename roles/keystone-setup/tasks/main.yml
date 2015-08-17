@@ -34,6 +34,7 @@
   keystone_user: tenant={{ item }}
                  tenant_description="{{ item }} tenant"
                  token={{ admin_token }}
+                 endpoint="http://127.0.0.1:35358/v2.0/"
   with_items: keystone.tenants
 
 - name: keystone users
@@ -41,6 +42,7 @@
                  password={{ item.password }}
                  tenant={{ item.tenant }}
                  token={{ admin_token }}
+                 endpoint="http://127.0.0.1:35358/v2.0/"
   with_items: keystone.users
 
 - name: keystone roles
@@ -48,6 +50,7 @@
                  user={{ item.user }}
                  tenant={{ item.tenant }}
                  token={{ admin_token }}
+                 endpoint="http://127.0.0.1:35358/v2.0/"
   with_items: keystone.user_roles
 
 - name: keystone endpoint

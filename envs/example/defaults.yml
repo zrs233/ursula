@@ -40,6 +40,24 @@ memcached:
   user: nobody
   max_connections: 1024
 
+haproxy_ports:
+  keystone: 5000
+  keystone_admin: 35357
+  nova: 8774
+  novnc: 6080
+  neutron: 9696
+  glance: 9292
+  cinder: 8776
+
+backend_ports:
+  keystone: 5001
+  keystone_admin: 353538
+  nova: 9774
+  novnc: 6081
+  neutron: 9797
+  glance: 9393
+  cinder: 8778
+
 endpoints:
   main:     "{{ fqdn }}"
   db:       "{{ undercloud_floating_ip }}"
@@ -54,8 +72,8 @@ endpoints:
   heat:     "{{ fqdn }}"
   heat-cfn: "{{ fqdn }}"
   ironic: "{{ fqdn }}"
-  identity_uri: https://{{ fqdn }}:35358
-  auth_uri: https://{{ fqdn }}:5001/v2.0
+  identity_uri: https://{{ fqdn }}:{{ haproxy_ports.keystone_admin }}
+  auth_uri: https://{{ fqdn }}:{{ haproxy_ports.keystone }}/v2.0
 
 mysql:
   root_password: asdf
@@ -280,45 +298,45 @@ keystone:
     - name: keystone
       type: identity
       description: 'Identity Service'
-      public_url: https://{{ endpoints.main }}:5001/v2.0
-      internal_url: https://{{ endpoints.main }}:5001/v2.0
-      admin_url: https://{{ endpoints.main }}:35358/v2.0
+      public_url: https://{{ endpoints.main }}:{{ haproxy_ports.keystone }}/v2.0
+      internal_url: https://{{ endpoints.main }}:{{ haproxy_ports.keystone }}/v2.0
+      admin_url: https://{{ endpoints.main }}:{{ haproxy_ports.keystone_admin }}/v2.0
     - name: keystonev3
       type: identityv3
       description: 'Identity Service v3'
-      public_url: https://{{ endpoints.main }}:5001/v3
-      internal_url: https://{{ endpoints.main }}:5001/v3
-      admin_url: https://{{ endpoints.main }}:35358/v3
+      public_url: https://{{ endpoints.main }}:{{ haproxy_ports.keystone }}/v3
+      internal_url: https://{{ endpoints.main }}:{{ haproxy_ports.keystone }}/v3
+      admin_url: https://{{ endpoints.main }}:{{ haproxy_ports.keystone_admin }}/v3
     - name: nova
       type: compute
       description: 'Compute Service'
-      public_url: https://{{ endpoints.main }}:8777/v2/%(tenant_id)s
-      internal_url: https://{{ endpoints.main }}:8777/v2/%(tenant_id)s
-      admin_url: https://{{ endpoints.main }}:8777/v2/%(tenant_id)s
+      public_url: https://{{ endpoints.main }}:{{ haproxy_ports.nova }}/v2/%(tenant_id)s
+      internal_url: https://{{ endpoints.main }}:{{ haproxy_ports.nova }}/v2/%(tenant_id)s
+      admin_url: https://{{ endpoints.main }}:{{ haproxy_ports.nova }}/v2/%(tenant_id)s
     - name: glance
       type: image
       description: 'Image Service'
-      public_url: https://{{ endpoints.main }}:9393
-      internal_url: https://{{ endpoints.main }}:9393
-      admin_url: https://{{ endpoints.main }}:9393
+      public_url: https://{{ endpoints.main }}:{{ haproxy_ports.glance }}
+      internal_url: https://{{ endpoints.main }}:{{ haproxy_ports.glance }}
+      admin_url: https://{{ endpoints.main }}:{{ haproxy_ports.glance }}
     - name: neutron
       type: network
       description: 'Network Service'
-      public_url: https://{{ endpoints.main }}:9797
-      internal_url: https://{{ endpoints.main }}:9797
-      admin_url: https://{{ endpoints.main }}:9797
+      public_url: https://{{ endpoints.main }}:{{ haproxy_ports.neutron }}
+      internal_url: https://{{ endpoints.main }}:{{ haproxy_ports.neutron }}
+      admin_url: https://{{ endpoints.main }}:{{ haproxy_ports.neutron }}
     - name: cinder
       type: volume
       description: 'Volume Service'
-      public_url: https://{{ endpoints.main }}:8778/v1/%(tenant_id)s
-      internal_url: https://{{ endpoints.main }}:8778/v1/%(tenant_id)s
-      admin_url: https://{{ endpoints.main }}:8778/v1/%(tenant_id)s
+      public_url: https://{{ endpoints.main }}:{{ haproxy_ports.cinder }}/v1/%(tenant_id)s
+      internal_url: https://{{ endpoints.main }}:{{ haproxy_ports.cinder }}/v1/%(tenant_id)s
+      admin_url: https://{{ endpoints.main }}:{{ haproxy_ports.cinder }}/v1/%(tenant_id)s
     - name: cinderv2
       type: volumev2
       description: 'Volume Service v2'
-      public_url: https://{{ endpoints.main }}:8778/v2/%(tenant_id)s
-      internal_url: https://{{ endpoints.main }}:8778/v2/%(tenant_id)s
-      admin_url: https://{{ endpoints.main }}:8778/v2/%(tenant_id)s
+      public_url: https://{{ endpoints.main }}:{{ haproxy_ports.cinder }}/v2/%(tenant_id)s
+      internal_url: https://{{ endpoints.main }}:{{ haproxy_ports.cinder }}/v2/%(tenant_id)s
+      admin_url: https://{{ endpoints.main }}:{{ haproxy_ports.cinder }}/v2/%(tenant_id)s
     - name: heat
       type: orchestration
       description: 'Heat Orchestration API'

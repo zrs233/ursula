@@ -2,6 +2,8 @@
 neutron:
   l2_population: False
   api_workers: 3
+  backend_api_port: 9797
+  haproxy_api_port: 9696
   metadata_workers: 3
   agent_down_time: 20
   report_interval: 4

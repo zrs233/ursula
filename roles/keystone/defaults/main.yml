@@ -4,7 +4,10 @@ keystone:
   token_expiration_in_seconds: 86400
   admin_workers: 5
   public_workers: 5
-
+  backend_api_port: 5001
+  haproxy_api_port: 5000
+  admin_haproxy_api_port: 35357
+  admin_backend_api_port: 35358
   source:
     rev: '8a7282bebd1ebfb92d9ccd87f85b8490a89da4e0'
   package:
