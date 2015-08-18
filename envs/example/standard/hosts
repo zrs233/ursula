@@ -1,8 +1,6 @@
-
-#this group installs ldap id ldap backend for keystone is enabled.
 [ldap]
-controller1
-controller2
+controller1 oid=1
+controller2 oid=2
 
 [controller]
 controller1
