@@ -36,7 +36,7 @@
   register: pipout
   changed_when: pipout.stdout|search("Successfully installed")
   notify: restart keystone services
-  when: openstack_install_method == 'package' and 
+  when: openstack_install_method == 'package' and
         keystone.ldap.enabled|bool
   with_items: keystone.package.ldap_python
 

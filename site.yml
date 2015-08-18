@@ -36,7 +36,7 @@
   roles:
     - role: openldap
       tags: ['auth']
-      when: keystone.ldap.enabled|default('False')|bool 
+      when: keystone.ldap.enabled|default('False')|bool
 
 - name: openldap replication post both controllers have basic config
   gather_facts: force
@@ -45,7 +45,7 @@
   roles:
     - role: openldap-replication
       tags: ['auth']
-      when: keystone.ldap.enabled|default('False')|bool and 
+      when: keystone.ldap.enabled|default('False')|bool and
             groups['ldap'] | length > 1
 
 - name: rabbitmq used by openstack

@@ -1,5 +1,5 @@
 - name: Copy templates - replication post oid
-  template: src={{ item }} 
+  template: src={{ item }}
             dest={{ keystone.ldap.config_dir }}/{{ item | basename }}
   with_fileglob: ../templates/*
 

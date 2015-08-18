@@ -3,14 +3,14 @@
   with_items: "{{ keystone.ldap.ldap_pkgs }}"
 
 - name: Create directory for ldif files
-  file: path={{ keystone.ldap.config_dir }} 
-        state=directory 
-        owner=root 
-        group=root 
+  file: path={{ keystone.ldap.config_dir }}
+        state=directory
+        owner=root
+        group=root
         mode=0400
 
 - name: Copy templates
-  template: src={{ item }} 
+  template: src={{ item }}
             dest={{ keystone.ldap.config_dir }}/{{ item | basename }}
   with_fileglob: ../templates/install_configure/*
 
@@ -27,7 +27,7 @@
   shell: ldapmodify -Y EXTERNAL -H ldapi:/// -f {{ keystone.ldap.config_dir }}/set_admin.ldif
   when: admin_name.stdout.count("cn={{ keystone.ldap.root_cn }}") < 1
 
-- name: Get base domain 
+- name: Get base domain
   shell: ldapsearch -D {{ keystone.ldap.root_dn }} -w {{ keystone.ldap.root_password }}  -s sub -b "{{ keystone.ldap.suffix }}" objectclass=*
   register: base_domain
   ignore_errors: yes
@@ -48,7 +48,7 @@
   when: base_domain.stdout.count("cn={{ keystone.ldap.keystone_user_name }}") < 1
 
 - name: Check keystone_user access
-  shell: ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -s sub -b olcDatabase={1}hdb,cn=config objectclass=* olcAccess 
+  shell: ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -s sub -b olcDatabase={1}hdb,cn=config objectclass=* olcAccess
   register: keystone_user_access
   ignore_errors: yes
   changed_when: False
@@ -64,10 +64,10 @@
   when: keystone_user_access.stdout.count("{{ keystone.ldap.keystone_user_name }}") < 1
 
 - name: configure rsyslog for openldap
-  copy: src=45-slapd.conf 
-        dest=/etc/rsyslog.d/45-slapd.conf 
-        owner=root 
-        group=root 
+  copy: src=45-slapd.conf
+        dest=/etc/rsyslog.d/45-slapd.conf
+        owner=root
+        group=root
         mode=0644
   notify:
   - restart rsyslog

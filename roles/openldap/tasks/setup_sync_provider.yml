@@ -1,9 +1,9 @@
 - name: Copy templates for replication
-  template: src={{ item }} 
+  template: src={{ item }}
             dest={{ keystone.ldap.config_dir }}/{{ item | basename }}
   with_fileglob: ../templates/sync_prov/*
 
-- name: Check oid is set 
+- name: Check oid is set
   shell: ldapsearch -L -Y EXTERNAL -H ldapi:/// -b cn=config -s base olcServerId
   register: oid_stdout
   ignore_errors: yes
