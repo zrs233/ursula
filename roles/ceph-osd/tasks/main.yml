@@ -5,8 +5,8 @@
 
 - name: write out bootstrap keyring
   copy:
-    dest: "{{ hostvars[groups['mons'][0]]['keyrings']['source'] }}"
-    content: "{{ hostvars[groups['mons'][0]]['keyrings']['content'] | b64decode }}"
+    dest: "{{ hostvars[groups['ceph_monitors'][0]]['keyrings']['source'] }}"
+    content: "{{ hostvars[groups['ceph_monitors'][0]]['keyrings']['content'] | b64decode }}"
 
 - name: if partition named 'ceph' exists
   shell: "parted --script {{ item }} print | egrep -sq '^ 1.*ceph'"
