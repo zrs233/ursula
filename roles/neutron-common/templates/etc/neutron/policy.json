@@ -70,7 +70,7 @@
     "update_port:binding:vnic_type": "rule:admin_only",
     "update_port:mac_learning_enabled": "rule:admin_only",
     "delete_port": "rule:admin_or_owner",
-
+    "get_router:ha": "rule:admin_only",
     "create_security_group": "rule:admin_or_admin_owner",
     "get_security_group": "rule:admin_or_owner",
     "delete_security_group": "rule:admin_or_admin_owner",

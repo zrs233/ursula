@@ -12,6 +12,7 @@
     "admin_or_projAdmin_or_cloudAdmin_or_member": "rule:admin_or_projAdmin_or_cloudAdmin or rule:is_owner",
     "admin_or_cloudadmin": "role:admin or role:Cloud_Admin",
     "default": "rule:admin_or_owner",
+    "admin_api": "is_admin:True",
 
     "cells_scheduler_filter:TargetCellFilter": "is_admin:True",
 
@@ -32,7 +33,7 @@
     "compute:volume_snapshot_create": "is_admin:True",
     "compute:volume_snapshot_delete": "is_admin:True",
 
-    "admin_api": "is_admin:True",
+
     "compute:v3:servers:start": "rule:admin_or_projAdmin_or_cloudAdmin_or_owner",
     "compute:v3:servers:stop": "rule:admin_or_projAdmin_or_cloudAdmin_or_owner",
     "compute_extension:v3:os-access-ips:discoverable": "",
@@ -133,6 +134,10 @@
     "compute_extension:flavor_access": "",
     "compute_extension:flavor_access:addTenantAccess": "rule:admin_or_cloudadmin",
     "compute_extension:flavor_access:removeTenantAccess": "rule:admin_or_cloudadmin",
+    "compute_extension:v3:os-flavor-access": "",
+    "compute_extension:v3:os-flavor-access:discoverable": "",
+    "compute_extension:v3:os-flavor-access:remove_tenant_access": "rule:admin_api",
+    "compute_extension:v3:os-flavor-access:add_tenant_access": "rule:admin_api",
     "compute_extension:v3:flavor-access": "",
     "compute_extension:v3:flavor-access:discoverable": "",
     "compute_extension:v3:flavor-access:remove_tenant_access": "rule:admin_or_cloudadmin",
@@ -267,6 +272,7 @@
     "compute_extension:v3:os-shelve:shelve_offload": "rule:admin_or_projAdmin_or_cloudAdmin",
     "compute_extension:simple_tenant_usage:show": "rule:admin_or_owner",
     "compute_extension:simple_tenant_usage:show": "rule:admin_or_projAdmin_or_cloudAdmin_or_member",
+    "compute_extension::v3:os-simple-tenant-usage:discoverable": "",
     "compute_extension::v3:os-simple-tenant-usage:show": "rule:admin_or_owner",
     "compute_extension::v3:os-simple-tenant-usage:list": "rule:admin_api",
     "compute_extension:v3:os-suspend-server:discoverable": "",
@@ -295,6 +301,7 @@
     "compute_extension:v3:os-availability-zone:detail": "rule:admin_or_projAdmin_or_cloudAdmin",
     "compute_extension:used_limits_for_admin": "rule:admin_api",
     "compute_extension:migrations:index": "rule:admin_or_projAdmin_or_cloudAdmin",
+    "compute_extension:v3:os-used-limits": "rule:admin_api",    
     "compute_extension:v3:os-used-limits:discoverable": "",
     "compute_extension:migrations:index": "rule:admin_api",
     "compute_extension:v3:os-migrations:index": "rule:admin_or_projAdmin_or_cloudAdmin",
