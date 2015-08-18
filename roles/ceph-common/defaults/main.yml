@@ -5,8 +5,8 @@ ceph_common:
   # INSTALL #
   ###########
 
-  mon_group_name: mons
-  osd_group_name: osds
+  mon_group_name: ceph_monitors
+  osd_group_name: ceph_osds
 
   debian_pkgs:
     - python-pycurl

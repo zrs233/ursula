@@ -33,12 +33,12 @@
   shell: uuidgen > /etc/ceph/fsid
          creates=/etc/ceph/fsid
   run_once: true
-  delegate_to:  "{{ groups['mons'][0] }}"
+  delegate_to:  "{{ groups['ceph_monitors'][0] }}"
 
 - name: fetch contents of fsid file
   slurp: path=/etc/ceph/fsid
   run_once: true
-  delegate_to: "{{ groups['mons'][0] }}"
+  delegate_to: "{{ groups['ceph_monitors'][0] }}"
   register: fsid_file
 
 # for redundancy, and if the hosts in mons get reordered
@@ -50,7 +50,7 @@
 - name: detect and register public and cluster network
   shell: ip addr | grep {{ ceph_common.monitor_interface }} | grep inet | awk '{print $2}'
   run_once: true
-  delegate_to: "{{ groups['mons'][0] }}"
+  delegate_to: "{{ groups['ceph_monitors'][0] }}"
   register: public_and_cluster_network
 
 - name: generate ceph configuration file
