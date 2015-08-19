@@ -5,6 +5,10 @@ nova:
   firewall_driver: nova.virt.firewall.NoopFirewallDriver
   scheduler_host_manager: nova.scheduler.host_manager.HostManager
   compute_manager: nova.compute.manager.ComputeManager
+  backend_api_port: 9774
+  haproxy_api_port: 8774
+  novnc_backend_api_port: 6081
+  novnc_haproxy_api_port: 6080
   api_workers: 5
   conductor_workers: 5
   metadata_api_workers: 5
@@ -23,7 +27,7 @@ nova:
   python_libvirt_version: 1.2.2-0ubuntu2~cloud0
   qemu_kvm_version: 2.0.0+dfsg-2ubuntu1.16~cloud0
   librdb1_version: 0.80.9-0ubuntu0.14.04.2~cloud0
-  glance_endpoint: http://{{ endpoints.glance }}:9292
+  glance_endpoint: http://{{ endpoints.glance }}:{{ glance.backend_api_port }}
   reserved_host_disk_mb: 51200
   controller_reserve_ram: 4096
   compute_reserve_ram: 2048

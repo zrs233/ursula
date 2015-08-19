@@ -3,26 +3,26 @@ controller1 oid=1
 controller2 oid=2
 
 [controller]
-controller1
-controller2
+22.22.0.8
+22.22.0.9
 
 [network]
-controller1
-controller2
+22.22.0.8
+22.22.0.9
 
 [db]
-controller1
-controller2
+22.22.0.8
+22.22.0.9
 
 [db_arbiter]
-compute1
+22.22.0.10
 
 [compute]
-compute1
+22.22.0.10
 
 [ceph_monitors]
 
 [ceph_osds]
 
 [cinder_volume]
-compute1
+22.22.0.10

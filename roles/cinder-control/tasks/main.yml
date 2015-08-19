@@ -47,7 +47,7 @@
   when: swift.enabled|default("false")|bool
 
 - name: Permit access to Cinder
-  ufw: rule=allow to_port=8778 proto=tcp
+  ufw: rule=allow to_port={{ cinder.haproxy_api_port }} proto=tcp
 
 - include: monitoring.yml tags=monitoring,common
   when: monitoring.enabled|default('True')|bool
