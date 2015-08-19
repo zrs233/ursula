@@ -48,7 +48,7 @@
     - nova-scheduler
 
 - name: permit access to nova api
-  ufw: rule=allow to_port=8777 proto=tcp
+  ufw: rule=allow to_port={{ nova.haproxy_api_port }} proto=tcp
 
 - include: novnc.yml tags=novnc
 
