@@ -9,6 +9,9 @@ cinder:
   volume_group: cinder-volumes
   create_vg: true
   alternatives:
+
+  package:
+    console_scripts:
       - cinder-all
       - cinder-api
       - cinder-backup

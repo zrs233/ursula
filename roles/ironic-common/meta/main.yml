@@ -1,5 +1,6 @@
 ---
 dependencies:
+  - role: endpoints 
   - role: logging-config
     service: ironic
     logdata: "{{ ironic.logs }}"

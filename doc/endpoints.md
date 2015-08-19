@@ -34,23 +34,23 @@ request.
 | MySQL          | internal | mysql    | 3306  | internal floating IP   |
 | RabbitMQ       | internal | rabbitmq | 5672  | internal floating IP   |
 | Memcached      | internal | memcache | 11211 | controller internal IP |
-| Keystone       | haproxy  | HTTP     | 5000  | controller internal IP |
-| Keystone       | internal | HTTPS    | 5001  | external floating IP   |
-| Keystone       | public   | HTTPS    | 5001  | external floating IP   |
-| Keystone-admin | haproxy  | HTTP     | 35357 | controller internal IP |
-| Keystone-admin | internal | HTTPS    | 35358 | external floating IP   |
-| Keystone-admin | public   | HTTPS    | 35358 | external floating IP   |
-| Nova           | haproxy  | HTTP     | 8774  | controller internal IP |
-| Nova           | internal | HTTPS    | 8777  | external floating IP   |
-| Nova           | public   | HTTPS    | 8777  | external floating IP   |
-| Nova - noVNC   | internal | HTTP     | 6080  | controller internal IP |
-| Nova - noVNC   | public   | HTTPS    | 6081  | external floating IP   |
-| Neutron        | haproxy  | HTTP     | 9696  | controller internal IP |
-| Neutron        | internal | HTTPS    | 9797  | external floating IP   |
-| Neutron        | public   | HTTPS    | 9797  | external floating IP   |
-| Glance         | haproxy  | HTTP     | 9292  | controller internal IP |
-| Glance         | internal | HTTPS    | 9393  | external floating IP   |
-| Glance         | public   | HTTPS    | 9393  | external floating IP   |
+| Keystone       | haproxy  | HTTP     | 5001  | controller internal IP |
+| Keystone       | internal | HTTPS    | 5000  | external floating IP   |
+| Keystone       | public   | HTTPS    | 5000  | external floating IP   |
+| Keystone-admin | haproxy  | HTTP     | 35358 | controller internal IP |
+| Keystone-admin | internal | HTTPS    | 35357 | external floating IP   |
+| Keystone-admin | public   | HTTPS    | 35357 | external floating IP   |
+| Nova           | haproxy  | HTTP     | 9774  | controller internal IP |
+| Nova           | internal | HTTPS    | 8774  | external floating IP   |
+| Nova           | public   | HTTPS    | 8774  | external floating IP   |
+| Nova - noVNC   | internal | HTTP     | 6081  | controller internal IP |
+| Nova - noVNC   | public   | HTTPS    | 6080  | external floating IP   |
+| Neutron        | haproxy  | HTTP     | 9797  | controller internal IP |
+| Neutron        | internal | HTTPS    | 9696  | external floating IP   |
+| Neutron        | public   | HTTPS    | 9696  | external floating IP   |
+| Glance         | haproxy  | HTTP     | 9393  | controller internal IP |
+| Glance         | internal | HTTPS    | 9292  | external floating IP   |
+| Glance         | public   | HTTPS    | 9292  | external floating IP   |
 | Heat           | haproxy  | HTTP     | 8004  | controller internal IP |
 | Heat           | internal | HTTPS    | 8005  | external floating IP   |
 | Heat           | public   | HTTPS    | 8005  | external floating IP   |
