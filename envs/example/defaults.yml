@@ -104,6 +104,10 @@ nova:
   reserved_host_disk_mb: 50
   enable_ssh: true
   preallocate_images: none
+  haproxy_api_port: 8774
+  backend_api_port: 9774
+  novnc_haproxy_api_port: 6080
+  novnc_backend_api_port: 6081
   logging:
     debug: True
     verbose: True
@@ -113,6 +117,8 @@ cinder:
   volume_type: file
   volume_file: /opt/stack/cinder-volumes
   volume_file_size: 5G
+  haproxy_api_port: 8776
+  backend_api_port: 8778
   #fixed_key: 6a5c55db5e250f234b6af7807dafda77433dddcf372b6d04801a45f578a35aa7
   logging:
     debug: True
@@ -127,6 +133,8 @@ cinder:
 
 neutron:
   plugin: ml2
+  haproxy_api_port: 9696
+  backend_api_port: 9797
   bridge_mappings: ''
   network_vlan_ranges: ''
   tenant_network_type: vxlan
@@ -177,10 +185,7 @@ neutron:
       tenant_name: admin
   router_interfaces:
     - router_name: default
-      subnet_name: internal_v4
-      tenant_name: admin
-    - router_name: default
-      subnet_name: internal_v6
+      subnet_name: internal
       tenant_name: admin
   service:
     envs:
@@ -192,6 +197,8 @@ neutron:
 glance:
   api_workers: 1
   registry_workers: 1
+  haproxy_api_port: 9292
+  backend_api_port: 9393
   logging:
     debug: True
     verbose: True
@@ -201,6 +208,10 @@ glance:
 
 keystone:
   token_expiration_in_seconds: 86400
+  haproxy_api_port: 5001
+  backend_api_port: 5000
+  admin_haproxy_api_port: 35358 
+  admin_backend_api_port: 35357
   logging:
     debug: True
     verbose: True
@@ -293,33 +304,33 @@ keystone:
     - name: nova
       type: compute
       description: 'Compute Service'
-      public_url: https://{{ endpoints.main }}:8777/v2/%(tenant_id)s
-      internal_url: https://{{ endpoints.main }}:8777/v2/%(tenant_id)s
-      admin_url: https://{{ endpoints.main }}:8777/v2/%(tenant_id)s
+      public_url: https://{{ endpoints.main }}:{{ nova.haproxy_api_port }}/v2/%(tenant_id)s
+      internal_url: https://{{ endpoints.main }}:{{ nova.haproxy_api_port }}/v2/%(tenant_id)s
+      admin_url: https://{{ endpoints.main }}:{{ nova.haproxy_api_port }}/v2/%(tenant_id)s
     - name: glance
       type: image
       description: 'Image Service'
-      public_url: https://{{ endpoints.main }}:9393
-      internal_url: https://{{ endpoints.main }}:9393
-      admin_url: https://{{ endpoints.main }}:9393
+      public_url: https://{{ endpoints.main }}:{{ glance.haproxy_api_port }}
+      internal_url: https://{{ endpoints.main }}:{{ glance.haproxy_api_port }}
+      admin_url: https://{{ endpoints.main }}:{{ glance.haproxy_api_port }}
     - name: neutron
       type: network
       description: 'Network Service'
-      public_url: https://{{ endpoints.main }}:9797
-      internal_url: https://{{ endpoints.main }}:9797
-      admin_url: https://{{ endpoints.main }}:9797
+      public_url: https://{{ endpoints.main }}:{{ neutron.haproxy_api_port }}
+      internal_url: https://{{ endpoints.main }}:{{ neutron.haproxy_api_port }}
+      admin_url: https://{{ endpoints.main }}:{{ neutron.haproxy_api_port }}
     - name: cinder
       type: volume
       description: 'Volume Service'
-      public_url: https://{{ endpoints.main }}:8778/v1/%(tenant_id)s
-      internal_url: https://{{ endpoints.main }}:8778/v1/%(tenant_id)s
-      admin_url: https://{{ endpoints.main }}:8778/v1/%(tenant_id)s
+      public_url: https://{{ endpoints.main }}:{{ cinder.haproxy_api_port }}/v1/%(tenant_id)s
+      internal_url: https://{{ endpoints.main }}:{{ cinder.haproxy_api_port }}/v1/%(tenant_id)s
+      admin_url: https://{{ endpoints.main }}:{{ cinder.haproxy_api_port }}/v1/%(tenant_id)s
     - name: cinderv2
       type: volumev2
       description: 'Volume Service v2'
-      public_url: https://{{ endpoints.main }}:8778/v2/%(tenant_id)s
-      internal_url: https://{{ endpoints.main }}:8778/v2/%(tenant_id)s
-      admin_url: https://{{ endpoints.main }}:8778/v2/%(tenant_id)s
+      public_url: https://{{ endpoints.main }}:{{ cinder.haproxy_api_port }}/v2/%(tenant_id)s
+      internal_url: https://{{ endpoints.main }}:{{ cinder.haproxy_api_port }}/v2/%(tenant_id)s
+      admin_url: https://{{ endpoints.main }}:{{ cinder.haproxy_api_port }}/v2/%(tenant_id)s
     - name: heat
       type: orchestration
       description: 'Heat Orchestration API'

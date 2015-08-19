@@ -1,6 +1,156 @@
 ---
-stack_env: example_standard
-floating_ip: 172.16.0.101
+stack_env: softlayertest
+
+fqdn: ndp1.open-test.ibmcloud.com
+
+openstack_install_method: source
+openstack_package_version: 11.0-bbc72
+
+floating_ip: 159.8.88.132
+undercloud_floating_ip:  22.22.0.8
+undercloud_cidr: 22.22.0.0/24
+primary_interface: 'ansible_eth0'
+
+secrets:
+  admin_token:        sdfewTG2etfgefewfewf
+  db_password:        dgfRweg34gt4t34gt4
+  service_password:   dfg43fedrgV43t4egtfdgsdDFsd
+  rabbit_password:    ddsSF4T4fdfghtGREfgert34
+  admin_password:     sd33lejrfewsd43t4fds
+  provider_admin_password: xdsf34F24ftg43T3
+  monitor_password:   dseg34t3egfvDEg54yt42t
+  metadata_proxy_shared_secret: fdgbrtH5erghathge54
+  horizon_secret_key: fdg5wty42egfsdgygqa
+  glance_sync: sdf4tw4ergVGFDg4t42tedgfHE
+
+endpoints:
+  cinder: "{{ fqdn }}"
+  cinderv2: "{{ fqdn }}"
+
+mysql:
+  root_password: fcdg34tgtf234ytgDS
 
 xtradb:
-  sst_auth_password: asdf
+  galera_version: 3.x
+  client_version: 5.6
+  server_version: 5.6
+  sst_auth_password: dcgfvsadt234gtw234tg4
+
+neutron:
+  plugin: ml2
+  l2_population: True
+  tunnel_types:
+    - vxlan
+  bridge_mappings: physnet:eth0
+  tenant_network_type: vxlan
+  network_vlan_ranges: physnet:1608:1608
+  networks:
+    - name: internal
+      shared: true
+      external: false
+      network_type: vxlan
+      provider_physical_network: ~
+      segmentation_id: 1781
+    - name: external
+      shared: true
+      external: true
+      network_type: vlan
+      segmentation_id: 1608
+      provider_physical_network: physnet
+  subnets:
+    - name: internal
+      network_name: internal
+      cidr: 10.113.119.0/26
+      enable_dhcp: "true"
+      gateway_ip: 10.113.119.1
+      dns_nameservers: '8.8.8.8,8.8.4.4'
+      ip_version: 4
+    - name: external
+      network_name: external
+      cidr: 22.22.0.0/24
+      enable_dhcp: "false"
+      gateway_ip: 22.22.0.1
+      dns_nameservers: '8.8.8.8,8.8.4.4'
+      ip_version: 4
+
+
+monitoring:
+  sensu_plugin_version: 0.1.7
+
+logging:
+  follow:
+    global_fields:
+      customer_id: "66666"
+      cluster_name: "softlayer-test"
+
+
+nova:
+  libvirt_type: qemu
+  libvirt_cpu_model: null
+
+heat:
+  enabled: True
+  logging:
+    debug: True
+    verbose: True
+
+ssl:
+  crt: |
+    -----BEGIN CERTIFICATE-----
+    MIICVzCCAcACCQCdMCh6ykbdXzANBgkqhkiG9w0BAQUFADBwMQswCQYDVQQGEwJV
+    UzEOMAwGA1UECAwFVGV4YXMxDzANBgNVBAcMBkF1c3RpbjEMMAoGA1UECgwDSUJN
+    MQwwCgYDVQQLDANDSVMxJDAiBgNVBAMMG25kcDEub3Blbi10ZXN0LmlibWNsb3Vk
+    LmNvbTAeFw0xNTA3MjkxNTU1MjVaFw0xNTA4MjgxNTU1MjVaMHAxCzAJBgNVBAYT
+    AlVTMQ4wDAYDVQQIDAVUZXhhczEPMA0GA1UEBwwGQXVzdGluMQwwCgYDVQQKDANJ
+    Qk0xDDAKBgNVBAsMA0NJUzEkMCIGA1UEAwwbbmRwMS5vcGVuLXRlc3QuaWJtY2xv
+    dWQuY29tMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDCmaCqiLSaD2AcEjXL
+    wvOFrv9GUfxLDvSHcZhI6axN05+60J6c6XJ6TTmfpsOZ8ZwXy+YtZ3/0yp3KHel3
+    ouchzh1kidFX3k4afPwqsA3AbBlQGodoLRHITWHsjf7+iWnvJZlzWoMW+AnGiTQp
+    ISUmgE9Ge6Zis8aEGptzPY2nPQIDAQABMA0GCSqGSIb3DQEBBQUAA4GBAGyPKByh
+    /3y4hUMfBYv9bEn2KcYAp/NGa+6Qa6J3kJRoaxdABSfK1ASYlv3gENJdq8ZjZst0
+    WhGsw3soTqZvuH2K2Zm2skGuqKy2ViqL0DmSF+hzYyJO2DEgUIjcBK2kx/KGIK8L
+    NfPcT/V0JisNpKWc4gMGTnq5DshkzDCPum8S
+    -----END CERTIFICATE-----
+  key: |
+    -----BEGIN RSA PRIVATE KEY-----
+    MIICXQIBAAKBgQDCmaCqiLSaD2AcEjXLwvOFrv9GUfxLDvSHcZhI6axN05+60J6c
+    6XJ6TTmfpsOZ8ZwXy+YtZ3/0yp3KHel3ouchzh1kidFX3k4afPwqsA3AbBlQGodo
+    LRHITWHsjf7+iWnvJZlzWoMW+AnGiTQpISUmgE9Ge6Zis8aEGptzPY2nPQIDAQAB
+    AoGBAJmzY64uKY9hQ4UIcQsOYO+ex6uQB9h06HiuJRy5y8jwtEGGkzDWRgAJTNEn
+    k2jc52/4MUZ9cBg1jKleNM+0kB7Ge/hie5euFuX6tdLOyuAFSHarq4kYCRzuxlcc
+    n9d9Gw975sRlOGYog1e9+x8piSaq65Stgv3wEN5lvdWML+L1AkEA8kM4iTYXbi8I
+    MhLHTh4BWYa4vrXBWuhh7DF94AoQQKqgGwusdfKmR3Doakx/vWYJbZjmG+DqZqtn
+    Z6YkWHQujwJBAM2ihP3Xiv1il/g7WCw5RheR+7CTb9uDSqeyj96my1+RkFahicPa
+    3CdRtDM3neSMdGCy2Oc+TI1OURXAMNml83MCQAHZKXFCjGM20KUxJ3wdFn2MXZR2
+    5oa/ByA6MG+pI/6aTqZmLGap90LMRbmp47+aK7A+XmMQEDnATQWpatWR7VkCQQCj
+    xZLLpDWy9in4bjMcDYVQUli02ceVeSwlASZp+kcw1vqwtDjHPnBl9EFjJSFgG6i4
+    Nthe2xQW2k/j1cxSG0QXAkBtWODcxwczmBAVxaP3690zscIeTuNqS6DnHEIbLSuw
+    /y9EdXKrcjGczviMP1icNYWI20CHthT+fQRDQKBBWaZA
+    -----END RSA PRIVATE KEY-----
+  # remove this line out if using a real CA supplied cert
+  cafile: /usr/local/share/ca-certificates/{{ endpoints.main }}.crt
+
+
+apt_repos:
+  docker:
+    validate_certs: no
+  bbg_ubuntu:
+    validate_certs: no
+  blueboxcloud_giftwrap:
+    validate_certs: no
+  hwraid:
+    validate_certs: no
+  sensu:
+    validate_certs: no
+  haproxy:
+    validate_certs: no
+  bbg_openstack_ppa:
+    validate_certs: no
+  percona:
+    validate_certs: no
+  rabbitmq:
+    validate_certs: no
+  cloud_archive:
+    validate_certs: no
+  erlang:
+    validate_certs: no
