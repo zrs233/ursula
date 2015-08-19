@@ -41,6 +41,11 @@ memcached:
   user: nobody
   max_connections: 1024
 
+swift:
+  enabled: False
+  haproxy_vip: "{{ fqdn }}"
+  haproxy_port: 8090
+
 endpoints:
   main:     "{{ fqdn }}"
   db:       "{{ undercloud_floating_ip }}"
@@ -55,6 +60,7 @@ endpoints:
   heat:     "{{ fqdn }}"
   heat-cfn: "{{ fqdn }}"
   ironic: "{{ fqdn }}"
+  swift: "{{ swift.haproxy_vip }}"
   identity_uri: https://{{ fqdn }}:35358
   auth_uri: https://{{ fqdn }}:5001/v2.0
 
@@ -135,7 +141,7 @@ cinder:
     debug: True
     verbose: True
   volume_types: []
-  encrypted_volume_types:
+  encrypted_volumetypes:
     - volume_type: encrypted-aes-512
       cipher: aes-xts-plain64
       key_size: 512
@@ -255,7 +261,10 @@ keystone:
       tenant: service
     - name: "{{ monitoring.openstack.user.username }}"
       password: "{{ monitoring.openstack.user.password }}"
-      tenant: "{{ monitoring.openstack.user.tenant }}"
+      tenant: "{{ monitoring.openstack.user.tenant }}"     
+    - name: swift
+      password: "{{ secrets.service_password }}"
+      tenant: service
   user_roles:
     - user: admin
       tenant: admin
@@ -293,7 +302,9 @@ keystone:
     - user: "{{ monitoring.openstack.user.username }}"
       tenant: "{{ monitoring.openstack.user.tenant }}"
       role: "{{ monitoring.openstack.user.role }}"
-
+    - user: swift
+      tenant: service
+      role: admin
   services:
     - name: keystone
       type: identity
@@ -355,6 +366,12 @@ keystone:
       public_url: https://{{ endpoints.main }}:6384
       internal_url: https://{{ endpoints.main }}:6384
       admin_url: https://{{ endpoints.main }}:6384
+    - name: swift
+      type: object-store       
+      description: 'Object Storage Service'
+      public_url: https://{{ endpoints.swift }}:{{ swift.haproxy_port}}/v1/%(tenant_id)s
+      internal_url: https://{{ endpoints.swift }}:{{ swift.haproxy_port}}/v1/%(tenant_id)s
+      admin_url: https://{{ endpoints.swift }}:{{ swift.haproxy_port}}/v1/%(tenant_id)s
 
 openldap:
   enabled: True

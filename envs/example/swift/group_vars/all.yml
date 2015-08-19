@@ -21,6 +21,7 @@ swift:
   enabled: True
   disks:
     - sdb
+  enabled: True
 
 openstack_setup:
   add_users: True
