@@ -54,7 +54,7 @@ options:
      description:
         - The keystone url for authentication
      required: false
-     default: 'http://127.0.0.1:35357/v2.0/'
+     default: 'http://127.0.0.1:35358/v2.0/'
    region_name:
      description:
         - Name of the region
@@ -235,7 +235,7 @@ def main():
             login_username = dict(default='admin'),
             login_password = dict(required=True),
             login_tenant_name = dict(required='True'),
-            auth_url = dict(default='http://127.0.0.1:35357/v2.0/'),
+            auth_url = dict(default='http://127.0.0.1:35358/v2.0/'),
             cacert = dict(default=None),
             region_name = dict(default=None),
             name = dict(required=True),

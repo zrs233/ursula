@@ -43,7 +43,7 @@ options:
      description:
         - the keystone url for authentication
      required: false
-     default: 'http://127.0.0.1:5000/v2.0/'
+     default: 'http://127.0.0.1:5001/v2.0/'
    encryption_type:
      description:
         - flag indicating whether this is a encrption type or not
@@ -82,7 +82,7 @@ EXAMPLES = '''
     login_username=admin
     login_password=password
     login_tenant_id=123456789
-    auth_url=http://keystone:5000/v2.0
+    auth_url=http://keystone:5001/v2.0
     volume_type=encrypted-aes-256
 '''
 
@@ -192,7 +192,7 @@ def main():
             login_username=dict(default=None),
             login_password=dict(default=None),
             login_tenant_name=dict(default=None),
-            auth_url=dict(default='http://127.0.0.1:5000/v2.0/'),
+            auth_url=dict(default='http://127.0.0.1:5001/v2.0/'),
             volume_type=dict(required=True),
             encryption_type=dict(default=False),
             provider=dict(default=None),
