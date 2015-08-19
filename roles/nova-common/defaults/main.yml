@@ -25,6 +25,8 @@ nova:
   librdb1_version: 0.80.9-0ubuntu0.14.04.2~cloud0
   glance_endpoint: http://{{ endpoints.glance }}:9292
   reserved_host_disk_mb: 51200
+  controller_reserve_ram: 4096
+  compute_reserve_ram: 2048
   preallocate_images: space
   floating_pool: external
   install_packages:
