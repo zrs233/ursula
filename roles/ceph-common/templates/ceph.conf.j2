@@ -103,6 +103,7 @@
   public_network = {{ public_and_cluster_network.stdout }}
   cluster_network = {{ public_and_cluster_network.stdout }}
   osd mon heartbeat interval = {{ ceph_common.osd_mon_heartbeat_interval }}
+  osd backfill full ratio = {{ ceph.common.osd_backfill_full_ratio }}
   # Performance tuning
   filestore merge threshold = {{ ceph_common.filestore_merge_threshold }}
   filestore split multiple = {{ ceph_common.filestore_split_multiple }}
