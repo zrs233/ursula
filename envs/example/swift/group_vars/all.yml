@@ -1,6 +1,5 @@
 ---
 stack_env: example_swift
-swift_fqdn: swift.example.org
 swift_floating_ip: "{{ hostvars[groups['swiftnode'][0]][primary_interface]['ipv4']['address'] }}"
 
 undercloud_cidr: 10.1.1.0/24
@@ -11,15 +10,13 @@ etc_hosts:
   - name: "{{ swift_fqdn }}"
     ip: "{{ swift_floating_ip }}"
 
-endpoints:
-  swift: "{{ swift_fqdn }}"
-
 percona:
   replication: False
 
 swift:
   disks:
     - sdb
+  enabled: True
 
 openstack_setup:
   add_users: True
