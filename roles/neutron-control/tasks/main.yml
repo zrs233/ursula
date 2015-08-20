@@ -32,6 +32,15 @@
   notify: restart neutron services
   # we want this to always be changed so that it can notify the service restart
 
+- name: sync neutron database for lbaas
+  command: neutron-db-manage --service lbaas --config-file /etc/neutron/neutron.conf \
+           --config-file /etc/neutron/plugins/ml2/ml2_plugin.ini upgrade head
+  when: (database_create.changed or force_sync|default('false')|bool) and neutron.lbaas.enable
+  run_once: true
+  changed_when: true
+  notify: restart neutron services
+  # we want this to always be changed so that it can notify the service restart
+
 - meta: flush_handlers
 
 - name: start neutron-server

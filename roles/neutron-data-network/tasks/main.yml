@@ -59,12 +59,60 @@
     neutron-metadata-agent:
       config_files: /etc/neutron/metadata_agent.ini
 
+- name: neutron lbaas config
+  template:
+    src=etc/neutron/neutron_lbaas.conf
+    dest=/etc/neutron/neutron_lbaas.conf
+    mode=0644
+  notify:
+     - restart neutron services
+  when: neutron.lbaas.enable
+
+- name: neutron lbaas agent config
+  template:
+    src=etc/neutron/services/loadbalancer/haproxy/lbaas_agent.ini
+    dest=/etc/neutron/services/loadbalancer/haproxy
+    mode=0644
+  notify:
+     - restart neutron services
+  when: neutron.lbaas.enable
+
+- name: update-alternatives for lbaas
+  shell:
+    update-alternatives --install /usr/local/bin/neutron-lbaasv2-agent \
+    neutron-lbaasv2-agent \
+    /opt/openstack/current/neutron/bin/neutron-lbaasv2-agent 10 --force
+  when: neutron.lbaas.enable and openstack_install_method == 'package'
+
+- name: install neutron lbaas service
+  upstart_service:
+    name: "{{ item.key }}"
+    user: neutron
+    cmd: "/usr/local/bin/{{ item.key }}"
+    pidfile: "{{ item.value.pidfile|default('') }}"
+    start_on: "starting {{ neutron_data_path_agent }}"
+    stop_on: "stopping {{ neutron_data_path_agent }}"
+    config_dirs: /etc/neutron
+    config_files: "{{ item.value.config_files|join(',') }}"
+    envs: "{{ neutron.service.envs }}"
+  when: neutron.lbaas.enable
+  with_dict:
+    neutron-lbaasv2-agent:
+      config_files:
+        - /etc/neutron/neutron.conf
+        - /etc/neutron/services/loadbalancer/haproxy/lbaas_agent.ini
+        - /etc/neutron/neutron_lbaas.conf
+
 - name: start neutron-data-network services
   service: name={{ item }} state=started
   with_items:
     - neutron-l3-agent
     - neutron-dhcp-agent
     - neutron-metadata-agent
+
+- name: start neutron lbaas agent
+  service: name=neutron-lbaasv2-agent state=started
+  when: neutron.lbaas.enable
 
 - include: ipchanged.yml
 
