@@ -1,0 +1,6 @@
+---
+stack_env: example_standard
+floating_ip: 172.16.0.101
+
+xtradb:
+  sst_auth_password: asdf
