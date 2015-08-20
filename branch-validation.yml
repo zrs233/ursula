@@ -1,3 +1,4 @@
+
 # playbook for validating a branch for release tagging
 # interactive, may prompt runner to affirm things have completed
 ---
@@ -25,7 +26,7 @@
           username: provider_admin
           project_name: admin
           password: "{{ secrets.provider_admin_password }}"
-          auth_url: "http://127.0.0.1:35357/v2.0"
+          auth_url: "http://127.0.0.1:{{ keystone.admin_backend_api_port }}/v2.0"
         name: validate
         state: present
       register: keypair
@@ -43,7 +44,7 @@
           username: provider_admin
           project_name: admin
           password: "{{ secrets.provider_admin_password }}"
-          auth_url: "http://127.0.0.1:35357/v2.0"
+          auth_url: "http://127.0.0.1:{{ keystone.admin_backend_api_port }}/v2.0"
         name: validate_ssh
         description: "validate group allowing ssh, icmp ipv4 ingress"
         state: present
@@ -54,7 +55,7 @@
           username: provider_admin
           project_name: admin
           password: "{{ secrets.provider_admin_password }}"
-          auth_url: "http://127.0.0.1:35357/v2.0"
+          auth_url: "http://127.0.0.1:{{ keystone.admin_backend_api_port }}/v2.0"
         security_group: validate_ssh
         protocol: "{{ item.ip_protocol }}"
         port_range_min: "{{ item.from_port }}"
@@ -78,7 +79,7 @@
           username: provider_admin
           project_name: admin
           password: "{{ secrets.provider_admin_password }}"
-          auth_url: "http://127.0.0.1:35357/v2.0"
+          auth_url: "http://127.0.0.1:{{ keystone.admin_backend_api_port }}/v2.0"
         flavor: 1
         image: cirros
         key_name: validate
@@ -100,7 +101,7 @@
           username: provider_admin
           project_name: admin
           password: "{{ secrets.provider_admin_password }}"
-          auth_url: "http://127.0.0.1:35357/v2.0"
+          auth_url: "http://127.0.0.1:{{ keystone.admin_backend_api_port }}/v2.0"
         network: external
         server: validate-{{ groups['compute'][0] }}
         reuse: true
@@ -118,6 +119,8 @@
     - name: cross-node inter-instance connectivity test
       command: ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
                -o IdentityFile=/root/validate-key
+               cirros@{{ fip.floating_ip.floating_ip_address }}
+               cirros@{{ fip.floating_ip.floating_ip_address }}
                cirros@{{ fip.floating_ip.floating_ip_address }}
                ping -c 5 {{ item.private_ip }}
       changed_when: false
@@ -151,7 +154,7 @@
           username: provider_admin
           project_name: admin
           password: "{{ secrets.provider_admin_password }}"
-          auth_url: "http://127.0.0.1:35357/v2.0"
+          auth_url: "http://127.0.0.1:{{ keystone.admin_backend_api_port }}/v2.0"
         network: external
         server: validate-{{ groups['compute'][0] }}
         floating_ip_address: "{{ fip.floating_ip.floating_ip_address }}"
@@ -173,7 +176,7 @@
           username: provider_admin
           project_name: admin
           password: "{{ secrets.provider_admin_password }}"
-          auth_url: "http://127.0.0.1:35357/v2.0"
+          auth_url: "http://127.0.0.1:{{ keystone.admin_backend_api_port }}/v2.0"
         network: external
         server: validate-{{ item }}
         reuse: true
@@ -186,7 +189,7 @@
           username: provider_admin
           project_name: admin
           password: "{{ secrets.provider_admin_password }}"
-          auth_url: "http://127.0.0.1:35357/v2.0"
+          auth_url: "http://127.0.0.1:{{ keystone.admin_backend_api_port }}/v2.0"
         network: external
         server: validate-{{ item }}
         reuse: true
@@ -225,8 +228,6 @@
       delegate_to: localhost
 
     - name: wait for the panic
-      wait_for: host={{ groups['controller'][1] }} port=22 state=stopped
-                delay=10 timeout=30
       when: master is not defined
       delegate_to: localhost
 
@@ -295,7 +296,7 @@
           username: provider_admin
           project_name: admin
           password: "{{ secrets.provider_admin_password }}"
-          auth_url: "http://127.0.0.1:35357/v2.0"
+          auth_url: "http://127.0.0.1:{{ keystone.admin_backend_api_port }}/v2.0"
         name: validate-{{ item }}
         state: absent
         wait: "yes"
@@ -308,7 +309,7 @@
           username: provider_admin
           project_name: admin
           password: "{{ secrets.provider_admin_password }}"
-          auth_url: "http://127.0.0.1:35357/v2.0"
+          auth_url: "http://127.0.0.1:{{ keystone.admin_backend_api_port }}/v2.0"
         name: validate_ssh
         state: absent
       tags: delete
@@ -325,7 +326,7 @@
           username: provider_admin
           project_name: admin
           password: "{{ secrets.provider_admin_password }}"
-          auth_url: "http://127.0.0.1:35357/v2.0"
+          auth_url: "http://127.0.0.1:{{ keystone.admin_backend_api_port }}/v2.0"
         name: validate
         state: absent
       tags: delete
