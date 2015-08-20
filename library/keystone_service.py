@@ -63,9 +63,9 @@ keystone_service: >
     name=keystone
     type=identity
     description="Keystone Identity Service"
-    publicurl=http://192.168.206.130:5000/v2.0
-    internalurl=http://192.168.206.130:5000/v2.0
-    adminurl=http://192.168.206.130:35357/v2.0
+    publicurl=http://192.168.206.130:5001/v2.0
+    internalurl=http://192.168.206.130:5001/v2.0
+    adminurl=http://192.168.206.130:35358/v2.0
 
 keystone_service: >
     name=glance
@@ -250,7 +250,7 @@ def main():
             region=dict(required=True),
             state=dict(default='present', choices=['present', 'absent']),
             endpoint=dict(required=False,
-                          default="http://127.0.0.1:35357/v2.0",
+                          default="http://127.0.0.1:35358/v2.0",
                           aliases=['auth_url']),
             token=dict(required=False),
             insecure=dict(required=False, default=False, choices=BOOLEANS),

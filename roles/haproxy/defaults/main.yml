@@ -3,7 +3,6 @@ haproxy:
   bufsize: 16384
   stats_group: monitor
  
- 
   cinder:
     clear_port: 8778
     enc_port: 8776
@@ -25,9 +24,9 @@ haproxy:
     enc_port: 6080
 
   keystone:
-    clear_port: 5000
-    enc_port: 5001
+    clear_port: 5001
+    enc_port: 5000
 
   keystone_admin:
-    clear_port: 35357
-    enc_port: 35358
+    clear_port: 35358
+    enc_port: 35357
