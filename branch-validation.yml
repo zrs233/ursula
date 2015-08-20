@@ -120,8 +120,6 @@
       command: ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
                -o IdentityFile=/root/validate-key
                cirros@{{ fip.floating_ip.floating_ip_address }}
-               cirros@{{ fip.floating_ip.floating_ip_address }}
-               cirros@{{ fip.floating_ip.floating_ip_address }}
                ping -c 5 {{ item.private_ip }}
       changed_when: false
       register: pings
@@ -228,6 +226,8 @@
       delegate_to: localhost
 
     - name: wait for the panic
+      wait_for: host={{ groups['controller'][1] }} port=22 state=stopped
+                delay=10 timeout=30
       when: master is not defined
       delegate_to: localhost
 

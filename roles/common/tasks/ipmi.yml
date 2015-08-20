@@ -6,7 +6,7 @@
   apt: pkg=ipmitool
 
 - name: load kernel ipmi modules
-  modprobe: name={{ item }} state=absent
+  modprobe: name={{ item }} state=probe
   with_items:
     - ipmi_devintf
     - ipmi_si

@@ -185,7 +185,10 @@ neutron:
       tenant_name: admin
   router_interfaces:
     - router_name: default
-      subnet_name: internal
+      subnet_name: internal_v4
+      tenant_name: admin
+    - router_name: default
+      subnet_name: internal_v6
       tenant_name: admin
   service:
     envs:
