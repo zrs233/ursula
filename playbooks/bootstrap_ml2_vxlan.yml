@@ -2,7 +2,7 @@
 # This playbook boot straps a new compute node with its network config
 #
 ---
-- hosts: compute:networkl
+- hosts: compute:network
   serial: 10
   vars:
     timezone: Etc/UTC
