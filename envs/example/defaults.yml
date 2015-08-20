@@ -61,8 +61,8 @@ endpoints:
   heat-cfn: "{{ fqdn }}"
   ironic: "{{ fqdn }}"
   swift: "{{ swift.haproxy_vip }}"
-  identity_uri: https://{{ fqdn }}:35358
-  auth_uri: https://{{ fqdn }}:5001/v2.0
+  identity_uri: https://{{ fqdn }}:35357
+  auth_uri: https://{{ fqdn }}:5000/v2.0
 
 mysql:
   root_password: asdf
@@ -231,10 +231,10 @@ glance:
 
 keystone:
   token_expiration_in_seconds: 86400
-  haproxy_api_port: 5001
-  backend_api_port: 5000
-  admin_haproxy_api_port: 35358 
-  admin_backend_api_port: 35357
+  haproxy_api_port: 5000
+  backend_api_port: 5001
+  admin_haproxy_api_port: 35357 
+  admin_backend_api_port: 35358
   logging:
     debug: True
     verbose: True
@@ -272,7 +272,7 @@ keystone:
       tenant: service
     - name: "{{ monitoring.openstack.user.username }}"
       password: "{{ monitoring.openstack.user.password }}"
-      tenant: "{{ monitoring.openstack.user.tenant }}"     
+      tenant: "{{ monitoring.openstack.user.tenant }}"
     - name: swift
       password: "{{ secrets.service_password }}"
       tenant: service
@@ -320,15 +320,15 @@ keystone:
     - name: keystone
       type: identity
       description: 'Identity Service'
-      public_url: https://{{ endpoints.main }}:5001/v2.0
-      internal_url: https://{{ endpoints.main }}:5001/v2.0
-      admin_url: https://{{ endpoints.main }}:35358/v2.0
+      public_url: https://{{ endpoints.main }}:5000/v2.0
+      internal_url: https://{{ endpoints.main }}:5000/v2.0
+      admin_url: https://{{ endpoints.main }}:35357/v2.0
     - name: keystonev3
       type: identityv3
       description: 'Identity Service v3'
-      public_url: https://{{ endpoints.main }}:5001/v3
-      internal_url: https://{{ endpoints.main }}:5001/v3
-      admin_url: https://{{ endpoints.main }}:35358/v3
+      public_url: https://{{ endpoints.main }}:5000/v3
+      internal_url: https://{{ endpoints.main }}:5000/v3
+      admin_url: https://{{ endpoints.main }}:35357/v3
     - name: nova
       type: compute
       description: 'Compute Service'
