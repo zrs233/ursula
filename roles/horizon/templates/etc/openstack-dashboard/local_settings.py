@@ -122,17 +122,17 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # For multiple regions uncomment this configuration, and add (endpoint, title).
 # AVAILABLE_REGIONS = [
-#     ('http://cluster1.example.com:5000/v2.0', 'cluster1'),
-#     ('http://cluster2.example.com:5000/v2.0', 'cluster2'),
+#     ('http://cluster1.example.com:5001/v2.0', 'cluster1'),
+#     ('http://cluster2.example.com:5001/v2.0', 'cluster2'),
 # ]
 {% if horizon.keystone_api_version == 3 -%}
 AVAILABLE_REGIONS = [
-     ('https://{{ endpoints.main }}:5001/v3', 'RegionOne'),
+     ('https://{{ endpoints.main }}:{{ keystone.haproxy_api_port }}/v3', 'RegionOne'),
 ]
 {% endif -%}
 
 OPENSTACK_HOST = "{{ endpoints.main }}"
-OPENSTACK_KEYSTONE_URL = "https://%s:5001/v{{horizon.keystone_api_version}}" % OPENSTACK_HOST
+OPENSTACK_KEYSTONE_URL = "https://%s:{{ keystone.haproxy_api_port }}/v{{horizon.keystone_api_version}}" % OPENSTACK_HOST
 OPENSTACK_KEYSTONE_DEFAULT_ROLE = "service"
 SESSION_TIMEOUT = {{ horizon.session_timeout }}
 
