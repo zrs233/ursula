@@ -110,9 +110,20 @@ nova:
 
 ceph:
   enabled: false
+  rbd_pool: default
+  rbd_user: cinder
+  rbd_ceph_conf: /etc/ceph/ceph.conf
+  rbd_flatten_volume_from_snapshot: false
+  rbd_max_clone_depth: 5
+  glance_api_version: 2
 
 cinder:
-  enabled: "{{ ceph.enabled }}"
+  enabled: True
+  enabled_backends: #RBD_VOLUMES for ceph
+  backends: []
+    # Ceph
+    #- name: RBD_VOLUMES
+    #  volume_driver: cinder.volume.drivers.rbd.RBDDriver
   volume_type: file
   volume_file: /opt/stack/cinder-volumes
   volume_file_size: 5G
