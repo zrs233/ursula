@@ -44,7 +44,7 @@ def main():
         module.exit_json(changed=False)
 
     # setup the parted command
-    cmd = ['parted', '--script', dev_path, 'mklabel', 'msdos', 'mkpart', 'primary', '1', '100%']
+    cmd = ['parted', '--script', dev_path, 'mklabel', 'gpt', 'mkpart', 'primary', '1', '100%']
     rc, out, err = module.run_command(cmd, check_rc=True)
 
     # make an xfs
