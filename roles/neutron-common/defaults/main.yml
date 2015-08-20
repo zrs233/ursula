@@ -11,16 +11,24 @@ neutron:
   service_plugins:
     - neutron.services.l3_router.l3_router_plugin.L3RouterPlugin
   enable_flat_networks: False
-  alembic_version: 0.7.0
 
   # Tunneling encapsulations enabled e.g. gre, vxlan
   # Including any tunnels will enable tunnling
   tunnel_types: []
 
+  lbaas:
+    enable: False
+    interface_driver: neutron.agent.linux.interface.BridgeInterfaceDriver
+    service_plugin:
+      - neutron_lbaas.services.loadbalancer.plugin.LoadBalancerPluginv2
+    service_provider: LOADBALANCERV2:Haproxy:neutron_lbaas.drivers.haproxy.plugin_driver.HaproxyOnHostPluginDriver:default
+
   service:
     envs: []
 
   source:
+    python_requirements:
+      - { name: "git+git://github.com/openstack/neutron-lbaas.git@stable/kilo#egg=neutron-lbaas" }
     rev: 'stable/kilo'
   package:
     console_scripts:
@@ -32,37 +40,7 @@ neutron:
       - neutron-hyperv-agent
       - neutron-ibm-agent
       - neutron-keepalived-state-change
-      - neutron-l3-agent
-      - neutron-linuxbridge-agent
-      - neutron-metadata-agent
-      - neutron-metering-agent
-      - neutron-mlnx-agent
-      - neutron-nec-agent
-      - neutron-netns-cleanup
-      - neutron-ns-metadata-proxy
-      - neutron-nvsd-agent
-      - neutron-openvswitch-agent
-      - neutron-ovs-cleanup
-      - neutron-ovsvapp-agent
-      - neutron-restproxy-agent
-      - neutron-rootwrap
-      - neutron-rootwrap-daemon
-      - neutron-rootwrap-xen-dom0
-      - neutron-sanity-check
-      - neutron-server
-      - neutron-sriov-nic-agent
-      - neutron-usage-audit
-
-  package:
-    console_scripts:
-      - neutron-cisco-apic-host-agent
-      - neutron-cisco-apic-service-agent
-      - neutron-db-manage
-      - neutron-debug
-      - neutron-dhcp-agent
-      - neutron-hyperv-agent
-      - neutron-ibm-agent
-      - neutron-keepalived-state-change
+      - neutron-lbaasv2-agent
       - neutron-l3-agent
       - neutron-linuxbridge-agent
       - neutron-metadata-agent
@@ -105,6 +83,12 @@ neutron:
       fields:
         type: openstack
         tags: neutron,neutron-metadata-agent
+    - paths:
+        - /var/log/neutron/neutron-lbaasv2-agent.log
+      fields:
+        type: openstack
+        tags: neutron,neutron-lbaasv2-agent
+        when: neutron.lbaas.enable
   logging:
     debug: False
     verbose: True

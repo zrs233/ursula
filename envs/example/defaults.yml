@@ -132,6 +132,8 @@ neutron:
   tenant_network_type: vxlan
   tunnel_types:
     - vxlan
+  lbaas:
+    enable: False
   logging:
     debug: True
     verbose: True
