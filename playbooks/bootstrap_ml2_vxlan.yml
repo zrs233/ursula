@@ -2,7 +2,7 @@
 # This playbook boot straps a new compute node with its network config
 #
 ---
-- hosts: all
+- hosts: compute:networkl
   serial: 10
   vars:
     timezone: Etc/UTC
@@ -59,7 +59,7 @@
 
   - name: create interfaces.d directory if multiple interface files
     file: state=directory path=/etc/network/interfaces.d mode=0755
-    #when: network_interfaces_d is defined
+    when: network_interfaces_d is defined
     tags: network_config
 
   - name: write network configuration if multiple interface files
