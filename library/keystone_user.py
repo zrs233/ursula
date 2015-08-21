@@ -1,5 +1,19 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+# This file is part of Ansible
+#
+# Ansible is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Ansible is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 
 # Based on Jimmy Tang's implementation
 
@@ -72,8 +86,10 @@ options:
         - Indicate desired state of the resource
      choices: ['present', 'absent']
      default: present
-requirements: [ python-keystoneclient ]
-author: Lorin Hochstein
+requirements:
+    - "python >= 2.6"
+    -  python-keystoneclient
+author: "Lorin Hochstein (@lorin)"
 '''
 
 EXAMPLES = '''
@@ -240,11 +256,14 @@ def ensure_role_exists(keystone, role_name):
     # Get the role if it exists
     try:
         role = get_role(keystone, role_name)
+        # Role does exist, we're done
+        return (False, role.id)
     except KeyError:
         # Role doesn't exist yet
-        role = keystone.roles.create(role_name)
-    return (True, role.id)
+        pass
 
+    role = keystone.roles.create(role_name)
+    return (True, role.id)
 
 def ensure_user_role_exists(keystone, user_name, tenant_name, role_name,
                        check_mode):
@@ -381,9 +400,9 @@ def dispatch(keystone, user=None, password=None, tenant=None,
     changed = False
     id = None
     if not tenant and not user and role and state == "present":
-        ensure_role_exists(keystone, role)
+        changed, id = ensure_role_exists(keystone, role)
     elif not tenant and not user and role and state == "absent":
-        ensure_role_absent(keystone, role)
+        changed = ensure_role_absent(keystone, role)
     elif tenant and not user and not role and state == "present":
         changed, id = ensure_tenant_exists(keystone, tenant,
                                            tenant_description, check_mode)
