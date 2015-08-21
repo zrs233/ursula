@@ -141,7 +141,7 @@ cinder:
     debug: True
     verbose: True
   volume_types: []
-  encrypted_volumetypes:
+  encrypted_volume_types:
     - volume_type: encrypted-aes-512
       cipher: aes-xts-plain64
       key_size: 512
@@ -548,3 +548,13 @@ haproxy:
 
 logging:
   enabled: True
+
+keystonev3:
+  enabled: True
+
+cinderv2:
+  enabled: True
+
+heat-cfn:
+  enabled: True
+

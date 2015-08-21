@@ -42,7 +42,6 @@
                  tenant={{ item.tenant }}
                  token={{ admin_token }}
   with_items: keystone.users
-  when: "{{ item.name }}.enabled is undefined or {{item.name}}.enabled|bool"
 
 - name: keystone roles
   keystone_user: role={{ item.role }}
@@ -50,7 +49,6 @@
                  tenant={{ item.tenant }}
                  token={{ admin_token }}
   with_items: keystone.user_roles
-  when: "{{ item.user }}.enabled is undefined or {{item.user}}.enabled|bool"
 
 - name: keystone endpoint
   keystone_service: name={{ item.name }}

@@ -240,30 +240,24 @@
     - role: haproxy
       haproxy_type: swift
       tags: ['openstack', 'swift', 'control', 'haproxy', 'infra']
-      when: swift.enabled|bool
 
     - role: swift-object
       tags: ['openstack', 'swift', 'data']
-      when: swift.enabled|bool
 
     - role: swift-account
       tags: ['openstack', 'swift', 'data']
-      when: swift.enabled|bool
 
     - role: swift-container
       tags: ['openstack', 'swift', 'data']
-      when: swift.enabled|bool
 
     - role: swift-proxy
       tags: ['openstack', 'swift', 'control']
-      when: swift.enabled|bool
 
 - name: swift bootstrap rings
   hosts: swiftnode_primary
   roles:
     - role: swift-ring
       tags: ['openstack', 'swift', 'swift-ring', 'data']
-      when: swift.enabled|bool
 
 - name: heat code and config
   gather_facts: force
