@@ -49,4 +49,13 @@ keystone:
     ldap_pkgs:
       - slapd
       - ldap-utils
-
+    openldap_source_git: git://git.openldap.org/openldap.git
+    check_password_source_svn: https://ltb-project.org/svn/openldap-ppolicy-check-password/trunk/
+    build_check_password_from_source: False
+    openldap_dev_pkgs:
+      - build-essential
+      - libldap2-dev
+      - libdb5.1-dev
+      - dpkg-dev
+      - git
+      - subversion
