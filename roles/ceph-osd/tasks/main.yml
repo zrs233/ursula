@@ -3,10 +3,16 @@
   apt: pkg=parted
        state=present
 
-- name: write out bootstrap keyring
+- name: register ceph.keyring
+  slurp: src=/var/lib/ceph/bootstrap-osd/ceph.keyring
+  register: ceph_keyrings
+  run_once: true
+  delegate_to: "{{ groups['ceph_monitors'][0] }}"
+
+- name: write ceph.keyring
   copy:
-    dest: "{{ hostvars[groups['ceph_monitors'][0]]['keyrings']['source'] }}"
-    content: "{{ hostvars[groups['ceph_monitors'][0]]['keyrings']['content'] | b64decode }}"
+    dest: "{{ ceph_keyrings['source'] }}"
+    content: "{{ ceph_keyrings['content'] | b64decode }}"
 
 - name: check if 'ceph' partition exists on osd devices
   shell: "parted --script {{ item }} print | egrep -sq '^ 1.*ceph'"
