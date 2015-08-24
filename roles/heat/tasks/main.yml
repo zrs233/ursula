@@ -16,8 +16,8 @@
 - name: permit access to heat
   ufw: rule=allow to_port={{ item }} proto=tcp
   with_items:
-    - 8000
-    - 8004
+    - 8001
+    - 8005
 
 - name: install heat services
   upstart_service: name={{ item }}
