@@ -1,11 +1,11 @@
 dn: olcDatabase={1}hdb,cn=config
 changetype: modify
 replace: olcSuffix
-olcsuffix: {{ keystone.ldap.suffix }}
+olcsuffix: {{ openldap.suffix }}
 -
 replace: olcRootDN
-olcRootDN: {{ keystone.ldap.root_dn }}
+olcRootDN: {{ openldap.root_dn }}
 -
 replace: olcRootPW
-olcRootPW: {{ keystone.ldap.root_password }}
+olcRootPW: {{ openldap.root_password }}
 

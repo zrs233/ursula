@@ -11,7 +11,7 @@ dn: olcOverlay={0}ppolicy,olcDatabase={1}hdb,cn=config
 objectClass: olcOverlayConfig
 objectClass: olcPPolicyConfig
 olcOverlay: {0}ppolicy
-olcPPolicyDefault: {{ keystone.ldap.password_policy_dn }}
+olcPPolicyDefault: {{ openldap.password_policy_dn }}
 olcPPolicyHashCleartext: TRUE
 olcPPolicyUseLockout: FALSE
 olcPPolicyForwardUpdates: FALSE

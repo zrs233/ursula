@@ -1,18 +1,18 @@
 dn: olcDatabase={1}hdb,cn=config
 changetype: modify
 replace: olcSuffix
-olcsuffix: {{ keystone.ldap.suffix }}
+olcsuffix: {{ openldap.suffix }}
 -
 add: olcAccess
 olcAccess: {0}to attrs=userPassword,shadowLastChange by self write by anonymou
- s auth by dn="i{{keystone.ldap.root_dn}}" write by * none
+ s auth by dn="i{{openldap.root_dn}}" write by * none
 -
 add: olcAccess
-olcAccess: {2}to * by self write by dn="{{ keystone.ldap.root_dn }}" write by * read
+olcAccess: {2}to * by self write by dn="{{ openldap.root_dn }}" write by * read
 -
 replace: olcRootDN
-olcRootDN: {{ keystone.ldap.root_dn }}
+olcRootDN: {{ openldap.root_dn }}
 -
 replace: olcRootPW
-olcRootPW: {{ keystone.ldap.root_password }}
+olcRootPW: {{ openldap.root_password }}
 

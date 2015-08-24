@@ -3,7 +3,7 @@ changetype: modify
 add: olcSyncRepl
 {% for host in groups['ldap'] -%}
 olcSyncRepl: rid=00{{ loop.index }} provider=ldap://{{ hostvars[host]['ansible_default_ipv4']['address'] }}/ binddn="cn=config" 
-  bindmethod=simple credentials={{ keystone.ldap.config_root_password }}
+  bindmethod=simple credentials={{ openldap.config_root_password }}
   searchbase="cn=config" type=refreshAndPersist
   retry="5 5 300 5" timeout=1
 {% endfor -%}
