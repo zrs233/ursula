@@ -1,29 +1,21 @@
 ---
-# we're storing the monitor_secret in a file on the first monitor node
-- name: check if mon_secrets file exists
-  stat: path=/var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
-  run_once: true
-  delegate_to: "{{ groups['ceph_monitors'][0] }}"
-  failed_when: false
-  register: mon_file_check
-
 - name: create monitor initial keyring
-  command: ceph-authtool /var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }} --create-keyring --name=mon. --gen-key --cap mon 'allow *'
+  command: ceph-authtool /var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
+           --create-keyring --name=mon. --gen-key --cap mon 'allow *'
            creates=/var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
   run_once: true
-  delegate_to:  "{{ groups['ceph_monitors'][0] }}"
-  when: mon_file_check.stat.exists == false
+  delegate_to:  "{{ groups[ceph.monitor_group_name][0] }}"
 
 - name: fetch contents of mon_secret file
   slurp: path=/var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
   run_once: true
-  delegate_to: "{{ groups['ceph_monitors'][0] }}"
+  delegate_to: "{{ groups[ceph.monitor_group_name][0] }}"
   register: mon_secret_file
 
 - name: copy mon_secret to all hosts
   copy:
     dest: /var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
-    content: "{{ hostvars[groups['ceph_monitors'][0]]['mon_secret_file']['content'] | b64decode }}"
+    content: "{{ mon_secret_file['content'] | b64decode }}"
 
 - name: set initial monitor key permissions
   file: path=/var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
@@ -39,7 +31,9 @@
         mode=0755
 
 - name: ceph monitor mkfs
-  command: ceph-mon --mkfs -i {{ ansible_hostname }} --fsid {{ fsid_file.content | b64decode }} --keyring /var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
+  command: ceph-mon --mkfs -i {{ ansible_hostname }}
+           --fsid {{ fsid_file.content | b64decode }}
+           --keyring /var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
            creates=/var/lib/ceph/mon/ceph-{{ ansible_hostname }}/keyring
 
 - name: activate monitor with upstart
@@ -51,7 +45,6 @@
   with_items:
     - done
     - upstart
-  changed_when: false
 
 - name: ensure ceph-mon service enabled and started
   service: name=ceph-mon
@@ -59,43 +52,27 @@
            enabled=yes
            args=id={{ ansible_hostname }}
 
-# NOTE (leseb): wait for mon discovery and quorum resolution
-# the admin key is not instantanely created so we have to wait a bit
 - name: wait for client.admin key exists
   wait_for: path=/etc/ceph/ceph.client.admin.keyring
 
 - name: create openstack pool
-  command: rados mkpool {{ item }}
-  with_items:
-    - "{{ ceph_monitor.openstack_block_storage_pool }}"
-  failed_when: false
+  command: "ceph osd pool create {{ ceph_monitor.openstack_block_storage_pool }} {{ ceph_common.pool_default_pg_num }}"
+  register: poolout
+  changed_when: poolout.stdout | search('created')
 
 - name: create openstack keys
-  command: ceph auth get-or-create {{ item.name }} {{ item.value }} -o /etc/ceph/ceph.{{ item.name }}.keyring
+  command: ceph auth get-or-create {{ item.name }} {{ item.value }}
+           -o /etc/ceph/ceph.{{ item.name }}.keyring
            creates=/etc/ceph/ceph.{{ item.name }}.keyring
   with_items: ceph_monitor.openstack_keys
 
-- name: find ceph keys
-  shell: ls -1 /etc/ceph/*.keyring
-  changed_when: false
-  register: ceph_keys
-  when: ceph_common.cephx
-
-- name: set keys permissions
-  file: path={{ item }}
-        mode=0600
-        owner=root
-        group=root
-  with_items:
-    - "{{ ceph_keys.stdout_lines }}"
-
-- name: save bootstrap-osd ceph.keyring for OSD nodes to use
-  slurp: src=/var/lib/ceph/bootstrap-osd/ceph.keyring
-  register: keyrings
-  run_once: true
+- name: delete default 'rbd' pool
+  command: ceph osd pool delete rbd rbd --yes-i-really-really-mean-it
+  register: poolout
+  changed_when: poolout.stdout | search('removed')
 
 - name: drop in a motd script to report status when logging in
-  template: src=../files/etc/update-motd.d/92-ceph
+  template: src=etc/update-motd.d/92-ceph
             dest=/etc/update-motd.d/92-ceph
             owner=root
             group=root
