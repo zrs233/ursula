@@ -285,13 +285,10 @@ keystone:
       role: service
     - user: "{{ monitoring.openstack.user.username }}"
       tenant: "{{ monitoring.openstack.user.tenant }}"
-      role: "{{ monitoring.openstack.user.role }}"
+      role: Project_Admin 
     - user: cloud_admin
       tenant: admin
       role: Cloud_Admin
-    - user: project_admin
-      tenant: demo
-      role: Project_Admin
 
   services:
     - name: keystone
