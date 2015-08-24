@@ -126,6 +126,18 @@
     - role: iptables
       tags: ['iptables', 'infra']
 
+- name: ceph monitors
+  hosts: ceph_monitors
+  roles:
+    - role: ceph-monitor
+      tags: ['ceph', 'ceph-monitor']
+
+- name: ceph osds
+  hosts: ceph_osds
+  roles:
+    - role: ceph-osd
+      tags: ['ceph', 'ceph-osd']
+
 # OPENSTACK SERVICES
 - name: openstack client tools
   hosts: all
@@ -177,18 +189,6 @@
     - role: nova-data
       tags: ['openstack', 'nova', 'data']
       when: not ironic.enabled|bool
-
-- name: ceph monitors
-  hosts: ceph_monitors
-  roles:
-    - role: ceph-monitor
-      tags: ['ceph', 'ceph-monitor']
-
-- name: ceph osds
-  hosts: ceph_osds
-  roles:
-    - role: ceph-osd
-      tags: ['ceph', 'ceph-osd']
 
 - name: cinder control plane
   gather_facts: force

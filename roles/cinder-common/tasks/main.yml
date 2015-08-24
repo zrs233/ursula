@@ -30,26 +30,8 @@
 - name: cinder log dir
   file: dest=/var/log/cinder state=directory mode=0755 owner=cinder group=cinder
 
-# generate a uuid for ceph and store it on the first controller
-- name: generate ceph uuid
-  shell: uuidgen > /etc/cinder/ceph_uuid
-         creates=/etc/cinder/ceph_uuid
-  run_once: true
-  delegate_to:  "{{ groups['controller'][0] }}"
-  when: ceph.enabled
-
-- name: fetch contents of uuid file
-  slurp: path=/etc/cinder/ceph_uuid
-  run_once: true
-  delegate_to: "{{ groups['controller'][0] }}"
-  register: ceph_uuid_file
-  when: ceph.enabled
-
-# for redundancy, and if the hosts in [controller] get reordered
-- name: copy uuid to all hosts
-  copy:
-    dest: "{{ ceph_uuid_file['source'] }}"
-    content: "{{ ceph_uuid_file['content'] | b64decode }}"
+# needs to happen before 'cinder config'
+- include: ceph_integration.yml
   when: ceph.enabled
 
 - name: cinder config

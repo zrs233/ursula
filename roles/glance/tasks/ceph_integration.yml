@@ -1,0 +1,38 @@
+- name: install ceph dependencies
+  apt: pkg={{ item }}
+       state=present
+       update_cache=yes
+       cache_valid_time=3600
+  with_items:
+    - python-pycurl
+    - ntp
+    - hdparm
+
+- name: install ceph
+  apt: pkg={{ item }}
+       state=present
+  with_items:
+    - ceph
+    - ceph-common
+
+- name: fetch ceph conf
+  slurp: path=/etc/ceph/ceph.conf
+  run_once: true
+  delegate_to: "{{ groups['ceph_monitors'][0] }}"
+  register: ceph_conf
+
+- name: write ceph conf
+  copy:
+    dest: "{{ ceph_conf['source'] }}"
+    content: "{{ ceph_conf['content'] | b64decode }}"
+
+- name: fetch glance keyring
+  slurp: path=/etc/ceph/ceph.client.glance.keyring
+  run_once: true
+  delegate_to: "{{ groups['ceph_monitors'][0] }}"
+  register: glance_keyring
+
+- name: write glance keyring
+  copy:
+    dest: "{{ glance_keyring['source'] }}"
+    content: "{{ glance_keyring['content'] | b64decode }}"

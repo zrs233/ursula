@@ -1,0 +1,57 @@
+- name: install ceph dependencies
+  apt: pkg={{ item }}
+       state=present
+       update_cache=yes
+       cache_valid_time=3600
+  with_items:
+    - python-pycurl
+    - ntp
+    - hdparm
+
+- name: install ceph
+  apt: pkg={{ item }}
+       state=present
+  with_items:
+    - ceph
+    - ceph-common
+
+- name: fetch ceph conf
+  slurp: path=/etc/ceph/ceph.conf
+  run_once: true
+  delegate_to: "{{ groups['ceph_monitors'][0] }}"
+  register: ceph_conf
+
+- name: write ceph conf
+  copy:
+    dest: "{{ ceph_conf['source'] }}"
+    content: "{{ ceph_conf['content'] | b64decode }}"
+
+- name: fetch cinder keyring
+  slurp: path=/etc/ceph/ceph.client.cinder.keyring
+  run_once: true
+  delegate_to: "{{ groups['ceph_monitors'][0] }}"
+  register: cinder_keyring
+
+- name: write cinder keyring
+  copy:
+    dest: "{{ cinder_keyring['source'] }}"
+    content: "{{ cinder_keyring['content'] | b64decode }}"
+
+# generate a uuid for cinder.conf and store it on the first controller
+- name: generate ceph uuid
+  shell: uuidgen > /etc/cinder/ceph_uuid
+         creates=/etc/cinder/ceph_uuid
+  run_once: true
+  delegate_to:  "{{ groups['controller'][0] }}"
+
+- name: fetch contents of uuid file
+  slurp: path=/etc/cinder/ceph_uuid
+  run_once: true
+  delegate_to: "{{ groups['controller'][0] }}"
+  register: ceph_uuid_file
+
+# for redundancy, and if the hosts in [controller] get reordered
+- name: copy uuid to all hosts
+  copy:
+    dest: "{{ ceph_uuid_file['source'] }}"
+    content: "{{ ceph_uuid_file['content'] | b64decode }}"
