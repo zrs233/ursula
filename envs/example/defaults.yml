@@ -16,6 +16,7 @@ secrets:
   rabbit_password:  asdf
   admin_password:   asdf
   provider_admin_password:      ghij
+  stack_domain_admin_password: ydgurtH5erghithge57
   metadata_proxy_shared_secret: asdf
   horizon_secret_key:           asdf
   glance_sync:      ADQ64XUQLUWH75M634RVBLP55RKPGGOWG
