@@ -78,23 +78,6 @@
   with_items:
     - "{{ ceph_keys.stdout_lines }}"
 
-- name: create client.cinder.key
-  shell: ceph auth get-key client.cinder > /etc/ceph/client.cinder.key
-         creates=/etc/ceph/client.cinder.key
-  run_once: true
-  delegate_to: "{{ groups['ceph_monitors'][0] }}"
-
-- name: fetch client.cinder.key
-  slurp: path=/etc/ceph/client.cinder.key
-  run_once: true
-  delegate_to: "{{ groups['ceph_monitors'][0] }}"
-  register: client_cinder_key
-
-- name: copy client.cinder.key to all hosts
-  copy:
-    dest: /etc/ceph/client.cinder.key
-    content: "{{ client_cinder_key['content'] | b64decode }}"
-
 - name: drop in a motd script to report status when logging in
   template: src=../files/etc/update-motd.d/92-ceph
             dest=/etc/update-motd.d/92-ceph
