@@ -2,4 +2,5 @@
 - include: install-configure.yml
 - include: password_policy.yml
 - include: setup_check_password.yml
+  when: openldap.password_policy_enabled|bool
 - include: setup_sync_provider.yml
