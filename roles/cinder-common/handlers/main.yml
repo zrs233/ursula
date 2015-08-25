@@ -6,3 +6,7 @@
     - cinder-api
     - cinder-scheduler
     - cinder-volume
+
+- name: restart cinder backup service
+  service: name=cinder-backup state=restarted must_exist=false
+  when: restart|default('True') and swift.enabled|default('False')

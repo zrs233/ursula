@@ -18,6 +18,7 @@ percona:
   replication: False
 
 swift:
+  enabled: True
   disks:
     - sdb
 
