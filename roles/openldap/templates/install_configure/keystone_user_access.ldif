@@ -3,7 +3,7 @@
 dn: olcDatabase={1}hdb,cn=config
 changetype: modify
 replace: olcAccess
-olcAccess: {0}to dn.subtree="{{openldap.organizationalUnit}}" attrs=entry,children  by dn="{{openldap.keystone_user_dn}}" write
+olcAccess: {0}to dn.subtree="{{openldap.organizationalUnit}}" attrs=entry,children  by dn="{{openldap.openldap_user_dn}}" write
 -
 add: olcAccess
 olcAccess: {1}to attrs=userPassword,shadowLastChange by self write by anonymou

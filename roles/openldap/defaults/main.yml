@@ -21,9 +21,9 @@ openldap:
   password_attribute: userPassword
   
   # keystone user settings
-  keystone_user_name: keystone_user
-  keystone_user_password: aq1sw2de
-  keystone_user_dn: "cn=keystone_user,ou=openstack,dc=example,dc=org"    
+  openldap_user_name: keystone_user
+  openldap_user_password: aq1sw2de
+  openldap_user_dn: "cn=keystone_user,ou=openstack,dc=example,dc=org"    
   
   # ldap password policy settings
   pwdAllowUserChange: "TRUE"

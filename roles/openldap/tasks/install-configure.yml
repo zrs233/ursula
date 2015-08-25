@@ -45,7 +45,7 @@
 
 - name: ensure keystone_user is created
   shell: ldapadd -D {{ openldap.root_dn }} -w {{ openldap.root_password }} -f {{ openldap.config_dir }}/keystone_user.ldif
-  when: base_domain.stdout.count("cn={{ openldap.keystone_user_name }}") < 1
+  when: base_domain.stdout.count("cn={{ openldap.openldap_user_name }}") < 1
 
 - name: check keystone_user access
   shell: ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -s sub -b olcDatabase={1}hdb,cn=config objectclass=* olcAccess
@@ -56,12 +56,12 @@
 - name: ensure keystone_users access is created
   shell: ldapmodify -Y EXTERNAL -H ldapi:/// -f {{ openldap.config_dir }}/keystone_user_access.ldif
   ignore_errors: yes
-  when: keystone_user_access.stdout.count("{{ openldap.keystone_user_name }}") < 1
+  when: keystone_user_access.stdout.count("{{ openldap.openldap_user_name }}") < 1
 
 - name: ensure other access is restored
   shell: ldapmodify -Y EXTERNAL -H ldapi:/// -f {{ openldap.config_dir }}/other_access_add.ldif
   ignore_errors: yes
-  when: keystone_user_access.stdout.count("{{ openldap.keystone_user_name }}") < 1
+  when: keystone_user_access.stdout.count("{{ openldap.openldap_user_name }}") < 1
 
 - name: create slapd config
   template: src=etc/default/slapd

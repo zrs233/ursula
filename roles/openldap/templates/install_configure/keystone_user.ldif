@@ -1,9 +1,9 @@
 #ldapadd -x -D cn=admin,dc=ibm,dc=com -w aq1sw2de -f keystone_user.ldif
-dn: {{openldap.keystone_user_dn}}
-userPassword: {{openldap.keystone_user_password}}
+dn: {{openldap.openldap_user_dn}}
+userPassword: {{openldap.openldap_user_password}}
 objectClass: person
 objectClass: inetOrgPerson
 objectClass: organizationalPerson
 objectClass: top
-sn: {{openldap.keystone_user_name}}
-cn: {{openldap.keystone_user_name}}
+sn: {{openldap.openldap_user_name}}
+cn: {{openldap.openldap_user_name}}
