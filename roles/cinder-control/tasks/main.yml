@@ -20,8 +20,11 @@
   with_items:
     - cinder-api
     - cinder-scheduler
-    - cinder-backup
   when: database_create.changed or force_sync|default('false')|bool
+
+- name: stop cinder backup service before db sync
+  service: name=cinder-backup state=stopped
+  when: swift.enabled|default("false")|bool
 
 - name: sync cinder database
   command: cinder-manage db sync
