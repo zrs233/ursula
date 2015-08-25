@@ -29,8 +29,9 @@
   register: socket
 
 # we're storing the fsid in a file on the first monitor node
+# truncate is to get rid of the newline
 - name: generate fsid file if we don't have one
-  shell: uuidgen > /etc/ceph/fsid
+  shell: uuidgen > /etc/ceph/fsid && truncate -s -1 /etc/ceph/fsid
          creates=/etc/ceph/fsid
   run_once: true
   delegate_to:  "{{ groups['ceph_monitors'][0] }}"
