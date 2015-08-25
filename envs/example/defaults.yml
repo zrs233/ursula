@@ -339,8 +339,8 @@ keystone:
       internal_url: https://{{ endpoints.main }}:6384
       admin_url: https://{{ endpoints.main }}:6384
 
-ldap:
-  enabled: False
+openldap:
+  enabled: True
 
   # openldap server settings
   url: ldap://{{ undercloud_floating_ip }}:390
@@ -354,6 +354,7 @@ ldap:
   groups_ou: "groups"
   users_dn: "ou=users,ou=openstack,dc=example,dc=org"
   groups_dn: "ou=groups,ou=openstack,dc=example,dc=org"
+
   password_policy_enabled: False
   password_policy_ou: "policies"
   password_policy_ou_dn: "ou=policies,ou=openstack,dc=example,dc=org"
