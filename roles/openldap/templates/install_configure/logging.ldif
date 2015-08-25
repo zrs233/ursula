@@ -1,4 +1,4 @@
 dn: cn=config
 changetype: modify
 replace: olcLogLevel
-olcLogLevel: {{ openldap.openldap_log_level }} 
+olcLogLevel: {{ openldap.logging.log_level }}

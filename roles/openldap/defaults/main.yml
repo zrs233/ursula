@@ -41,7 +41,6 @@ openldap:
   pwdSafeModify: "FALSE"
   dir: /var/lib/ldap
   config_dir: /root/ldif_files_config
-  openldap_log_level: none 
   ldap_pkgs:
     - slapd
     - ldap-utils
@@ -57,3 +56,13 @@ openldap:
     - dpkg-dev
     - git
     - subversion
+
+  logs:
+    - paths:
+      - /var/log/openldap/openldap.log
+      fields:
+        type: syslog
+        tags: ldap,slapd,openldap
+
+  logging:
+    log_level: none
