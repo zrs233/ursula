@@ -63,6 +63,13 @@
   ignore_errors: yes
   when: keystone_user_access.stdout.count("{{ openldap.keystone_user_name }}") < 1
 
+- name: create slapd config
+  template: src=etc/default/slapd
+            dest=/etc/default/slapd
+            owner=root
+            group=root
+            mode=0644
+
 - name: configure rsyslog for openldap
   copy: src=45-slapd.conf
         dest=/etc/rsyslog.d/45-slapd.conf
