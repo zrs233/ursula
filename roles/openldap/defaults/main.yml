@@ -22,7 +22,6 @@ openldap:
   
   # keystone user settings
   openldap_user_name: keystone_user
-  openldap_user_password: aq1sw2de
   openldap_user_dn: "cn=keystone_user,ou=openstack,dc=example,dc=org"    
   
   # ldap password policy settings
@@ -40,8 +39,6 @@ openldap:
   pwdMinLength: 5
   pwdMustChange: "FALSE"
   pwdSafeModify: "FALSE"
-  root_password: aq1sw2de
-  config_root_password: aq1sw2de_c
   dir: /var/lib/ldap
   config_dir: /root/ldif_files_config
   openldap_log_level: none 
