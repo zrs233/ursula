@@ -1,14 +1,15 @@
 ---
 - name: create monitor initial keyring
-  command: ceph-authtool /var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }} --create-keyring --name=mon. --gen-key --cap mon 'allow *'
+  command: ceph-authtool /var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
+           --create-keyring --name=mon. --gen-key --cap mon 'allow *'
            creates=/var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
   run_once: true
-  delegate_to:  "{{ groups['ceph_monitors'][0] }}"
+  delegate_to:  "{{ groups[ceph.monitor_group_name][0] }}"
 
 - name: fetch contents of mon_secret file
   slurp: path=/var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
   run_once: true
-  delegate_to: "{{ groups['ceph_monitors'][0] }}"
+  delegate_to: "{{ groups[ceph.monitor_group_name][0] }}"
   register: mon_secret_file
 
 - name: copy mon_secret to all hosts
@@ -30,7 +31,9 @@
         mode=0755
 
 - name: ceph monitor mkfs
-  command: ceph-mon --mkfs -i {{ ansible_hostname }} --fsid {{ fsid_file.content | b64decode }} --keyring /var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
+  command: ceph-mon --mkfs -i {{ ansible_hostname }}
+           --fsid {{ fsid_file.content | b64decode }}
+           --keyring /var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
            creates=/var/lib/ceph/mon/ceph-{{ ansible_hostname }}/keyring
 
 - name: activate monitor with upstart
@@ -42,7 +45,6 @@
   with_items:
     - done
     - upstart
-  changed_when: false
 
 - name: ensure ceph-mon service enabled and started
   service: name=ceph-mon
@@ -54,13 +56,13 @@
   wait_for: path=/etc/ceph/ceph.client.admin.keyring
 
 - name: create openstack pool
-  command: rados mkpool {{ item }}
-  with_items:
-    - "{{ ceph_monitor.openstack_block_storage_pool }}"
-  failed_when: false
+  command: "ceph osd pool create {{ ceph_monitor.openstack_block_storage_pool }} {{ ceph_common.pool_default_pg_num }}"
+  register: poolout
+  changed_when: poolout.stdout | search('created')
 
 - name: create openstack keys
-  command: ceph auth get-or-create {{ item.name }} {{ item.value }} -o /etc/ceph/ceph.{{ item.name }}.keyring
+  command: ceph auth get-or-create {{ item.name }} {{ item.value }}
+           -o /etc/ceph/ceph.{{ item.name }}.keyring
            creates=/etc/ceph/ceph.{{ item.name }}.keyring
   with_items: ceph_monitor.openstack_keys
 
@@ -79,7 +81,7 @@
     - "{{ ceph_keys.stdout_lines }}"
 
 - name: drop in a motd script to report status when logging in
-  template: src=../files/etc/update-motd.d/92-ceph
+  template: src=etc/update-motd.d/92-ceph
             dest=/etc/update-motd.d/92-ceph
             owner=root
             group=root
