@@ -1,13 +1,31 @@
 ---
+- name: ensure raw_multi_journal was chosen
+  fail: msg="please choose an osd scenario"
+  when: ceph.osd_group_name is defined and
+        not ceph_osd.raw_multi_journal
+
+- name: verify devices have been provided
+  fail: msg="please provide devices to your osd scenario"
+  when: ceph.osd_group_name is defined and
+        ceph_osd.raw_multi_journal and
+        ceph_osd.devices is not defined
+
+- name: verify journal devices have been provided
+  fail: msg="please provide journal devices to your osd scenario"
+  when: ceph.osd_group_name is defined and
+        ceph_osd.raw_multi_journal and
+        ceph_osd.raw_journal_devices is not defined
+
 - name: install dependencies
-  apt: pkg=parted
+  apt: pkg={{ item }}
        state=present
+  with_items: ceph_osd.pkgs
 
 - name: register ceph.keyring
   slurp: src=/var/lib/ceph/bootstrap-osd/ceph.keyring
   register: ceph_keyrings
   run_once: true
-  delegate_to: "{{ groups['ceph_monitors'][0] }}"
+  delegate_to: "{{ groups[ceph.monitor_group_name][0] }}"
 
 - name: write ceph.keyring
   copy:
@@ -78,7 +96,7 @@
 
 # only do this if no ceph partitions were found on the disk
 - name: activate osd(s)
-  command: ceph-disk activate {{ item.1 | regex_replace('^(\/dev\/cciss\/c[0-9]{1}d[0-9]{1})$', '\\1p') }}1
+    command: ceph-disk activate {{ item.1 }}1
   with_together:
     - ceph_partition_osds.results
     - ceph_osd.devices
