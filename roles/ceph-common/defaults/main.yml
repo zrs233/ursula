@@ -5,23 +5,17 @@ ceph_common:
   # INSTALL #
   ###########
 
-  mon_group_name: ceph_monitors
-  osd_group_name: ceph_osds
-
   debian_pkgs:
     - python-pycurl
     - ntp
     - hdparm
+    - libvirt-bin
 
   ceph_pkgs:
     - ceph
     - ceph-common
 
-  rbd_client_paths:
-    - rbd_client_log_path
-    - rbd_client_admin_socket_path
-
-  ceph_stable_release: hammer # ceph stable release
+  stable_release: hammer
 
   ######################
   # CEPH CONFIGURATION #
