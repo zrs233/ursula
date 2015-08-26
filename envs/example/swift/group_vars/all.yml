@@ -11,9 +11,6 @@ etc_hosts:
   - name: "{{ swift_fqdn }}"
     ip: "{{ swift_floating_ip }}"
 
-endpoints:
-  swift: "{{ swift_fqdn }}"
-
 percona:
   replication: False
 

@@ -43,7 +43,7 @@ memcached:
 
 swift:
   enabled: False
-  haproxy_vip: "{{ fqdn }}"
+  haproxy_vip: "{{ swift_fqdn }}"
   haproxy_port: 8090
 
 endpoints:
