@@ -25,6 +25,7 @@
     - nova-consoleauth
     - nova-scheduler
   when: database_create.changed or force_sync|default('false')|bool
+  tags: db-migrate
 
 - name: sync nova database
   command: nova-manage db sync
@@ -33,6 +34,7 @@
   changed_when: true
   notify: restart nova services
   # we want this to always be changed so that it can notify the service restart
+  tags: db-migrate
 
 - meta: flush_handlers
 
