@@ -96,7 +96,7 @@
 
 # only do this if no ceph partitions were found on the disk
 - name: activate osd(s)
-    command: ceph-disk activate {{ item.1 }}1
+  command: ceph-disk activate {{ item.1 }}1
   with_together:
     - ceph_partition_osds.results
     - ceph_osd.devices
