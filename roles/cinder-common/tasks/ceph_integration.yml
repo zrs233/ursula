@@ -10,7 +10,7 @@
     dest: "{{ cinder_keyring['source'] }}"
     content: "{{ cinder_keyring['content'] | b64decode }}"
 
-# generate a uuid for cinder.conf and store it on the first controller
+# generate a uuid for cinder.conf and secret.xml and store it on the first controller
 # truncate is to get rid of the newline
 - name: generate cinder uuid
   shell: uuidgen > /etc/ceph/cinder_uuid && truncate -s -1 /etc/ceph/cinder_uuid
@@ -22,13 +22,13 @@
   slurp: path=/etc/ceph/cinder_uuid
   run_once: true
   delegate_to: "{{ groups['controller'][0] }}"
-  register: ceph_uuid_file
+  register: cinder_uuid_file
 
 # for redundancy, and if the hosts in [controller] get reordered
 - name: copy uuid to all hosts
   copy:
-    dest: "{{ ceph_uuid_file['source'] }}"
-    content: "{{ ceph_uuid_file['content'] | b64decode }}"
+    dest: "{{ cinder_uuid_file['source'] }}"
+    content: "{{ cinder_uuid_file['content'] | b64decode }}"
 
 - name: generate ceph secret xml file
   template: src=etc/ceph/secret.xml
@@ -54,8 +54,8 @@
     dest: /etc/ceph/client.cinder.key
     content: "{{ client_cinder_key['content'] | b64decode }}"
 
-#- name: define virsh secret
-#  shell: virsh secret-define --file /etc/ceph/secret.xml
+- name: define virsh secret
+  shell: virsh secret-define --file /etc/ceph/secret.xml
 
-#- name: set virsh secret
-#  shell: "virsh secret-set-value —secret {{ ceph_uuid_file.content | b64decode }} --base64 $(cat /etc/ceph/client.cinder.key)"
+- name: set virsh secret
+  shell: "virsh secret-set-value --secret {{ cinder_uuid_file.content | b64decode }} --base64 $(cat /etc/ceph/client.cinder.key)"
