@@ -51,3 +51,8 @@
 - name: ucarp processes check
   sensu_check: name=check-ucarp-procs plugin=check-ucarp-procs.sh use_sudo=true
   notify: restart sensu-client
+
+- name: swift sla metrics
+  sensu_metrics_check: name=swift-sla-metrics plugin=metrics-os-api.py
+                       args='-S swift --scheme {{ monitoring.graphite.host_prefix }}'
+  notify: restart sensu-client
