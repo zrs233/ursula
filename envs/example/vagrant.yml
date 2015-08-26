@@ -12,6 +12,9 @@ monitoring:
     pass: rabbit
     vhost: /rabbit
 
+nova:
+  scheduler_default_filters: RetryFilter,AvailabilityZoneFilter,ComputeFilter,CoreFilter,ComputeCapabilitiesFilter,ImagePropertiesFilter,ServerGroupAntiAffinityFilter,ServerGroupAffinityFilter
+
 neutron:
   plugin: ml2
   bridge_mappings: physnet:eth2

@@ -5,5 +5,5 @@
   when: cinder.volume_type == "file"
 
 - name: device based cinder volume group
-  lvg:  vg=cinder-volumes pvs={{ cinder.volume_device }}
+  lvg:  vg={{ cinder.volume_group }} pvs={{ cinder.volume_device }}
   when: cinder.volume_type == "device"

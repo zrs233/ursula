@@ -6,7 +6,7 @@ monitoring:
       critical: 1024
   graphite:
     cluster_prefix: "stats.bbc.{{ stack_env }}.openstack"
-    host_prefix: "stats.bbc.{{ stack_env }}.{{ ansible_nodename }}"
+    host_prefix: "stats.bbc.{{ stack_env }}.{{ ansible_nodename|regex_replace('\\\\.*$', '') }}"
   rabbit:
     vhost: /sensu
     username: sensu

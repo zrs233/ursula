@@ -3,27 +3,31 @@
 Ursula provides a series of Ansible playbooks for installing, managing and
 maintaining OpenStack powered clouds.
 
-Ursula was originally created by a team at [Blue Box](https://www.bluebox.net) and is 
+Ursula was originally created by a team at [Blue Box](https://www.bluebox.net) and is
 released under the MIT License (MIT).
+
+The `ceph-common`, `ceph-monitor`, and `ceph-osd` roles were originally taken from
+[ceph/ceph-ansible](https://github.com/ceph/ceph-ansible), but have since been
+modified. `ceph/ceph-ansible` is released under the Apache License. 
 
 # Installation
 
 ## System Dependencies
 
 The following system packages ( or their equivalents for your OS ) are
-required to run `ursula`: 
+required to run `ursula`:
 
-* python-pip 
-* python-dev 
-* libxml2-dev 
-* libxslt-dev 
+* python-pip
+* python-dev
+* libxml2-dev
+* libxslt-dev
 * libffi-dev
 
 ## Python Environment
 
 We recommend using [virtualenv](http://virtualenv.readthedocs.org/en/latest/) or
-[virtualenvwrapper](https://virtualenvwrapper.readthedocs.org/en/latest/) 
-to isolate your Python environment. 
+[virtualenvwrapper](https://virtualenvwrapper.readthedocs.org/en/latest/)
+to isolate your Python environment.
 
 If you're new to python the following will install `virtualenvwrapper` and set
 up a `virtualenv` for ursula.
@@ -33,7 +37,7 @@ $ pip install virtualenvwrapper
 $ mkvirtualenv ursula
 ```
 
-From now on to work with ursula you can run `$ workon ursula` to 
+From now on to work with ursula you can run `$ workon ursula` to
 enter the `virtualenv`
 
 ## Install ursula and dependencies:
@@ -56,7 +60,7 @@ patched fork of `Ansible`.
 Ursula was designed by [Blue Box](https://www.bluebox.net) to manage a large
 number of OpenStack deployments. In order to do this efficiently we've made
 some changes to how `ansible` works. As part of these changes we have a
-wrapper tool called `ursula-cli` which was installed during the 
+wrapper tool called `ursula-cli` which was installed during the
 `pip install -r requirements.txt` above.
 
 Make sure `ursula-cli` is installed in your environment:
@@ -71,7 +75,7 @@ A CLI wrapper for ansible
 ...
 ```
 
-There are two mandatory fields required by `ursula-cli`.  The first is 
+There are two mandatory fields required by `ursula-cli`.  The first is
 `environment` which will require some further explanation.  
 The second is `playbook` which will almost always be `site.yml`.
 
@@ -84,7 +88,7 @@ OpenStack deployment[s].   An example of this can be found in `/envs/example`
 If you look in the `/envs/example` path you'll see a `defaults.yml` file and a
 series of directories each representing a different OpenStack deployment.
 
-We then utilize the standard `Ansible` features by having `group_vars`, 
+We then utilize the standard `Ansible` features by having `group_vars`,
 `host_vars`, and a `hosts` file.
 
 There are also some `vagrant.yml` files scattered around.  These are helper
@@ -96,7 +100,7 @@ environments in VMs.
 The simplest example deployment is `allinone` which is a single server
 deployment that acts as both a `controller` and a `compute` node.
 
-Whether or not you're using `Vagrant` If you look in the 
+Whether or not you're using `Vagrant` If you look in the
 `envs/example/allinone/vagrant.yml` file it will give you some hints on what
 your server should look like.  If you do not wish to use `Vagrant` then you
 should install Ubuntu 12.04 on a server and configure its networking as
@@ -119,7 +123,7 @@ rather than `Manual`
 
 If you're not running `Vagrant` and have installed ubuntu onto a server and
 configured the networking then we need to tell our system how to talk to this
-new server.  The easiest way is via an entry in your ssh config file in 
+new server.  The easiest way is via an entry in your ssh config file in
 `~/.ssh/config`.
 
 ```

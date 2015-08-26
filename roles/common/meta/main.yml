@@ -12,3 +12,4 @@ dependencies:
   - role: docker
     when: docker.enabled is defined and docker.enabled|bool
   - role: monitoring-common
+    when: monitoring.enabled is not defined or monitoring.enabled|bool

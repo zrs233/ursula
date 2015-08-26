@@ -62,6 +62,7 @@ class CallbackModule(object):
     def __init__(self):
         self.stats = {}
         self.current = None
+        self.count = 0
 
     def on_any(self, *args, **kwargs):
         pass
@@ -115,6 +116,7 @@ class CallbackModule(object):
         # Record the start time of the current task
         self.current = name
         self.stats[self.current] = time.time()
+        self.count += 1
 
         pass
 
@@ -138,6 +140,8 @@ class CallbackModule(object):
 
     def playbook_on_stats(self, stats):
         timestamp()
+        display(filled("", fchar="="))
+        print "Total tasks: %d" % ( self.count )
         display(filled("", fchar="="))
         print "Slowest 25 Tasks"
         display(filled("", fchar="="))

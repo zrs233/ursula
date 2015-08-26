@@ -39,19 +39,17 @@
   set_fact: neutron_data_path_agent=neutron-linuxbridge-agent
   when: neutron.plugin == 'ml2'
 
-# pidfile is a hack while we wait for 'default(omit)' in ansible 1.8
 - name: install neutron-data-network services
   upstart_service:
     name: "{{ item.key }}"
     user: neutron
     cmd: "/usr/local/bin/{{ item.key }}"
-    pidfile: "{{ item.value.pidfile|default('') }}"
+    pidfile: "{{ item.value.pidfile|default(omit) }}"
     start_on: "starting {{ neutron_data_path_agent }}"
     stop_on: "stopping {{ neutron_data_path_agent }}"
     config_dirs: /etc/neutron
     config_files: /etc/neutron/neutron.conf,{{ item.value.config_files }}
     envs: "{{ neutron.service.envs }}"
-
   with_dict:
     neutron-dhcp-agent:
       config_files: /etc/neutron/dhcp_agent.ini
@@ -71,3 +69,4 @@
 - include: ipchanged.yml
 
 - include: monitoring.yml tags=monitoring,common
+  when: monitoring.enabled|default('True')|bool

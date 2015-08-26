@@ -41,6 +41,11 @@
               line=EMBEDDED_RUBY=true
   notify: restart sensu-client
 
+- name: ensure PATH contains /usr/local/bin (OpenStack clients)
+  lineinfile: dest=/etc/default/sensu regexp=^PATH
+              line="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+  notify: restart sensu-client
+
 - name: sensu client config
   template: src=monitoring/config.json dest=/etc/sensu/config.json owner=root
             group=root
@@ -128,6 +133,10 @@
   sensu_check: name=cpu plugin=check-cpu.rb args='-w 80 -c 90 -p kvm'
   notify: restart sensu-client
 
+- name: network interface traffic check
+  sensu_check: name=network_interface_traffic plugin=check-netif.rb args="-c 500 -w 350 --interfaces eth0,eth1,bond0,bond1"
+  notify: restart sensu-client
+
 - name: disk check
   sensu_check: name=disk plugin=check-disk.rb
   notify: restart sensu-client
@@ -142,12 +151,17 @@
 
 - name: vmstat metrics check
   sensu_metrics_check: name=vmstat-metrics plugin=vmstat-metrics.rb
-                       args='--scheme {{ monitoring.graphite.host_prefix }}'
+                       args='--scheme {{ monitoring.graphite.host_prefix }}.vmstat'
   notify: restart sensu-client
 
 - name: load metrics check
   sensu_metrics_check: name=load-metrics plugin=load-metrics.rb
                        args='--scheme {{ monitoring.graphite.host_prefix }}'
+  notify: restart sensu-client
+
+- name: network interface traffic metrics check
+  sensu_metrics_check: name=network-interface-traffic-metrics plugin=metrics-netif.rb
+                       args='--scheme {{ monitoring.graphite.host_prefix }}.network --interface eth0,eth1,bond0,bond1'
   notify: restart sensu-client
 
 - name: syslog check
@@ -169,12 +183,12 @@
 
 - name: memory metrics check
   sensu_metrics_check: name=memory-metrics plugin=memory-metrics.rb
-                       args='--scheme {{ monitoring.graphite.host_prefix }}'
+                       args='--scheme {{ monitoring.graphite.host_prefix }}.memory'
   notify: restart sensu-client
 
 - name: network metrics check
   sensu_metrics_check: name=network-metrics plugin=metrics-net.rb
-                       args='--scheme {{ monitoring.graphite.host_prefix }}'
+                       args='--scheme {{ monitoring.graphite.host_prefix }}.network'
   notify: restart sensu-client
 
 - name: add sensu to adm group so it can read log files

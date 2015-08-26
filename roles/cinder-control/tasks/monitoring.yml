@@ -20,3 +20,8 @@
   notify: restart collectd
   when: collectd is defined and collectd.enabled|bool
   tags: collectd
+
+- name: cinder sla metrics
+  sensu_metrics_check: name=cinder-sla-metrics plugin=metrics-os-api.py
+                       args='-S cinder --scheme {{ monitoring.graphite.host_prefix }}'
+  notify: restart sensu-client

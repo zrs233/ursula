@@ -106,6 +106,15 @@
   max_fail_percentage: 1
   tags: glance
 
+  pre_tasks:
+    - name: dump glance db
+      mysql_db:
+        name: glance
+        state: dump
+        target: /backup/glance-preupgrade.sql
+      run_once: True
+      tags: dbdump
+
   roles:
     - role: glance
       force_sync: true
@@ -135,6 +144,15 @@
   tags:
     - cinder
     - cinder-control
+
+  pre_tasks:
+    - name: dump cinder db
+      mysql_db:
+        name: cinder
+        state: dump
+        target: /backup/cinder-preupgrade.sql
+      run_once: True
+      tags: dbdump
 
   roles:
     - role: cinder-control
@@ -202,6 +220,15 @@
   tags:
     - nova
     - nova-control
+
+  pre_tasks:
+    - name: dump nova db
+      mysql_db:
+        name: nova
+        state: dump
+        target: /backup/nova-preupgrade.sql
+      run_once: True
+      tags: dbdump
 
   roles:
     - role: nova-control
@@ -280,6 +307,14 @@
     - neutron-control
 
   pre_tasks:
+    - name: dump neutron db
+      mysql_db:
+        name: neutron
+        state: dump
+        target: /backup/neutron-preupgrade.sql
+      run_once: True
+      tags: dbdump
+
     - name: check db version
       command: neutron-db-manage --config-file /etc/neutron/neutron.conf
                --config-file /etc/neutron/plugins/ml2/ml2_plugin.ini
@@ -366,6 +401,15 @@
   hosts: controller
   max_fail_percentage: 1
   tags: keystone
+
+  pre_tasks:
+    - name: dump keystone db
+      mysql_db:
+        name: keystone
+        state: dump
+        target: /backup/keystone-preupgrade.sql
+      run_once: True
+      tags: dbdump
 
   roles:
     - role: keystone

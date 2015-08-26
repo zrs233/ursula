@@ -8,8 +8,5 @@ xtradb:
 percona:
   replication: False
 
-nova:
-  scheduler_default_filters: AvailabilityZoneFilter,ComputeFilter
-
 heat:
  enabled: true

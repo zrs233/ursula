@@ -15,3 +15,4 @@
     - restart memcached
 
 - include: monitoring.yml tags=monitoring,common
+  when: monitoring.enabled|default('True')|bool
