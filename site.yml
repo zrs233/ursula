@@ -170,10 +170,10 @@
   roles:
     - role: openstack-database
       database_name: glance
-      tags: ['openstack', 'glance', 'control']
+      tags: ['openstack', 'glance', 'control', 'ceph']
 
     - role: glance
-      tags: ['openstack', 'glance', 'control']
+      tags: ['openstack', 'glance', 'control', 'ceph']
 
 - name: nova control plane
   gather_facts: force
@@ -195,7 +195,7 @@
   hosts: controller
   roles:
     - role: cinder-control
-      tags: ['openstack', 'cinder', 'control']
+      tags: ['openstack', 'cinder', 'control', 'ceph']
       when: cinder.enabled|bool
 
 - name: cinder data plane
@@ -203,7 +203,7 @@
   hosts: cinder_volume
   roles:
     - role: cinder-data
-      tags: ['openstack', 'cinder', 'data', 'cinder-data']
+      tags: ['openstack', 'cinder', 'data', 'cinder-data', 'ceph']
       when: cinder.enabled|bool
 
 - name: neutron control plane

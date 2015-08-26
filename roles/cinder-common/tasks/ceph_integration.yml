@@ -1,35 +1,8 @@
-- name: install ceph dependencies
-  apt: pkg={{ item }}
-       state=present
-       update_cache=yes
-       cache_valid_time=3600
-  with_items:
-    - python-pycurl
-    - ntp
-    - hdparm
-
-- name: install ceph
-  apt: pkg={{ item }}
-       state=present
-  with_items:
-    - ceph
-    - ceph-common
-
-- name: fetch ceph conf
-  slurp: path=/etc/ceph/ceph.conf
-  run_once: true
-  delegate_to: "{{ groups['ceph_monitors'][0] }}"
-  register: ceph_conf
-
-- name: write ceph conf
-  copy:
-    dest: "{{ ceph_conf['source'] }}"
-    content: "{{ ceph_conf['content'] | b64decode }}"
-
+---
 - name: fetch cinder keyring
   slurp: path=/etc/ceph/ceph.client.cinder.keyring
   run_once: true
-  delegate_to: "{{ groups['ceph_monitors'][0] }}"
+  delegate_to: "{{ groups[ceph.monitor_group_name][0] }}"
   register: cinder_keyring
 
 - name: write cinder keyring
@@ -38,14 +11,15 @@
     content: "{{ cinder_keyring['content'] | b64decode }}"
 
 # generate a uuid for cinder.conf and store it on the first controller
-- name: generate ceph uuid
-  shell: uuidgen > /etc/cinder/ceph_uuid
-         creates=/etc/cinder/ceph_uuid
+# truncate is to get rid of the newline
+- name: generate cinder uuid
+  shell: uuidgen > /etc/ceph/cinder_uuid && truncate -s -1 /etc/ceph/cinder_uuid
+         creates=/etc/ceph/cinder_uuid
   run_once: true
   delegate_to:  "{{ groups['controller'][0] }}"
 
 - name: fetch contents of uuid file
-  slurp: path=/etc/cinder/ceph_uuid
+  slurp: path=/etc/ceph/cinder_uuid
   run_once: true
   delegate_to: "{{ groups['controller'][0] }}"
   register: ceph_uuid_file
@@ -55,3 +29,33 @@
   copy:
     dest: "{{ ceph_uuid_file['source'] }}"
     content: "{{ ceph_uuid_file['content'] | b64decode }}"
+
+- name: generate ceph secret xml file
+  template: src=etc/ceph/secret.xml
+            dest=/etc/ceph/secret.xml
+            owner=root
+            group=root
+            mode=0644
+
+- name: create client.cinder.key
+  shell: ceph auth get-key client.cinder > /etc/ceph/client.cinder.key
+         creates=/etc/ceph/client.cinder.key
+  run_once: true
+  delegate_to: "{{ groups[ceph.monitor_group_name][0] }}"
+
+- name: fetch client.cinder.key
+  slurp: path=/etc/ceph/client.cinder.key
+  run_once: true
+  delegate_to: "{{ groups[ceph.monitor_group_name][0] }}"
+  register: client_cinder_key
+
+- name: write client.cinder.key
+  copy:
+    dest: /etc/ceph/client.cinder.key
+    content: "{{ client_cinder_key['content'] | b64decode }}"
+
+#- name: define virsh secret
+#  shell: virsh secret-define --file /etc/ceph/secret.xml
+
+#- name: set virsh secret
+#  shell: "virsh secret-set-value —secret {{ ceph_uuid_file.content | b64decode }} --base64 $(cat /etc/ceph/client.cinder.key)"
