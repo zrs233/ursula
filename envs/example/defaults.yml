@@ -390,7 +390,7 @@ keystone:
       admin_url: https://{{ endpoints.swift }}:{{ swift.haproxy_port}}/v1/%(tenant_id)s
 
 openldap:
-  enabled: True
+  enabled: False
 
   # openldap server settings
   url: ldap://{{ undercloud_floating_ip }}:390
