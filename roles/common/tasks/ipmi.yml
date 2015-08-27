@@ -6,9 +6,9 @@
   apt: pkg=ipmitool
 
 - name: load kernel ipmi modules
-  modprobe: name={{ item }} state=probe
+  modprobe: name={{ item }} state={{ common.ipmi.state }}
   with_items:
     - ipmi_devintf
     - ipmi_si
 
-- include: serial-console.yml tty={{ common.ipmi.serial_console }} baud_rate=115200
+- include: serial-console.yml tty={{ common.ipmi.serial_console }} baud_rate={{ common.ipmi.baud_rate }}
