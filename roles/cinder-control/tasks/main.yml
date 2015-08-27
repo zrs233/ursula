@@ -14,6 +14,7 @@
     - cinder-api
     - cinder-scheduler
   when: database_create.changed or force_sync|default('false')|bool
+  tags: db-migrate
 
 - name: sync cinder database
   command: cinder-manage db sync
@@ -22,6 +23,7 @@
   changed_when: true
   notify: restart cinder services
   # we want this to always be changed so that it can notify the service restart
+  tags: db-migrate
 
 - meta: flush_handlers
 
