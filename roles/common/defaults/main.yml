@@ -8,6 +8,8 @@ common:
   ipmi:
     enabled: True
     serial_console: ttyS1
+    state: probe
+    baud_rate: 115200
   python_extra_packages: []
   ssh_private_keys: []
   ssh:

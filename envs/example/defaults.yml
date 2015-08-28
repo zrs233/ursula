@@ -442,6 +442,7 @@ percona:
 common:
   ipmi:
     enabled: false
+    state: probe
 
 heat:
   enabled: False
