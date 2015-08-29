@@ -25,6 +25,7 @@
           username: provider_admin
           password: "{{ secrets.provider_admin_password }}"
         name: turtle-sec
+        description: turtle-sec
 
     - name: test security group rule
       os_security_group_rule:

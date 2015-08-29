@@ -8,6 +8,7 @@
   until: git_result|success
   retries: 3
   notify:
+    - "python requirements for {{ project_name }}"
     - "pip install {{ project_name }}"
     - "ensure project config directory exists"
     - "stat rootwrap.d"
@@ -15,16 +16,5 @@
     - "setup {{ project_name }} rootwrap"
     - "restart {{ project_name }} services"
     - "additional handlers"
-
-# This happens after the git clone as one may locate the virtualenv
-# in the same directory as the git clone path. In this scenario, git will
-# not clone into a non-empty directory.
-- name: "python requirements for {{ project_name }}"
-  pip:
-    name: "{{ item.name }}"
-    version: "{{ item.version|default(omit) }}"
-    virtualenv: "{{ virtualenv|default(omit) }}"
-  with_items: python_requirements
-  when: python_requirements is defined
 
 - meta: flush_handlers
