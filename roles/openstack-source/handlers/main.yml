@@ -1,4 +1,13 @@
 ---
+- name: "python requirements for {{ project_name }}"
+  pip:
+    name: "{{ item.name }}"
+    version: "{{ item.version|default(omit) }}"
+    virtualenv: "{{ virtualenv|default(omit) }}"
+    extra_args: "-i {{ openstack_source.pypi_mirror }}"
+  with_items: python_requirements
+  when: python_requirements is defined
+
 - name: "pip install {{ project_name }}"
   pip:
     name: "/opt/stack/{{ project_name }}"
@@ -10,7 +19,6 @@
   delay: 10
   notify:
     - update ca-certs
-  when: virtualenv is not defined
 
 - name: update ca-certs
   command: "update-ca-certificates"
