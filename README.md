@@ -35,6 +35,16 @@ up a `virtualenv` for ursula.
 ```bash
 $ pip install virtualenvwrapper
 $ mkvirtualenv ursula
+$ source /usr/local/bin/virtualenvwrapper.sh
+```
+
+You will want to add `source /usr/local/bin/virtualenvwrapper.sh` to your shell startup file, changing the path to virtualenvwrapper.sh
+depending on where it was installed by pip.
+
+```bash
+echo " " >> .bash_profile (for OSX; .bashrc for various linux flavors)
+echo "#sourcing statement for virtualenvwrapper" >> .bash_profile
+echo "source /usr/local/bin/virtualenvwrapper.sh" >> .bash_profile
 ```
 
 From now on to work with ursula you can run `$ workon ursula` to
