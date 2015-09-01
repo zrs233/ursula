@@ -102,13 +102,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     workstation_config.vm.provider "libvirt" do |v|
       v.memory = 1024
     end
+     config.vm.provision :shell, path: "bootstrap.sh"
     if File.exist?("#{ENV['HOME']}/.stackrc")
       workstation_config.vm.provision "file", source: "~/.stackrc", destination: ".stackrc"
-    end
-    workstation_config.vm.provision "ansible" do |ansible|
-      ansible.playbook = "playbooks/vagrant/predeploy.yml"
-      ansible.sudo = true
-      ansible.groups = { "workstation" => ["workstation"] }
     end
   end
 
