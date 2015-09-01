@@ -16,3 +16,22 @@
 
 - name: restart rsyslog
   service: name=rsyslog state=restarted
+
+- name: restart swift services
+  service: name={{ item }} state=restarted must_exist=false
+  when: restart|default('True')
+  with_items:
+    - swift-container
+    - swift-container-auditor
+    - swift-container-updater
+    - swift-container-replicator
+    - swift-account
+    - swift-account-auditor
+    - swift-account-reaper
+    - swift-account-replicator
+    - swift-proxy
+    - swift-object
+    - swift-object-expirer
+    - swift-object-auditor
+    - swift-object-replicator
+    - swift-object-updater
