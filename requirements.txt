@@ -1,7 +1,7 @@
-python-novaclient
-python-neutronclient
+python-novaclient<2.27.0
+python-neutronclient==2.6.0
 python-keystoneclient
-python-glanceclient
+python-glanceclient<=0.19.0
 python-cinderclient
 oslo.utils
 tox
