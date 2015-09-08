@@ -40,7 +40,6 @@ nova:
 
   source:
     rev: 'stable/kilo'
-    git_mirror: https://github.com/blueboxgroup
   package:
     console_scripts:
       - nova-all
