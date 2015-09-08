@@ -150,7 +150,7 @@ neutron:
       segmentation_id: 256
       provider_physical_network: ~
     - name: external
-      shared: true
+      shared: false
       external: true
       network_type: local
       segmentation_id: ~
