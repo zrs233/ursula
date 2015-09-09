@@ -59,12 +59,51 @@
     neutron-metadata-agent:
       config_files: /etc/neutron/metadata_agent.ini
 
+- name: neutron lbaas config
+  template:
+    src: etc/neutron/neutron_lbaas.conf
+    dest: /etc/neutron/neutron_lbaas.conf
+    mode: 0644
+  when: neutron.lbaas.enable
+
+- name: neutron lbaas agent config
+  template:
+    src: etc/neutron/services/loadbalancer/haproxy/lbaas_agent.ini
+    dest: /etc/neutron/services/loadbalancer/haproxy
+    mode: 0644
+  when: neutron.lbaas.enable
+
+- name: install neutron lbaas service
+  upstart_service:
+    name: "{{ item.key }}"
+    user: neutron
+    cmd: "/usr/local/bin/{{ item.key }}"
+    pidfile: "{{ item.value.pidfile|default(omit) }}"
+    start_on: "starting {{ neutron_data_path_agent }}"
+    stop_on: "stopping {{ neutron_data_path_agent }}"
+    config_dirs: /etc/neutron
+    config_files: "{{ item.value.config_files|join(',') }}"
+    envs: "{{ neutron.service.envs }}"
+  when: neutron.lbaas.enable
+  with_dict:
+    neutron-lbaasv2-agent:
+      config_files:
+        - /etc/neutron/neutron.conf
+        - /etc/neutron/services/loadbalancer/haproxy/lbaas_agent.ini
+        - /etc/neutron/neutron_lbaas.conf
+
+- meta: flush_handlers
+
 - name: start neutron-data-network services
   service: name={{ item }} state=started
   with_items:
     - neutron-l3-agent
     - neutron-dhcp-agent
     - neutron-metadata-agent
+
+- name: start neutron lbaas agent
+  service: name=neutron-lbaasv2-agent state=started
+  when: neutron.lbaas.enable
 
 - include: ipchanged.yml
 
