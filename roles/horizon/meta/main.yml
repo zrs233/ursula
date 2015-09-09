@@ -7,7 +7,9 @@ dependencies:
     project_rev: "{{ horizon.source.rev }}"
     virtualenv: "{{ horizon.virtualenv }}"
     python_requirements:
+      - { name: functools32 }
       - { name: python-memcached, version: '1.48' }
+      - { name: stevedore, version: '1.5.0' }
     additional_handlers: [ "compress horizon assets" ]
     when: openstack_install_method == 'source'
   - role: openstack-package

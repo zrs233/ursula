@@ -10,6 +10,7 @@ dependencies:
     # is this even required anymore with Juno?
     python_requirements:
       - { name: babel, version: "{{ keystone.babel_version }}" }
+      - { name: functools32 }
     when: openstack_install_method == 'source'
   - role: openstack-package
     project_name: keystone

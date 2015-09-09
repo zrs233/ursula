@@ -21,18 +21,18 @@ neutron:
     envs: []
 
   source:
-    rev: '679246d7280e9fb374f8db0972b21b3653724c42'
+    rev: 'stable/kilo'
   package:
     console_scripts:
-      - neutron-check-nsx-config
-      - neutron-cisco-cfg-agent
+      - neutron-cisco-apic-host-agent
+      - neutron-cisco-apic-service-agent
       - neutron-db-manage
       - neutron-debug
       - neutron-dhcp-agent
       - neutron-hyperv-agent
       - neutron-ibm-agent
+      - neutron-keepalived-state-change
       - neutron-l3-agent
-      - neutron-lbaas-agent
       - neutron-linuxbridge-agent
       - neutron-metadata-agent
       - neutron-metering-agent
@@ -40,31 +40,30 @@ neutron:
       - neutron-nec-agent
       - neutron-netns-cleanup
       - neutron-ns-metadata-proxy
-      - neutron-nsx-manage
       - neutron-nvsd-agent
-      - neutron-ofagent-agent
       - neutron-openvswitch-agent
       - neutron-ovs-cleanup
+      - neutron-ovsvapp-agent
+      - neutron-restproxy-agent
       - neutron-rootwrap
+      - neutron-rootwrap-daemon
       - neutron-rootwrap-xen-dom0
-      - neutron-ryu-agent
       - neutron-sanity-check
       - neutron-server
       - neutron-sriov-nic-agent
       - neutron-usage-audit
-      - neutron-vpn-agent
 
   package:
     console_scripts:
-      - neutron-check-nsx-config
-      - neutron-cisco-cfg-agent
+      - neutron-cisco-apic-host-agent
+      - neutron-cisco-apic-service-agent
       - neutron-db-manage
       - neutron-debug
       - neutron-dhcp-agent
       - neutron-hyperv-agent
       - neutron-ibm-agent
+      - neutron-keepalived-state-change
       - neutron-l3-agent
-      - neutron-lbaas-agent
       - neutron-linuxbridge-agent
       - neutron-metadata-agent
       - neutron-metering-agent
@@ -72,19 +71,18 @@ neutron:
       - neutron-nec-agent
       - neutron-netns-cleanup
       - neutron-ns-metadata-proxy
-      - neutron-nsx-manage
       - neutron-nvsd-agent
-      - neutron-ofagent-agent
       - neutron-openvswitch-agent
       - neutron-ovs-cleanup
+      - neutron-ovsvapp-agent
+      - neutron-restproxy-agent
       - neutron-rootwrap
+      - neutron-rootwrap-daemon
       - neutron-rootwrap-xen-dom0
-      - neutron-ryu-agent
       - neutron-sanity-check
       - neutron-server
       - neutron-sriov-nic-agent
       - neutron-usage-audit
-      - neutron-vpn-agent
 
   logs:
     - paths:

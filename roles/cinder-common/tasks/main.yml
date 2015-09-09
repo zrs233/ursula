@@ -23,9 +23,16 @@
     - /var/lib/cinder
     - /var/lib/cinder/images
 
-- name: cinder cache dir
-  file: dest=/var/cache/cinder state=directory mode=0700 owner=cinder
-        group=cinder
+- name: cinder private dirs
+  file:
+    dest: "{{ item }}"
+    state: directory
+    mode: 0700
+    owner: cinder
+    group: cinder
+  with_items:
+    - /var/cache/cinder
+    - /var/lib/cinder/lock
 
 - name: cinder log dir
   file: dest=/var/log/cinder state=directory mode=0755 owner=cinder group=cinder
