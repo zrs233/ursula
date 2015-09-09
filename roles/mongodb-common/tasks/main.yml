@@ -1,0 +1,28 @@
+---
+- name: install mongodb packages
+  apt: pkg={{ item }} state=installed
+  with_items:
+    - mongodb-org-server={{ mongodb.version }}
+    - mongodb-org-shell={{ mongodb.version }}
+
+- name: install mongodb config files
+  template: src=etc/mongodb/mongod.conf dest=/etc/mongod.conf mode=0644
+  notify:
+    - restart mongodb service
+
+- meta: flush_handlers
+
+- name: start mongodb service
+  service: name=mongod state=started
+
+- include: monitoring.yml
+  tags:
+    - monitoring
+    - common
+  when: monitoring.enabled|default('True')|bool
+
+- include: logging.yml
+  tags:
+    - logrotate
+    - logging
+  when: logging.enabled|default('True')|bool
