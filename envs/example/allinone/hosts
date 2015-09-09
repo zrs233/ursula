@@ -7,6 +7,9 @@ allinone
 [db]
 allinone
 
+[mongo_db]
+allinone
+
 [compute]
 allinone
 

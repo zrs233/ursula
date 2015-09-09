@@ -76,6 +76,13 @@ $(public_ip "${testenv_instance_prefix}-controller-1")
 [db_arbiter]
 $(public_ip "${testenv_instance_prefix}-compute-0")
 
+[mongo_db]
+$(public_ip "${testenv_instance_prefix}-controller-0")
+$(public_ip "${testenv_instance_prefix}-controller-1")
+
+[mongo_arbiter]
+$(public_ip "${testenv_instance_prefix}-compute-0")
+
 [controller]
 $(public_ip "${testenv_instance_prefix}-controller-0")
 $(public_ip "${testenv_instance_prefix}-controller-1")
@@ -99,6 +106,9 @@ else
 $(public_ip "${testenv_instance_prefix}-allinone")
 
 [db_arbiter]
+$(public_ip "${testenv_instance_prefix}-allinone")
+
+[mongo_db]
 $(public_ip "${testenv_instance_prefix}-allinone")
 
 [controller]
