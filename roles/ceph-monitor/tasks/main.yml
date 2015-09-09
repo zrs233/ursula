@@ -1,0 +1,79 @@
+---
+- name: create monitor initial keyring
+  command: ceph-authtool /var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
+           --create-keyring --name=mon. --gen-key --cap mon 'allow *'
+           creates=/var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
+  run_once: true
+  delegate_to:  "{{ groups[ceph.monitor_group_name][0] }}"
+
+- name: fetch contents of mon_secret file
+  slurp: path=/var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
+  run_once: true
+  delegate_to: "{{ groups[ceph.monitor_group_name][0] }}"
+  register: mon_secret_file
+
+- name: copy mon_secret to all hosts
+  copy:
+    dest: /var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
+    content: "{{ mon_secret_file['content'] | b64decode }}"
+
+- name: set initial monitor key permissions
+  file: path=/var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
+        mode=0600
+        owner=root
+        group=root
+
+- name: create monitor directory
+  file: path=/var/lib/ceph/mon/ceph-{{ ansible_hostname }}
+        state=directory
+        owner=root
+        group=root
+        mode=0755
+
+- name: ceph monitor mkfs
+  command: ceph-mon --mkfs -i {{ ansible_hostname }}
+           --fsid {{ fsid_file.content | b64decode }}
+           --keyring /var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
+           creates=/var/lib/ceph/mon/ceph-{{ ansible_hostname }}/keyring
+
+- name: activate monitor with upstart
+  file: path=/var/lib/ceph/mon/ceph-{{ ansible_hostname }}/{{ item }}
+        state=touch
+        owner=root
+        group=root
+        mode=0600
+  with_items:
+    - done
+    - upstart
+
+- name: ensure ceph-mon service enabled and started
+  service: name=ceph-mon
+           state=started
+           enabled=yes
+           args=id={{ ansible_hostname }}
+
+- name: wait for client.admin key exists
+  wait_for: path=/etc/ceph/ceph.client.admin.keyring
+
+- name: create openstack pool
+  command: "ceph osd pool create {{ ceph_monitor.openstack_block_storage_pool }} {{ ceph_common.pool_default_pg_num }}"
+  register: poolout
+  changed_when: poolout.stdout | search('created')
+
+- name: create openstack keys
+  command: ceph auth get-or-create {{ item.name }} {{ item.value }}
+           -o /etc/ceph/ceph.{{ item.name }}.keyring
+           creates=/etc/ceph/ceph.{{ item.name }}.keyring
+  with_items: ceph_monitor.openstack_keys
+
+- name: delete default 'rbd' pool
+  command: ceph osd pool delete rbd rbd --yes-i-really-really-mean-it
+  register: poolout
+  changed_when: poolout.stdout | search('removed')
+
+- name: drop in a motd script to report status when logging in
+  template: src=etc/update-motd.d/92-ceph
+            dest=/etc/update-motd.d/92-ceph
+            owner=root
+            group=root
+            mode=0755
