@@ -1,0 +1,10 @@
+---
+- name: ceilometer-api check
+  sensu_check: name=check-ceilomter-api plugin=check-os-api.rb
+               args="--service ceilometer"
+  notify: restart sensu-client
+
+- name: ceilometer sla metrics
+  sensu_metrics_check: name=ceilometer-sla-metrics plugin=metrics-os-api.py
+                      args='-S ceilometer --scheme {{ monitoring.graphite.host_prefix }}'
+  notify: restart sensu-client

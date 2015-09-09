@@ -1,0 +1,9 @@
+---
+- name: mongod process check
+  sensu_process_check: service=mongod
+
+- name: mongodb metrics
+  template: src=etc/collectd/plugins/mongod.conf dest=/etc/collectd/plugins/mongod.conf
+  notify: restart collectd
+  when: collectd is defined and collectd.enabled|bool
+  tags: collectd

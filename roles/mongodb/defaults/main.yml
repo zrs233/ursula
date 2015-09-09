@@ -1,0 +1,14 @@
+---
+mongodb:
+  version: 3.0.6
+  replica_name: mongoreplica
+  db_password: "{{ secrets.mongodb_password }}"
+  bind_ip: 0.0.0.0
+  port: 27017
+  ceilometer_password: "{{ secrets.mongodb_password }}"
+  ceilometer_database: ceilometer
+  ceilometer_user: ceilometer
+  logging:
+    debug: False
+    verbose: False
+  cafile: "{{ ssl.cafile|default('/etc/ssl/certs/ca-certificates.crt') }}"
