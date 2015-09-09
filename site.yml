@@ -119,6 +119,13 @@
     - role: ceph-osd
       tags: ['ceph', 'ceph-osd']
 
+- name: ceph compute
+  hosts: compute
+  roles:
+    - role: ceph-compute
+      tags: ['ceph', 'ceph-compute']
+      when: ceph.enabled|bool
+
 # OPENSTACK SERVICES
 - name: openstack client tools
   hosts: all
