@@ -1,0 +1,24 @@
+---
+- name: ceilometer-api process check
+  sensu_process_check: service=ceilometer-api
+  notify: restart sensu-client
+
+- name: ceilometer-collector process check
+  sensu_process_check: service=ceilometer-collector
+  notify: restart sensu-client
+
+- name: ceilometer-agent-notification process check
+  sensu_process_check: service=ceilometer-agent-notification
+  notify: restart sensu-client
+
+- name: ceilometer-agent-central process check
+  sensu_process_check: service=ceilometer-agent-central
+  notify: restart sensu-client
+
+- name: ceilometer-alarm-evaluator process check
+  sensu_process_check: service=ceilometer-alarm-evaluator
+  notify: restart sensu-client
+
+- name: ceilometer-alarm-notifier process check
+  sensu_process_check: service=ceilometer-alarm-notifier
+  notify: restart sensu-client

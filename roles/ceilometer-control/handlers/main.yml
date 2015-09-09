@@ -1,0 +1,15 @@
+---
+- name: restart ceilometer services
+  service: name={{ item }} state=restarted must_exist=false
+  when: restart|default('True')
+  with_items:
+    - ceilometer-api
+    - ceilometer-collector
+    - ceilometer-agent-notification
+    - ceilometer-agent-central
+    - ceilometer-alarm-evaluator
+    - ceilometer-alarm-notifier
+
+- name: restart ceilometer-agent-compute service
+  service: name=ceilometer-agent-compute state=restarted must_exist=false
+  when: restart|default('True')
