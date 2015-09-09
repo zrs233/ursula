@@ -8,6 +8,7 @@ dependencies:
     project_name: swift
     python_requirements:
       - { name: python-keystoneclient, version: '1.0.0' }
+      - { name: keystonemiddleware }
     project_rev: "{{ swift.source.rev }}"
     when: openstack_install_method == 'source'
   - role: openstack-package
