@@ -19,3 +19,7 @@
 - name: ucarp processes check
   sensu_check: name=check-ucarp-procs plugin=check-ucarp-procs.sh use_sudo=true
   notify: restart sensu-client
+
+- name: l3 router check
+  sensu_check: name=check-l3-router plugin=check-l3-router.sh use_sudo=true
+  notify: restart sensu-client
