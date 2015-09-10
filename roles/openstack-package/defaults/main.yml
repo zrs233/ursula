@@ -1,4 +1,4 @@
-openstack_package_version: 10.0-bbc115
+openstack_package_version: 10.0-bbc117
 openstack_package:
   package_name: 'openstack-{{ project_name }}-{{ openstack_package_version }}'
   rootwrap: "{{ rootwrap|default(False)|bool }}"
