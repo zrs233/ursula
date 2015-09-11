@@ -1,5 +1,6 @@
 ---
 dependencies:
+  - role: endpoints
   - role: apt-repos
     repos:
       - repo: 'deb {{ apt_repos.cloud_archive.repo }} precise-updates/icehouse main'

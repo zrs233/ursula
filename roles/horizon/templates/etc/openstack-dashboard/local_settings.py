@@ -127,12 +127,12 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # ]
 {% if horizon.keystone_api_version == 3 -%}
 AVAILABLE_REGIONS = [
-     ('https://{{ endpoints.main }}:{{ keystone.haproxy_api_port }}/v3', 'RegionOne'),
+     ('{{ endpoints.keystone.url.internal }}/{{ endpoints.keystonev3.version  }}', 'RegionOne'),
 ]
 {% endif -%}
 
 OPENSTACK_HOST = "{{ endpoints.main }}"
-OPENSTACK_KEYSTONE_URL = "https://%s:{{ keystone.haproxy_api_port }}/v{{horizon.keystone_api_version}}" % OPENSTACK_HOST
+OPENSTACK_KEYSTONE_URL = "https://%s:{{ endpoints.keystone.port.haproxy_api }}/v{{horizon.keystone_api_version}}" % OPENSTACK_HOST
 OPENSTACK_KEYSTONE_DEFAULT_ROLE = "service"
 SESSION_TIMEOUT = {{ horizon.session_timeout }}
 

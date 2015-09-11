@@ -5,8 +5,8 @@ neutron:
   metadata_workers: 3
   agent_down_time: 20
   report_interval: 4
-  backend_api_port: 9797
-  haproxy_api_port: 9696
+#  backend_api_port: 9797
+#  haproxy_api_port: 9696
   dhcp_dns_servers:
     - 8.8.8.8
     - 8.8.4.4

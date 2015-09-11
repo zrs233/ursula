@@ -51,16 +51,6 @@ endpoints:
   main:     "{{ fqdn }}"
   db:       "{{ undercloud_floating_ip }}"
   rabbit:   "{{ undercloud_floating_ip }}"
-  keystone: "{{ fqdn }}"
-  nova:     "{{ fqdn }}"
-  glance:   "{{ fqdn }}"
-  neutron:  "{{ fqdn }}"
-  vnc:      "{{ fqdn }}"
-  cinder:   "{{ fqdn }}"
-  cinderv2: "{{ fqdn }}"
-  heat:     "{{ fqdn }}"
-  heat-cfn: "{{ fqdn }}"
-  ironic: "{{ fqdn }}"
   swift: "{{ swift.haproxy_vip }}"
   identity_uri: https://{{ fqdn }}:35358
   auth_uri: https://{{ fqdn }}:5001/v2.0
@@ -111,10 +101,10 @@ nova:
   reserved_host_disk_mb: 50
   enable_ssh: true
   preallocate_images: none
-  haproxy_api_port: 8774
-  backend_api_port: 9774
-  novnc_haproxy_api_port: 6080
-  novnc_backend_api_port: 6081
+#  haproxy_api_port: 8774
+#  backend_api_port: 9774
+#  novnc_haproxy_api_port: 6080
+#  novnc_backend_api_port: 6081
   logging:
     debug: True
     verbose: True
@@ -124,8 +114,8 @@ cinder:
   volume_type: file
   volume_file: /opt/stack/cinder-volumes
   volume_file_size: 5G
-  haproxy_api_port: 8776
-  backend_api_port: 8778
+#  haproxy_api_port: 8776
+#  backend_api_port: 8778
   #fixed_key: 6a5c55db5e250f234b6af7807dafda77433dddcf372b6d04801a45f578a35aa7
   logging:
     debug: True
@@ -140,8 +130,8 @@ cinder:
 
 neutron:
   plugin: ml2
-  haproxy_api_port: 9696
-  backend_api_port: 9797
+# haproxy_api_port: 9696
+# backend_api_port: 9797
   bridge_mappings: ''
   network_vlan_ranges: ''
   tenant_network_type: vxlan
@@ -207,8 +197,8 @@ neutron:
 glance:
   api_workers: 1
   registry_workers: 1
-  haproxy_api_port: 9292
-  backend_api_port: 9393
+#  haproxy_api_port: 9292
+#  backend_api_port: 9393
   logging:
     debug: True
     verbose: True
@@ -218,10 +208,10 @@ glance:
 
 keystone:
   token_expiration_in_seconds: 86400
-  haproxy_api_port: 5000
-  backend_api_port: 5001
-  admin_haproxy_api_port: 35357 
-  admin_backend_api_port: 35358
+#  haproxy_api_port: 5000
+#  backend_api_port: 5001
+#  admin_haproxy_api_port: 35357 
+#  admin_backend_api_port: 35358
   logging:
     debug: True
     verbose: True
@@ -307,70 +297,66 @@ keystone:
     - name: keystone
       type: identity
       description: 'Identity Service'
-      public_url: https://{{ endpoints.main }}:5000/v2.0
-      internal_url: https://{{ endpoints.main }}:5000/v2.0
-      admin_url: https://{{ endpoints.main }}:35357/v2.0
+      public_url: "{{ endpoints.keystone.url.internal }}/{{ endpoints.keystone.version }}"
+      internal_url: "{{ endpoints.keystone.url.internal }}/{{ endpoints.keystone.version }}"
+      admin_url: "{{ endpoints.keystone.url.admin }}/{{ endpoints.keystone.version }}"
     - name: keystonev3
       type: identityv3
       description: 'Identity Service v3'
-      public_url: https://{{ endpoints.main }}:5000/v3
-      internal_url: https://{{ endpoints.main }}:5000/v3
-      admin_url: https://{{ endpoints.main }}:35357/v3
+      public_url: "{{ endpoints.keystone.url.internal }}/{{ endpoints.keystonev3.version }}"
+      internal_url: "{{ endpoints.keystone.url.internal }}/{{ endpoints.keystonev3.version }}"
+      admin_url: "{{ endpoints.keystone.url.internal }}/{{ endpoints.keystonev3.version }}"
     - name: nova
       type: compute
       description: 'Compute Service'
-      public_url: https://{{ endpoints.main }}:{{ nova.haproxy_api_port }}/v2/%(tenant_id)s
-      internal_url: https://{{ endpoints.main }}:{{ nova.haproxy_api_port }}/v2/%(tenant_id)s
-      admin_url: https://{{ endpoints.main }}:{{ nova.haproxy_api_port }}/v2/%(tenant_id)s
+      public_url: "{{ endpoints.nova.url.internal }}/{{ endpoints.nova.url.path }}"
+      internal_url: "{{ endpoints.nova.url.internal }}/{{ endpoints.nova.url.path }}"
+      admin_url: "{{ endpoints.nova.url.internal }}/{{ endpoints.nova.url.path }}"
     - name: glance
       type: image
       description: 'Image Service'
-      public_url: https://{{ endpoints.main }}:{{ glance.haproxy_api_port }}
-      internal_url: https://{{ endpoints.main }}:{{ glance.haproxy_api_port }}
-      admin_url: https://{{ endpoints.main }}:{{ glance.haproxy_api_port }}
+      public_url: "{{ endpoints.glance.url.internal }}"
+      internal_url: "{{ endpoints.glance.url.internal }}"
+      admin_url: "{{ endpoints.glance.url.internal }}"
     - name: neutron
       type: network
       description: 'Network Service'
-      public_url: https://{{ endpoints.main }}:{{ neutron.haproxy_api_port }}
-      internal_url: https://{{ endpoints.main }}:{{ neutron.haproxy_api_port }}
-      admin_url: https://{{ endpoints.main }}:{{ neutron.haproxy_api_port }}
+      public_url: "{{ endpoints.neutron.url.internal }}"
+      internal_url: "{{ endpoints.neutron.url.internal }}"
+      admin_url: "{{ endpoints.neutron.url.internal }}"
     - name: cinder
       type: volume
       description: 'Volume Service'
-      public_url: https://{{ endpoints.main }}:{{ cinder.haproxy_api_port }}/v1/%(tenant_id)s
-      internal_url: https://{{ endpoints.main }}:{{ cinder.haproxy_api_port }}/v1/%(tenant_id)s
-      admin_url: https://{{ endpoints.main }}:{{ cinder.haproxy_api_port }}/v1/%(tenant_id)s
+      public_url: "{{ endpoints.cinder.url.internal }}/{{ endpoints.cinder.url.path }}"
+      internal_url: "{{ endpoints.cinder.url.internal }}/{{ endpoints.cinder.url.path }}"
+      admin_url: "{{ endpoints.cinder.url.internal }}/{{ endpoints.cinder.url.path }}"
     - name: cinderv2
       type: volumev2
       description: 'Volume Service v2'
-      public_url: https://{{ endpoints.main }}:{{ cinder.haproxy_api_port }}/v2/%(tenant_id)s
-      internal_url: https://{{ endpoints.main }}:{{ cinder.haproxy_api_port }}/v2/%(tenant_id)s
-      admin_url: https://{{ endpoints.main }}:{{ cinder.haproxy_api_port }}/v2/%(tenant_id)s
+      public_url: "{{ endpoints.cinderv2.url.internal }}/{{ endpoints.cinderv2.url.path }}" 
+      internal_url: "{{ endpoints.cinderv2.url.internal }}/{{ endpoints.cinderv2.url.path }}"
+      admin_url: "{{ endpoints.cinderv2.url.internal }}/{{ endpoints.cinderv2.url.path }}"
     - name: heat
       type: orchestration
       description: 'Heat Orchestration API'
-      public_url: https://{{ endpoints.main }}:8005/v1/%(tenant_id)s
-      internal_url: https://{{ endpoints.main }}:8005/v1/%(tenant_id)s
-      admin_url: https://{{ endpoints.main }}:8005/v1/%(tenant_id)s
+      public_url: "{{ endpoints.heat.url.internal }}/{{ endpoints.heat.url.path }}"
+      internal_url: "{{ endpoints.heat.url.internal }}/{{ endpoints.heat.url.path }}"
+      admin_url: "{{ endpoints.heat.url.internal }}/{{ endpoints.heat.url.path }}"
     - name: heat-cfn
       type: cloudformation
       description: 'Heat CloudFormation API'
-      public_url: https://{{ endpoints.main }}:8001/v1
-      internal_url: https://{{ endpoints.main }}:8001/v1
-      admin_url: https://{{ endpoints.main }}:8001/v1
+      public_url: "{{ endpoints.heat-cfn.url.internal }}/{{ endpoints.heat-cfn.version }}" 
+      internal_url: "{{ endpoints.heat-cfn.url.internal }}/{{ endpoints.heat-cfn.version }}"
+      admin_url: "{{ endpoints.heat-cfn.url.internal }}/{{ endpoints.heat-cfn.version }}"
     - name: ironic
       type: baremetal
       description: 'Ironic bare metal provisioning service'
-      public_url: https://{{ endpoints.main }}:6384
-      internal_url: https://{{ endpoints.main }}:6384
-      admin_url: https://{{ endpoints.main }}:6384
     - name: swift
       type: object-store       
       description: 'Object Storage Service'
       public_url: https://{{ endpoints.swift }}:{{ swift.haproxy_port}}/v1/%(tenant_id)s
       internal_url: https://{{ endpoints.swift }}:{{ swift.haproxy_port}}/v1/%(tenant_id)s
       admin_url: https://{{ endpoints.swift }}:{{ swift.haproxy_port}}/v1/%(tenant_id)s
-
 ssl:
   crt: |
     -----BEGIN CERTIFICATE-----

@@ -8,8 +8,8 @@ cinder:
   volume_type: file
   volume_group: cinder-volumes
   create_vg: true
-  backend_api_port: 8778
-  haproxy_api_port: 8776
+#  backend_api_port: 8778
+#  haproxy_api_port: 8776
 
   source:
     rev: 'stable/kilo'

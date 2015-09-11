@@ -1,7 +1,7 @@
 ---
 - name: determine Neutron external interface name
   neutron_network: name=external
-                   auth_url=https://{{ endpoints.main }}:{{ keystone.haproxy_api_port }}/v2.0/
+                   auth_url=https://{{ endpoints.keystone.url.internal }}/{{ endpoints.keystone.version }}/
                    login_tenant_name=admin
                    login_username=provider_admin
                    login_password={{ secrets.provider_admin_password }}

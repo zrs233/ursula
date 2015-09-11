@@ -1,5 +1,6 @@
 ---
 dependencies:
+  - role: endpoints
   - role: monitoring-common
   - role: logging-config
     service: keystone

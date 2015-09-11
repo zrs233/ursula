@@ -53,8 +53,8 @@
 - name: permit access to keystone
   ufw: rule=allow to_port={{ item }} proto=tcp
   with_items:
-    - "{{ keystone.haproxy_api_port }}"
-    - "{{ keystone.admin_haproxy_api_port }}"
+    - "{{ endpoints.keystone.port.haproxy_api }}"
+    - "{{ endpoints.keystone.port.admin_haproxy_api }}"
 
 - name: add cron job to clean up expired tokens
   template:

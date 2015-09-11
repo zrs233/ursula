@@ -1,0 +1,134 @@
+---
+endpoints:
+  nova:
+    name: nova
+    type: compute
+    description: Compute Service
+    version: v2
+    url:
+      admin: https://{{ fqdn }}:8774
+      internal: https://{{ fqdn }}:8774 
+      public: https://{{ fqdn }}:8774
+      path: /v2/%(tenant_id)s
+    port:
+      backend_api: 9774
+      haproxy_api: 8774
+  glance:
+    name: glance
+    type: image
+    description: Image Service
+    url:                                                                           
+      admin: https://{{ fqdn }}:9292                                                                       
+      internal: https://{{ fqdn }}:9292                                                                     
+      public: https://{{ fqdn }}:9292                                                                     
+    port:                                                                          
+      backend_api: 9393                                              
+      haproxy_api: 9292
+  cinder:
+    name: cinder
+    type: volume
+    description: Volume Service
+    version: v1
+    url:                                                                           
+      admin: https://{{ fqdn }}:8776                                                             
+      internal: https://{{ fqdn }}:8776                                                                    
+      public: https://{{ fqdn }}:8776 
+      path: /v1/%(tenant_id)s
+    port:                                                                          
+      backend_api: 8778                                              
+      haproxy_api: 8776
+  cinderv2:     
+    name: cinderv2
+    type: volume                                                                   
+    description: Volume Service v2                                                   
+    version: v2                                                                    
+    url:                                                                           
+      admin: https://{{ fqdn }}:8776                                                
+      internal: https://{{ fqdn }}:8776                                             
+      public: https://{{ fqdn }}:8776                                              
+      path: /v2/%(tenant_id)s                                                                                                         
+  keystone:
+    name: keystone
+    type: identity
+    description: Identity Service
+    version: v2.0
+    url:                                                                           
+      internal: https://{{ fqdn }}:5000                                                                   
+      public: https://{{ fqdn }}:5000 
+      admin: https://{{ fqdn }}:35357
+    port:                                                                          
+      backend_api: 5002                                                                 
+      haproxy_api: 5000
+  keystone-admin:
+    port:                                                                          
+      backend_api: 35358                                                                 
+      haproxy_api: 35357
+  keystone-backward:
+    port:
+      backend_api: 5002
+      haproxy_api: 5001
+  keystonev3:                                                                     
+    name: keystonev3                                                              
+    type: identity                                                              
+    description: Identity Service v3                                               
+    version: v3                                                               
+    url:                                                                        
+      internal: https://{{ fqdn }}:5000                                         
+      public: https://{{ fqdn }}:5000                                           
+      admin: https://{{ fqdn }}:35357                                           
+    port:                                                                       
+      backend_api: 5002                                                         
+      haproxy_api: 5000
+  novnc:
+    url:                                                                           
+      admin: https://{{ fqdn }}:6080                                                                       
+      internal: https://{{ fqdn }}:6080                                                                    
+      public: https://{{ fqdn }}:6080                                                                      
+    port:                                                                          
+      backend_api: 6081                                                                 
+      haproxy_api: 6080
+  heat:
+    name: heat
+    type: orchestration 
+    description: Heat Orchestration API
+    url:                                                                           
+      admin: https://{{ fqdn }}:8004                                                                       
+      internal: https://{{ fqdn }}:8004                                                                    
+      public: https://{{ fqdn }}:8004                                                                      
+    port:                                                                          
+      backend_api: 8005                                                                 
+      haproxy_api: 8004
+  heat-cfn:
+    name: heat-cfn
+    type: cloudformation
+    description: Heat Cloudformation API
+    url:                                                                           
+      admin: https://{{ fqdn }}:8000                                                                       
+      internal: https://{{ fqdn }}:8000                                                                   
+      public: https://{{ fqdn }}:8000                                                                      
+    port:                                                                          
+      backend_api: 8001                                                                 
+      haproxy_api: 8000
+  ceilometer:
+    name: ceilometer
+    type: metering
+    description: Metering Service
+    url:                                                                           
+      admin: https://{{ fqdn }}:8777                                                                       
+      internal: https://{{ fqdn }}:8777                                                                    
+      public: https://{{ fqdn }}:8777                                                                      
+    port:                                                                          
+      backend_api: 9777                                                                 
+      haproxy_api: 8777
+  ironic:
+    name: ironic
+    type: baremetal
+    description: Ironic bare metal provisioning service
+    url:                                                                           
+      admin: https://{{ fqdn }}:6385                                                                      
+      internal: https://{{ fqdn }}:6385                                                                     
+      public: https://{{ fqdn }}:6385                                                                       
+    port:                                                                          
+      backend_api: 6384                                                                 
+      haproxy_api: 6385
+      

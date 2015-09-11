@@ -31,4 +31,4 @@
   service: name=nova-novncproxy state=started
 
 - name: Permit access to NoVNC
-  ufw: rule=allow to_port={{ nova.novnc_haproxy_api_port }} proto=tcp
+  ufw: rule=allow to_port={{ endpoints.novnc.port.haproxy_api }} proto=tcp
