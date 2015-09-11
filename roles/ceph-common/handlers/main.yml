@@ -1,8 +1,8 @@
 ---
 - name: restart ceph mons
   service: name=ceph-mon-all state=restarted
-  when: socket.rc == 0
+  when: ceph_socket.rc == 0
 
 - name: restart ceph osds
   service: name=ceph-osd-all state=restarted
-  when: socket.rc == 0
+  when: ceph_socket.rc == 0
