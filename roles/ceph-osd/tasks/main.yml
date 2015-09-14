@@ -35,12 +35,14 @@
 - name: check if 'ceph' partition exists on osd devices
   shell: "parted --script {{ item }} print | egrep -sq '^ 1.*ceph'"
   with_items: ceph_osd.devices
+  ignore_errors: true
   changed_when: false
   register: ceph_partition_osds
 
 - name: check if 'ceph' partition exists on journal devices
   shell: "parted --script {{ item }} print | egrep -sq '^ 1.*ceph'"
   with_items: ceph_osd.raw_journal_devices
+  ignore_errors: true
   changed_when: false
   register: ceph_partition_journals
 
