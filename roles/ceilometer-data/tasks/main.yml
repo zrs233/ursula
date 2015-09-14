@@ -4,12 +4,12 @@
                    user=ceilometer
                    cmd=/usr/local/bin/ceilometer-agent-compute
   notify:
-    - restart ceilometer-agent-compute service
+    - restart ceilometer services
 
 - name: pip install libvirt-python in venv on compute
   pip: name=libvirt-python virtualenv="{{ ceilometer.virtualenv }}"
   notify:
-    - restart ceilometer-agent-compute service
+    - restart ceilometer services
 
 - meta: flush_handlers
 

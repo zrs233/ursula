@@ -10,6 +10,3 @@
     - ceilometer-alarm-evaluator
     - ceilometer-alarm-notifier
 
-- name: restart ceilometer-agent-compute service
-  service: name=ceilometer-agent-compute state=restarted must_exist=false
-  when: restart|default('True')

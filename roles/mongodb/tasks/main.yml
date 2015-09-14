@@ -2,8 +2,8 @@
 - name: install mongodb packages
   apt: pkg={{ item }} state=installed
   with_items:
-    - mongodb-org-server
-    - mongodb-org-shell
+    - mongodb-org-server=3.0.6
+    - mongodb-org-shell=3.0.6
   register: mongo_installed
 
 - name: install mongodb config files
