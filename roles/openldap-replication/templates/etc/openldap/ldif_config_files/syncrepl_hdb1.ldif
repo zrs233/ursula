@@ -1,0 +1,22 @@
+dn: olcDatabase={1}hdb,cn=config
+changetype: modify
+add: olcLimits
+olcLimits: dn.exact="{{ openldap.root_dn }}" time.soft=unlimited
+  time.hard=unlimited size.soft=unlimited size.hard=unlimited
+-
+add: olcSyncRepl
+{% for host in groups['ldap'] -%}
+olcSyncRepl: rid=00{{ loop.index+loop.length }} provider=ldap://{{ hostvars[host]['ansible_default_ipv4']['address']  }}/ binddn="{{ openldap.root_dn }}"
+  bindmethod=simple credentials={{ openldap.root_password }}
+  searchbase="{{ openldap.suffix }}" type=refreshAndPersist
+  retry="5 5 300 +" timeout=1
+{% endfor -%}
+-
+add: olcDbIndex
+olcDbIndex: entryUUID  eq
+-
+add: olcDbIndex
+olcDbIndex: entryCSN  eq
+-
+add: olcMirrorMode
+olcMirrorMode: TRUE

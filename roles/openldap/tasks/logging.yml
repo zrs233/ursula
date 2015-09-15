@@ -1,0 +1,8 @@
+- name: configure rsyslog for openldap
+  copy: src=45-slapd.conf
+        dest=/etc/rsyslog.d/45-slapd.conf
+        owner=root
+        group=root
+        mode=0644
+  notify:
+  - restart rsyslog

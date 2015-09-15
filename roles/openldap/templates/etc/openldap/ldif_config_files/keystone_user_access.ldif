@@ -1,0 +1,21 @@
+dn: olcDatabase={1}hdb,cn=config
+changetype: modify
+replace: olcAccess
+olcAccess: {0}to dn.subtree="{{openldap.organizationalUnit}}" attrs=entry,children,cn,sn,mail,userPassword,employeeType,departmentNumber,description,businessCategory,member  
+    by dn="{{openldap.openldap_user_dn}}" write
+    by * read
+-
+add: olcAccess
+olcAccess: {1}to attrs=userPassword,shadowLastChange 
+    by self write by anonymous auth 
+    by dn="cn=admin,dc=nodomain" write by * none
+-
+add: olcAccess
+olcAccess: {2}to dn.base="" by * read
+-
+add: olcAccess
+olcAccess: {3}to * 
+    by self write 
+    by dn="{{ openldap.root_dn }}" write 
+    by * read
+

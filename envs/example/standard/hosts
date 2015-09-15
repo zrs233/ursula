@@ -1,3 +1,7 @@
+[ldap]
+controller1 oid=1
+controller2 oid=2
+
 [controller]
 controller1
 controller2

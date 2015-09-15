@@ -1,0 +1,12 @@
+dn: olcDatabase={0}config,cn=config
+changetype: modify
+add: olcSyncRepl
+{% for host in groups['ldap'] -%}
+olcSyncRepl: rid=00{{ loop.index }} provider=ldap://{{ hostvars[host]['ansible_default_ipv4']['address'] }}/ binddn="cn=config" 
+  bindmethod=simple credentials={{ openldap.config_root_password }}
+  searchbase="cn=config" type=refreshAndPersist
+  retry="5 5 300 +" timeout=1
+{% endfor -%}
+-
+add: olcMirrorMode
+olcMirrorMode: TRUE

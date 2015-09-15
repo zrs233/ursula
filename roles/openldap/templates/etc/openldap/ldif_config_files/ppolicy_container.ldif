@@ -1,0 +1,5 @@
+dn: {{ openldap.password_policy_ou_dn }}
+objectClass: organizationalUnit
+objectClass: top
+ou: {{ openldap.password_policy_ou }}
+
