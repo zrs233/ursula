@@ -1,0 +1,17 @@
+---
+- name: create ceilometer user/db setup script
+  template:
+    src: etc/mongodb/create_ceilometer_db.sh
+    dest: /tmp/create_ceilometer_db.sh
+    owner: root
+    group: root
+    mode: 0700
+  when: mongodb_primary==true
+
+- name: run ceilometer user/db setup script
+  command: /tmp/create_ceilometer_db.sh
+  register: create_result
+  changed_when: "create_result.rc == 0"
+  failed_when: "create_result.rc > 1"
+  when: mongodb_primary==true
+

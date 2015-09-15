@@ -1,0 +1,19 @@
+---
+dependencies:
+  - role: monitoring-common
+  - role: logging-config
+    service: ceilometer
+    logdata: "{{ ceilometer.logs }}"
+  - role: openstack-source
+    project_name: ceilometer
+    project_rev: "{{ ceilometer.source.rev }}"
+#    virtualenv: "{{ ceilometer.virtualenv }}"
+    python_requirements:
+      - { name: pymongo, version: '3.0.3' }
+      - { name: functools32 }
+      - { name: simplegeneric }
+    when: openstack_install_method == 'source'
+  - role: openstack-package
+    project_name: ceilometer
+    package_alternatives: "{{ ceilometer.package.console_scripts }}"
+    when: openstack_install_method == 'package'

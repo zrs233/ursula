@@ -1,0 +1,19 @@
+---
+- name: install ceilometer compute service
+  upstart_service: name=ceilometer-agent-compute
+                   user=ceilometer
+                   cmd=/usr/local/bin/ceilometer-agent-compute
+  notify:
+    - restart ceilometer services
+
+- name: pip install libvirt-python in venv on compute
+  pip: name=libvirt-python virtualenv="{{ ceilometer.virtualenv }}"
+  notify:
+    - restart ceilometer services
+
+- meta: flush_handlers
+
+- name: start ceilometer-compute service
+  service: name=ceilometer-agent-compute state=started
+
+- include: monitoring.yml tags=monitoring,common
