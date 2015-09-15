@@ -7,10 +7,11 @@ dependencies:
   - role: openstack-source
     project_name: ceilometer
     project_rev: "{{ ceilometer.source.rev }}"
-    virtualenv: "{{ ceilometer.virtualenv }}"
+#    virtualenv: "{{ ceilometer.virtualenv }}"
     python_requirements:
       - { name: pymongo, version: '3.0.3' }
       - { name: functools32 }
+      - { name: simplegeneric }
     when: openstack_install_method == 'source'
   - role: openstack-package
     project_name: ceilometer
