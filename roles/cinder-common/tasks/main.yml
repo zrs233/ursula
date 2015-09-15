@@ -37,6 +37,10 @@
 - name: cinder log dir
   file: dest=/var/log/cinder state=directory mode=0755 owner=cinder group=cinder
 
+# needs to happen before 'cinder config'
+- include: ceph_integration.yml
+  when: ceph.enabled
+
 - name: cinder config
   template: src={{ item }} dest=/etc/cinder mode=0644
   with_fileglob: ../templates/etc/cinder/*
