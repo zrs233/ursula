@@ -2,3 +2,31 @@
 haproxy:
   bufsize: 16384
   stats_group: monitor
+ 
+  cinder:
+    clear_port: 8778
+    enc_port: 8776
+
+  nova:
+    clear_port: 9774
+    enc_port: 8774
+
+  glance:
+    clear_port: 9393
+    enc_port: 9292
+
+  neutron:
+    clear_port: 9797
+    enc_port: 9696
+
+  novnc:
+    clear_port: 6081
+    enc_port: 6080
+
+  keystone:
+    clear_port: 5001
+    enc_port: 5000
+
+  keystone_admin:
+    clear_port: 35358
+    enc_port: 35357
