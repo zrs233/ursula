@@ -119,13 +119,6 @@
     - role: ceph-osd
       tags: ['ceph', 'ceph-osd']
 
-- name: ceph compute
-  hosts: compute
-  roles:
-    - role: ceph-compute
-      tags: ['ceph', 'ceph-compute']
-      when: ceph.enabled|bool
-
 # OPENSTACK SERVICES
 - name: openstack client tools
   hosts: all
@@ -193,6 +186,13 @@
     - role: cinder-data
       tags: ['openstack', 'cinder', 'data', 'cinder-data', 'ceph']
       when: cinder.enabled|bool
+
+- name: ceph compute
+  hosts: compute
+  roles:
+    - role: ceph-compute
+      tags: ['ceph', 'ceph-compute']
+      when: ceph.enabled|bool
 
 - name: neutron control plane
   gather_facts: force
