@@ -1,0 +1,21 @@
+---
+- name: fetch cinder keyring
+  slurp: path=/etc/ceph/ceph.client.cinder.keyring
+  run_once: true
+  delegate_to: "{{ groups[ceph.monitor_group_name][0] }}"
+  register: cinder_keyring
+
+- name: write cinder keyring
+  copy:
+    dest: "{{ cinder_keyring['source'] }}"
+    content: "{{ cinder_keyring['content'] | b64decode }}"
+    mode: 0644
+    owner: cinder
+    group: cinder
+
+# used in cinder.conf
+- name: fetch contents of uuid file
+  slurp: path=/etc/ceph/cinder_uuid
+  run_once: true
+  delegate_to: "{{ groups[ceph.monitor_group_name][0] }}"
+  register: cinder_uuid_file
