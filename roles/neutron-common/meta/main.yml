@@ -9,8 +9,7 @@ dependencies:
   - role: openstack-source
     project_name: neutron
     project_rev: "{{ neutron.source.rev }}"
-    python_requirements:
-      - { name: alembic, version: "{{ neutron.alembic_version }}" }
+    python_requirements: "{{ neutron.source.python_requirements }}"
     rootwrap: True
     when: openstack_install_method == 'source'
   - role: openstack-package
