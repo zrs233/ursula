@@ -1,4 +1,8 @@
 ---
+- name: "install {{ project_name }} system dependencies"
+  apt: pkg={{ item }}
+  with_items: openstack_source.system_dependencies
+
 - name: "get {{ project_name }} source repo"
   git: repo="{{ openstack_source.git_mirror }}/{{ project_name }}.git"
        dest="/opt/stack/{{ project_name }}"
@@ -7,14 +11,68 @@
   register: git_result
   until: git_result|success
   retries: 3
-  notify:
-    - "python requirements for {{ project_name }}"
-    - "pip install {{ project_name }}"
-    - "ensure project config directory exists"
-    - "stat rootwrap.d"
-    - "remove rootwrap.d if a directory"
-    - "setup {{ project_name }} rootwrap"
-    - "restart {{ project_name }} services"
-    - "additional handlers"
 
-- meta: flush_handlers
+- name: "python requirements for {{ project_name }}"
+  pip:
+    name: "{{ item.name }}"
+    version: "{{ item.version|default(omit) }}"
+    virtualenv: "{{ openstack_source.virtualenv_base }}/{{ project_name }}"
+    extra_args: "-i {{ openstack_source.pypi_mirror }}"
+  with_items: openstack_source.python_dependencies
+
+- name: "pip install {{ project_name }}"
+  pip:
+    name: "/opt/stack/{{ project_name }}"
+    extra_args: "-i {{ openstack_source.pypi_mirror }}"
+    virtualenv: "{{ openstack_source.virtualenv_base }}/{{ project_name }}"
+  register: pip_result
+  until: pip_result|success
+  retries: 3
+  delay: 10
+  notify:
+    - update ca-certs
+
+- name: setup current symlink if it doesnt exist
+  file: dest=/opt/openstack
+        state=directory
+
+- name: test whether current {{ project_name }} symlink exists
+  shell: 'test -h /opt/openstack/current'
+  register: symlink_exists
+  ignore_errors: True
+
+- name: setup current symlink if it doesnt exist
+  file: src="{{ openstack_source.virtualenv_base }}"
+        dest=/opt/openstack/current
+        state=link
+  when: symlink_exists.rc != 0
+
+- name: ensure project config directory exists
+  file: name="/etc/{{ project_name }}" state=directory
+  when: openstack_source.rootwrap|bool
+
+- name: stat rootwrap.d
+  stat: path="/etc/{{ project_name }}/rootwrap.d"
+  register: st
+  when: openstack_source.rootwrap|bool
+
+- name: remove rootwrap.d if a directory
+  file: dest="/etc/{{ project_name }}/rootwrap.d" state=absent
+  when: openstack_source.rootwrap|bool and st.stat is defined and st.stat.isdir
+
+- name: "setup {{ project_name }} rootwrap"
+  file: src="/opt/stack/{{ project_name }}/etc/{{ project_name }}/rootwrap.d"
+        dest="/etc/{{ project_name }}/rootwrap.d" state=link
+  when: openstack_source.rootwrap|bool
+
+- name: "additional handlers"
+  debug: msg="Running additional handlers"
+  notify: "{{ additional_handlers }}"
+  when: additional_handlers is defined
+
+- name: update-alternatives
+  alternatives: name={{ item }}
+                path={{ openstack_source.virtualenv_base }}/{{ project_name }}/bin/{{ item }}
+                link=/usr/local/bin/{{ item }}
+  with_items: alternatives
+  when: alternatives is defined

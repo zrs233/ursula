@@ -8,11 +8,14 @@ dependencies:
     project_name: cinder
     project_rev: "{{ cinder.source.rev }}"
     rootwrap: True
+    alternatives: "{{ cinder.alternatives }}"
+    system_dependencies: "{{ cinder.source.system_dependencies }}"
+    python_dependencies: "{{ cinder.source.python_dependencies }}"
     when: openstack_install_method == 'source'
   - role: openstack-package
     project_name: cinder
     rootwrap: True
-    package_alternatives: "{{ cinder.package.console_scripts }}"
+    alternatives: "{{ cinder.alternatives }}"
     when: openstack_install_method == 'package'
   - role: ceph-common
     when: ceph.enabled

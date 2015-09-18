@@ -4,14 +4,29 @@ magnum:
   host: 127.0.0.1
   source:
     rev: 'stable/kilo'
+    virtualenv: "/opt/openstack/magnum"
+    python_dependencies:
+      - { name: mysql-python }
+    system_dependencies:
+      - libmysqlclient-dev
   package: ~
   cafile: "{{ ssl.cafile|default('/etc/ssl/certs/ca-certificates.crt') }}"
   logs:
     - paths:
-      - /var/log/magnum/something.log
+      - /var/log/magnum/magnum-api.log
       fields:
         type: openstack
-        tags: magnum,keystone-something
+        tags: magnum,api,api
+    - paths:
+      - /var/log/magnum/magnum-conductor.log
+      fields:
+        type: openstack
+        tags: magnum,conductor
   logging:
     debug: False
     verbose: True
+  alternatives:
+    - magnum-api
+    - magnum-conductor
+    - magnum-db-manage
+    - magnum-template-manage

@@ -1,20 +1,22 @@
 ---
 heat:
   enabled: False
-
   source:
     rev: 'stable/kilo'
-  package:
-    console_scripts:
-      - heat-api
-      - heat-api-cfn
-      - heat-api-cloudwatch
-      - heat-db-setup
-      - heat-engine
-      - heat-keystone-setup
-      - heat-keystone-setup-domain
-      - heat-manage
-
+    python_dependencies:
+      - { name: mysql-python }
+      - { name: functools32 }
+    system_dependencies:
+      - libmysqlclient-dev
+  alternatives:
+    - heat-api
+    - heat-api-cfn
+    - heat-api-cloudwatch
+    - heat-db-setup
+    - heat-engine
+    - heat-keystone-setup
+    - heat-keystone-setup-domain
+    - heat-manage
   logs:
     - paths:
         - /var/log/heat/heat-api.log
