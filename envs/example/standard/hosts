@@ -16,9 +16,5 @@ compute1
 [compute]
 compute1
 
-[ceph_monitors]
-
-[ceph_osds]
-
 [cinder_volume]
 compute1
