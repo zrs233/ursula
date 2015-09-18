@@ -15,35 +15,27 @@ glance:
   store_swift: False
   store_ceph: False
   show_multiple_locations: True
-
   source:
     rev: 'stable/kilo'
-  package:
-    console_scripts:
-      - glance-api
-      - glance-cache-cleaner
-      - glance-cache-manage
-      - glance-cache-prefetcher
-      - glance-cache-pruner
-      - glance-control
-      - glance-manage
-      - glance-registry
-      - glance-replicator
-      - glance-scrubber
-
-  package:
-    console_scripts:
-      - glance-api
-      - glance-cache-cleaner
-      - glance-cache-manage
-      - glance-cache-prefetcher
-      - glance-cache-pruner
-      - glance-control
-      - glance-manage
-      - glance-registry
-      - glance-replicator
-      - glance-scrubber
-
+    python_dependencies:
+      - { name: mysql-python }
+      - { name: functools32 }
+      - { name: ipaddr }
+      - { name: simplegeneric }
+    system_dependencies:
+      - libxml2-dev
+      - libmysqlclient-dev
+  alternatives:
+    - glance-api
+    - glance-cache-cleaner
+    - glance-cache-manage
+    - glance-cache-prefetcher
+    - glance-cache-pruner
+    - glance-control
+    - glance-manage
+    - glance-registry
+    - glance-replicator
+    - glance-scrubber
   logs:
     - paths:
         - /var/log/glance/glance-api.log

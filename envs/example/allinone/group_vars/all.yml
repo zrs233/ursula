@@ -9,8 +9,5 @@ percona:
   replication: False
 
 heat:
- enabled: true
-
-magnum:
   enabled: True
   debug: True

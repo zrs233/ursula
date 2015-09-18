@@ -76,17 +76,6 @@
   # we want this to always be changed so that it can notify the service restart
   tags: db-migrate
 
-- name: setup heat domain and user
-  shell: . /root/stackrc; heat-keystone-setup-domain "{{ secrets.service_password }}" | grep stack_user_domain_id
-  register: heat_domain
-  failed_when: false
-
-- name: configure heat for stack domain
-  template: src=etc/heat/heat_stack_domain.conf} dest=/etc/heat/heat_stack_domain.conf mode=0644
-  when: heat_domain.rc == 0
-  notify:
-    - restart heat services
-
 - meta: flush_handlers
 
 - name: start heat services

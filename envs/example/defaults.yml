@@ -261,7 +261,6 @@ keystone:
     - name: heat
       password: "{{ secrets.service_password }}"
       tenant: service
-
     - name: ironic
       password: "{{ secrets.service_password }}"
       tenant: service
@@ -528,3 +527,6 @@ cinderv2:
 heat-cfn:
   enabled: True
 
+magnum:
+  enabled: True
+  debug: True

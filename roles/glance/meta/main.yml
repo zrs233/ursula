@@ -7,10 +7,13 @@ dependencies:
   - role: openstack-source
     project_name: glance
     project_rev: "{{ glance.source.rev }}"
+    alternatives: "{{ glance.alternatives }}"
+    system_dependencies: "{{ glance.source.system_dependencies }}"
+    python_dependencies: "{{ glance.source.python_dependencies }}"
     when: openstack_install_method == 'source'
   - role: openstack-package
     project_name: glance
-    package_alternatives: "{{ glance.package.console_scripts }}"
+    alternatives: "{{ glance.alternatives }}"
     when: openstack_install_method == 'package'
   - role: collectd-plugin
     when: collectd is defined and collectd.enabled|bool

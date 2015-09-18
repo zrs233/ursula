@@ -40,6 +40,7 @@
 
 - meta: flush_handlers
 
+- name: restart magum services
   service: name={{ item }} state=started
   with_items:
     - magnum-api
@@ -50,6 +51,7 @@
   with_items:
     - 9511
 
+# TODO:
 #- include: monitoring.yml tags=monitoring,common
 
 #- include: logging.yml
