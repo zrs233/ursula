@@ -3,6 +3,10 @@
   command: ifup br-ex
   failed_when: False
 
+- name: restart neutron lbaas agent
+  service: name=neutron-lbaasv2-agent state=restarted_if_running
+  when: restart|default('True') and neutron.lbaas.enable
+
 - name: restart xorp
   service: name=xorp state=restarted sleep=10
   ignore_errors: True
