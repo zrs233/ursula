@@ -55,21 +55,11 @@
 - name: wait for client.admin key exists
   wait_for: path=/etc/ceph/ceph.client.admin.keyring
 
-- name: create openstack pool
-  command: "ceph osd pool create {{ ceph_monitor.openstack_block_storage_pool }} {{ ceph_common.pool_default_pg_num }}"
-  register: poolout
-  changed_when: poolout.stdout | search('created')
-
 - name: create openstack keys
   command: ceph auth get-or-create {{ item.name }} {{ item.value }}
            -o /etc/ceph/ceph.{{ item.name }}.keyring
            creates=/etc/ceph/ceph.{{ item.name }}.keyring
   with_items: ceph_monitor.openstack_keys
-
-- name: delete default 'rbd' pool
-  command: ceph osd pool delete rbd rbd --yes-i-really-really-mean-it
-  register: poolout
-  changed_when: poolout.stdout | search('removed')
 
 - name: drop in a motd script to report status when logging in
   template: src=etc/update-motd.d/92-ceph
