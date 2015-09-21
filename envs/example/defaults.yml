@@ -491,8 +491,10 @@ percona:
 
 common:
   ipmi:
-    enabled: false
+    enabled: False
     state: probe
+  system_tools:
+    mcelog: False
 
 heat:
   enabled: False

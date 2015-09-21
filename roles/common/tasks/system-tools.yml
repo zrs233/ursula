@@ -15,7 +15,6 @@
     - iotop
     - iperf
     - ltrace
-    - mcelog
     - mtr
     - netcat
     - pstack
@@ -29,7 +28,6 @@
     - cdpr
     - sysstat
     - logrotate
-    - ipmitool
     - ntp
     - vlan
 
@@ -37,6 +35,10 @@
   lineinfile: dest=/etc/modules
               line="8021q"
   when: ansible_distribution_version == "14.04"
+
+- name: install mcelog package
+  apt: pkg=mcelog
+  when: common.system_tools.mcelog|bool
 
 # http://www.supermicro.com/support/faqs/faq.cfm?faq=14537
 - name: blacklist mei
