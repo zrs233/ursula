@@ -260,6 +260,19 @@
       tags: ['openstack', 'heat', 'control']
       when: heat.enabled|bool
 
+- name: magnum code and config
+  gather_facts: force
+  hosts: controller
+  roles:
+    - role: openstack-database
+      database_name: magnum
+      tags: ['openstack', 'magnum', 'control']
+      when: magnum.enabled|bool
+
+    - role: magnum
+      tags: ['openstack', 'magnum', 'control']
+      when: magnum.enabled|bool
+
 - name: ironic control plane
   gather_facts: force
   hosts: controller

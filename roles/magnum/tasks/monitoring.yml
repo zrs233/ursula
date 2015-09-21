@@ -1,0 +1,8 @@
+---
+- name: magnum-api process check
+  sensu_process_check: service=magnum-api
+  notify: restart sensu-client
+
+- name: magnum-conductor process check
+  sensu_process_check: service=magnum-conductor
+  notify: restart sensu-client
