@@ -10,4 +10,5 @@ client:
     - python-heatclient
     - python-ironicclient
     - python-swiftclient
+    - python-magnumclient
 

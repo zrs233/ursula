@@ -62,6 +62,7 @@ endpoints:
   heat-cfn: "{{ fqdn }}"
   ironic: "{{ fqdn }}"
   swift: "{{ swift.haproxy_vip }}"
+  magnum: "{{ fqdn }}"
   identity_uri: https://{{ fqdn }}:35358
   auth_uri: https://{{ fqdn }}:5001/v2.0
 
@@ -119,7 +120,7 @@ cinder:
   enabled: True
   volume_type: file
   volume_file: /opt/stack/cinder-volumes
-  volume_file_size: 5G
+  volume_file_size: 20G
   #fixed_key: 6a5c55db5e250f234b6af7807dafda77433dddcf372b6d04801a45f578a35aa7
   logging:
     debug: True
@@ -240,7 +241,11 @@ keystone:
     - name: heat
       password: "{{ secrets.service_password }}"
       tenant: service
+
     - name: ironic
+      password: "{{ secrets.service_password }}"
+      tenant: service
+    - name: magnum
       password: "{{ secrets.service_password }}"
       tenant: service
     - name: "{{ monitoring.openstack.user.username }}"
@@ -278,6 +283,9 @@ keystone:
       tenant: service
       role: admin
     - user: heat
+      tenant: service
+      role: service
+    - user: magnum
       tenant: service
       role: service
     - user: ironic
@@ -356,6 +364,12 @@ keystone:
       public_url: https://{{ endpoints.swift }}:{{ swift.haproxy_port}}/v1/%(tenant_id)s
       internal_url: https://{{ endpoints.swift }}:{{ swift.haproxy_port}}/v1/%(tenant_id)s
       admin_url: https://{{ endpoints.swift }}:{{ swift.haproxy_port}}/v1/%(tenant_id)s
+    - name: magnum
+      type: container
+      description: 'Magnum Container Service'
+      public_url: https://{{ endpoints.main }}:9511
+      internal_url: https://{{ endpoints.main }}:9511
+      admin_url: https://{{ endpoints.main }}:9511
 
 ssl:
   crt: |
@@ -467,6 +481,16 @@ heat:
   logging:
     debug: True
     verbose: True
+
+magnum:
+  enabled: False
+  logging:
+    debug: True
+    verbose: True
+  images:
+    - name: fedora-21-atomic-3
+      url: https://fedorapeople.org/groups/magnum/fedora-21-atomic-3.qcow2
+      distro: fedora-atomic
 
 ironic:
   enabled: False

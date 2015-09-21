@@ -1,0 +1,88 @@
+---
+- name: magnum user
+  user: name=magnum comment=magnum shell=/bin/false system=yes
+        home=/nonexistent createhome=no
+
+- name: magnum config dir
+  file: dest=/etc/magnum state=directory
+
+- name: magnum log dir
+  file: dest=/var/log/magnum state=directory mode=0755 owner=magnum
+        group=magnum
+
+- name: install magnum service
+  upstart_service: name={{ item }} user=magnum cmd=/usr/local/bin/{{ item }}
+                   config_dirs=/etc/magnum
+  with_items:
+    - magnum-api
+    - magnum-conductor
+
+- name: configure magnum
+  template: src={{ item }} dest=/etc/magnum/ mode=0644
+  with_fileglob: ../templates/etc/magnum/*
+  notify:
+    - restart magnum services
+
+- name: stop magnum service before db sync
+  service: name={{ item }} state=stopped
+  with_items:
+    - magnum-api
+    - magnum-conductor
+  when: database_create.changed or force_sync|default('false')|bool
+  tags: db-migrate
+
+- name: sync magnum database
+  command: magnum-db-manage upgrade
+  when: database_create.changed or force_sync|default('false')|bool
+  run_once: true
+  changed_when: true
+  # we want this to always be changed so that it can notify the service restart
+  notify: restart magnum services
+  tags: db-migrate
+
+- meta: flush_handlers
+
+- name: start magnum services
+  service: name={{ item }} state=started
+  with_items:
+    - magnum-api
+    - magnum-conductor
+
+- name: permit access to magnum
+  ufw: rule=allow to_port={{ item }} proto=tcp
+  with_items:
+    - 9511
+
+- name: container images
+  glance_image: name={{ item.name }}
+                copy_from={{ item.url }}
+                container_format=bare
+                disk_format=qcow2
+                auth_url={{ endpoints.auth_uri }}
+                login_tenant_name=admin
+                login_username=provider_admin
+                login_password={{ secrets.provider_admin_password }}
+                is_public=yes
+                timeout=12000
+  with_items: magnum.images
+  run_once: true
+
+- name: update os_distro for images. TODO in ansible 2, set with properties option in os_image (replaces glance_image above)
+  shell: "glance --os-image-api-version 1 \
+                 --os-auth-url {{ endpoints.auth_uri }} \
+                 --os-tenant-name admin \
+                 --os-username provider_admin \
+                 --os-password {{ secrets.provider_admin_password }} \
+                 image-update --property 'os_distro={{ item.distro }}' \
+                 {{ item.name }} <&-"
+  with_items: magnum.images
+  run_once: true
+
+- include: monitoring.yml tags=monitoring,common
+  when: monitoring.enabled|default('True')|bool
+
+- include: logging.yml
+  tags:
+    - logrotate
+    - logging
+  when: logging.enabled|default('True')|bool
