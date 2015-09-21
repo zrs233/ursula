@@ -116,3 +116,28 @@
 
 - include: monitoring.yml tags=monitoring,common
   when: monitoring.enabled|default('True')|bool
+
+
+- name: Delete existing policy files
+  command: rm "{{ horizon.virtualenv }}/lib/python2.7/site-packages/openstack_dashboard/conf/{{ item }}_policy.json"
+  with_items:
+     - keystone
+     - nova
+     - cinder
+     - glance
+     - heat
+     - neutron
+     - ceilometer
+
+- name: Create symbolic links for policy files
+  file: src="/etc/{{ item }}/policy.json"
+        dest="{{ horizon.virtualenv }}/lib/python2.7/site-packages/openstack_dashboard/conf/{{ item }}_policy.json"
+        state=link
+  with_items:
+     - keystone
+     - nova
+     - cinder
+     - glance
+     - heat
+     - neutron
+     - ceilometer
