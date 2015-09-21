@@ -4,7 +4,7 @@ collectd:
   key_url: "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xE97C3D97792BD34E"
   client_name: "{{ ansible_hostname }}"
   plugin_conf_dir: /etc/collectd/plugins
-  interval: 10
+  interval: 60
   timeout: 2
   threads: 5
   graphite_prefix: "stats."

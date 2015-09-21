@@ -87,6 +87,11 @@ def main():
         desired_pg_count = 2**i
         i += 1
 
+    # if desired_pg_count is > 32 pgs/osd, ceph throws a warning
+    # common protocol is to divide by 2
+    if (desired_pg_count / osds) > 32:
+        desired_pg_count = desired_pg_count / 2
+
     # does the pool exist already?
     cmd = ['ceph', 'osd', 'pool', 'get', pool_name, 'pg_num']
     rc, out, err = module.run_command(cmd, check_rc=False)
