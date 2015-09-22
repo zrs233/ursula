@@ -1,0 +1,42 @@
+---
+- name: install mongodb packages
+  apt: pkg={{ item }} state=installed
+  with_items:
+    - mongodb-org-server={{ mongodb.version }}
+    - mongodb-org-shell={{ mongodb.version }}
+#  register: mongo_installed
+
+- name: install mongodb config files
+  template: src=etc/mongodb/mongod.conf dest=/etc/mongod.conf mode=0644
+  notify:
+    - restart mongod service
+
+- meta: flush_handlers
+
+- name: start mongod service
+  service: name=mongod state=started
+
+- include: primary.yml
+#  run_once: true
+  when: mongodb_primary==true #and mongo_installed.changed
+
+- name: add mongodb secondary servers to replica set
+  command: mongo --host {{ endpoints.mongodb }} --eval rs.add(\"{{ primary_ip ~ ":" ~ mongodb.port | string}}\")
+  when: mongodb_primary==false and inventory_hostname in groups['mongo_db'] #and mongo_installed.changed
+
+- name: add mongodb arbiter to replica set
+  command: mongo --host {{ endpoints.mongodb }} --eval rs.addArb(\"{{ primary_ip ~ ":" ~ mongodb.port | string}}\")
+  when: mongodb_primary==false and inventory_hostname in groups['mongo_arbiter'] #and mongo_installed.changed
+
+- include: monitoring.yml
+  tags:
+    - monitoring
+    - common
+  when: monitoring.enabled|default('True')|bool
+
+- include: logging.yml
+  tags:
+    - logrotate
+    - logging
+  when: logging.enabled|default('True')|bool
+

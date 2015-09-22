@@ -1,0 +1,11 @@
+---
+- name: ceilometer process check
+  sensu_process_check: service={{ item }}
+  with_items:
+    - ceilometer-api
+    - ceilometer-collector
+    - ceilometer-agent-notification
+    - ceilometer-agent-central
+    - ceilometer-alarm-evaluator
+    - ceilometer-alarm-notifier
+  notify: restart sensu-client

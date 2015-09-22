@@ -1,0 +1,58 @@
+---
+ceilometer:
+  enabled: False
+  source:
+    rev: 'stable/kilo'
+  package:
+    console_scripts:
+      - ceilometer-api
+      - ceilometer-collector
+      - ceilometer-agent-notification
+      - ceilometer-agent-central
+      - ceilometer-alarm-evaluator
+      - ceilometer-alarm-notifier
+      - ceilometer-agent-compute
+  purge_frequency: 604800
+  pymongo_version: '3.0.3'
+  virtualenv: /opt/openstack/current/ceilometer
+#  virtualenv: /opt/stack/ceilometer/.venv
+  logs:
+    - paths:
+        - /var/log/ceilometer/api.log
+      fields:
+        type: openstack
+        tags: ceilometer,ceilometer-api
+    - paths:
+        - /var/log/ceilometer/agent-notification.log
+      fields:
+        type: openstack
+        tags: ceilometer,ceilometer-agent-notification
+    - paths:
+        - /var/log/ceilometer/alarm-evaluator.log
+      fields:
+        type: openstack
+        tags: ceilometer,ceilometer-alarm-evaluator
+    - paths:
+        - /var/log/ceilometer/alarm-notifier.log
+      fields:
+        type: openstack
+        tags: ceilometer,ceilometer-alarm-notifier
+    - paths:
+        - /var/log/ceilometer/central.log
+      fields:
+        type: openstack
+        tags: ceilometer,ceilometer-agent-central
+    - paths:
+        - /var/log/ceilometer/collector.log
+      fields:
+        type: openstack
+        tags: ceilometer,ceilometer-collector
+    - paths:
+        - /var/log/ceilometer/compute.log
+      fields:
+        type: openstack
+        tags: ceilometer,ceilometer-agent-compute
+  logging:
+    debug: False
+    verbose: False
+  cafile: "{{ ssl.cafile|default('/etc/ssl/certs/ca-certificates.crt') }}"

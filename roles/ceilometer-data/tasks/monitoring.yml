@@ -1,0 +1,4 @@
+---
+- name: ceilometer-agent-compute process check
+  sensu_process_check: service=ceilometer-agent-compute
+  notify: restart sensu-client
