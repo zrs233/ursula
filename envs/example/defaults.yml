@@ -95,6 +95,51 @@ openstack:
   pypi_mirror: https://pypi.python.org/simple/
   git_mirror:  https://github.com/openstack
   git_update: yes
+  pypi_mirror: https://pypi-mirror.openstack.blueboxgrid.com/root/pypi
+  easy_install_mirror: https://pypi-mirror.openstack.blueboxgrid.com/root/pypi/+simple
+  pip_trusted: pypi-mirror.openstack.blueboxgrid.com
+  gem_sources:
+    - https://gem-mirror.openstack.blueboxgrid.com
+  git_mirror:  https://github.com/openstack
+  git_update: yes
+  ubuntu_mirror: https://apt-mirror.openstack.blueboxgrid.com/archive.ubuntu.com/ubuntu
+
+apt_repos:
+  docker:
+    repo: https://apt-mirror.openstack.blueboxgrid.com/docker/ubuntu
+    key_url: https://apt-mirror.openstack.blueboxgrid.com/keys/docker.key
+  bbg_ubuntu:
+    repo: https://apt-mirror.openstack.blueboxgrid.com/bbg_ubuntu/ubuntu
+    key_url: https://apt-mirror.openstack.blueboxgrid.com/keys/bbg_ubuntu.key
+  blueboxcloud_giftwrap:
+    repo: https://apt-mirror.openstack.blueboxgrid.com/blueboxcloud_giftwrap/blueboxcloud/giftwrap/ubuntu
+    key_url: https://apt-mirror.openstack.blueboxgrid.com/keys/blueboxcloud_giftwrap.key
+  hwraid:
+    repo: https://apt-mirror.openstack.blueboxgrid.com/hwraid/ubuntu
+    key_url: https://apt-mirror.openstack.blueboxgrid.com/keys/hwraid.key
+  sensu:
+    repo: https://apt-mirror.openstack.blueboxgrid.com/sensu/apt
+    key_url: https://apt-mirror.openstack.blueboxgrid.com/keys/sensu.key
+  haproxy:
+    repo: https://apt-mirror.openstack.blueboxgrid.com/haproxy/vbernat/haproxy-1.5/ubuntu
+    key_url: https://apt-mirror.openstack.blueboxgrid.com/keys/haproxy.key
+  bbg_openstack_ppa:
+    repo: https://apt-mirror.openstack.blueboxgrid.com/bbg_openstack_ppa/blueboxgroup/openstack/ubuntu
+    key_url: https://apt-mirror.openstack.blueboxgrid.com/keys/bbg_openstack_ppa.key
+  percona:
+    repo: https://apt-mirror.openstack.blueboxgrid.com/percona/apt
+    key_url: https://apt-mirror.openstack.blueboxgrid.com/keys/percona.key
+  rabbitmq:
+    repo: https://apt-mirror.openstack.blueboxgrid.com/rabbitmq/debian
+    key_url: https://apt-mirror.openstack.blueboxgrid.com/keys/rabbitmq.key
+  cloud_archive:
+    repo: https://apt-mirror.openstack.blueboxgrid.com/cloud_archive/ubuntu
+  erlang:
+    repo: https://apt-mirror.openstack.blueboxgrid.com/erlang/debian
+    key_url: https://apt-mirror.openstack.blueboxgrid.com/keys/erlang.key
+  ceph:
+    repo: https://apt-mirror.openstack.blueboxgrid.com/ceph/debian-
+    key_url: https://apt-mirror.openstack.blueboxgrid.com/keys/ceph.key
 
 client:
   self_signed_cert: true
@@ -110,6 +155,8 @@ nova:
   logging:
     debug: True
     verbose: True
+  novnc_method: file
+  novnc_url: https://file-mirror.openstack.blueboxgrid.com/novnc/novnc-0.5.1.tar.gz
 
 ceph:
   enabled: false
@@ -223,7 +270,7 @@ glance:
     verbose: True
   images:
     - name: cirros
-      url: http://download.cirros-cloud.net/0.3.3/cirros-0.3.3-x86_64-disk.img
+      url: https://file-mirror.openstack.blueboxgrid.com/cloud-images/cirros-0.3.3-x86_64-disk.img
 
 keystone:
   token_expiration_in_seconds: 86400
@@ -520,6 +567,10 @@ common:
     state: probe
   system_tools:
     mcelog: False
+  ursula_monitoring:
+    method: tar # git|tar
+    tar_url: https://file-mirror.openstack.blueboxgrid.com/ursula-monitoring/master.tar.gz
+    tar_version: master
 
 heat:
   enabled: False
@@ -550,6 +601,8 @@ haproxy:
 
 logging:
   enabled: True
+  download:
+    url: https://file-mirror.openstack.blueboxgrid.com/logstash/logstash-forwarder_0.3.1_amd64.deb
 
 keystonev3:
   enabled: True
@@ -563,3 +616,7 @@ heat-cfn:
 magnum:
   enabled: True
   debug: True
+
+horizon:
+  logo_url: https://file-mirror.openstack.blueboxgrid.com/horizon-branding/bluebox-u1.1.x.png
+  favicon_url: https://file-mirror.openstack.blueboxgrid.com/horizon-branding/bluebox.ico

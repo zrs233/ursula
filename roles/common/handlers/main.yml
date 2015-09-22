@@ -18,3 +18,6 @@
 
 - name: load sensors
   shell: /usr/sbin/sensors-detect < /dev/null
+
+- name: update apt index
+  apt: update_cache=yes

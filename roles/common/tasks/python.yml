@@ -1,4 +1,41 @@
 ---
+- name: update pip
+  pip: name=pip version={{ common.pip_version }}
+       extra_args='-i {{ openstack.pypi_mirror }}/+simple'
+  when: ansible_distribution_version == "12.04" and openstack.pypi_mirror is defined
+
+- name: update pip
+  pip: name=pip version={{ common.pip_version }}
+       extra_args='-i {{ openstack.pypi_mirror }}/+simple'
+  when: ansible_distribution_version != "12.04"
+
+- name: root user pip config directory
+  file: dest=/root/.pip state=directory
+
+- name: pip config file
+  template: src=etc/pip.conf dest=/root/.pip/pip.conf
+  when: openstack.pypi_mirror is defined
+
+- name: easyinstall config file
+  template: src=etc/pydistutils.cfg dest=/root/.pydistutils.cfg
+  when: openstack.easy_install_mirror is defined
+
+- name: update pip
+  pip: name=pip version={{ common.pip_version }}
+       extra_args='-i {{ openstack.pypi_mirror }}/+simple'
+  when: ansible_distribution_version == "12.04" and openstack.pypi_mirror is not defined
+
+- name: uninstall python-setuptools
+  apt: pkg=python-setuptools state=absent
+  when: common.setuptools_version != "system"
+
+- name: install pip setuptools
+  pip: name=setuptools version={{ common.setuptools_version }}
+  when: common.setuptools_version != "system"
+
+- name: pin alembic to 0.7.0
+  pip: name=alembic version=0.7.0
+
 - name: install additional python packages
   git: repo={{ item.repo }} dest=/opt/stack/{{ item.name }}
        version={{ item.rev }} accept_hostkey=True

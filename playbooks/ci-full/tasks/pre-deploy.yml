@@ -40,8 +40,6 @@
   - name: set locale to en_US
     command: /usr/sbin/update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
 
-  - include: ../../../roles/common/tasks/proxy.yml
-
   - name: add pip
     apt:
       update_cache: yes
@@ -94,8 +92,6 @@
       - linux-tools-lts-trusty
     when: neutron.plugin == 'ml2'
     notify: restart machine
-
-  - include: ../../../roles/common/tasks/noproxy.yml
 
   - meta: flush_handlers
 

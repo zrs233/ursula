@@ -8,12 +8,14 @@
     - role: collectd-client
       tags: ['collectd-client','collectd']
       when: collectd.enabled|default('False')|bool
+  environment: "{{ env_vars|default({}) }}"
 
 - name: security and errata
   hosts: all
   roles:
     - role: security_errata
       tags: ['common', 'security', 'errata']
+  environment: "{{ env_vars|default({}) }}"
 
 - name: install logging and dependencies
   hosts: all
@@ -21,6 +23,7 @@
     - role: logging
       tags: ['common', 'logging']
       when: logging.enabled|default('True')|bool
+  environment: "{{ env_vars|default({}) }}"
 
 - name: setup IPv6 router advertisements
   gather_facts: force
@@ -28,6 +31,7 @@
   roles:
     - role: ipv6ra
       tags: ['infra']
+  environment: "{{ env_vars|default({}) }}"
 
 - name: rabbitmq used by openstack
   gather_facts: force
@@ -36,6 +40,7 @@
   roles:
     - role: rabbitmq
       tags: ['infra', 'rabbitmq']
+  environment: "{{ env_vars|default({}) }}"
 
 - name: install common percona components and gather facts
   gather_facts: force
@@ -43,6 +48,7 @@
   roles:
     - role: percona-common
       tags: ['infra', 'percona', 'percona-facts']
+  environment: "{{ env_vars|default({}) }}"
 
 - name: install percona on primary
   gather_facts: force
@@ -52,6 +58,7 @@
   roles:
     - role: percona-server
       tags: ['infra', 'percona', 'percona-primary']
+  environment: "{{ env_vars|default({}) }}"
 
 - name: install percona on secondaries
   gather_facts: force
@@ -61,6 +68,7 @@
   roles:
     - role: percona-server
       tags: ['infra', 'percona', 'percona-secondary']
+  environment: "{{ env_vars|default({}) }}"
 
 - name: install percona arbiter
   gather_facts: force
@@ -71,12 +79,14 @@
 
     - role: percona-arbiter
       tags: ['infra', 'percona']
+  environment: "{{ env_vars|default({}) }}"
 
 - name: configure percona backups on primary
   hosts: db[0]
   roles:
     - role: percona-backup
       tags: ['infra', 'percona']
+  environment: "{{ env_vars|default({}) }}"
 
 - name: install mongodb server
   gather_facts: force
@@ -100,6 +110,7 @@
   roles:
     - role: memcached
       tags: ['infra']
+  environment: "{{ env_vars|default({}) }}"
 
 - name: openvswitch
   hosts: network:compute
@@ -107,6 +118,7 @@
     - role: openvswitch
       when: neutron.plugin == 'ovs'
       tags: ['infra', 'data', 'openvswitch']
+  environment: "{{ env_vars|default({}) }}"
 
 - name: controller haproxy
   gather_facts: force
@@ -116,12 +128,14 @@
       haproxy_type: openstack
       tags: ['haproxy', 'infra']
       when: haproxy.enabled|bool
+  environment: "{{ env_vars|default({}) }}"
 
 - name: iptables
   hosts: network
   roles:
     - role: iptables
       tags: ['iptables', 'infra']
+  environment: "{{ env_vars|default({}) }}"
 
 - name: ceph monitors
   hosts: ceph_monitors
@@ -141,6 +155,7 @@
   roles:
     - role: client
       tags: ['openstack', 'client']
+  environment: "{{ env_vars|default({}) }}"
 
 - name: keystone code and config
   gather_facts: force
@@ -151,6 +166,7 @@
       tags: ['openstack', 'keystone', 'control']
     - role: keystone
       tags: ['openstack', 'keystone', 'control']
+  environment: "{{ env_vars|default({}) }}"
 
 - name: keystone setup
   hosts: controller[0]
@@ -159,6 +175,7 @@
       keystone_configured: false
       tags: ['openstack', 'setup', 'keystone-setup']
       #when: not keystone_configured
+  environment: "{{ env_vars|default({}) }}"
 
 - name: glance code and config
   gather_facts: force
@@ -167,9 +184,9 @@
     - role: openstack-database
       database_name: glance
       tags: ['openstack', 'glance', 'control', 'ceph']
-
     - role: glance
       tags: ['openstack', 'glance', 'control', 'ceph']
+  environment: "{{ env_vars|default({}) }}"
 
 - name: nova control plane
   gather_facts: force
@@ -177,6 +194,7 @@
   roles:
     - role: nova-control
       tags: ['openstack', 'nova', 'control']
+  environment: "{{ env_vars|default({}) }}"
 
 - name: nova data plane
   gather_facts: force
@@ -185,6 +203,7 @@
     - role: nova-data
       tags: ['openstack', 'nova', 'data']
       when: not ironic.enabled|bool
+  environment: "{{ env_vars|default({}) }}"
 
 - name: cinder control plane
   gather_facts: force
@@ -193,6 +212,7 @@
     - role: cinder-control
       tags: ['openstack', 'cinder', 'control', 'ceph']
       when: cinder.enabled|bool
+  environment: "{{ env_vars|default({}) }}"
 
 - name: cinder data plane
   gather_facts: force
@@ -201,6 +221,7 @@
     - role: cinder-data
       tags: ['openstack', 'cinder', 'data', 'cinder-data', 'ceph']
       when: cinder.enabled|bool
+  environment: "{{ env_vars|default({}) }}"
 
 - name: ceph compute
   hosts: compute
@@ -215,6 +236,7 @@
   roles:
     - role: neutron-control
       tags: ['openstack', 'neutron', 'control']
+  environment: "{{ env_vars|default({}) }}"
 
 - name: neutron core data plane
   gather_facts: force
@@ -222,18 +244,21 @@
   roles:
     - role: neutron-data
       tags: ['openstack', 'neutron', 'data']
+  environment: "{{ env_vars|default({}) }}"
 
 - name: neutron network services data plane
   hosts: network
   roles:
     - role: neutron-data-network
       tags: ['openstack', 'neutron', 'data']
+  environment: "{{ env_vars|default({}) }}"
 
 - name: horizon code and config
   hosts: controller
   roles:
     - role: horizon
       tags: ['openstack', 'horizon', 'control']
+  environment: "{{ env_vars|default({}) }}"
 
 - name: swift code and config
   gather_facts: force
@@ -243,24 +268,22 @@
     - role: haproxy
       haproxy_type: swift
       tags: ['openstack', 'swift', 'control', 'haproxy', 'infra']
-
     - role: swift-object
       tags: ['openstack', 'swift', 'data']
-
     - role: swift-account
       tags: ['openstack', 'swift', 'data']
-
     - role: swift-container
       tags: ['openstack', 'swift', 'data']
-
     - role: swift-proxy
       tags: ['openstack', 'swift', 'control']
+  environment: "{{ env_vars|default({}) }}"
 
 - name: swift bootstrap rings
   hosts: swiftnode_primary
   roles:
     - role: swift-ring
       tags: ['openstack', 'swift', 'swift-ring', 'data']
+  environment: "{{ env_vars|default({}) }}"
 
 - name: heat code and config
   gather_facts: force
@@ -270,10 +293,10 @@
       database_name: heat
       tags: ['openstack', 'heat', 'control']
       when: heat.enabled|bool
-
     - role: heat
       tags: ['openstack', 'heat', 'control']
       when: heat.enabled|bool
+  environment: "{{ env_vars|default({}) }}"
 
 - name: ceilometer control plane
   gather_facts: force
@@ -310,6 +333,7 @@
     - role: ironic-control
       tags: ['openstack', 'ironic', 'control']
       when: ironic.enabled|bool
+  environment: "{{ env_vars|default({}) }}"
 
 - name: ironic data plane
   hosts: controller
@@ -317,18 +341,21 @@
     - role: ironic-data
       tags: ['openstack', 'ironic', 'data']
       when: ironic.enabled|bool
+  environment: "{{ env_vars|default({}) }}"
 
 - name: openstack base setup
   hosts: controller
   roles:
     - role: 'openstack-setup'
       tags: ['openstack-setup', 'openstack', 'setup']
+  environment: "{{ env_vars|default({}) }}"
 
 - name: openstack network setup
   hosts: network
   roles:
     - role: 'openstack-network'
       tags: ['openstack', 'setup', 'openstack-network']
+  environment: "{{ env_vars|default({}) }}"
 
 - name: extra neutron setup
   hosts: network:compute
@@ -336,9 +363,4 @@
     - name: restart neutron-openvswitch-agent to ensure VXLAN mesh is configured
       service: name=neutron-openvswitch-agent state=restarted
       when: neutron.plugin == 'ovs'
-
-- name: cleanup ansible proxy
-  hosts: all
-  tasks:
-    - include: roles/common/tasks/noproxy.yml
-      when: common.ansible_proxy is defined
+  environment: "{{ env_vars|default({}) }}"
