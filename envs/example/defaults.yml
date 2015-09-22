@@ -356,7 +356,6 @@ keystone:
       public_url: "{{ endpoints.ironic.url.public }}"
       internal_url: "{{ endpoints.ironic.url.internal }}"
       admin_url: "{{ endpoints.ironic.url.admin }}"
-    - name: ironic
     - name: swift
       type: object-store       
       description: 'Object Storage Service'
