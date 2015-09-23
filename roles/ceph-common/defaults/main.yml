@@ -57,7 +57,6 @@ ceph_common:
   #
   monitor_interface: bond0
   mon_osd_down_out_interval: 600
-  mon_osd_min_down_reporters: 7 # number of OSDs per host + 1
   mon_clock_drift_allowed: .15
   mon_clock_drift_warn_backoff: 30
   mon_osd_full_ratio: .95
@@ -68,7 +67,7 @@ ceph_common:
 
   ## OSD options
   #
-  journal_size: 5000 # 5 GB
+  journal_size: 10000 # 10 GB
   pool_name: default
   pool_default_size: 3
   pool_default_min_size: 2
