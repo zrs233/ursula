@@ -34,7 +34,7 @@ def main():
             plugin_dir=dict(default='/etc/sensu/plugins', required=False),
             check_dir=dict(default='/etc/sensu/conf.d/checks', required=False),
             prefix=dict(default='', required=False),
-            interval=dict(default=20, reuired=False),
+            interval=dict(default=60, required=False),
             state=dict(default='present', required=False, choices=['present','absent'])
         )
     )
