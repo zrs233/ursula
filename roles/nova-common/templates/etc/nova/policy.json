@@ -33,7 +33,6 @@
     "compute:volume_snapshot_create": "is_admin:True",
     "compute:volume_snapshot_delete": "is_admin:True",
 
-
     "compute:v3:servers:start": "rule:admin_or_projAdmin_or_cloudAdmin_or_owner",
     "compute:v3:servers:stop": "rule:admin_or_projAdmin_or_cloudAdmin_or_owner",
     "compute_extension:v3:os-access-ips:discoverable": "",
@@ -259,8 +258,6 @@
     "compute_extension:v3:os-server-groups:discoverable": "",
     "compute_extension:services": "rule:admin_api",
     "compute_extension:services": "rule:admin_or_projAdmin_or_cloudAdmin",
-
-
     "compute_extension:v3:os-services": "rule:admin_api",
     "compute_extension:v3:os-services:discoverable": "",
     "compute_extension:v3:server-metadata:discoverable": "",
@@ -319,13 +316,11 @@
     "volume:get_snapshot": "",
     "volume:get_all_snapshots": "",
 
-
     "volume_extension:types_manage": "rule:admin_api",
     "volume_extension:types_extra_specs": "rule:admin_api",
     "volume_extension:volume_admin_actions:reset_status": "rule:admin_or_projAdmin_or_cloudAdmin",
     "volume_extension:snapshot_admin_actions:reset_status": "rule:admin_api",
     "volume_extension:volume_admin_actions:force_delete": "rule:admin_or_projAdmin_or_cloudAdmin",
-
 
     "network:get_all": "",
     "network:get": "",
