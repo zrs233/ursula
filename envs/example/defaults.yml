@@ -272,7 +272,7 @@ keystone:
       tenant: service
     - name: cloud_admin
       password: "{{ secrets.cloud_admin_password }}"
-      tenant: admin
+      tenant: demo
     - name: project_admin
       password: "{{ secrets.project_admin_password }}"
       tenant: demo
@@ -317,7 +317,7 @@ keystone:
       tenant: service
       role: admin
     - user: cloud_admin
-      tenant: admin
+      tenant: demo
       role: cloud_admin
     - user: project_admin
       tenant: demo
