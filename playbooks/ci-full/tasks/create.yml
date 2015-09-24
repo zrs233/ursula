@@ -34,7 +34,7 @@
         security_groups: "{{ testenv_security_groups }}"
         wait: yes
         timeout: 200
-        flavor: 3
+        flavor: 4
         nics:
           - net-name: internal
         auto_floating_ip: false
