@@ -41,7 +41,7 @@
 - name: create heat trusts roles
   keystone_user: role={{ item }}
                  login_user=provider_admin
-                 endpoint="{{ endpoints.keystone.url.port.admin }}/{{ endpoints.keystone.version }}/"
+                 endpoint="{{ endpoints.keystone.url.admin }}/{{ endpoints.keystone.version }}/"
                  login_password="{{ secrets.provider_admin_password }}"
                  login_tenant_name=admin
   with_items: 

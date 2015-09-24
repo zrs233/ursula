@@ -3,8 +3,6 @@ glance:
   api_workers: 5
   rbd_store_chunk_size: 8
   registry_workers: 5
-#  backend_api_port: 9393
-#  haproxy_api_port: 9292
   sync:
     enabled: true
     listening_port: 25307
