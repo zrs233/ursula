@@ -23,16 +23,7 @@ required to run `ursula`:
 * libxslt-dev
 * libffi-dev
 
-### RHEL System Dependencies
-
-The following packages are needed on Red Hat Enterprise Linux environments:
-
-* python-pip
-* python-devel
-* python-virtualenvwrapper
-* libxml2-devel
-* libxslt-devel
-* libffi-devel
+For OS-specific installation differences, please see the [installing-ursula](https://github.com/blueboxgroup/ursula/blob/master/doc/installing-ursula.md) instructions for more details.
 
 ## Python Environment
 
@@ -45,8 +36,9 @@ up a `virtualenv` for ursula.
 
 ```bash
 $ pip install virtualenvwrapper
+$ pip install -U pip virtualenv
 $ mkvirtualenv --no-wheel ursula
-$ source /usr/local/bin/virtualenvwrapper.sh  # or /usr/bin/virtualenvwrapper.sh on RHEL
+$ source /usr/local/bin/virtualenvwrapper.sh
 ```
 
 You will want to add `source /usr/local/bin/virtualenvwrapper.sh` to your shell startup file, changing the path to virtualenvwrapper.sh
@@ -56,8 +48,6 @@ depending on where it was installed by pip.
 echo " " >> .bash_profile (for OSX; .bashrc for various linux flavors)
 echo "#sourcing statement for virtualenvwrapper" >> .bash_profile
 echo "source /usr/local/bin/virtualenvwrapper.sh" >> .bash_profile
-# Or the RHEL path is this:
-echo "source /usr/bin/virtualenvwrapper.sh" >> /etc/bashrc  # or ~/.bashrc
 ```
 
 From now on to work with ursula you can run `$ workon ursula` to
