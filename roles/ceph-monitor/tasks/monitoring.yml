@@ -1,0 +1,4 @@
+---
+- name: ceph status check
+  sensu_check: name=check-ceph-status plugin=check-ceph.rb
+  notify: restart sensu-client

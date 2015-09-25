@@ -1,5 +1,6 @@
 ---
 dependencies:
+  - role: monitoring-common
   - role: apt-repos
     repos:
       - repo: 'deb {{ apt_repos.ceph.repo }}{{ ceph_common.stable_release }}/ {{ ansible_lsb.codename }} main'

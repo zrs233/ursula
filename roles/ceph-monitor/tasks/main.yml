@@ -67,3 +67,9 @@
             owner=root
             group=root
             mode=0755
+
+- include: monitoring.yml
+  tags:
+    - monitoring
+    - common
+  when: monitoring.enabled|default('True')|bool
