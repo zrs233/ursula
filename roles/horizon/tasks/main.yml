@@ -125,9 +125,7 @@
      - nova
      - cinder
      - glance
-     - heat
      - neutron
-     - ceilometer
 
 - name: Create symbolic links for policy files
   file: src="/etc/{{ item }}/policy.json"
@@ -138,6 +136,4 @@
      - nova
      - cinder
      - glance
-     - heat
      - neutron
-     - ceilometer
