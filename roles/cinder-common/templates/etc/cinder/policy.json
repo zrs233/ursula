@@ -4,8 +4,11 @@
     "default": "rule:admin_or_owner",
 
     "admin_api": "is_admin:True",
+    "admin_or_cloudadmin": "role:admin or role:cloud_admin",
 
     "volume:create": "",
+    "volume:delete": "",
+    "volume:get": "",
     "volume:get_all": "",
     "volume:get_volume_metadata": "",
     "volume:get_volume_admin_metadata": "rule:admin_api",
@@ -19,13 +22,16 @@
 
     "volume_extension:types_manage": "rule:admin_api",
     "volume_extension:types_extra_specs": "rule:admin_api",
+    "volume_extension:volume_type_access": "",
+    "volume_extension:volume_type_access:addProjectAccess": "rule:admin_api",
+    "volume_extension:volume_type_access:removeProjectAccess": "rule:admin_api",
     "volume_extension:volume_type_encryption": "rule:admin_api",
     "volume_extension:volume_encryption_metadata": "rule:admin_or_owner",
     "volume_extension:extended_snapshot_attributes": "",
     "volume_extension:volume_image_metadata": "",
 
     "volume_extension:quotas:show": "",
-    "volume_extension:quotas:update": "rule:admin_api",
+    "volume_extension:quotas:update": "rule:admin_or_cloudadmin",
     "volume_extension:quota_classes": "",
 
     "volume_extension:volume_admin_actions:reset_status": "rule:admin_api",
@@ -45,7 +51,7 @@
 
     "volume_extension:volume_manage": "rule:admin_api",
     "volume_extension:volume_unmanage": "rule:admin_api",
-
+    "volume_extension:services": "rule:admin_api",
     "volume:services": "rule:admin_api",
 
     "volume:create_transfer": "",
@@ -56,25 +62,27 @@
     "volume_extension:replication:promote": "rule:admin_api",
     "volume_extension:replication:reenable": "rule:admin_api",
 
-    "backup:create" : "",
+    "backup:create": "",
     "backup:delete": "",
     "backup:get": "",
     "backup:get_all": "",
     "backup:restore": "",
-    "backup:backup-import": "rule:admin_api",
-    "backup:backup-export": "rule:admin_api",
+    "backup:backup-import": "rule:admin_or_cloudadmin",
+    "backup:backup-export": "rule:admin_or_cloudadmin",
 
     "snapshot_extension:snapshot_actions:update_snapshot_status": "",
 
-    "consistencygroup:create" : "group:nobody",
+    "consistencygroup:create": "group:nobody",
     "consistencygroup:delete": "group:nobody",
+    "consistencygroup:update": "group:nobody",
     "consistencygroup:get": "group:nobody",
     "consistencygroup:get_all": "group:nobody",
 
-    "consistencygroup:create_cgsnapshot" : "",
-    "consistencygroup:delete_cgsnapshot": "",
-    "consistencygroup:get_cgsnapshot": "",
-    "consistencygroup:get_all_cgsnapshots": "",
+    "consistencygroup:create_cgsnapshot" : "group:nobody",
+    "consistencygroup:delete_cgsnapshot": "group:nobody",
+    "consistencygroup:get_cgsnapshot": "group:nobody",
+    "consistencygroup:get_all_cgsnapshots": "group:nobody",
 
-    "scheduler_extension:scheduler_stats:get_pools" : "rule:admin_api"
+    "scheduler_extension:scheduler_stats:get_pools": "rule:admin_api",
+    "snapshot_extension:snapshot_actions:update_snapshot_status": "" 
 }

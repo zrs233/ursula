@@ -180,6 +180,25 @@ API_RESULT_PAGE_SIZE = 20
 # of your entire OpenStack installation, and hopefully be in UTC.
 TIME_ZONE = "UTC"
 
+#
+# The Horizon Policy Enforcement engine uses these values to load per service
+# policy rule files. The content of these files should match the files the
+# OpenStack services are using to determine role based access control in the
+# target installation.
+
+# Path to directory containing policy.json files
+POLICY_FILES_PATH = "/opt/stack/horizon/conf"
+# Map of local copy of service policy files
+POLICY_FILES = {
+    'identity': 'keystone_policy.json',
+    'compute': 'nova_policy.json',
+    'volume': 'cinder_policy.json',
+    'image': 'glance_policy.json',
+    'orchestration': 'heat_policy.json',
+    'network': 'neutron_policy.json',
+    'telemetry': 'ceilometer_policy.json',
+}
+
 LOGGING = {
     'version': 1,
     # When set to True this will disable all logging except
