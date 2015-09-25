@@ -68,7 +68,7 @@ ceph_common:
 
   ## OSD options
   #
-  journal_size: 5000 # 5 GB
+  journal_size: 10000 # 10 GB
   pool_name: default
   pool_default_size: 3
   pool_default_min_size: 2
