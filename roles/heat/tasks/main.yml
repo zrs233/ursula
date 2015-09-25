@@ -16,8 +16,8 @@
 - name: permit access to heat
   ufw: rule=allow to_port={{ item }} proto=tcp
   with_items:
-    - 8001
-    - 8005
+    - "{{ endpoints.heat.port.haproxy_api }}"
+    - "{{ endpoints.heat_cfn.port.haproxy_api }}"
 
 - name: install heat services
   upstart_service: name={{ item }}
@@ -41,6 +41,7 @@
 - name: create heat trusts roles
   keystone_user: role={{ item }}
                  login_user=provider_admin
+                 endpoint="{{ endpoints.keystone.url.admin }}/{{ endpoints.keystone.version }}/"
                  login_password="{{ secrets.provider_admin_password }}"
                  login_tenant_name=admin
   with_items: 
