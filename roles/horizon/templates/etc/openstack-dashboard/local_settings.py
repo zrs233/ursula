@@ -187,8 +187,7 @@ TIME_ZONE = "UTC"
 # target installation.
 
 # Path to directory containing policy.json files
-ROOT_PATH = "/opt/stack/horizon"
-POLICY_FILES_PATH = os.path.join(ROOT_PATH, "conf")
+POLICY_FILES_PATH = "/opt/stack/horizon/conf"
 # Map of local copy of service policy files
 POLICY_FILES = {
     'identity': 'keystone_policy.json',
