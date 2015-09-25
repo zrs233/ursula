@@ -1,0 +1,36 @@
+---
+- name: permit access to ceilometer
+  ufw: rule=allow to_port={{ item }} proto=tcp
+  with_items:
+    - 8889
+
+- name: install ceilometer controller services
+  upstart_service: name={{ item }}
+                   user=ceilometer
+                   cmd=/usr/local/bin/{{ item }}
+  with_items:
+    - ceilometer-api
+    - ceilometer-collector
+    - ceilometer-agent-notification
+    - ceilometer-agent-central
+    - ceilometer-alarm-evaluator
+    - ceilometer-alarm-notifier
+  notify:
+    - restart ceilometer services
+
+- meta: flush_handlers
+
+- name: start ceilometer services
+  service: name={{ item }} state=started
+  with_items:
+    - ceilometer-api
+    - ceilometer-collector
+    - ceilometer-agent-notification
+    - ceilometer-agent-central
+    - ceilometer-alarm-evaluator
+    - ceilometer-alarm-notifier
+
+- include: monitoring.yml
+  tags:
+    - monitoring
+    - common
