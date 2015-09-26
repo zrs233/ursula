@@ -34,7 +34,7 @@
   notify: restart nova services
   when: ansible_distribution_version == "14.04"
 
-# in the case of packaging, we want to be sure that libvirt python
+# We want to be sure that libvirt python
 # modules are built against the libvirt running on the host, so build
 # this part of the virtualenv on the system itself
 # # This is done with command rather than pip due to a bug where the venv
@@ -46,6 +46,13 @@
   changed_when: lvpout.stdout|search("Successfully installed")
   notify: restart nova services
   when: openstack_install_method == 'package'
+
+- name: install libvirt-python in package venv
+  command: "{{ openstack_source.virtualenv_base }}/nova/bin/pip install libvirt-python"
+  register: lvpout
+  changed_when: lvpout.stdout|search("Successfully installed")
+  notify: restart nova services
+  when: openstack_install_method == 'source'
 
 - name: update various lines in libvirtd.conf
   lineinfile: dest=/etc/libvirt/libvirtd.conf regexp="{{ item.value.regexp }}"
