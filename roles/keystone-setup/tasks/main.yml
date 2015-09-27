@@ -15,6 +15,7 @@
 - name: add admin_token to keystone conf
   lineinfile: dest=/etc/keystone/keystone.conf
               line="admin_token = {{ admin_token }}"
+              regexp="^admin_token"
               insertafter='\[DEFAULT\]'
               state=present
 
@@ -50,6 +51,20 @@
                  token={{ admin_token }}
   with_items: keystone.user_roles
 
+- name: heat stack user
+  keystone_user: user=heat_stack_user
+                 password="{{ secrets.service_password }}"
+                 tenant=admin
+                 token={{ admin_token }}
+  when: heat.enabled|bool
+
+- name: heat stack user role
+  keystone_user: role=heat_stack_user
+                 user=heat_stack_user
+                 tenant=admin
+                 token={{ admin_token }}
+  when: heat.enabled|bool
+
 - name: keystone endpoint
   keystone_service: name={{ item.name }}
                     type={{ item.type }}
@@ -63,7 +78,7 @@
   with_items: keystone.services
   when: endpoints[item.name] is defined and item.name == 'keystone'
 
-- name: remote admin_token from keystone api
+- name: remove admin_token from keystone api
   lineinfile: dest=/etc/keystone/keystone.conf
               line="admin_token = {{ admin_token }}"
               state=absent

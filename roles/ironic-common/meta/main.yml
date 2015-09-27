@@ -7,8 +7,11 @@ dependencies:
     project_name: ironic
     project_rev: "{{ ironic.source.rev }}"
     rootwrap: True
+    alternatives: "{{ ironic.alternatives }}"
+    system_dependencies: "{{ ironic.source.system_dependencies }}"
+    python_dependencies: "{{ ironic.source.python_dependencies }}"
     when: openstack_install_method == 'source'
   - role: openstack-package
     project_name: ironic
-    package_alternatives: "{{ ironic.package.console_scripts }}"
+    alternatives: "{{ ironic.alternatives }}"
     when: openstack_install_method == 'package'

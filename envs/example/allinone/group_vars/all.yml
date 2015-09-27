@@ -9,4 +9,5 @@ percona:
   replication: False
 
 heat:
- enabled: true
+  enabled: True
+  debug: True

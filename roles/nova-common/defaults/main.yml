@@ -37,59 +37,38 @@ nova:
       rev: 'stable/kilo'
       git_mirror: https://github.com/stackforge/nova-docker.git
       dest: /opt/stack/novadocker
-
   source:
     rev: 'stable/kilo'
-  package:
-    console_scripts:
-      - nova-all
-      - nova-api
-      - nova-api-ec2
-      - nova-api-metadata
-      - nova-api-os-compute
-      - nova-cells
-      - nova-cert
-      - nova-compute
-      - nova-conductor
-      - nova-console
-      - nova-consoleauth
-      - nova-dhcpbridge
-      - nova-idmapshift
-      - nova-manage
-      - nova-network
-      - nova-novncproxy
-      - nova-objectstore
-      - nova-rootwrap
-      - nova-scheduler
-      - nova-serialproxy
-      - nova-spicehtml5proxy
-      - nova-xvpvncproxy
-
-  package:
-    console_scripts:
-      - nova-all
-      - nova-api
-      - nova-api-ec2
-      - nova-api-metadata
-      - nova-api-os-compute
-      - nova-cells
-      - nova-cert
-      - nova-compute
-      - nova-conductor
-      - nova-console
-      - nova-consoleauth
-      - nova-dhcpbridge
-      - nova-idmapshift
-      - nova-manage
-      - nova-network
-      - nova-novncproxy
-      - nova-objectstore
-      - nova-rootwrap
-      - nova-scheduler
-      - nova-serialproxy
-      - nova-spicehtml5proxy
-      - nova-xvpvncproxy
-
+    python_dependencies:
+      - { name: mysql-python }
+      - { name: python-memcached }
+    system_dependencies:
+      - libjs-jquery-tablesorter
+      - libmysqlclient-dev
+      - python-libvirt
+  alternatives:
+    - nova-all
+    - nova-api
+    - nova-api-ec2
+    - nova-api-metadata
+    - nova-api-os-compute
+    - nova-cells
+    - nova-cert
+    - nova-compute
+    - nova-conductor
+    - nova-console
+    - nova-consoleauth
+    - nova-dhcpbridge
+    - nova-idmapshift
+    - nova-manage
+    - nova-network
+    - nova-novncproxy
+    - nova-objectstore
+    - nova-rootwrap
+    - nova-scheduler
+    - nova-serialproxy
+    - nova-spicehtml5proxy
+    - nova-xvpvncproxy
   logs:
     - paths:
         - /var/log/nova/nova-api.log
