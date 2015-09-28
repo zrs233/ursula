@@ -29,13 +29,7 @@
   sensu_check: name=check-l3-router plugin=check-l3-router.sh use_sudo=true
   notify: restart sensu-client
 
-- name: default route gateway
-  shell: ip route | awk "/default.+{{ hostvars[inventory_hostname][primary_interface].device }}/ { print \$3; exit }"
-  register: default_route_gateway
-  ignore_errors: True
-
 - name: gateway ip duplicate check
   sensu_check: name=check-gateway-ip-duplicate plugin=check-arping.sh
-               args="-I {{ hostvars[inventory_hostname][primary_interface].device }} -d {{ default_route_gateway.stdout }}"
+               args="-I {{ ansible_default_ipv4.interface }} -d {{ ansible_default_ipv4.gateway }}"
   notify: restart sensu-client
-  when: default_route_gateway.stdout|match('\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}')
