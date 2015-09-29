@@ -2,9 +2,6 @@
 - name: permit swift proxy from anywhere
   ufw: rule=allow to_port=8090 proto=tcp
 
-- name: install memcached
-  apt: pkg=memcached
-
 - name: swift-proxy service script
   template: src=roles/swift-common/templates/etc/init/swift-service.conf
             dest=/etc/init/swift-{{ item.service_name }}.conf mode=0644
