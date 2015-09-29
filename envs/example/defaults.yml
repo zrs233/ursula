@@ -51,7 +51,6 @@ endpoints:
   main:     "{{ fqdn }}"
   db:       "{{ undercloud_floating_ip }}"
   rabbit:   "{{ undercloud_floating_ip }}"
-  swift: "{{ swift.haproxy_vip }}"
   magnum: "{{ fqdn }}"
   identity_uri: https://{{ fqdn }}:35358
   auth_uri: https://{{ fqdn }}:5001/v2.0
@@ -267,6 +266,9 @@ keystone:
     - name: ironic
       password: "{{ secrets.service_password }}"
       tenant: service
+    - name: magnum
+      password: "{{ secrets.service_password }}"
+      tenant: service
     - name: "{{ monitoring.openstack.user.username }}"
       password: "{{ monitoring.openstack.user.password }}"
       tenant: "{{ monitoring.openstack.user.tenant }}"
@@ -302,6 +304,9 @@ keystone:
       tenant: service
       role: admin
     - user: heat
+      tenant: service
+      role: service
+    - user: magnum
       tenant: service
       role: service
     - user: ironic
@@ -372,11 +377,17 @@ keystone:
       type: baremetal
       description: 'Ironic bare metal provisioning service'
     - name: swift
-      type: object-store       
+      type: object-store
       description: 'Object Storage Service'
       public_url: https://{{ endpoints.swift }}:{{ swift.haproxy_port}}/v1/%(tenant_id)s
       internal_url: https://{{ endpoints.swift }}:{{ swift.haproxy_port}}/v1/%(tenant_id)s
       admin_url: https://{{ endpoints.swift }}:{{ swift.haproxy_port}}/v1/%(tenant_id)s
+    - name: magnum
+      type: container
+      description: 'Magnum Container Service'
+      public_url: https://{{ endpoints.main }}:9511
+      internal_url: https://{{ endpoints.main }}:9511
+      admin_url: https://{{ endpoints.main }}:9511
 ssl:
   crt: |
     -----BEGIN CERTIFICATE-----
@@ -479,8 +490,10 @@ percona:
 
 common:
   ipmi:
-    enabled: false
+    enabled: False
     state: probe
+  system_tools:
+    mcelog: False
 
 heat:
   enabled: False
@@ -514,3 +527,7 @@ cinderv2:
 
 heat-cfn:
   enabled: True
+
+magnum:
+  enabled: True
+  debug: True

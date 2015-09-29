@@ -8,14 +8,13 @@ dependencies:
   - role: openstack-source
     project_name: keystone
     project_rev: "{{ keystone.source.rev }}"
-    # is this even required anymore with Juno?
-    python_requirements:
-      - { name: babel, version: "{{ keystone.babel_version }}" }
-      - { name: functools32 }
+    alternatives: "{{ keystone.alternatives }}"
+    system_dependencies: "{{ keystone.source.system_dependencies }}"
+    python_dependencies: "{{ keystone.source.python_dependencies }}"
     when: openstack_install_method == 'source'
   - role: openstack-package
     project_name: keystone
-    package_alternatives: "{{ keystone.package.console_scripts }}"
+    alternatives: "{{ keystone.alternatives }}"
     when: openstack_install_method == 'package'
   - role: collectd-plugin
     when: collectd is defined and collectd.enabled|bool

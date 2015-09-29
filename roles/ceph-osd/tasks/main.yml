@@ -35,12 +35,14 @@
 - name: check if 'ceph' partition exists on osd devices
   shell: "parted --script {{ item }} print | egrep -sq '^ 1.*ceph'"
   with_items: ceph_osd.devices
+  ignore_errors: true
   changed_when: false
   register: ceph_partition_osds
 
 - name: check if 'ceph' partition exists on journal devices
   shell: "parted --script {{ item }} print | egrep -sq '^ 1.*ceph'"
   with_items: ceph_osd.raw_journal_devices
+  ignore_errors: true
   changed_when: false
   register: ceph_partition_journals
 
@@ -105,3 +107,17 @@
   service: name=ceph
            state=started
            enabled=yes
+
+- name: delete default 'rbd' pool
+  command: ceph osd pool delete rbd rbd --yes-i-really-really-mean-it
+  register: poolout
+  changed_when: poolout.stdout | search('removed')
+  run_once: true
+  delegate_to: "{{ groups[ceph.monitor_group_name][0] }}"
+
+- name: create openstack pool
+  ceph_pool:
+    pool_name: "{{ ceph_common.pool_name}}"
+  register: pool_output
+  run_once: true
+  delegate_to: "{{ groups[ceph.monitor_group_name][0] }}"

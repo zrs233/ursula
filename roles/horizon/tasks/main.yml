@@ -98,11 +98,11 @@
 - name: gather static assets from openstack source install
   environment:
     DJANGO_SETTINGS_MODULE: 'openstack_dashboard.settings'
-    PYTHONPATH: "/etc/openstack-dashboard:{{ horizon.virtualenv }}/../:$PYTHONPATH"
+    PYTHONPATH: "/etc/openstack-dashboard:/opt/stack/horizon:$PYTHONPATH"
   shell: "{{ item }}"
   with_items:
-    - "{{ horizon.virtualenv }}/bin/django-admin.py collectstatic --noinput"
-    - "{{ horizon.virtualenv }}/bin/django-admin.py compress"
+    - "{{ openstack_source.virtualenv_base }}/horizon/bin/django-admin.py collectstatic --noinput"
+    - "{{ openstack_source.virtualenv_base }}/horizon/bin/django-admin.py compress"
   when: openstack_install_method == 'source'
   tags: FIXME
 

@@ -8,13 +8,12 @@ cinder:
   volume_type: file
   volume_group: cinder-volumes
   create_vg: true
-#  backend_api_port: 8778
-#  haproxy_api_port: 8776
 
   source:
     rev: 'stable/kilo'
   package:
     console_scripts:
+  alternatives:
       - cinder-all
       - cinder-api
       - cinder-backup
@@ -24,19 +23,14 @@ cinder:
       - cinder-scheduler
       - cinder-volume
       - cinder-volume-usage-audit
-
-  package:
-    console_scripts:
-      - cinder-all
-      - cinder-api
-      - cinder-backup
-      - cinder-manage
-      - cinder-rootwrap
-      - cinder-rtstool
-      - cinder-scheduler
-      - cinder-volume
-      - cinder-volume-usage-audit
-
+  source:
+    rev: 'stable/kilo'
+    python_dependencies:
+      - { name: mysql-python }
+      - { name: functools32 }
+    system_dependencies:
+      - libmysqlclient-dev
+      - libpq-dev
   logs:
   - paths:
       - /var/log/cinder/cinder-api.log

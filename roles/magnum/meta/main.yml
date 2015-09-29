@@ -1,0 +1,20 @@
+---
+dependencies:
+  - role: monitoring-common
+  - role: logging-config
+    service: magnum
+    logdata: "{{ magnum.logs }}"
+  - role: openstack-source
+    project_name: magnum
+    project_rev: "{{ magnum.source.rev }}"
+    virtualenv: "{{ magnum.source.virtualenv }}"
+    system_dependencies: "{{ magnum.source.system_dependencies }}"
+    python_dependencies: "{{ magnum.source.python_dependencies }}"
+    alternatives: "{{ magnum.alternatives }}"
+    when: openstack_install_method == 'source'
+  - role: openstack-package
+    project_name: magnum
+    alternatives: "{{ magnum.alternatives }}"
+    when: openstack_install_method == 'package'
+  - role: collectd-plugin
+    when: collectd is defined and collectd.enabled|bool

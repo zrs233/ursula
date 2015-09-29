@@ -16,25 +16,19 @@ ironic:
     - fake
     - pxe_ssh
     - pxe_ipmitool
-
   source:
     rev: 'stable/kilo'
-  package:
-    console_scripts:
-      - ironic-api
-      - ironic-conductor
-      - ironic-dbsync
-      - ironic-nova-bm-migrate
-      - ironic-rootwrap
-
-  package:
-    console_scripts:
-      - ironic-api
-      - ironic-conductor
-      - ironic-dbsync
-      - ironic-nova-bm-migrate
-      - ironic-rootwrap
-
+    python_dependencies:
+      - { name: mysql-python }
+      - { name: functools32 }
+    system_dependencies:
+      - libmysqlclient-dev
+  alternatives:
+    - ironic-api
+    - ironic-conductor
+    - ironic-dbsync
+    - ironic-nova-bm-migrate
+    - ironic-rootwrap
   logs:
     - paths:
         - /var/log/ironic/ironic-api.log
