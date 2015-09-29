@@ -36,6 +36,8 @@
   when: openstack_package.rootwrap|bool
 
 - name: update-alternatives
-  shell: update-alternatives --install /usr/local/bin/{{ item }} {{ item }} /opt/openstack/current/{{ project_name }}/bin/{{ item }} 10 --force
-  with_items: package_alternatives
-  when: package_alternatives is defined
+  alternatives: name={{ item }}
+                path={{ virtualenv_base }}/{{ project_name }}/bin/{{ item }}
+                link=/usr/local/bin/{{ item }}
+  with_items: alternatives
+  when: alternatives is defined

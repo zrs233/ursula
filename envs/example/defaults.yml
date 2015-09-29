@@ -249,6 +249,9 @@ keystone:
     - name: ironic
       password: "{{ secrets.service_password }}"
       tenant: service
+    - name: magnum
+      password: "{{ secrets.service_password }}"
+      tenant: service
     - name: "{{ monitoring.openstack.user.username }}"
       password: "{{ monitoring.openstack.user.password }}"
       tenant: "{{ monitoring.openstack.user.tenant }}"
@@ -284,6 +287,9 @@ keystone:
       tenant: service
       role: admin
     - user: heat
+      tenant: service
+      role: service
+    - user: magnum
       tenant: service
       role: service
     - user: ironic
@@ -357,11 +363,17 @@ keystone:
       internal_url: "{{ endpoints.ironic.url.internal }}"
       admin_url: "{{ endpoints.ironic.url.admin }}"
     - name: swift
-      type: object-store       
+      type: object-store
       description: 'Object Storage Service'
       public_url: "{{ endpoints.swift.url.public }}/{{ endpoints.swift.url.path }}"
       internal_url: "{{ endpoints.swift.url.internal }}/{{ endpoints.swift.url.path }}"
       admin_url: "{{ endpoints.swift.url.admin }}/{{ endpoints.swift.url.path }}"
+    - name: magnum
+      type: container
+      description: 'Magnum Container Service'
+      public_url: https://{{ endpoints.main }}:9511
+      internal_url: https://{{ endpoints.main }}:9511
+      admin_url: https://{{ endpoints.main }}:9511
 ssl:
   crt: |
     -----BEGIN CERTIFICATE-----
@@ -464,8 +476,10 @@ percona:
 
 common:
   ipmi:
-    enabled: false
+    enabled: False
     state: probe
+  system_tools:
+    mcelog: False
 
 heat:
   enabled: False
@@ -499,3 +513,7 @@ cinderv2:
 
 heat-cfn:
   enabled: True
+
+magnum:
+  enabled: True
+  debug: True

@@ -11,9 +11,12 @@ dependencies:
     project_rev: "{{ neutron.source.rev }}"
     python_requirements: "{{ neutron.source.python_requirements }}"
     rootwrap: True
+    alternatives: "{{ neutron.alternatives }}"
+    system_dependencies: "{{ neutron.source.system_dependencies }}"
+    python_dependencies: "{{ neutron.source.python_dependencies }}"
     when: openstack_install_method == 'source'
   - role: openstack-package
     project_name: neutron
     rootwrap: True
-    package_alternatives: "{{ neutron.package.console_scripts }}"
+    alternatives: "{{ neutron.alternatives }}"
     when: openstack_install_method == 'package'

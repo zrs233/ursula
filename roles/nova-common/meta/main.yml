@@ -14,11 +14,12 @@ dependencies:
     project_name: nova
     project_rev: "{{ nova.source.rev }}"
     rootwrap: True
-    python_requirements:
-      - { name: functools32 }
+    alternatives: "{{ nova.alternatives }}"
+    system_dependencies: "{{ nova.source.system_dependencies }}"
+    python_dependencies: "{{ nova.source.python_dependencies }}"
     when: openstack_install_method == 'source'
   - role: openstack-package
     project_name: nova
     rootwrap: True
-    package_alternatives: "{{ nova.package.console_scripts }}"
+    alternatives: "{{ nova.alternatives }}"
     when: openstack_install_method == 'package'

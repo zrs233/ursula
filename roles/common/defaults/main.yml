@@ -27,4 +27,5 @@ common:
     git_rev: master
     tar_url: https://github.com/blueboxgroup/ursula-monitoring/archive/master.tar.gz
     tar_version: master
-
+  system_tools:
+    mcelog: True

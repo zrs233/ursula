@@ -80,6 +80,20 @@
 
   - name: all backends are up in haproxy
     shell: curl -k -s -u provider_admin:{{ secrets.provider_admin_password }} https://127.0.0.1/haproxy_stats\;csv | awk '/DOWN/ {print;ec=1} END{exit ec}'
+    register: haproxy
+    ignore_errors: true
+
+  - name: restart novavncproxy
+    service: name=nova-novncproxy state=restarted
+    when: haproxy.rc != 0
+
+  - name: give novanovncproxy time to get up
+    pause: seconds=30
+    when: haproxy.rc != 0
+
+  - name: all backends are up in haproxy
+    shell: curl -k -s -u provider_admin:{{ secrets.provider_admin_password }} https://127.0.0.1/haproxy_stats\;csv | awk '/DOWN/ {print;ec=1} END{exit ec}'
+    when: haproxy.rc != 0
 
 - name: tests on a single controller
   hosts: controller[0]

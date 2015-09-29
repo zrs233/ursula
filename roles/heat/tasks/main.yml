@@ -12,7 +12,7 @@
 - name: create heat cache dir
   file: dest=/var/cache/heat state=directory mode=0700
         owner=heat group=heat
-        
+
 - name: permit access to heat
   ufw: rule=allow to_port={{ item }} proto=tcp
   with_items:
@@ -44,13 +44,13 @@
                  endpoint="{{ endpoints.keystone.url.admin }}/{{ endpoints.keystone.version }}/"
                  login_password="{{ secrets.provider_admin_password }}"
                  login_tenant_name=admin
-  with_items: 
+  with_items:
     - heat_stack_owner
     - heat_stack_user
   run_once: true
- 
+
 - name: create heat stack admin
-  command: heat-keystone-setup-domain --stack-user-domain-name heat --stack-domain-admin heat_domain_admin --stack-domain-admin-password {{ secrets.stack_domain_admin_password }} 
+  command: heat-keystone-setup-domain --stack-user-domain-name heat --stack-domain-admin heat_domain_admin --stack-domain-admin-password {{ secrets.stack_domain_admin_password }}
   environment:
       OS_USERNAME: provider_admin
       OS_PASSWORD: "{{ secrets.provider_admin_password }}"
