@@ -52,6 +52,7 @@ endpoints:
   db:       "{{ undercloud_floating_ip }}"
   rabbit:   "{{ undercloud_floating_ip }}"
   swift: "{{ swift.haproxy_vip }}"
+  magnum: "{{ fqdn }}"
   identity_uri: https://{{ fqdn }}:35358
   auth_uri: https://{{ fqdn }}:5001/v2.0
 
