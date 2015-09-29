@@ -1,14 +1,14 @@
-# Ursula
+<div align="center"><img src="./ursula.png" alt="Ursula"></div><hr />
 
 Ursula provides a series of Ansible playbooks for installing, managing and
 maintaining OpenStack powered clouds.
 
-Ursula was originally created by a team at [Blue Box](https://www.bluebox.net) and is
+Ursula was originally created by a team at [Blue Box](https://www.blueboxcloud.com) and is
 released under the MIT License (MIT).
 
 The `ceph-common`, `ceph-monitor`, and `ceph-osd` roles were originally taken from
 [ceph/ceph-ansible](https://github.com/ceph/ceph-ansible), but have since been
-modified. `ceph/ceph-ansible` is released under the Apache License. 
+modified. `ceph/ceph-ansible` is released under the Apache License.
 
 # Installation
 
@@ -86,7 +86,7 @@ A CLI wrapper for ansible
 ```
 
 There are two mandatory fields required by `ursula-cli`.  The first is
-`environment` which will require some further explanation.  
+`environment` which will require some further explanation.
 The second is `playbook` which will almost always be `site.yml`.
 
 ## openstack-envs
