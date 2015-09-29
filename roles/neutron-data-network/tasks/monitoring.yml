@@ -28,3 +28,8 @@
 - name: l3 router check
   sensu_check: name=check-l3-router plugin=check-l3-router.sh use_sudo=true
   notify: restart sensu-client
+
+- name: gateway ip duplicate check
+  sensu_check: name=check-gateway-ip-duplicate plugin=check-arping.sh
+               args="-I {{ ansible_default_ipv4.interface }} -d {{ ansible_default_ipv4.gateway }}"
+  notify: restart sensu-client
