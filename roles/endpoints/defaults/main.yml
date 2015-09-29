@@ -24,7 +24,7 @@ endpoints:
     description: Image Service
     url:                                                                           
       admin: https://{{ fqdn }}:9292                                                                       
-      internal: http://{{ undercloud_floating_ip }}:9393                                                                   
+      internal: https://{{ fqdn }}:9292                                                                   
       public: https://{{ fqdn }}:9292                                                                     
     port:                                                                          
       backend_api: 9393                                              
