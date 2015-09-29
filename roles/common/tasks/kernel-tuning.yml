@@ -37,10 +37,10 @@
 #                   See https://www.kernel.org/doc/Documentation/serial-console.txt
 #  biosdevname=0    Disable naming ethernet devices by bios names
 #
-- name: "Kernel boot parameters: disable console screen blanking, enabled serial console on IPMI serial over LAN"
+- name: "Kernel boot parameters: disable console screen blanking, enabled serial console on IPMI serial over LAN, optional maxcpu"
   lineinfile: dest=/etc/default/grub
               regexp="^GRUB_CMDLINE_LINUX="
-              line="GRUB_CMDLINE_LINUX=\"consoleblank=0 crashkernel=256M nmi_watchdog=1 {{ serial_console_cmdline|default('') }} console=tty0 biosdevname=0\""
+              line="GRUB_CMDLINE_LINUX=\"consoleblank=0 crashkernel=256M nmi_watchdog=1 {{ serial_console_cmdline|default('') }} console=tty0 biosdevname=0 {{- ' maxcpu=%s' % cpulimit if cpulimit is defined else '' }} \""
   notify: update grub config
 
 # This was removed in later distributions, but is in grub-common and if present
