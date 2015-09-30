@@ -167,8 +167,9 @@ def main():
         rc, adapterInfo, err = module.run_command(cmd, check_rc=False)
 
     ssd_devices = find_available_devices(module, adaptecTest, lsiTest, path, diskProps, adapterInfo)
+    devices_dict = {'ssd_devices': ssd_devices}
 
-    module.exit_json(changed=False, ansible_facts=ssd_devices)
+    module.exit_json(changed=False, ansible_facts=devices_dict)
 
 # this is magic, see lib/ansible/module_common.py
 from ansible.module_utils.basic import *
