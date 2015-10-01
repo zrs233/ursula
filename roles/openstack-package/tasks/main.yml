@@ -37,7 +37,7 @@
 
 - name: update-alternatives
   alternatives: name={{ item }}
-                path={{ virtualenv_base }}/{{ project_name }}/bin/{{ item }}
+                path={{ openstack_package.virtualenv_base }}/{{ project_name }}/bin/{{ item }}
                 link=/usr/local/bin/{{ item }}
   with_items: alternatives
   when: alternatives is defined
