@@ -1,0 +1,11 @@
+---
+mongodb:
+  version: 3.0.6
+  replica_name: mongoreplica
+  db_password: "{{ secrets.mongodb_password }}"
+  bind_ip: 0.0.0.0
+  port: 27017
+  logging:
+    debug: False
+    verbose: True
+  cafile: "{{ ssl.cafile|default('/etc/ssl/certs/ca-certificates.crt') }}"

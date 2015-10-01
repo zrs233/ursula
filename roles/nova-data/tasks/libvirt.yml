@@ -47,7 +47,7 @@
   notify: restart nova services
   when: openstack_install_method == 'package'
 
-- name: install libvirt-python in package venv
+- name: install libvirt-python in source venv
   command: "{{ openstack_source.virtualenv_base }}/nova/bin/pip install libvirt-python"
   register: lvpout
   changed_when: lvpout.stdout|search("Successfully installed")
