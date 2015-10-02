@@ -24,6 +24,7 @@
 - name: configure neutron internal services failover
   template: src=etc/ipchanged/add_internal_floating_ip mode=0755
             dest=/etc/ipchanged/{{ hostvars[inventory_hostname][primary_interface].device }}/{{ undercloud_floating_ip }}/add
+  when: ansible_default_ipv4.interface != hostvars[inventory_hostname][primary_interface].device
 
 - name: start ipchanged service
   service: name=ipchanged state=started

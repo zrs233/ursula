@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Send gratuitous ARP broadcast for other pNodes to find RabbitMQ/MySQL endpoint
+arping -A -I {{ ansible_default_ipv4.interface }} {{ undercloud_floating_ip }} -c 3
+arping -U -I {{ ansible_default_ipv4.interface }} {{ undercloud_floating_ip }} -c 3
+
+# Send gratuitous ARP to default gateway (some discard broadcasts if already known)
+arping -A -I {{ ansible_default_ipv4.interface }} -s {{ floating_ip }} {{ ansible_default_ipv4.gateway }} -c 3
+
+
 . /root/stackrc
 export HOSTNAME=$( hostname )
 
