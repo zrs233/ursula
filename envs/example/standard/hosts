@@ -17,8 +17,10 @@ compute1
 compute1
 
 [ceph_monitors]
+# when expanding cluster, place new hosts BELOW existing hosts
 
 [ceph_osds]
+# when expanding cluster, place new hosts BELOW existing hosts
 
 [cinder_volume]
 compute1
