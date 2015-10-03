@@ -16,5 +16,7 @@ horizon:
       - apache2
       - libapache2-mod-wsgi
       - libmysqlclient-dev
-
-
+horizon_customization:
+    git_repo: https://github.com/davidcusatis/bluebox-horizon-customization.git
+    git_rev: master
+    path: "{{ openstack_source.virtualenv_base}}/horizon/lib/python2.7/site-packages/bluebox-horizon-customization"

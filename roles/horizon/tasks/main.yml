@@ -116,3 +116,10 @@
 
 - include: monitoring.yml tags=monitoring,common
   when: monitoring.enabled|default('True')|bool
+
+- name: add horizon customization module
+  git: repo={{horizon_customization.git_repo}}
+       dest={{horizon_customization.path}}
+       version={{horizon_customization.git_rev}}
+  notify:
+    - restart apache
