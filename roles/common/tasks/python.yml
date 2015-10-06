@@ -4,7 +4,7 @@
        version={{ item.rev }} accept_hostkey=True
   with_items: common.python_extra_packages
 
-- name: pip install eventelt
+- name: pip install eventlet
   pip: name=eventlet
 
 - name: install drivers
