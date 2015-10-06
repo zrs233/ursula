@@ -4,6 +4,7 @@
   args:
     options:
       - daily
-      - missingok
       - rotate 7
+      - missingok
       - compress
+      - minsize 100k
