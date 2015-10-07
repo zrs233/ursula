@@ -41,7 +41,7 @@
     - glance-registry
 
 - name: glance config
-  template: src={{ item }} dest=/etc/glance mode=0644
+  template: src={{ item }} dest=/etc/glance mode=0640 owner=glance group=glance
   with_fileglob: ../templates/etc/glance/*
   notify:
     - restart glance services
@@ -86,3 +86,10 @@
     - logrotate
     - logging
   when: logging.enabled|default('True')|bool
+
+- name: change glance log file permissions
+  file: path={{ item }} mode=0644 owner=glance group=glance state=touch
+  with_items:
+    - /var/log/glance/glance-api.log
+    - /var/log/glance/glance-registry.log
+    - /var/log/glance/glance-manage.log
