@@ -42,6 +42,7 @@ nova:
     python_dependencies:
       - { name: mysql-python }
       - { name: python-memcached }
+      - { name: requests, version: 2.7.0 }
     system_dependencies:
       - libjs-jquery-tablesorter
       - libmysqlclient-dev
