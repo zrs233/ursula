@@ -3,5 +3,3 @@ ceph_osd:
 
   pkgs:
     - parted
-    - gdisk
-    - coreutils

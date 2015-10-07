@@ -122,6 +122,10 @@ ceph:
   monitor_group_name: ceph_monitors
   osd_group_name: ceph_osds
   public_and_cluster_network:
+  #disks:
+  #  - sdb
+  #  - sdc
+  #  - sdd
 
 cinder:
   enabled: True
@@ -353,7 +357,7 @@ keystone:
     - name: glance
       type: image
       description: 'Image Service'
-      public_url: "{{ endpoints.glance.url.public }}" 
+      public_url: "{{ endpoints.glance.url.public }}"
       internal_url: "{{ endpoints.glance.url.internal }}"
       admin_url: "{{ endpoints.glance.url.admin }}"
     - name: neutron
@@ -371,7 +375,7 @@ keystone:
     - name: cinderv2
       type: volumev2
       description: 'Volume Service v2'
-      public_url: "{{ endpoints.cinderv2.url.public }}/{{ endpoints.cinderv2.url.path }}" 
+      public_url: "{{ endpoints.cinderv2.url.public }}/{{ endpoints.cinderv2.url.path }}"
       internal_url: "{{ endpoints.cinderv2.url.internal }}/{{ endpoints.cinderv2.url.path }}"
       admin_url: "{{ endpoints.cinderv2.url.admin }}/{{ endpoints.cinderv2.url.path }}"
     - name: heat
