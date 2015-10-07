@@ -12,6 +12,7 @@ undercloud_cidr: 10.230.7.0/24
 
 secrets:
   db_password:      asdf
+  mongodb_password: asdf
   service_password: asdf
   rabbit_password:  asdf
   admin_password:   asdf
@@ -23,6 +24,7 @@ secrets:
   monitor_password: asdf
   cloud_admin_password: asdf
   project_admin_password: asdf
+  telemetry_secret: asdf
 
 fqdn: openstack.example.com
 swift_fqdn: "{{ fqdn }}"
@@ -38,6 +40,9 @@ rabbitmq:
   user: openstack
   cluster: false
 
+mongodb:
+  port: 27017
+
 memcached:
   memory: 64
   port: 11211
@@ -50,6 +55,7 @@ swift:
 endpoints:
   main:     "{{ fqdn }}"
   db:       "{{ undercloud_floating_ip }}"
+  mongodb:  "{{ undercloud_floating_ip }}"
   rabbit:   "{{ undercloud_floating_ip }}"
   magnum: "{{ fqdn }}"
   identity_uri: https://{{ fqdn }}:35357
@@ -249,6 +255,9 @@ keystone:
     - name: heat
       password: "{{ secrets.service_password }}"
       tenant: service
+    - name: ceilometer
+      password: "{{ secrets.service_password }}"
+      tenant: service
     - name: ironic
       password: "{{ secrets.service_password }}"
       tenant: service
@@ -289,15 +298,21 @@ keystone:
     - user: neutron
       tenant: service
       role: service
-    - user: cinder
-      tenant: service
-      role: service
     - user: neutron
       tenant: service
       role: admin
+    - user: cinder
+      tenant: service
+      role: service
     - user: heat
       tenant: service
       role: service
+    - user: ceilometer
+      tenant: service
+      role: service
+    - user: ceilometer
+      tenant: service
+      role: admin
     - user: magnum
       tenant: service
       role: service
@@ -371,6 +386,12 @@ keystone:
       public_url: "{{ endpoints.heat_cfn.url.public }}/{{ endpoints.heat_cfn.version }}"
       internal_url: "{{ endpoints.heat_cfn.url.internal }}/{{ endpoints.heat_cfn.version }}"
       admin_url: "{{ endpoints.heat_cfn.url.admin }}/{{ endpoints.heat_cfn.version }}"
+    - name: ceilometer
+      type: metering
+      description: 'Telemetry Service'
+      public_url: "{{ endpoints.ceilometer.url.public }}"
+      internal_url: "{{ endpoints.ceilometer.url.internal }}"
+      admin_url: "{{ endpoints.ceilometer.url.admin }}"
     - name: ironic
       type: baremetal
       description: 'Ironic bare metal provisioning service'
@@ -498,6 +519,12 @@ common:
 
 heat:
   enabled: False
+  logging:
+    debug: True
+    verbose: True
+
+ceilometer:
+  enabled: True
   logging:
     debug: True
     verbose: True
