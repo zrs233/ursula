@@ -61,13 +61,6 @@
            creates=/etc/ceph/ceph.{{ item.name }}.keyring
   with_items: ceph_monitor.openstack_keys
 
-- name: drop in a motd script to report status when logging in
-  template: src=etc/update-motd.d/92-ceph
-            dest=/etc/update-motd.d/92-ceph
-            owner=root
-            group=root
-            mode=0755
-
 - include: monitoring.yml
   tags:
     - monitoring
