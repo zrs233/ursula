@@ -118,7 +118,9 @@
     shell: . /root/stackrc; glance image-list | grep cirros
 
   - name: cirros image is public
-    shell: . /root/stackrc; glance image-show cirros |grep is_public |grep True
+    shell: . /root/stackrc; glance --os-image-api-version 1 image-show cirros |grep is_public |grep True
+    # Use glance version 1 API until we replace this with something more
+    # elegant
 
   - name: nova has a working api
     shell: . /root/stackrc; nova list | grep ID
