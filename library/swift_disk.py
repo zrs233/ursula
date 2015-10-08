@@ -4,22 +4,31 @@
 DOCUMENTATION = '''
 ---
 author: Jesse Keating and Dustin Lundquist
-module: cinder_volume_group
-short_description: Configure LVM volume groups
+module: swift_disk
+short_description: Configure Swift disks/partition
 description:
-  - This module creates a LVM VG for Cinder to use
+  - This module prepares the disk/partition for use with Swift
 options:
   dev:
     description:
       - The device to make a swift disk
-    required: true
+    required: false
+  partition_path:
+    description: 
+      - Complete path to partition to be used for Swift
+    required: false
 '''
 
 EXAMPLES = '''
-# create a volume group for cinder, named `cinder-volumes`,
-# backed by a file mounted over loop device
+# use the sdb disk for swift. it will be formatted to xfs
+# and mounted on /srv/node/sdb
 
 - swift_disk: dev=sdb
+
+# use the lvm disk /dev/vgpool/sftmeta. Partition will be formatted
+# and mounted on /srv/node/sftmeta
+
+- swift_disk: partition_path=/srv/node/sftmeta
 '''
 
 import os
@@ -29,23 +38,39 @@ import grp
 def main():
     module = AnsibleModule(
         argument_spec  = dict(
-            dev       = dict(required=True),
+            dev       = dict(required=False, default=None),
+            partition_path      = dict(required=False, default=None)
         ),
     )
 
     dev = module.params.get('dev')
-    dev_path = "/dev/%s" % dev
-    part_path = "%s1" % dev_path
-
-    if not os.path.exists(dev_path):
+    part_path = module.params.get('partition_path')
+    
+    if (dev is None and part_path is None) or \
+          (dev is not None and part_path is not None) :
+        module.fail_json(msg="only one of the dev or partition_path must be set")
+    
+    dev_path = None
+    mount_point = "/srv/node/"
+    if dev is not None:   
+        dev_path = "/dev/%s" % dev
+        part_path = "/dev/%s1" % dev
+        mount_point += ("%s1" % dev)
+    else:
+        # Get the last part of partition path
+        mount_point += (part_path.split("/")[-1])
+        
+    if dev_path is not None and not os.path.exists(dev_path):
         module.fail_json(msg="no such device: %s" % dev)
-
-    if os.path.exists(part_path):
+    
+    
+    if os.path.exists(part_path) and os.path.ismount(mount_point):
         module.exit_json(changed=False)
 
     # setup the parted command
-    cmd = ['parted', '--script', dev_path, 'mklabel', 'gpt', 'mkpart', 'primary', '1', '100%']
-    rc, out, err = module.run_command(cmd, check_rc=True)
+    if dev_path is not None:
+        cmd = ['parted', '--script', dev_path, 'mklabel', 'gpt', 'mkpart', 'primary', '1', '100%']
+        rc, out, err = module.run_command(cmd, check_rc=True)
 
     # make an xfs
     cmd = ['mkfs.xfs', '-f', '-i', 'size=512', part_path]
@@ -59,21 +84,21 @@ def main():
     # write fstab
     try:
         with open('/etc/fstab', 'a') as f:
-            f.write("UUID=%s /srv/node/%s1 xfs noatime,nodiratime,nobarrier,logbufs=8 0 0\n" % (fsuuid, dev))
+            f.write("UUID=%s %s xfs noatime,nodiratime,nobarrier,logbufs=8 0 0\n" % (fsuuid, mount_point))
     except Exception, e:
         module.fail_json(msg="failed to update fstab: %s" % e)
 
     # mount point
-    os.makedirs('/srv/node/%s1' % dev)
+    os.makedirs(mount_point)
 
     # mount it
-    cmd = ['mount', '/srv/node/%s1' % dev]
+    cmd = ['mount', mount_point]
     rc, out, err = module.run_command(cmd, check_rc=True)
 
     # chown it
     swuid = pwd.getpwnam('swift').pw_uid
     swgid = grp.getgrnam('swift').gr_gid
-    os.chown('/srv/node/%s1' % dev, swuid, swgid)
+    os.chown(mount_point, swuid, swgid)
 
     module.exit_json(changed=True)
 
