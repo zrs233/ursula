@@ -78,6 +78,22 @@
     - role: percona-backup
       tags: ['infra', 'percona']
 
+- name: install mongodb server
+  gather_facts: force
+  hosts: mongo_db
+  roles:
+    - role: mongodb-server
+      tags: ['mongodb', 'mongodb-server']
+      when: ceilometer.enabled|bool
+
+- name: install mongodb arbiter
+  gather_facts: force
+  hosts: mongo_arbiter
+  roles:
+    - role: mongodb-arbiter
+      tags: ['mongodb', 'mongodb-arbiter']
+      when: ceilometer.enabled|bool
+
 - name: memcached for keystone and horizon
   gather_facts: force
   hosts: controller
@@ -258,6 +274,22 @@
     - role: heat
       tags: ['openstack', 'heat', 'control']
       when: heat.enabled|bool
+
+- name: ceilometer control plane
+  gather_facts: force
+  hosts: controller
+  roles:
+    - role: ceilometer-control
+      tags: ['openstack', 'ceilometer', 'control']
+      when: ceilometer.enabled|bool
+
+- name: ceilometer data plane
+  gather_facts: force
+  hosts: compute
+  roles:
+    - role: ceilometer-data
+      tags: ['openstack', 'ceilometer', 'data']
+      when: ceilometer.enabled|bool
 
 - name: magnum code and config
   gather_facts: force

@@ -1,0 +1,15 @@
+---
+- name: initiate replica set
+  command: mongo --host {{ endpoints.mongodb }} --eval 'rs.initiate()'
+
+- name: wait for replica set init to complete
+  pause: seconds=20
+
+- name: rename primary replica member
+  command: mongo --host {{ endpoints.mongodb }} --eval 'cfg=rs.conf(); cfg.members[0].host="{{ primary_ip }}:{{ mongodb.port }}"; rs.reconfig(cfg)'
+
+- name: install pymongo for mongodb_user module
+  pip: name=pymongo state=present
+
+- name: create admin user
+  mongodb_user: database=admin name=admin password={{ mongodb.db_password }} roles='userAdminAnyDatabase' state=present
