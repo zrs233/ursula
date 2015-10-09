@@ -4,7 +4,7 @@
 #
 # Expects a hosts name as input into --extra-vars
 #
-# ex. ursula envs/example/swift playbooks/test-playbook.yml --extra-vars 'hosts=swiftnode'
+# ex. ursula envs/example/swift playbooks/unmount-and-clear-disks.yml --extra-vars 'hosts=swiftnode'
 #
 
 ---
@@ -30,25 +30,27 @@
         [{% for item in hostvars[inventory_hostname]['ansible_devices'] -%}
             {{ comma() }}"{{ item }}"
         {%- endfor %}]
-
+  
   - name: unmount all mounted devices
-    mount: name={{ item.mount }} src={{ item.device }} fstype={{ item.fstype }} state=unmounted
-    with_items: "{{ ansible_mounts }}"
-    when: (item.mount != "/" or item.mount != "/boot") and "{{ item.device | relpath('/dev') }}" in disk_list
+    mount: name={{ item[0].mount }} src={{ item[0].device }} fstype={{ item[0].fstype }} state=unmounted
+    with_nested: 
+      - "{{ ansible_mounts }}"
+      - disk_list
+    when: (item[0].mount != "/" and item[0].mount != "/boot") and item[1] in "{{ item[0].device }}"
 
   - name: unmount shared partition if defined
     mount: name={{ item.mount }} src={{ item.device }} fstype={{ item.fstype }} state=unmounted
     with_items: "{{ ansible_mounts }}"
-    when: swift.os_shared_partition  is defined and item.device == swift.os_shared_partition and hosts == "swiftnode"
+    when: swift.os_shared_partition is defined and item.device == swift.os_shared_partition and hosts == "swiftnode"
 
   - name: destroy GPT structures
-    shell: sgdisk --zap "/dev/"{{ item }}
+    shell: sgdisk --zap-all /dev/{{ item }}
     ignore_errors: true
     with_items: disk_list
     when: item in disks_present
 
   - name: clear all devices
-    shell: dd if=/dev/zero of="/dev/"{{ item }} bs=1M count=512
+    shell: dd if=/dev/zero of=/dev/{{ item }} bs=1M count=512
     ignore_errors: true
     with_items: disk_list
     when: item in disks_present
