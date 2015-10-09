@@ -15,6 +15,7 @@ ceph_common:
     - ceph
     - ceph-common
 
+  ceph_version: v0.94.3
   stable_release: hammer
 
   ######################
