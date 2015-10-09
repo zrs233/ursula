@@ -41,6 +41,10 @@
 - include: ceph_integration.yml
   when: ceph.enabled
 
+- name: Error out when Swift HAProxy VIP is not defined
+  fail: msg="Swift HAProxy VIP must be set for Cinder backup to function correctly"
+  when: swift.enabled and not endpoints.swift.haproxy_vip
+
 - name: cinder config
   template: src={{ item }} dest=/etc/cinder mode=0644
   with_fileglob: ../templates/etc/cinder/*
