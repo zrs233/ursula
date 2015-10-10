@@ -23,6 +23,8 @@ secrets:
   glance_sync:      ADQ64XUQLUWH75M634RVBLP55RKPGGOWG
   monitor_password: asdf
   telemetry_secret: asdf
+  cloud_admin_password: asdf
+  project_admin_password: asdf
 
 fqdn: openstack.example.com
 swift_fqdn: "{{ fqdn }}"
@@ -283,6 +285,12 @@ keystone:
     - name: swift
       password: "{{ secrets.service_password }}"
       tenant: service
+    - name: cloud_admin
+      password: "{{ secrets.cloud_admin_password }}"
+      tenant: demo
+    - name: project_admin
+      password: "{{ secrets.project_admin_password }}"
+      tenant: demo
   user_roles:
     - user: admin
       tenant: admin
@@ -332,6 +340,12 @@ keystone:
     - user: swift
       tenant: service
       role: admin
+    - user: cloud_admin
+      tenant: demo
+      role: cloud_admin
+    - user: project_admin
+      tenant: demo
+      role: project_admin
   services:
     - name: keystone
       type: identity
