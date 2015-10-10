@@ -29,8 +29,8 @@
 - name: permit access to glance
   ufw: rule=allow to_port={{ item }} proto=tcp
   with_items:
-    - 9292
-    - 9393
+    - "{{ endpoints.glance.port.haproxy_api }}"
+    - "{{ endpoints.glance.port.backend_api }}"
 
 - name: install glance services
   upstart_service: name={{ item }}

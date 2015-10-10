@@ -50,7 +50,7 @@ options:
      description:
         - The keystone url for authentication
      required: false
-     default: 'http://127.0.0.1:35357/v2.0/'
+     default: 'http://127.0.0.1:35358/v2.0/'
    user:
      description:
         - The name of the user that has to added/removed from OpenStack
@@ -327,7 +327,7 @@ def main():
             role=dict(required=False),
             state=dict(default='present', choices=['present', 'absent']),
             endpoint=dict(required=False,
-                          default="http://127.0.0.1:35357/v2.0"),
+                          default="http://127.0.0.1:35358/v2.0"),
             token=dict(required=False),
             login_user=dict(required=False),
             login_password=dict(required=False),
