@@ -353,7 +353,7 @@ keystone:
     - name: glance
       type: image
       description: 'Image Service'
-      public_url: "{{ endpoints.glance.url.public }}" 
+      public_url: "{{ endpoints.glance.url.public }}"
       internal_url: "{{ endpoints.glance.url.internal }}"
       admin_url: "{{ endpoints.glance.url.admin }}"
     - name: neutron
@@ -371,7 +371,7 @@ keystone:
     - name: cinderv2
       type: volumev2
       description: 'Volume Service v2'
-      public_url: "{{ endpoints.cinderv2.url.public }}/{{ endpoints.cinderv2.url.path }}" 
+      public_url: "{{ endpoints.cinderv2.url.public }}/{{ endpoints.cinderv2.url.path }}"
       internal_url: "{{ endpoints.cinderv2.url.internal }}/{{ endpoints.cinderv2.url.path }}"
       admin_url: "{{ endpoints.cinderv2.url.admin }}/{{ endpoints.cinderv2.url.path }}"
     - name: heat
@@ -389,9 +389,9 @@ keystone:
     - name: ceilometer
       type: metering
       description: 'Telemetry Service'
-      public_url: https://{{ endpoints.main }}:8889
-      internal_url: https://{{ endpoints.main }}:8889
-      admin_url: https://{{ endpoints.main }}:8889
+      public_url: "{{ endpoints.ceilometer.url.public }}"
+      internal_url: "{{ endpoints.ceilometer.url.internal }}"
+      admin_url: "{{ endpoints.ceilometer.url.admin }}"
     - name: ironic
       type: baremetal
       description: 'Ironic bare metal provisioning service'
@@ -524,7 +524,7 @@ heat:
     verbose: True
 
 ceilometer:
-  enabled: True
+  enabled: False
   logging:
     debug: True
     verbose: True
