@@ -6,10 +6,10 @@
   pause: seconds=20
 
 - name: rename primary replica member
-  command: mongo --host {{ endpoints.mongodb }} --eval 'cfg=rs.conf(); cfg.members[0].host="{{ primary_ip }}:{{ mongodb.port }}"; rs.reconfig(cfg)'
+  command: mongo --host {{ endpoints.mongodb }} --eval 'cfg=rs.conf(); cfg.members[0].host="{{ primary_ip }}:{{ mongodb.port }}"; cfg.members[0].priority = 2; rs.reconfig(cfg)'
 
 - name: install pymongo for mongodb_user module
   pip: name=pymongo state=present
 
 - name: create admin user
-  mongodb_user: database=admin name=admin password={{ mongodb.db_password }} roles='userAdminAnyDatabase' state=present
+  mongodb_user: database=admin name=admin password={{ mongodb.db_password }} replica_set={{ mongodb.replica_name }} roles='userAdminAnyDatabase' state=present

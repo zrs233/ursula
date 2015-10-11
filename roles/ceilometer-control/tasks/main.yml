@@ -1,6 +1,6 @@
 ---
 - name: permit access to ceilometer
-  ufw: rule=allow to_port=8889 proto=tcp
+  ufw: rule=allow to_port={{ endpoints.ceilometer.port.haproxy_api }} proto=tcp
 
 - name: install ceilometer controller services
   upstart_service: name={{ item }}
