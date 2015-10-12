@@ -153,7 +153,7 @@ endpoints:
   swift:
     name: swift
     type: object-storage
-    haproxy_vip:
+    haproxy_vip: "{{ fqdn }}"
     description: 'Object Storage Service'
     version: v1
     url:
