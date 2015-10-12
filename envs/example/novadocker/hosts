@@ -10,11 +10,12 @@ controller2
 controller1
 controller2
 
+[cinder_volume]
+controller1
+controller2
+
 [db_arbiter]
 compute1
 
 [compute]
-compute1
-
-[cinder_volume]
 compute1
