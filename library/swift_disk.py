@@ -28,7 +28,7 @@ EXAMPLES = '''
 # use the lvm disk /dev/vgpool/sftmeta. Partition will be formatted
 # and mounted on /srv/node/sftmeta
 
-- swift_disk: partition_path=/srv/node/sftmeta
+- swift_disk: partition_path=/dev/vgpool/sftmeta
 '''
 
 import os
@@ -41,14 +41,12 @@ def main():
             dev       = dict(required=False, default=None),
             partition_path      = dict(required=False, default=None)
         ),
+        required_one_of = [['dev', 'partition_path']],
+        mutually_exclusive = [['dev', 'partition_path']]
     )
 
     dev = module.params.get('dev')
     part_path = module.params.get('partition_path')
-    
-    if (dev is None and part_path is None) or \
-          (dev is not None and part_path is not None) :
-        module.fail_json(msg="only one of the dev or partition_path must be set")
     
     dev_path = None
     mount_point = "/srv/node/"
