@@ -15,7 +15,7 @@
     "admin_or_owner_or_cloudadmin": "rule:admin_or_owner or rule:cloud_admin_role",
     "admin_or_owner_or_cloudadmin_or_projectadmin": "rule:admin_or_owner or rule:cloud_admin_role or rule:projectadmin_role",
     "admin_or_cloudadmin_or_projectadmin": "rule:admin_required or rule:cloud_admin_role or rule:projectadmin_role",
-    "create_revoke_grant_rule": "rule:admin_required or (rule:cloudadmin_role and not 'admin':%(target.role.name)s) or (rule:projectadmin_role and project_id:%(project_id)s and not 'cloud_admin':%(target.role.name)s and not 'admin':%(target.role.name)s)",
+    "create_revoke_grant_rule": "rule:admin_required or (rule:cloud_admin_role and not 'admin':%(target.role.name)s) or (rule:projectadmin_role and project_id:%(project_id)s and not 'cloud_admin':%(target.role.name)s and not 'admin':%(target.role.name)s)",
     "get_pseudo_admin_endpoints": "rule:cloudadmin_role or rule:projectadmin_role",
 
     "identity:get_region": "",
@@ -153,4 +153,3 @@
 
     "identity:list_revoke_events": ""
 }
-
