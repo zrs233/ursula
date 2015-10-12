@@ -14,6 +14,10 @@ controller2
 controller1
 controller2
 
+[cinder_volume]
+controller1
+controller2
+
 [db_arbiter]
 compute1
 
@@ -28,6 +32,3 @@ compute1
 
 [ceph_osds]
 # when expanding cluster, place new hosts BELOW existing hosts
-
-[cinder_volume]
-compute1
