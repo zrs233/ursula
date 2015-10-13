@@ -105,3 +105,25 @@ ceph_common:
   osd_disk_thread_ioprio_priority: 0
   osd_scrub_chunk_max: 5
   osd_deep_scrub_stride: 1048576
+
+  logs:
+    - paths:
+        - /var/log/ceph/ceph-osd*.log
+      fields:
+        type: openstack
+        tags: ceph,ceph-osd
+    - paths:
+        - /var/log/ceph/ceph-audit.log
+      fields:
+        type: openstack
+        tags: ceph,ceph-audit,archive
+    - paths:
+        - /var/log/ceph/ceph.log
+      fields:
+        type: openstack
+        tags: ceph
+    - paths:
+        - /var/log/ceph/ceph-mon*.log
+      fields:
+        type: openstack
+        tags: ceph,ceph-mon

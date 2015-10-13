@@ -1,0 +1,9 @@
+---
+- name: set up log rotation for ceph
+  logrotate: name=ceph path=/var/log/ceph/*.log
+  args:
+    options:
+      - daily
+      - missingok
+      - rotate 7
+      - compress
