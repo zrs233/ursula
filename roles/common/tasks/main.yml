@@ -75,6 +75,11 @@
   when: common.hwraid.enabled
   tags: hwraid
 
+- name: remove unwanted packages
+  apt:
+    name: "{{ item }}"
+    state: absent
+  with_items: common.packages_to_remove
 
 - name: fetch Ursula revision
   local_action: command git describe --tags
