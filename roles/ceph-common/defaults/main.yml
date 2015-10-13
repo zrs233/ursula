@@ -94,8 +94,8 @@ ceph_common:
   osd_max_scrubs: 1
 
   # Recovery tuning
-  osd_recovery_max_active: 1
-  osd_max_backfills: 1
+  osd_recovery_max_active: 2
+  osd_max_backfills: 2
   osd_recovery_op_priority: 2
   osd_recovery_max_chunk: 1048576
   osd_recovery_threads: 1
