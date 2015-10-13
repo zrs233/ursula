@@ -41,6 +41,10 @@
 - include: ceph_integration.yml
   when: ceph.enabled
 
+- name: error out when swift haproxy vip is not updated
+  fail: msg="swift haproxy vip needs to be updated for use with cinder backup"
+  when: swift.enabled|bool and (endpoints.swift.haproxy_vip == fqdn)
+
 - name: cinder config
   template: src={{ item }} dest=/etc/cinder mode=0644
   with_fileglob: ../templates/etc/cinder/*

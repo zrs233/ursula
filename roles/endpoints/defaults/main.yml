@@ -163,3 +163,5 @@ endpoints:
       path: v1/%(tenant_id)s
     port:
       haproxy_api: 8090
+      cinder_backup: 8091
+      proxy_api: 8080
