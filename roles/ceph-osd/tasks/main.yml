@@ -1,15 +1,12 @@
 ---
+- name: verify disks have been provided
+  fail: msg="please provide osd disks"
+  when: ceph.disks is not defined
+
 - name: install dependencies
   apt: pkg={{ item }}
        state=present
   with_items: ceph_osd.pkgs
-
-- name: detect osd devices
-  ceph_disks:
-
-- name: verify devices have been detected
-  fail: msg="error in detecting devices"
-  when: ssd_devices is not defined
 
 - name: register ceph.keyring
   slurp: src=/var/lib/ceph/bootstrap-osd/ceph.keyring
@@ -22,44 +19,26 @@
     dest: "{{ ceph_keyrings['source'] }}"
     content: "{{ ceph_keyrings['content'] | b64decode }}"
 
-- name: check if 'ceph' partition exists on osd devices
-  shell: "parted --script {{ item }} print | egrep -sq 'ceph'"
-  with_items: ssd_devices
+- name: check if 'ceph' partition exists on osd disks
+  shell: "parted --script /dev/{{ item }} print | egrep -sq 'ceph'"
+  with_items: ceph.disks
   ignore_errors: true
   changed_when: false
-  register: ceph_partition_osds
-
-# only do the next tasks when:
-# - no ceph partitions were found on the disk
-
-- name: erasing partitions and labels from osd devices
-  command: sgdisk --zap {{ item.1 }}
-  ignore_errors: true
-  with_together:
-    - ceph_partition_osds.results
-    - ssd_devices
-  when: item.0.rc != 0
-
-- name: clear osd devices
-  shell: dd if=/dev/zero of={{ item.1 }} bs=1M count=512
-  with_together:
-    - ceph_partition_osds.results
-    - ssd_devices
-  when: item.0.rc != 0
+  register: ceph_partitions
 
 # journal_collocation
 - name: prepare osd disks
-  command: "ceph-disk prepare {{ item.1 }}"
+  command: "ceph-disk prepare /dev/{{ item.1 }}"
   with_together:
-    - ceph_partition_osds.results
-    - ssd_devices
+    - ceph_partitions.results
+    - ceph.disks
   when: item.0.rc != 0
 
 - name: activate osds
-  command: ceph-disk activate {{ item.1 }}1
+  command: ceph-disk activate /dev/{{ item.1 }}1
   with_together:
-    - ceph_partition_osds.results
-    - ssd_devices
+    - ceph_partitions.results
+    - ceph.disks
   when: item.0.rc != 0
 
 - name: start and add that the osd service(s) to the init sequence
@@ -76,7 +55,7 @@
 
 - name: create openstack pool
   ceph_pool:
-    pool_name: "{{ ceph_common.pool_name}}"
+    pool_name: "{{ ceph_common.pool_name }}"
   register: pool_output
   run_once: true
   delegate_to: "{{ groups[ceph.monitor_group_name][0] }}"
