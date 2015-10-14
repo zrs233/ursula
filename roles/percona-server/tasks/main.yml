@@ -66,7 +66,7 @@
 - name: install root .my.cnf defaults file
   template: src=root/.my.cnf dest=/root/.my.cnf owner=root group=root mode=0600
 
-- name: are we already already bootstrapped
+- name: are we already bootstrapped
   shell: mysql -e "SHOW VARIABLES LIKE 'wsrep_on'" | grep 'ON'
   register: already_bootstrapped
   failed_when: False
