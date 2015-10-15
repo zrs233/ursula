@@ -32,6 +32,7 @@ request.
 | Horizon        | haproxy  | HTTP     | 8080  | controller internal IP |
 | Horizon        | public   | HTTPS    | 443   | external floating IP   |
 | MySQL          | internal | mysql    | 3306  | internal floating IP   |
+| MongoDB        | internal | mongodb  | 27017 | internal floating IP   |
 | RabbitMQ       | internal | rabbitmq | 5672  | internal floating IP   |
 | Memcached      | internal | memcache | 11211 | controller internal IP |
 | Keystone       | haproxy  | HTTP     | 5001  | controller internal IP |
@@ -57,6 +58,9 @@ request.
 | Heat CFN       | haproxy  | HTTP     | 8000  | controller internal IP |
 | Heat CFN       | internal | HTTPS    | 8001  | external floating IP   |
 | Heat CFN       | public   | HTTPS    | 8001  | external floating IP   |
-| Ironic-api       | haproxy  | HTTP     | 6385  | controller internal IP |
-| Ironic-api       | internal | HTTPS    | 6384  | external floating IP   |
-| Ironic-api       | public   | HTTPS    | 6384  | external floating IP   |
+| Ceilometer     | haproxy  | HTTP     | 8777  | controller internal IP |
+| Ceilometer     | internal | HTTPS    | 9777  | external floating IP   |
+| Ceilometer     | public   | HTTPS    | 9777  | external floating IP   |
+| Ironic-api     | haproxy  | HTTP     | 6385  | controller internal IP |
+| Ironic-api     | internal | HTTPS    | 6384  | external floating IP   |
+| Ironic-api     | public   | HTTPS    | 6384  | external floating IP   |
