@@ -130,6 +130,7 @@
       tags: ['ceph', 'ceph-monitor']
 
 - name: ceph osds
+  gather_facts: force
   hosts: ceph_osds
   roles:
     - role: ceph-osd
