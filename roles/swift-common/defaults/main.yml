@@ -7,11 +7,8 @@ swift:
   source:
     rev: 'stable/kilo'
     python_dependencies:
-      - { name: mysql-python }
       - { name: keystonemiddleware }
       - { name: python-swiftclient }
-    system_dependencies:
-      - libmysqlclient-dev
   alternatives:
     - swift-account-audit
     - swift-account-auditor
