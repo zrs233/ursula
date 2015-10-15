@@ -155,6 +155,9 @@
 
 - name: keystone setup
   hosts: controller[0]
+  vars_files:
+    - roles/keystone/defaults/main.yml
+
   roles:
     - role: keystone-setup
       keystone_configured: false
