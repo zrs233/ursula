@@ -29,3 +29,5 @@ common:
     tar_version: master
   system_tools:
     mcelog: True
+  packages_to_remove:
+    - language-selector-common
