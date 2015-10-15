@@ -51,6 +51,8 @@ memcached:
 
 swift:
   enabled: False
+  logging:
+    debug: False
 
 endpoints:
   main:     "{{ fqdn }}"
