@@ -26,7 +26,9 @@
                    config_dirs=/etc/keystone
 
 - name: configure keystone
-  template: src={{ item }} dest=/etc/keystone/ mode=0644
+  template: src={{ item }} dest=/etc/keystone/ 
+            mode={{ 0644 if 'policy.json' in item else 0640 }}
+            owner=keystone group=keystone
   with_fileglob: ../templates/etc/keystone/*
   notify:
     - restart keystone services
@@ -55,6 +57,12 @@
   with_items:
     - "{{ endpoints.keystone.port.haproxy_api }}"
     - "{{ endpoints.keystone_admin.port.haproxy_api }}"
+
+- name : change keystone log file ownership
+  file: path={{ item }} mode=0644 owner=keystone group=keystone state=touch
+  with_items:
+    - /var/log/keystone/keystone-all.log
+    - /var/log/keystone/keystone-manage.log
 
 - name: add cron job to clean up expired tokens
   template:
