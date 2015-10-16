@@ -26,7 +26,9 @@
   notify: restart sensu-client
 
 - name: l3 router check
-  sensu_check: name=check-l3-router plugin=check-l3-router.sh use_sudo=true
+  sensu_check: name=check-l3-router plugin=check-l3-router.sh 
+               args="-e {{ ansible_default_ipv4.interface }}"
+               use_sudo=true
   notify: restart sensu-client
 
 - name: gateway ip duplicate check
