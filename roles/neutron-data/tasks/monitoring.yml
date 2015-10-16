@@ -1,5 +1,4 @@
 ---
 - name: neutron agents check
   sensu_check: name=check-neutron-agents plugin=check-neutron-agents.sh
-               use_sudo=true
   notify: restart sensu-client
