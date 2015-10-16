@@ -1,7 +1,7 @@
 ---
 openstack_source:
   git_mirror: "{{ git_mirror|default('https://github.com/openstack') }}"
-  pypi_mirror: "{{ pypi_mirror|default('https://pypi.python.org/simple/') }}"
+  pypi_mirror: "{{ pypi_mirror|default(None) }}"
   project_rev: "{{ project_rev|default('master') }}"
   virtualenv_base: /opt/bbc/openstack-11.0-master
   git_update: no

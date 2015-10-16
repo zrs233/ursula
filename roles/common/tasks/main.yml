@@ -5,9 +5,11 @@
 
 - name: ubuntu apt source list
   template: src=etc/apt/sources.list dest=/etc/apt/sources.list
-  when: apt.ubuntu_mirror is defined
+  when: openstack.ubuntu_mirror is defined
+  notify:
+    - update apt index
 
-- include: proxy.yml
+- meta: flush_handlers
 
 - name: update apt index
   apt: update_cache=yes cache_valid_time=3600
@@ -35,8 +37,11 @@
     - libxml2-dev
     - libxslt1-dev
 
-- include: pip.yml
-  tags: pip
+- include: python.yml
+  tags: pip, python
+
+- include: ruby.yml
+  tags: ruby
 
 - name: set UTC timezone
   template: src=etc/timezone dest=/etc/timezone owner=root group=root mode=0644
@@ -45,8 +50,6 @@
 
 - name: /opt/stack
   file: dest=/opt/stack state=directory
-
-- include: python.yml
 
 - include: ssl.yml tags=ssl
 
