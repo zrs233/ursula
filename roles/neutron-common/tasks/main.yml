@@ -117,3 +117,4 @@
     - /var/log/neutron/neutron-linuxbridge-agent.log
     - /var/log/neutron/neutron-dhcp-agent.log
     - /var/log/neutron/neutron-metadata-agent.log
+    - /var/log/neturon/neutron-lbaasv2-agent.log
