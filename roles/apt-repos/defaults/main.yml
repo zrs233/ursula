@@ -35,7 +35,7 @@ apt_repos:
     key_url: 'https://packages.erlang-solutions.com/debian/erlang_solutions.asc'
   ceph:
     repo: 'http://ceph.com/debian-'
-    key_url: 'https://ceph.com/git/?p=ceph.git;a=blob_plain;f=keys/release.asc'
+    key_url: 'https://download.ceph.com/keys/release.asc'
   mongodb:
     repo: 'http://repo.mongodb.org/apt/ubuntu'
     key_url: 'https://docs.mongodb.org/10gen-gpg-key.asc'
