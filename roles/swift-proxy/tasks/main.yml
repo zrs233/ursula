@@ -10,7 +10,7 @@
 
 - name: configure swift-proxy
   template: src=etc/swift/proxy-server.conf dest=/etc/swift/proxy-server.conf
-            owner=root group=root mode=0644
+            owner=swift group=swift mode=0640
   notify: restart swift-proxy service
 
 - meta: flush_handlers
