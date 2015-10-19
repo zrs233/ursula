@@ -59,3 +59,6 @@
   register: pool_output
   run_once: true
   delegate_to: "{{ groups[ceph.monitor_group_name][0] }}"
+
+- include: system_tuning.yml
+  tags: ceph-osd

@@ -1,0 +1,34 @@
+---
+- name: disable osd directory parsing by updatedb
+  command: updatedb -e /var/lib/ceph
+  changed_when: false
+  failed_when: false
+
+- name: install dependencies
+  apt: pkg="hugepages"
+  when: ceph_osd.disable_transparent_hugepage
+
+- name: disable transparent hugepage until next reboot
+  command: hugeadm --thp-never
+  when: ceph_osd.disable_transparent_hugepage
+
+- name: disable transparent hugepages permanently
+  lineinfile: dest=/etc/default/grub
+    state=present
+    regexp="^GRUB_CMDLINE_LINUX_DEFAULT=\"(.*)\"$"
+    line="GRUB_CMDLINE_LINUX_DEFAULT=\"\1 transparent_hugepage=never\""
+    backrefs=yes
+  when: ceph_osd.disable_transparent_hugepage
+
+- name: update grub config with changes
+  command: update-grub
+  when: ceph_osd.disable_transparent_hugepage
+
+- name: apply operating system tuning
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+    sysctl_file: /etc/sysctl.conf
+    ignoreerrors: yes
+  with_items: ceph_osd.os_tuning_params
