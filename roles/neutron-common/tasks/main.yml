@@ -56,7 +56,7 @@
   register: service_tenant
 
 - name: neutron config
-  template: src={{ item }} dest=/etc/neutron mode=0644
+  template: src={{ item }} dest=/etc/neutron mode=0640 owner=neutron group=neutron
   with_fileglob: ../templates/etc/neutron/*
   notify:
      - restart neutron services
@@ -108,3 +108,13 @@
   tags:
     - logrotate
     - logging
+
+- name: change neutron log file permissions
+  file: path={{ item }} mode=0644 owner=neutron group=neutron state=touch
+  with_items:
+    - /var/log/neutron/neutron-server.log
+    - /var/log/neutron/neutron-l3-agent.log
+    - /var/log/neutron/neutron-linuxbridge-agent.log
+    - /var/log/neutron/neutron-dhcp-agent.log
+    - /var/log/neutron/neutron-metadata-agent.log
+    - /var/log/neutron/neutron-lbaasv2-agent.log
