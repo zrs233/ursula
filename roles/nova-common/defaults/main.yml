@@ -102,6 +102,11 @@ nova:
         type: openstack
         tags: nova,nova-manage
     - paths:
+        - /var/log/nova/nova-novncproxy.log
+      fields:
+        type: openstack
+        tags: nova,novnc
+    - paths:
         - /var/log/nova/nova-scheduler.log
       fields:
         type: openstack
