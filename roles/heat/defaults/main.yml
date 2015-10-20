@@ -6,6 +6,7 @@ heat:
     python_dependencies:
       - { name: mysql-python }
       - { name: functools32 }
+      - { name: requests, version: 2.7.0 }
     system_dependencies:
       - libmysqlclient-dev
   alternatives:
