@@ -7,7 +7,6 @@ dependencies:
     logdata: "{{ swift.logs }}"
   - role: openstack-source
     project_name: swift
-    system_dependencies: "{{ swift.source.system_dependencies }}"
     python_dependencies: "{{ swift.source.python_dependencies }}"
     project_rev: "{{ swift.source.rev }}"
     alternatives: "{{ swift.alternatives }}"
