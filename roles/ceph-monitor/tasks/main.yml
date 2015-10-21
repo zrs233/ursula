@@ -4,12 +4,12 @@
            --create-keyring --name=mon. --gen-key --cap mon 'allow *'
            creates=/var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
   run_once: true
-  delegate_to:  "{{ groups[ceph.monitor_group_name][0] }}"
+  delegate_to:  "{{ groups['ceph_monitors'][0] }}"
 
 - name: fetch contents of mon_secret file
   slurp: path=/var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
   run_once: true
-  delegate_to: "{{ groups[ceph.monitor_group_name][0] }}"
+  delegate_to: "{{ groups['ceph_monitors'][0] }}"
   register: mon_secret_file
 
 - name: copy mon_secret to all hosts

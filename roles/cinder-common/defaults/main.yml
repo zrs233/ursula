@@ -1,9 +1,12 @@
 ---
 cinder:
   enabled: True
-  enabled_backends:
+  enabled_backends: # rbd_volumes for ceph
   default_backend:
-  backends: []
+  backends: [] # remove this if you add a backend below
+    # Ceph
+    #- name: rbd_volumes
+    #  volume_driver: cinder.volume.drivers.rbd.RBDDriver
   api_workers: 5
   volume_type: file
   volume_group: cinder-volumes

@@ -12,7 +12,7 @@
   slurp: src=/var/lib/ceph/bootstrap-osd/ceph.keyring
   register: ceph_keyrings
   run_once: true
-  delegate_to: "{{ groups[ceph.monitor_group_name][0] }}"
+  delegate_to: "{{ groups['ceph_monitors'][0] }}"
 
 - name: write ceph.keyring
   copy:
@@ -51,14 +51,14 @@
   register: poolout
   changed_when: poolout.stdout | search('removed')
   run_once: true
-  delegate_to: "{{ groups[ceph.monitor_group_name][0] }}"
+  delegate_to: "{{ groups['ceph_monitors'][0] }}"
 
 - name: create openstack pool
   ceph_pool:
-    pool_name: "{{ ceph_common.pool_name }}"
+    pool_name: "{{ ceph.pool_name }}"
   register: pool_output
   run_once: true
-  delegate_to: "{{ groups[ceph.monitor_group_name][0] }}"
+  delegate_to: "{{ groups['ceph_monitors'][0] }}"
 
 - include: system_tuning.yml
   tags: ceph-osd

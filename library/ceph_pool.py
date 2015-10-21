@@ -25,7 +25,7 @@ EXAMPLES = """
     pool_name: default
   register: pool_output
   run_once: true
-  delegate_to: "{{ groups[ceph.monitor_group_name][0] }}"
+  delegate_to: "{{ groups['ceph_monitors'][0] }}"
 """
 
 import time
