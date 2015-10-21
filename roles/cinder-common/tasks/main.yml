@@ -46,7 +46,8 @@
   when: swift.enabled|bool and (endpoints.swift.haproxy_vip == fqdn)
 
 - name: cinder config
-  template: src={{ item }} dest=/etc/cinder mode=0640 owner=cinder group=cinder
+  template: src={{ item }} dest=/etc/cinder mode={{ 0644 if 'policy.json' in item else 0640 }}
+            owner=cinder group=cinder
   with_fileglob: ../templates/etc/cinder/*
   notify:
     - restart cinder services
