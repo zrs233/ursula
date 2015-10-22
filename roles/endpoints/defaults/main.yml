@@ -153,13 +153,13 @@ endpoints:
   swift:
     name: swift
     type: object-storage
-    haproxy_vip: "{{ fqdn }}"
+    haproxy_vip: "{{ swift_fqdn }}"
     description: 'Object Storage Service'
     version: v1
     url:
-      admin: https://{{ fqdn }}:8090
-      internal: https://{{ fqdn }}:8090
-      public: https://{{ fqdn }}:8090
+      admin: https://{{ swift_fqdn }}:8090
+      internal: https://{{ swift_fqdn }}:8090
+      public: https://{{ swift_fqdn }}:8090
       path: v1/%(tenant_id)s
     port:
       haproxy_api: 8090

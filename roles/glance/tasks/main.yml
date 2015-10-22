@@ -68,7 +68,7 @@
 - meta: flush_handlers
 
 - include: ceph_integration.yml
-  when: ceph.enabled
+  when: ceph.enabled|bool
 
 - name: start glance services
   service: name={{ item }} state=started

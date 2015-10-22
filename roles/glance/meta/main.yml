@@ -19,4 +19,4 @@ dependencies:
   - role: collectd-plugin
     when: collectd is defined and collectd.enabled|bool
   - role: ceph-common
-    when: ceph.enabled
+    when: ceph.enabled|bool
