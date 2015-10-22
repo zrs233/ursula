@@ -1,5 +1,6 @@
 ---
 dependencies:
+  - role: endpoints
   - role: apt-repos
     repos:
       - repo: 'deb {{ apt_repos.bbg_ubuntu.repo }} {{ ansible_lsb.codename }} main'

@@ -4,7 +4,7 @@
 
 - name: (possibly self-signed) ssl cert
   template: src=openstack.crt
-            dest=/usr/local/share/ca-certificates/{{ endpoints.main }}.crt
+            dest=/usr/local/share/ca-certificates/{{ fqdn }}.crt
   notify: refresh CAs
 
 - name: ssl directory

@@ -2,10 +2,11 @@
 # This playbook boot straps a new compute node with its network config
 #
 ---
-- hosts: compute:network
+- hosts: all 
   serial: 10
   vars:
     timezone: Etc/UTC
+  environment: "{{ env_vars|default({}) }}"
   tasks:
 
   #
@@ -25,6 +26,9 @@
     - linux-generic-lts-trusty
     - linux-tools-lts-trusty
     when: ansible_distribution_version == "12.04"
+
+  - name: disable apt sources
+    command: sed -i 's/^deb-src/#deb-src/' /etc/apt/sources.list
 
   # Install vlan and ucarp packages
   - apt: cache_valid_time=3600 update_cache=yes
@@ -62,6 +66,10 @@
     when: network_interfaces_d is defined
     tags: network_config
 
+  - name: remove any existing configurations
+    shell: rm -f /etc/network/interfaces.d/*
+    tags: network_config
+
   - name: write network configuration if multiple interface files
     copy: content="{{ item.contents }}" dest=/etc/network/interfaces.d/{{ item.filename }} force=yes owner=root group=root mode=0644
     when: network_interfaces_d is defined
@@ -73,3 +81,4 @@
     async: 0
     poll: 0
     ignore_errors: true
+    tags: network_config

@@ -60,6 +60,7 @@
 - include: ufw.yml
 
 - include: ntp.yml
+  tags: ntp
 
 # Include serial console before kernel-tuning to build serial_console_cmdline
 - include: serial-console.yml tty=ttyS0
