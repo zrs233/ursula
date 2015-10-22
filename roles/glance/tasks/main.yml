@@ -41,7 +41,8 @@
     - glance-registry
 
 - name: glance config
-  template: src={{ item }} dest=/etc/glance mode=0640 owner=glance group=glance
+  template: src={{ item }} dest=/etc/glance mode={{ 0644 if 'policy.json' in item else 0640 }}
+            owner=glance group=glance
   with_fileglob: ../templates/etc/glance/*
   notify:
     - restart glance services
