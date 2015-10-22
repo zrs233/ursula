@@ -9,6 +9,7 @@ horizon:
     python_dependencies:
       - { name: mysql-python }
       - { name: functools32 }
+      - { name: requests, version: '2.7.0' }
       - { name: python-memcached, version: '1.48' }
       - { name: stevedore, version: '1.5.0' }
       - { name: "git+https://github.com/blueboxgroup/horizon-customization#egg=horizon-customization"}
