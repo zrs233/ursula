@@ -18,8 +18,18 @@
   file: dest=/etc/keystone state=directory
 
 - name: keystone log dir
-  file: dest=/var/log/keystone state=directory mode=0755 owner=keystone
-        group=keystone
+  file: dest=/var/log/keystone state=directory mode=2750 owner=keystone
+        group=adm
+
+- name: Change keystone log dir acl
+  acl: name=/var/log/keystone state=present default=yes etype={{ item.etype }} permissions={{ item.permission }}
+  with_items:
+    - etype: user
+      permission: rw
+    - etype: group
+      permission: r
+    - etype: other
+      permission: r
 
 - name: install keystone service
   upstart_service: name=keystone user=keystone cmd=/usr/local/bin/keystone-all
@@ -57,12 +67,6 @@
   with_items:
     - "{{ endpoints.keystone.port.haproxy_api }}"
     - "{{ endpoints.keystone_admin.port.haproxy_api }}"
-
-- name : change keystone log file ownership
-  file: path={{ item }} mode=0644 owner=keystone group=keystone state=touch
-  with_items:
-    - /var/log/keystone/keystone-all.log
-    - /var/log/keystone/keystone-manage.log
 
 - name: add cron job to clean up expired tokens
   template:

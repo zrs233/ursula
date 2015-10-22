@@ -35,7 +35,17 @@
     - /var/lib/cinder/lock
 
 - name: cinder log dir
-  file: dest=/var/log/cinder state=directory mode=0755 owner=cinder group=cinder
+  file: dest=/var/log/cinder state=directory mode=2750 owner=cinder group=adm
+
+- name: Change cinder log dir acl
+  acl: name=/var/log/cinder state=present default=yes etype={{ item.etype }} permissions={{ item.permission }}
+  with_items:
+    - etype: user
+      permission: rw
+    - etype: group
+      permission: r
+    - etype: other
+      permission: r
 
 # needs to happen before 'cinder config'
 - include: ceph_integration.yml
@@ -61,11 +71,3 @@
   tags:
     - logrotate
     - logging
-
-- name: change cinder log file permissions
-  file: path={{ item }} mode=0644 owner=cinder group=cinder state=touch
-  with_items:
-    - /var/log/cinder/cinder-api.log
-    - /var/log/cinder/cinder-volume.log
-    - /var/log/cinder/cinder-manage.log
-    - /var/log/cinder/cinder-scheduler.log
