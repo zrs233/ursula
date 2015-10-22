@@ -1,5 +1,10 @@
 ---
-ceph_common:
+ceph:
+  enabled: false
+  #disks:
+  #  - sdb
+  #  - sdc
+  #  - sdd
 
   ###########
   # INSTALL #
@@ -69,7 +74,7 @@ ceph_common:
   ## OSD options
   #
   journal_size: 10000 # 10 GB
-  pool_name: "{{ ceph.rbd_pool }}"
+  pool_name: default
   pool_default_size: 3
   pool_default_min_size: 2
   osd_mkfs_type: xfs
@@ -106,6 +111,14 @@ ceph_common:
   osd_disk_thread_ioprio_priority: 0
   osd_scrub_chunk_max: 5
   osd_deep_scrub_stride: 1048576
+
+  # these values are used in cinder.conf
+  cinder:
+    rbd_user: cinder
+    rbd_ceph_conf: /etc/ceph/ceph.conf
+    rbd_flatten_volume_from_snapshot: false
+    rbd_max_clone_depth: 5
+    glance_api_version: 2
 
   logs:
     - paths:

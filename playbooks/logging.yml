@@ -85,7 +85,7 @@
   roles:
   - role: ../roles/logging-config
     service: ceph
-    logdata: "{{ ceph_common.logs }}"
+    logdata: "{{ ceph.logs }}"
   tasks:
     - include: ../roles/ceph-common/tasks/logging.yml
 

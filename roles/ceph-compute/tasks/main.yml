@@ -8,12 +8,12 @@
   shell: ceph auth get-key client.cinder > /etc/ceph/client.cinder.key
          creates=/etc/ceph/client.cinder.key
   run_once: true
-  delegate_to: "{{ groups[ceph.monitor_group_name][0] }}"
+  delegate_to: "{{ groups['ceph_monitors'][0] }}"
 
 - name: fetch client.cinder.key
   slurp: path=/etc/ceph/client.cinder.key
   run_once: true
-  delegate_to: "{{ groups[ceph.monitor_group_name][0] }}"
+  delegate_to: "{{ groups['ceph_monitors'][0] }}"
   register: client_cinder_key
 
 - name: write client.cinder.key
@@ -25,7 +25,7 @@
 - name: fetch contents of uuid file
   slurp: path=/etc/ceph/cinder_uuid
   run_once: true
-  delegate_to: "{{ groups[ceph.monitor_group_name][0] }}"
+  delegate_to: "{{ groups['ceph_monitors'][0] }}"
   register: cinder_uuid_file
 
 - name: generate ceph secret xml file

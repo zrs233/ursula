@@ -162,14 +162,6 @@ nova:
 
 ceph:
   enabled: false
-  rbd_pool: default
-  rbd_user: cinder
-  rbd_ceph_conf: /etc/ceph/ceph.conf
-  rbd_flatten_volume_from_snapshot: false
-  rbd_max_clone_depth: 5
-  glance_api_version: 2
-  monitor_group_name: ceph_monitors
-  osd_group_name: ceph_osds
   #disks:
   #  - sdb
   #  - sdc
