@@ -4,7 +4,7 @@
 
 - name: (possibly self-signed) ssl cert
   template: src=openstack.crt
-            dest=/usr/local/share/ca-certificates/{{ fqdn }}.crt
+            dest=/usr/local/share/ca-certificates/{{ endpoints.main }}.crt
   notify: refresh CAs
 
 - name: ssl directory
@@ -12,7 +12,7 @@
 
 - name: openstack cert
   template: src=openstack.crt dest=/opt/stack/ssl/openstack.crt mode=0644
-
+  tags: cert
 # ugly hack: some python http libs don't honor the system ca-certs, and ship with
 # their own list, instead.
 # pre-install these client libs, and force them to use the system cert list.
