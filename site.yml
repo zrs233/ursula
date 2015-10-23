@@ -229,6 +229,7 @@
 
 - name: ceph compute
   hosts: compute
+  gather_facts: force
   roles:
     - role: ceph-compute
       tags: ['ceph', 'ceph-compute']
