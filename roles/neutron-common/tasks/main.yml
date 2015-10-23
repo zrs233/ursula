@@ -66,7 +66,8 @@
   register: service_tenant
 
 - name: neutron config
-  template: src={{ item }} dest=/etc/neutron mode=0640 owner=neutron group=neutron
+  template: src={{ item }} dest=/etc/neutron mode={{ 0644 if 'policy.json' in item else 0640 }}
+            owner=neutron group=neutron
   with_fileglob: ../templates/etc/neutron/*
   notify:
      - restart neutron services

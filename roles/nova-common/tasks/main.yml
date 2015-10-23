@@ -31,7 +31,7 @@
       permission: r
 
 - name: nova config
-  action: template src={{ item }} dest=/etc/nova mode=0640
+  action: template src={{ item }} dest=/etc/nova mode={{ 0644 if 'policy.json' in item else 0640 }}
           owner=nova group=nova
   with_fileglob: ../templates/etc/nova/*
   notify:
