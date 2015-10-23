@@ -1,0 +1,7 @@
+{% set basepath = lookup('items', 'openstack_source.virtualenv_base') if
+openstack_install_method == 'source' else
+lookup('items', 'openstack_package.virtualenv_base') %}
+## Filters we add to deal with Ursula install paths
+
+[Filters]
+kill_ursulapaths: KillFilter, root, {{ basepath }}/neutron/bin/python, -9
