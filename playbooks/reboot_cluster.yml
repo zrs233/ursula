@@ -1,5 +1,6 @@
 ---
 - hosts: all:!db
+  serial: 1
   tasks:
   - name: Reboot
     command: shutdown -r now
@@ -14,6 +15,7 @@
     delegate_to: "{{ groups['controller']|first }}"
 
 - hosts: db_arbiter
+  serial: 1
   tasks:
   - name: Ensure Garbd is up before rebooting database servers
     wait_for: host={{ ansible_default_ipv4.address }}
