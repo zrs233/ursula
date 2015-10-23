@@ -43,7 +43,7 @@
 
 - name: configure swift
   template: src=etc/swift/swift.conf dest=/etc/swift/swift.conf
-            owner=root group=root mode=0644
+            owner=swift group=swift mode=0640
 
 - name: create swift cache directory
   file: dest=/var/cache/swift state=directory owner=swift
@@ -65,7 +65,7 @@
 
 - name: configure dispersion tools
   template: src=etc/swift/dispersion.conf dest=/etc/swift/dispersion.conf
-            owner=root group=root mode=0644
+            owner=swift group=swift mode=0640
 
 - include: monitoring.yml tags=monitoring,common
   when: monitoring.enabled|default('True')|bool
