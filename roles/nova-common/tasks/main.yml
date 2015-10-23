@@ -8,13 +8,31 @@
     pkg="{{ item }}"
   with_items: nova.install_packages
 
-- file: dest=/etc/nova state=directory
-- file: dest=/var/lib/nova state=directory owner=nova
-- file: dest=/var/cache/nova state=directory mode=0700 owner=nova group=nova
-- file: dest=/var/log/nova state=directory mode=0755 owner=nova group=nova
+- name: create nova config dir
+  file: dest=/etc/nova state=directory
+
+- name: create nova lib dir
+  file: dest=/var/lib/nova state=directory owner=nova
+
+- name: create nova cache dir
+  file: dest=/var/cache/nova state=directory mode=0700 owner=nova group=nova
+
+- name: create nova log dir
+  file: dest=/var/log/nova state=directory mode=2750 owner=nova group=adm
+
+- name: Change nova log dir acl
+  acl: name=/var/log/nova state=present default=yes etype={{ item.etype }} permissions={{ item.permission }}
+  with_items:
+    - etype: user
+      permission: rw
+    - etype: group
+      permission: r
+    - etype: other
+      permission: r
 
 - name: nova config
-  action: template src={{ item }} dest=/etc/nova mode=0644
+  action: template src={{ item }} dest=/etc/nova mode=0640
+          owner=nova group=nova
   with_fileglob: ../templates/etc/nova/*
   notify:
     - restart nova services
