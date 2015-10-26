@@ -22,6 +22,7 @@ required to run `ursula`:
 * libxml2-dev
 * libxslt-dev
 * libffi-dev
+* libssl-dev
 
 ## Python Environment
 
@@ -34,8 +35,8 @@ up a `virtualenv` for ursula.
 
 ```bash
 $ pip install virtualenvwrapper
-$ mkvirtualenv ursula
 $ source /usr/local/bin/virtualenvwrapper.sh
+$ mkvirtualenv ursula
 ```
 
 You will want to add `source /usr/local/bin/virtualenvwrapper.sh` to your shell startup file, changing the path to virtualenvwrapper.sh
