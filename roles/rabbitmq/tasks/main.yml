@@ -5,16 +5,16 @@
 - name: add rabbitmq config directory
   file: dest=/etc/rabbitmq state=directory owner=root mode=0755
 
-- name: add rabbitmq environment configuration
-  template: src=etc/rabbitmq/rabbitmq-env.conf
-            dest=/etc/rabbitmq/rabbitmq-env.conf
-            owner=root group=root mode=0644
-
 - name: install erlang-solutions erlang
   apt: pkg={{ item }}
   with_items:
     - esl-erlang
     - rabbitmq-server
+
+- name: add rabbitmq environment configuration
+  template: src=etc/rabbitmq/rabbitmq-env.conf
+            dest=/etc/rabbitmq/rabbitmq-env.conf
+            owner=rabbitmq group=rabbitmq mode=0600
 
 # Create the cluster if desired
 - include: cluster.yml
