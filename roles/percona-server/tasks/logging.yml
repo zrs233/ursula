@@ -1,0 +1,10 @@
+---
+- name: set up log rotation for mysql
+  logrotate: name=mysql path=/var/log/mysql/*.log
+  args:
+    options:
+      - daily
+      - rotate 7
+      - missingok
+      - compress
+      - minsize 100k
