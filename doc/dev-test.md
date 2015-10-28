@@ -65,7 +65,7 @@ You can save time on iterating by keeping your vms around for multiple ansible r
 
 ## DockerDockerDockerDockerDockerDocker (Unsupported)
 
-If you're feeling a little frisky you can deploy a test/dev environment straight from our docker images.
+If you're feeling a little frisky, you can deploy a test/dev environment straight from our docker images.
 This will run `test/deploy && test/run` from inside the container and use the stackrc file that you've mapped in:
 
 ```

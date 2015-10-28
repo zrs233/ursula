@@ -7,7 +7,7 @@ dependencies services like RabbitMQ and MySQL in our definition of endpoints.
 
 There are three IP addresses we use for endpoints:
 
-1. Each controllers internal "undercloud" IP address.
+1. Each controller's internal "undercloud" IP address.
 2. The floating internal "undercloud" IP address shared by the controllers.
 3. The floating external IP address shared by the controllers.
 

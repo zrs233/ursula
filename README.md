@@ -1,6 +1,6 @@
 <div align="center"><img src="./ursula.png" alt="Ursula"></div><hr />
 
-Ursula provides a series of Ansible playbooks for installing, managing and
+Ursula provides a series of Ansible playbooks for installing, managing, and
 maintaining OpenStack powered clouds.
 
 Ursula was originally created by a team at [Blue Box](https://www.blueboxcloud.com) and is
@@ -30,8 +30,8 @@ We recommend using [virtualenv](http://virtualenv.readthedocs.org/en/latest/) or
 [virtualenvwrapper](https://virtualenvwrapper.readthedocs.org/en/latest/)
 to isolate your Python environment.
 
-If you're new to python the following will install `virtualenvwrapper` and set
-up a `virtualenv` for ursula.
+If you're new to python, the following will install `virtualenvwrapper` and set
+up a `virtualenv` for ursula:
 
 ```bash
 $ pip install virtualenvwrapper
@@ -53,8 +53,8 @@ enter the `virtualenv`
 
 ## Install ursula and dependencies:
 
-now that your python environment is ready you can clone ursula and install
-it's prerequisites:
+Now that your python environment is ready, you can clone ursula and install
+its prerequisites:
 
 ```bash
 $ cd ~/development
@@ -63,7 +63,7 @@ $ cd ursula
 $ pip install -r requirements.txt
 ```
 
-This will have installed `ursula-cli`, the various openstack clients, and our
+These steps will have installed `ursula-cli`, the various openstack clients, and our
 patched fork of `Ansible`.
 
 # ursula-cli
@@ -94,9 +94,9 @@ The second is `playbook` which will almost always be `site.yml`.
 
 One of the modifications that we have made to `Ansible` is the ability to have
 a seperate path that includes all of the configuration options for your
-OpenStack deployment[s].   An example of this can be found in `/envs/example`
+OpenStack deployment(s).   An example of this can be found in `/envs/example`
 
-If you look in the `/envs/example` path you'll see a `defaults.yml` file and a
+If you look in the `/envs/example` path, you'll see a `defaults.yml` file and a
 series of directories each representing a different OpenStack deployment.
 
 We then utilize the standard `Ansible` features by having `group_vars`,
@@ -111,24 +111,23 @@ environments in VMs.
 The simplest example deployment is `allinone` which is a single server
 deployment that acts as both a `controller` and a `compute` node.
 
-Whether or not you're using `Vagrant` If you look in the
+Whether or not you're using `Vagrant` if you look in the
 `envs/example/allinone/vagrant.yml` file it will give you some hints on what
 your server should look like.  If you do not wish to use `Vagrant` then you
 should install Ubuntu 12.04 on a server and configure its networking as
 described in the `vagrant.yml` file.
 
-Next look in the `hosts` file.  It's very simple in this case due to the fact
+Next, look in the `hosts` file.  It's very simple in this case due to the fact
 we have only a single server.  This file combined with the `site.yml` playbook
 tells Ansible what roles to apply to which servers.
 
-Finally we have the `group_vars/all.yml` file.  This contains values that will
-override the `defaults.yml` in the parent directory.  For example we're
+Finally, we have the `group_vars/all.yml` file.  This contains values that will
+override the `defaults.yml` in the parent directory.  For example, we're
 disabling Percona replication by setting `percona.replication: False`.
 
 ## Performing a deployment:
 
-For the sake of simplicity for your first install I recommend using `Vagrant`
-rather than `Manual`
+For the sake of simplicity, I recommend using `Vagrant` rather than `Manual` for your first install. 
 
 ### Manually
 
@@ -150,8 +149,8 @@ $ ursula envs/example/allinone site.yml
 
 ### Vagrant
 
-If you're running `Vagrant` we have a wrapper script that stands up the
-appropriate vagrant environment, saves it as an ssh config and then calls
+If you're running `Vagrant`, we have a wrapper script that stands up the
+appropriate vagrant environment, saves it as an ssh config, and then calls
 `ursula` for you.
 
 To deploy your `allinone` environment via `Vagrant` simply run:
@@ -160,7 +159,7 @@ To deploy your `allinone` environment via `Vagrant` simply run:
 $ bin/run_vagrant up allinone
 ```
 
-Note: The default OS for ursula is Ubuntu Trusty, if you want Precise set
+Note: The default OS for ursula is Ubuntu Trusty. If you want Precise, set
 the env var `URSULA_BOX_NAME` to the name of your precise vagrant
 box before running vagrant.
 
