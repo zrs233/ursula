@@ -17,6 +17,8 @@
     "admin_or_cloudadmin_or_projectadmin": "rule:admin_required or rule:cloud_admin_role or rule:projectadmin_role",
     "create_revoke_grant_rule": "rule:admin_required or (rule:cloud_admin_role and not 'admin':%(target.role.name)s) or (rule:projectadmin_role and project_id:%(project_id)s and not 'cloud_admin':%(target.role.name)s and not 'admin':%(target.role.name)s)",
     "get_pseudo_admin_endpoints": "rule:cloudadmin_role or rule:projectadmin_role",
+    "project_admin_create_user": "role:project_admin and (project_id:%(project_id)s or project_id:%(user.default_project_id)s)",
+    "project_admin_update_user": "role:project_admin and (project_id:%(project_id)s or project_id:%(target.user.default_project_id)s)",
 
     "identity:get_region": "",
     "identity:list_regions": "",
@@ -51,10 +53,10 @@
 
     "identity:get_user": "rule:admin_or_owner_or_cloudadmin or (rule:projectadmin_role and project_id:%(target.user.default_project_id)s)",
     "identity:list_users": "rule:admin_or_cloudadmin_or_projectadmin or rule:support_role",
-    "identity:create_user": "rule:admin_or_cloudadmin or (rule:projectadmin_role and project_id:%(user.default_project_id)s)",
-    "identity:update_user": "rule:admin_or_owner_or_cloudadmin or (rule:projectadmin_role and project_id:%(target.user.default_project_id)s) or rule:support_role",
-    "identity:delete_user": "rule:admin_or_cloudadmin or (rule:projectadmin_role and project_id:%(target.user.default_project_id)s)",
-    "identity:change_password": "rule:admin_or_owner_or_cloudadmin or (rule:projectadmin_role and project_id:%(target.user.default_project_id)s) or rule:support_role",
+    "identity:create_user": "rule:admin_or_cloudadmin or rule:project_admin_create_user",
+    "identity:update_user": "rule:admin_or_owner_or_cloudadmin or rule:project_admin_update_user or rule:support_role",
+    "identity:delete_user": "rule:admin_or_cloudadmin or rule:project_admin_update_user",
+    "identity:change_password": "rule:admin_or_owner_or_cloudadmin or rule:project_admin_update_user or rule:support_role",
 
     "identity:get_group": "",
     "identity:list_groups": "",
