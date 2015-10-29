@@ -70,3 +70,8 @@ swift:
       fields:
         type: openstack
         tags: swift
+  tuning:
+      net.netfilter.nf_conntrack_max: 262144
+      net.ipv4.tcp_syncookies: 0
+      net.ipv4.tcp_tw_recycle: 1
+      net.ipv4.tcp_tw_reuse: 1
