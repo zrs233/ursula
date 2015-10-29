@@ -1,7 +1,7 @@
 Nova Docker Support
 ===================
 
-If you want to bootstrap a cloud with nova-docker installed you can do the following:
+If you want to bootstrap a cloud with nova-docker installed, you can do the following:
 
 Environment
 -----------
@@ -34,14 +34,6 @@ Then you should be able to boot a docker container like this:
 
 ```
 $ nova boot --image=$IMAGE --flavor=1 --nic net-id=<net-uuid> my_first_docker
-```
-
-within just a few seconds the container will be up and running.
-
-```
-$ docker ps
-$ curl <ip.of.docker.instance>
-WORDPRESS SETUP PAGE
 ```
 
 within just a few seconds the container will be up and running.

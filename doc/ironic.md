@@ -4,7 +4,7 @@ Using Ironic on the Ursula Stack
 Bootstrapping
 ---------------------
 
-set the following in your `envs/ENVIRONMENT/defaults.yml`:
+Set the following in your `envs/ENVIRONMENT/defaults.yml`:
 
 ```
 ironic:
@@ -20,7 +20,7 @@ Testing
 Vagrant and Vbox
 ----------------
 
-boot ironic allinone node
+Boot ironic allinone node:
 
 ```
 $ bin/run_vagrant ironic --skip-tags=cinder,horizon
@@ -34,7 +34,7 @@ $ ssh-keygen -f /var/lib/ironic/key -N '' && \
    cat /var/lib/ironic/key.pub
 ```
 
-and copy the public key into `~/.ssh/authorized_keys` on your host machine and then make sure you can ssh back into your host from inside vagrant `ssh <username>@10.0.2.2`.
+and copy the public key into `~/.ssh/authorized_keys` on your host machine. Then make sure you can ssh back into your host from inside vagrant `ssh <username>@10.0.2.2`.
 
 Create a VM in virtualbox with:
 * 512mb RAM, 21Gb disk, 1 CPU.
