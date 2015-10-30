@@ -80,3 +80,11 @@
   lineinfile: dest=/etc/motd.tail
               regexp="^WARNING Swift node"
               line='WARNING Swift node -- do not replace disks without consulting Swift specific procedures'
+
+- name: system tuning recommendations for swift per deployment guide
+  sysctl: name="{{ item.key }}" value="{{ item.value }}"
+  with_dict: swift.tuning
+
+- name: disable swift directory parsing by updatedb
+  command: updatedb -e /srv/node
+
