@@ -6,7 +6,7 @@
 - name: install dependencies
   apt: pkg={{ item }}
        state=present
-  with_items: ceph_osd.pkgs
+  with_items: ceph.osd_pkgs
 
 - name: register ceph.keyring
   slurp: src=/var/lib/ceph/bootstrap-osd/ceph.keyring

@@ -6,11 +6,11 @@
 
 - name: install dependencies
   apt: pkg="hugepages"
-  when: ceph_osd.disable_transparent_hugepage
+  when: ceph.disable_transparent_hugepage
 
 - name: disable transparent hugepage until next reboot
   command: hugeadm --thp-never
-  when: ceph_osd.disable_transparent_hugepage
+  when: ceph.disable_transparent_hugepage
 
 - name: disable transparent hugepages permanently
   lineinfile: dest=/etc/default/grub
@@ -18,11 +18,11 @@
     regexp="^GRUB_CMDLINE_LINUX_DEFAULT=\"(.*)\"$"
     line="GRUB_CMDLINE_LINUX_DEFAULT=\"\1 transparent_hugepage=never\""
     backrefs=yes
-  when: ceph_osd.disable_transparent_hugepage
+  when: ceph.disable_transparent_hugepage
 
 - name: update grub config with changes
   command: update-grub
-  when: ceph_osd.disable_transparent_hugepage
+  when: ceph.disable_transparent_hugepage
 
 - name: apply operating system tuning
   sysctl:
@@ -31,4 +31,4 @@
     state: present
     sysctl_file: /etc/sysctl.conf
     ignoreerrors: yes
-  with_items: ceph_osd.os_tuning_params
+  with_items: ceph.os_tuning_params
