@@ -66,6 +66,9 @@
 - name: install root .my.cnf defaults file
   template: src=root/.my.cnf dest=/root/.my.cnf owner=root group=root mode=0600
 
+- name: remove mysql test database
+  mysql_db: state=absent name=test
+
 - name: are we already bootstrapped
   shell: mysql -e "SHOW VARIABLES LIKE 'wsrep_on'" | grep 'ON'
   register: already_bootstrapped
@@ -110,3 +113,9 @@
 
 - include: monitoring.yml tags=monitoring,common
   when: monitoring.enabled|default('True')|bool
+
+- include: logging.yml
+  tags:
+    - logrotate
+    - logging
+  when: logging.enabled|default('True')|bool
