@@ -14,7 +14,7 @@ options:
       - The device to make a swift disk
     required: false
   partition_path:
-    description: 
+    description:
       - Complete path to partition to be used for Swift
     required: false
 '''
@@ -47,27 +47,27 @@ def main():
 
     dev = module.params.get('dev')
     part_path = module.params.get('partition_path')
-    
+
     dev_path = None
     mount_point = "/srv/node/"
-    if dev is not None:   
+    if dev is not None:
         dev_path = "/dev/%s" % dev
         part_path = "/dev/%s1" % dev
         mount_point += ("%s1" % dev)
     else:
         # Get the last part of partition path
         mount_point += (part_path.split("/")[-1])
-        
+
     if dev_path is not None and not os.path.exists(dev_path):
         module.fail_json(msg="no such device: %s" % dev)
-    
-    
+
+
     if os.path.exists(part_path) and os.path.ismount(mount_point):
         module.exit_json(changed=False)
 
-    # setup the parted command
+    # create partitions
     if dev_path is not None:
-        cmd = ['parted', '--script', dev_path, 'mklabel', 'gpt', 'mkpart', 'primary', '1', '100%']
+        cmd = ['parted', '--script', dev_path, 'mkpart', 'primary', '1', '100%']
         rc, out, err = module.run_command(cmd, check_rc=True)
 
     # make an xfs
