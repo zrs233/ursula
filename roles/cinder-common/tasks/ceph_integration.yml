@@ -17,7 +17,7 @@
 
 - name: fetch rados.py
   get_url: url=https://raw.githubusercontent.com/ceph/ceph/{{ ceph.ceph_version }}/src/pybind/rados.py
-           dest="{{ openstack_package.virtualenv_base }}/cinder/lib/python2.7/site-packages/rados.py"
+           dest="{{ 'cinder' | ursula_package_path(openstack_package_version) }}/lib/python2.7/site-packages/rados.py"
            owner=root
            group=root
            mode=0644
@@ -25,7 +25,7 @@
 
 - name: fetch rbd.py
   get_url: url=https://raw.githubusercontent.com/ceph/ceph/{{ ceph.ceph_version }}/src/pybind/rbd.py
-           dest="{{ openstack_package.virtualenv_base }}/cinder/lib/python2.7/site-packages/rbd.py"
+           dest="{{ 'cinder' | ursula_package_path(openstack_package_version) }}/lib/python2.7/site-packages/rbd.py"
            owner=root
            group=root
            mode=0644
