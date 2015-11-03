@@ -5,6 +5,7 @@
 # Expects a hosts name as input into --extra-vars
 #
 # ex. ursula envs/example/swift playbooks/unmount-and-clear-disks.yml --extra-vars 'hosts=swiftnode'
+#     ursula envs/example/standard playbooks/unmount-and-clear-disks.yml --extra-vars 'hosts=ceph_osds'
 #
 
 ---
@@ -30,10 +31,10 @@
         [{% for item in hostvars[inventory_hostname]['ansible_devices'] -%}
             {{ comma() }}"{{ item }}"
         {%- endfor %}]
-  
+
   - name: unmount all mounted devices
     mount: name={{ item[0].mount }} src={{ item[0].device }} fstype={{ item[0].fstype }} state=unmounted
-    with_nested: 
+    with_nested:
       - "{{ ansible_mounts }}"
       - disk_list
     when: (item[0].mount != "/" and item[0].mount != "/boot") and item[1] in "{{ item[0].device }}"
@@ -52,5 +53,10 @@
   - name: clear all devices
     shell: dd if=/dev/zero of=/dev/{{ item }} bs=1M count=512
     ignore_errors: true
+    with_items: disk_list
+    when: item in disks_present
+
+  - name: create GPT labels
+    command: parted --script /dev/{{ item }} mklabel gpt
     with_items: disk_list
     when: item in disks_present
