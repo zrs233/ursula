@@ -70,13 +70,12 @@
   tasks:
     - include: ../roles/neutron-common/tasks/logging.yml
 
-# TODO: These roles are missing logging configs!!!
-#- name: horizon logging
-#  hosts: controller
-#  roles:
-#  - role: ../roles/logging-config
-#    service: horizon
-#    logdata: "{{ horizon.logs }}"
+- name: horizon logging
+  hosts: controller
+  roles:
+  - role: ../roles/logging-config
+    service: horizon
+    logdata: "{{ horizon.logs }}"
 
 - name: ceph logging
   hosts: ceph_monitors:ceph_osds
