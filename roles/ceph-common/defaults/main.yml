@@ -7,7 +7,7 @@ ceph:
   #  - sdc
   #  - sdd
 
-  ceph_version: v0.94.3
+  ceph_version: v0.94.5
   stable_release: hammer
 
   openstack_keys:

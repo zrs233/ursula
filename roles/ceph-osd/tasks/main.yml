@@ -28,7 +28,7 @@
 
 # journal_collocation
 - name: prepare osd disks
-  command: "ceph-disk prepare /dev/{{ item.1 }}"
+  command: ceph-disk prepare /dev/{{ item.1 }}
   with_together:
     - ceph_partitions.results
     - ceph.disks
