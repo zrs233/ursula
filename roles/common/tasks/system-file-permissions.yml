@@ -1,0 +1,13 @@
+---
+- name: Set permissions for wtmp
+  file: path=/var/log/wtmp state=file mode=755
+
+- name: Set permissions for faillog
+  file: path=/var/log/faillog state=touch mode=600
+
+- name: Set permissions for shadow
+  file: path=/etc/shadow state=file mode=600
+
+- name: Set ownership for games directory
+  file: path=/usr/games state=directory recurse=yes owner=games group=games
+
