@@ -49,6 +49,8 @@ if dest_node in host_agents.keys() and 'L3 agent' in host_agents[dest_node].keys
     routers = neutron.list_routers()
 
     for router in routers['routers']:
+        if router['ha'] :
+           continue;
         hosting_agents = neutron.list_l3_agent_hosting_routers(router['id'])
 
         for hosting_agent in hosting_agents['agents']:
