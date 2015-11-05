@@ -19,9 +19,9 @@
   unarchive: src=/opt/stack/novnc/novnc-0.5.1.tgz dest=/opt/stack/novnc/ copy=no
   when: nova.novnc_method == 'file'
 
-- name: ensure novnc dir exists
-  file: src=/opt/stack/novnc/noVNC-0.5.1 dest=/usr/share/novnc state=link
-  when: nova.novnc_method == 'file'
+#- name: ensure novnc dir exists
+#  file: src=/opt/stack/novnc/noVNC-0.5.1 dest=/usr/share/novnc state=link
+#  when: nova.novnc_method == 'file'
 
 - name: install nova-novncproxy service
   upstart_service: name=nova-novncproxy user=nova

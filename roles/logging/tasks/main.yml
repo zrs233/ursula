@@ -20,6 +20,7 @@
   get_url: url={{ logging.download.url }}
            dest=/tmp/logstash-forwarder_{{ logging.version }}_amd64.deb
   when: ansible_distribution_version == "14.04"
+  tags: loggy
 
 - name: install logstash
   apt: deb=/tmp/logstash-forwarder_{{ logging.version }}_amd64.deb

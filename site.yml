@@ -277,7 +277,7 @@
       haproxy_type: swift
       tags: ['openstack', 'swift', 'control', 'haproxy', 'infra']
     - role: swift-object
-      tags: ['openstack', 'swift', 'data']
+      tags: ['openstack', 'swift', 'swift-object', 'data']
     - role: swift-account
       tags: ['openstack', 'swift', 'data']
     - role: swift-container
@@ -285,6 +285,12 @@
     - role: swift-proxy
       tags: ['openstack', 'swift', 'control']
   environment: "{{ env_vars|default({}) }}"
+
+- name: do not checkin
+  hosts: swiftnode
+  tasks:
+    - shell: "rm -f /etc/swift/*.builder && rm -f /etc/swift/*ring.gz && rm -rf /etc/swift/backups"
+  tags: ['swift', 'swift-ring']
 
 - name: swift bootstrap rings
   hosts: swiftnode_primary

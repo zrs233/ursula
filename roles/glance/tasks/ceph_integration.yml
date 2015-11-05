@@ -15,9 +15,9 @@
            mode=0644
   when: openstack_install_method == 'source'
 
-- name: fetch rados.py
+- name: fetch rados.py # failing here ... don't we have a filter to figure the package path out ?????
   get_url: url=https://raw.githubusercontent.com/ceph/ceph/{{ ceph.ceph_version }}/src/pybind/rados.py
-           dest="{{ 'glance' | ursula_package_path(openstack_package_version) }}/lib/python2.7/site-packages/rados.py"
+           dest="/opt/openstack/current/glance/lib/python2.7/site-packages/rados.py"
            owner=root
            group=root
            mode=0644
@@ -25,7 +25,7 @@
 
 - name: fetch rbd.py
   get_url: url=https://raw.githubusercontent.com/ceph/ceph/{{ ceph.ceph_version }}/src/pybind/rbd.py
-           dest="{{ 'glance' | ursula_package_path(openstack_package_version) }}/lib/python2.7/site-packages/rbd.py"
+           dest="/opt/openstack/current/glance/lib/python2.7/site-packages/rbd.py"
            owner=root
            group=root
            mode=0644
