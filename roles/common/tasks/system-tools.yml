@@ -7,6 +7,7 @@
   with_items:
     - ack-grep
     - acl
+    - auditd
     - build-essential
     - curl
     - dstat

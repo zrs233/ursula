@@ -31,3 +31,12 @@ common:
     mcelog: True
   packages_to_remove:
     - language-selector-common
+  logs:
+    - paths:
+        - /var/log/audit/audit.log
+      fields:
+      type: syslog
+      tags: audit,common
+  logging:
+    debug: False
+    verbose: True
