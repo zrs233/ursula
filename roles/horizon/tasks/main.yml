@@ -13,6 +13,17 @@
   notify:
     - restart apache
 
+- name: enable apache mod-headers
+  apache2_module: state=present name=headers
+  notify:
+    - restart apache
+
+- name: disable apache status
+  template: src=etc/apache2/mods-enabled/headers.conf
+            dest=/etc/apache2/mods-enabled/headers.conf
+  notify:
+    - restart apache
+
 - name: create horizon config directory
   file: dest=/etc/openstack-dashboard state=directory
 
