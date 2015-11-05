@@ -136,7 +136,7 @@ AVAILABLE_REGIONS = [
 
 OPENSTACK_HOST = "{{ endpoints.main }}"
 OPENSTACK_KEYSTONE_URL = "https://%s:{{ endpoints.keystone.port.haproxy_api }}/v{{horizon.keystone_api_version}}" % OPENSTACK_HOST
-OPENSTACK_KEYSTONE_DEFAULT_ROLE = "service"
+OPENSTACK_KEYSTONE_DEFAULT_ROLE = "_member_"
 SESSION_TIMEOUT = {{ horizon.session_timeout }}
 
 

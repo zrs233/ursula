@@ -8,8 +8,8 @@
         auth:
           auth_url: "{{ endpoints.auth_uri }}"
           project_name: admin
-          username: provider_admin
-          password: "{{ secrets.provider_admin_password }}"
+          username: admin
+          password: "{{ secrets.admin_password }}"
         name: turtle-stack
         state: absent
       failed_when: False
@@ -19,8 +19,8 @@
         auth:
           auth_url: "{{ endpoints.auth_uri }}"
           project_name: admin
-          username: provider_admin
-          password: "{{ secrets.provider_admin_password }}"
+          username: admin
+          password: "{{ secrets.admin_password }}"
         name: turtle-sec
         state: absent
       failed_when: False
@@ -30,8 +30,8 @@
         auth:
           auth_url: "{{ endpoints.auth_uri }}"
           project_name: admin
-          username: provider_admin
-          password: "{{ secrets.provider_admin_password }}"
+          username: admin
+          password: "{{ secrets.admin_password }}"
         name: turtle-key
         state: absent
       failed_when: False
@@ -41,8 +41,8 @@
         auth:
           auth_url: "{{ endpoints.auth_uri }}"
           project_name: admin
-          username: provider_admin
-          password: "{{ secrets.provider_admin_password }}"
+          username: admin
+          password: "{{ secrets.admin_password }}"
         display_name: turtle-vol
         state: absent
       failed_when: False

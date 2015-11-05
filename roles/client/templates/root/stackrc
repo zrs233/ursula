@@ -1,6 +1,6 @@
-export OS_PASSWORD={{ secrets.provider_admin_password }}
+export OS_PASSWORD={{ secrets.admin_password }}
 export OS_AUTH_URL={{ endpoints.auth_uri }}
-export OS_USERNAME=provider_admin
+export OS_USERNAME=admin
 export OS_TENANT_NAME=admin
 {% if client.self_signed_cert -%}
 export OS_CACERT=/opt/stack/ssl/openstack.crt

@@ -3,8 +3,8 @@
   neutron_network: name=external
                    auth_url={{ endpoints.keystone.url.internal }}/{{ endpoints.keystone.version }}/
                    login_tenant_name=admin
-                   login_username=provider_admin
-                   login_password={{ secrets.provider_admin_password }}
+                   login_username=admin
+                   login_password={{ secrets.admin_password }}
   register: result
   run_once: true
   failed_when: False
