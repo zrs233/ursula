@@ -128,6 +128,11 @@
             dest=/usr/local/bin/neutron-restart-all
             mode=0755
 
+- name: neutron reset script
+  template: src=usr/local/bin/neutron-reset
+            dest=/usr/local/bin/neutron-reset
+            mode=0755
+
 - include: logging.yml
   tags:
     - logrotate
