@@ -12,8 +12,10 @@ glance:
     storage_path: /var/lib/btsync
     device_name: image-cache
     dir: /var/lib/glance/images
+  store_smart: True
   store_swift: False
   store_ceph: False
+  store_file: False
   show_multiple_locations: True
   source:
     rev: 'stable/kilo'
