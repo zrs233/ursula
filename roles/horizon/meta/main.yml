@@ -2,6 +2,9 @@
 dependencies:
   - role: endpoints
   - role: monitoring-common
+  - role: logging-config
+    service: horizon
+    logdata: "{{ horizon.logs }}"
   - role: openstack-source
     project_name: horizon
     git_mirror: "https://github.com/blueboxgroup"

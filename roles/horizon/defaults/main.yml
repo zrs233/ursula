@@ -18,3 +18,22 @@ horizon:
       - apache2
       - libapache2-mod-wsgi
       - libmysqlclient-dev
+  logs:
+    - paths:
+        - /var/log/apache2/access.log
+      fields:
+        type: openstack
+        tags: horizon
+    - paths:
+        - /var/log/apache2/error.log
+      fields:
+        type: openstack
+        tags: horizon
+    - paths:
+        - /var/log/apache2/other_vhosts_access.log
+      fields:
+        type: openstack
+        tags: horizon
+  logging:
+    debug: False
+    verbose: True
