@@ -156,7 +156,7 @@ appropriate vagrant environment, saves it as an ssh config, and then calls
 To deploy your `allinone` environment via `Vagrant` simply run:
 
 ```bash
-$ bin/run_vagrant up allinone
+$ ursula --vagrant envs/example/allinone site.yml
 ```
 
 Note: The default OS for ursula is Ubuntu Trusty. If you want Precise, set

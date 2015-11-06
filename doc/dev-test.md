@@ -13,14 +13,7 @@ Confirm that you have followed the [installation instructions for ursula](https:
 Vagrant support is built in. To get started, run:
 
 ```
-$ ./bin/run_vagrant
-Usage: run_vagrant TYPE [minimal]
-Where type is one of the following:
-- allinone ( single monolithic openstack server )
-- standard ( two controllers and one compute )
-- swift ( object storage )
-
-$ ./bin/run_vagrant standard
+$ ursula --vagrant envs/example/allinone site.yml
 ```
 
 ## Unit tests
