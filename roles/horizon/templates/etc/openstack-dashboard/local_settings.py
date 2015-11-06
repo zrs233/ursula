@@ -267,3 +267,9 @@ STATIC_ROOT='/opt/bbc/openstack-{{ openstack_package_version }}/horizon/static'
 STATIC_ROOT='/opt/stack/horizon/static'
 {% endif %}
 STATICFILES_DIRS.append(('/etc/openstack-dashboard/static'))
+
+# The OPENSTACK_HEAT_STACK settings can be used to disable password
+# field required while launching the stack.
+OPENSTACK_HEAT_STACK = {
+    'enable_user_pass': False
+}
