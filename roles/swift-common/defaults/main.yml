@@ -2,7 +2,7 @@
 swift:
   enabled: False
   logging:
-    debug: False 
+    debug: False
   hash_path_prefix: a57b0dfd61b5fe3a
   disks:
     - sdb

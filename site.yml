@@ -286,12 +286,6 @@
       tags: ['openstack', 'swift', 'control']
   environment: "{{ env_vars|default({}) }}"
 
-- name: do not checkin
-  hosts: swiftnode
-  tasks:
-    - shell: "rm -f /etc/swift/*.builder && rm -f /etc/swift/*ring.gz && rm -rf /etc/swift/backups"
-  tags: ['swift', 'swift-ring']
-
 - name: swift bootstrap rings
   hosts: swiftnode_primary
   roles:
