@@ -6,7 +6,8 @@
     "admin_or_network_owner": "rule:cloud_admin_privilege or tenant_id:%(network:tenant_id)s",
     "admin_only": "role:admin",
     "project_admin_privilege": "project_id:%(tenant_id)s and role:project_admin",
-    "admin_or_admin_owner": "rule:cloud_admin_privilege or rule:project_admin_privilege",
+    "horizon_project_admin_privilege": "(project_id:%(project_id)s and role:project_admin)",
+    "admin_or_admin_owner": "rule:cloud_admin_privilege or rule:project_admin_privilege or rule:horizon_project_admin_privilege",
     "regular_user": "",
     "shared": "field:networks:shared=True",
     "shared_firewalls": "field:firewalls:shared=True",
@@ -86,10 +87,11 @@
     "update_router:external_gateway_info:enable_snat": "rule:admin_only",
     "update_router:distributed": "rule:admin_only",
     "update_router:ha": "rule:admin_only",
+    "update_router": "rule:admin_or_admin_owner",
     "delete_router": "rule:admin_or_admin_owner",
 
-    "add_router_interface": "rule:admin_or_owner",
-    "remove_router_interface": "rule:admin_or_owner",
+    "add_router_interface": "rule:admin_or_admin_owner",
+    "remove_router_interface": "rule:admin_or_admin_owner",
 
     "create_router:external_gateway_info:external_fixed_ips": "rule:admin_only",
     "update_router:external_gateway_info:external_fixed_ips": "rule:admin_only",
@@ -158,5 +160,12 @@
 
     "get_service_provider": "rule:regular_user",
     "get_lsn": "rule:admin_only",
-    "create_lsn": "rule:admin_only"
+    "create_lsn": "rule:admin_only",
+
+    "create_security_group": "",
+    "delete_security_group": "",
+    "update_security_group": "",
+    "get_security_group": "",
+    "create_security_group_rule": "",
+    "delete_security_group_rule": ""
 }
