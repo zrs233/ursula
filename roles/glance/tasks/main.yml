@@ -75,10 +75,10 @@
   # we want this to always be changed so that it can notify the service restart
   tags: db-migrate
 
-- meta: flush_handlers
-
 - include: ceph_integration.yml
   when: ceph.enabled|bool
+
+- meta: flush_handlers
 
 - name: start glance services
   service: name={{ item }} state=started
