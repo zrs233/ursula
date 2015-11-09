@@ -66,8 +66,8 @@
   keystone_user: tenant=service
                  endpoint="{{ endpoints.keystone.url.admin }}/{{ endpoints.keystone.version }}/"
                  login_tenant_name=admin
-                 login_user=provider_admin
-                 login_password={{ secrets.provider_admin_password }}
+                 login_user=admin
+                 login_password={{ secrets.admin_password }}
   register: service_tenant
 
 - name: neutron config

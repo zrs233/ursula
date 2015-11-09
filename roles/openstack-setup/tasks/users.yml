@@ -9,8 +9,8 @@
                     region=RegionOne
                     auth_url={{ endpoints.auth_uri }}
                     tenant_name=admin
-                    login_user=provider_admin
-                    login_password={{ secrets.provider_admin_password }}
+                    login_user=admin
+                    login_password={{ secrets.admin_password }}
   with_items: keystone.services
   when: "{{item.name}}.enabled is undefined or {{item.name}}.enabled|bool"
   run_once: true

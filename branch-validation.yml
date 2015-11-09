@@ -23,9 +23,9 @@
     - name: create keypair
       os_keypair:
         auth:
-          username: provider_admin
+          username: admin
           project_name: admin
-          password: "{{ secrets.provider_admin_password }}"
+          password: "{{ secrets.admin_password }}"
           auth_url: "http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}"
         name: validate
         state: present
@@ -41,9 +41,9 @@
     - name: create security group
       os_security_group:
         auth:
-          username: provider_admin
+          username: admin
           project_name: admin
-          password: "{{ secrets.provider_admin_password }}"
+          password: "{{ secrets.admin_password }}"
           auth_url: "http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}"
         name: validate_ssh
         description: "validate group allowing ssh, icmp ipv4 ingress"
@@ -52,9 +52,9 @@
     - name: create security group rules
       os_security_group_rule:
         auth:
-          username: provider_admin
+          username: admin
           project_name: admin
-          password: "{{ secrets.provider_admin_password }}"
+          password: "{{ secrets.admin_password }}"
           auth_url: "http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}"
         security_group: validate_ssh
         protocol: "{{ item.ip_protocol }}"
@@ -76,9 +76,9 @@
     - name: launch instances in each host az
       os_server:
         auth:
-          username: provider_admin
+          username: admin
           project_name: admin
-          password: "{{ secrets.provider_admin_password }}"
+          password: "{{ secrets.admin_password }}"
           auth_url: "http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}"
         flavor: 1
         image: cirros
@@ -98,9 +98,9 @@
     - name: associate a floating ip
       os_floating_ip:
         auth:
-          username: provider_admin
+          username: admin
           project_name: admin
-          password: "{{ secrets.provider_admin_password }}"
+          password: "{{ secrets.admin_password }}"
           auth_url: "http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}"
         network: external
         server: validate-{{ groups['compute'][0] }}
@@ -149,9 +149,9 @@
     - name: disassociate the floating ip
       os_floating_ip:
         auth:
-          username: provider_admin
+          username: admin
           project_name: admin
-          password: "{{ secrets.provider_admin_password }}"
+          password: "{{ secrets.admin_password }}"
           auth_url: "http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}"
         network: external
         server: validate-{{ groups['compute'][0] }}
@@ -171,9 +171,9 @@
     - name: add floating IPs to instances on controllers
       os_floating_ip:
         auth:
-          username: provider_admin
+          username: admin
           project_name: admin
-          password: "{{ secrets.provider_admin_password }}"
+          password: "{{ secrets.admin_password }}"
           auth_url: "http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}"
         network: external
         server: validate-{{ item }}
@@ -184,9 +184,9 @@
     - name: add floating ip to a non-controller instance
       os_floating_ip:
         auth:
-          username: provider_admin
+          username: admin
           project_name: admin
-          password: "{{ secrets.provider_admin_password }}"
+          password: "{{ secrets.admin_password }}"
           auth_url: "http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}"
         network: external
         server: validate-{{ item }}
@@ -293,9 +293,9 @@
     - name: delete instances
       os_server:
         auth:
-          username: provider_admin
+          username: admin
           project_name: admin
-          password: "{{ secrets.provider_admin_password }}"
+          password: "{{ secrets.admin_password }}"
           auth_url: "http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}"
         name: validate-{{ item }}
         state: absent
@@ -306,9 +306,9 @@
     - name: delete security group
       os_security_group:
         auth:
-          username: provider_admin
+          username: admin
           project_name: admin
-          password: "{{ secrets.provider_admin_password }}"
+          password: "{{ secrets.admin_password }}"
           auth_url: "http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}"
         name: validate_ssh
         state: absent
@@ -323,9 +323,9 @@
     - name: delete keypair
       os_keypair:
         auth:
-          username: provider_admin
+          username: admin
           project_name: admin
-          password: "{{ secrets.provider_admin_password }}"
+          password: "{{ secrets.admin_password }}"
           auth_url: "http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}"
         name: validate
         state: absent

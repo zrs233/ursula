@@ -2,8 +2,8 @@
 - name: create cinder volume types
   cinder_volume_type: volume_type={{ item }}
                       auth_url={{ endpoints.auth_uri }}
-                      login_username=provider_admin
-                      login_password={{ secrets.provider_admin_password }}
+                      login_username=admin
+                      login_password={{ secrets.admin_password }}
                       login_tenant_name=admin
   with_items: cinder.volume_types
   run_once: true
@@ -16,8 +16,8 @@
                       key_size={{ item.key_size }}
                       control_location={{ item.control_location }}
                       auth_url={{ endpoints.auth_uri }}
-                      login_username=provider_admin
-                      login_password={{ secrets.provider_admin_password }}
+                      login_username=admin
+                      login_password={{ secrets.admin_password }}
                       login_tenant_name=admin
   with_items: cinder.encrypted_volume_types
   run_once: true
