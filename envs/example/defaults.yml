@@ -557,6 +557,9 @@ common:
     method: tar # git|tar
     tar_url: https://file-mirror.openstack.blueboxgrid.com/ursula-monitoring/master.tar.gz
     tar_version: master
+  ntpd:
+    servers: []
+    #  - servertime.service.softlayer.com
 
 heat:
   enabled: False
