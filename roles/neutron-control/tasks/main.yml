@@ -37,7 +37,10 @@
 - name: sync neutron database for lbaas
   command: neutron-db-manage --service lbaas --config-file /etc/neutron/neutron.conf \
            --config-file /etc/neutron/plugins/ml2/ml2_plugin.ini upgrade head
-  when: (database_create.changed or force_sync|default('false')|bool) and neutron.lbaas.enable
+  when: (database_create.changed or force_sync|default('false')|bool) and
+        ((neutron.lbaas.enable == "smart" and
+         groups['controller'][0] not in groups['compute']) or
+         neutron.lbaas.enable|bool)
   run_once: true
   changed_when: true
   notify: restart neutron services
