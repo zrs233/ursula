@@ -4,3 +4,25 @@ floating_ip: 172.16.0.101
 
 xtradb:
   sst_auth_password: asdf
+
+manage_disks:
+  enabled: True
+  defaults:
+    pesize: 4
+  loopback:
+    enabled: True
+    file: /tmp/loopback
+    device: /dev/loop2
+    size: 1G
+  volume_groups:
+    - name: test
+      pvs:
+        - /dev/loop2
+  logical_volumes:
+    - name: test
+      volume_group: test
+      size: 500m
+      filesystem: ext4
+#      filesystem_opts:
+      mount_point: /mnt/test
+#      mount_opts:

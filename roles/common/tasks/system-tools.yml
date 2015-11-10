@@ -32,6 +32,7 @@
     - logrotate
     - ntp
     - vlan
+    - lvm2
 
 - name: load vlan module
   lineinfile: dest=/etc/modules
