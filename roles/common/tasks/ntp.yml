@@ -3,6 +3,13 @@
   lineinfile: dest=/etc/ntp.conf
               line="includefile /etc/ntp/cluster.conf" state=present
 
+- name: ntpd nameservers
+  lineinfile: dest=/etc/ntp.conf
+              line="server {{ item }}" state=present
+  with_items: common.ntpd.servers
+  notify:
+    - restart-ntp
+
 - name: /etc/ntp directory
   file: dest=/etc/ntp state=directory mode=755 owner=root
 

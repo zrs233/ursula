@@ -11,6 +11,9 @@ common:
     state: probe
     baud_rate: 115200
   python_extra_packages: []
+  ntpd:
+    servers: []
+    #  - servertime.service.softlayer.com
   ssh_private_keys: []
   ssh:
     allow_from:
