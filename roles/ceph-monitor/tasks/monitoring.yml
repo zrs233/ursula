@@ -3,3 +3,8 @@
   sensu_check: name=check-ceph-status plugin=check-ceph.rb
                use_sudo=true
   notify: restart sensu-client
+
+- name: ceph sla metrics
+  sensu_metrics_check: name=ceph-sla-metrics plugin=metrics-os-api.py
+                       args='-S ceph --scheme {{ monitoring.graphite.host_prefix }}'
+  notify: restart sensu-client
