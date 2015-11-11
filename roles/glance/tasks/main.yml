@@ -16,8 +16,15 @@
 - name: /etc/glance
   file: dest=/etc/glance state=directory
 
-- name: glance images dir
-  file: dest=/var/lib/glance/images state=directory owner=glance group=glance
+- name: glance images dirs
+  file:
+    dest: "{{ item }}"
+    state: directory
+    owner: glance
+    group: glance
+  with_items:
+    - "{{ glance.state_path }}/images"
+    - "{{ glance.state_path }}/image-cache"
 
 - name: glance cache dir
   file: dest=/var/cache/glance state=directory mode=0700 owner=glance

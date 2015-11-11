@@ -29,6 +29,7 @@ nova:
   compute_reserve_ram: 2048
   preallocate_images: space
   floating_pool: external
+  state_path: "{{ state_path_base }}/nova"
   install_packages:
     - python-numpy
     - virt-top

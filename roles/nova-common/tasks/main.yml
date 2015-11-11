@@ -1,7 +1,14 @@
 ---
 - name: nova user
-  user: name=nova comment=nova shell=/bin/sh system=yes home=/var/lib/nova
-        createhome=yes generate_ssh_key=yes ssh_key_bits=4096
+  user:
+    name: nova
+    comment: nova
+    shell: /bin/sh
+    system: yes
+    home: "{{ nova.state_path }}"
+    createhome: yes
+    generate_ssh_key: yes
+    ssh_key_bits: 4096
 
 - name: nova packages
   apt:
@@ -11,8 +18,8 @@
 - name: create nova config dir
   file: dest=/etc/nova state=directory
 
-- name: create nova lib dir
-  file: dest=/var/lib/nova state=directory owner=nova
+- name: create nova lock dir (and parents)
+  file: dest={{ nova.state_path }}/lock state=directory owner=nova
 
 - name: create nova cache dir
   file: dest=/var/cache/nova state=directory mode=0700 owner=nova group=nova
