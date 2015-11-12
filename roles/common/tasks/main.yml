@@ -57,6 +57,10 @@
 
 - include: networking.yml
 
+- include: password-policy.yml
+
+- include: system-file-permissions.yml
+
 - include: ufw.yml
 
 - include: ntp.yml
