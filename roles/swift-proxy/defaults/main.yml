@@ -3,6 +3,6 @@ swift_proxy:
   ip: "{{ primary_ip }}"
   port: "{{ endpoints.swift.port.proxy_api }}"
   workers: 10
-  operator_roles: Member,_member,admin,cloud_admin,project_admin
+  operator_roles: Member,_member_,admin,cloud_admin,project_admin
   reseller_admin_role: cloud_admin
 
