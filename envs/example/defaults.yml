@@ -603,7 +603,7 @@ heat-cfn:
   enabled: True
 
 magnum:
-  enabled: True
+  enabled: False
   debug: True
 
 horizon:
