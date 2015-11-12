@@ -1,72 +1,127 @@
 #
-# This playbook boot straps a new compute node with its network config
+# This playbook boot straps an environment for network config and LVM
+# partitioning
 #
 ---
-- hosts: compute
+- hosts: all
   serial: 10
+
   vars:
     timezone: Etc/UTC
+
   tasks:
-  # Bail if run against existing compute nodes
-  - fail: msg="Node appears to already be bootstrapped"
-    when: ansible_br_int is defined
+  - name: disable apt sources
+    command: sed -i 's/^deb-src/#deb-src/' /etc/apt/sources.list
 
-  - apt: pkg=python-pycurl
+  - name: ensure pycurl on precise
+    apt:
+      pkg: python-pycurl
+      cache_valid_time: 3600
+      update_cache: yes
     when: ansible_distribution_version == "12.04"
 
-  # Blue Box Group OpenStack PPA for OVS 1.11
-  - apt_key: id=49DE63CB url='https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xC37BA5F849DE63CB'
-    when: ansible_distribution_version == "12.04"
-  - apt_repository: repo='ppa:blueboxgroup/openstack' update_cache=yes
-    when: ansible_distribution_version == "12.04"
-
-  # Upgrade Kernel to 3.5.0 on Precise
-  # and install Open vSwitch datapath (in mainline kernel on more recent distributions)
-  - apt: pkg={{ item }}
-    with_items:
-    - linux-generic-lts-quantal
-    - linux-headers-generic-lts-quantal
-    - linux-image-generic-lts-quantal
-    - openvswitch-datapath-dkms
-    when: ansible_distribution_version == "12.04"
-
-  - apt: cache_valid_time=3600 update_cache=yes
-  - apt: pkg={{ item }}
+  - name: install basic packages for setup
+    apt:
+      pkg: "{{ item }}"
+      cache_valid_time: 3600
+      update_cache: yes
     with_items:
     - vlan
+    - ifenslave-2.6
     - ucarp
-    - openvswitch-switch
-  - apt: upgrade=dist
+
+  - name: do a dist upgrade
+    apt:
+      upgrade: dist
+
+  - name: "Disable GRUB OS prober"
+    lineinfile:
+      dest: /etc/default/grub
+      line: "GRUB_DISABLE_OS_PROBER=true"
+
+  - name: Upgrade Kernel on precise
+    apt:
+      pkg: "{{ item }}"
+    with_items:
+    - linux-generic-lts-trusty
+    - linux-tools-lts-trusty
+    when: ansible_distribution_version == "12.04"
+
+  - name: load vlan module
+    lineinfile:
+      dest: /etc/modules
+      line: "8021q"
+    when: ansible_distribution_version == "14.04" and
+          tenant_network_type == "vlan"
 
   # Set Locale
   - name: Generate locales
     command: /usr/sbin/locale-gen en_US
+
   - name: set locale to en_US.UTF-8
     command: /usr/sbin/update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
 
   # Set Time zone
-  - name: set /etc/localtime to {{ timezone }}
+  - name: set /etc/localtime to desired timezone
     command: /bin/cp /usr/share/zoneinfo/{{ timezone }} /etc/localtime
-  - name: set /etc/timezone to {{ timezone }}
-    copy: content="{{ timezone }}" dest=/etc/timezone force=yes owner=root group=root mode=0644
+
+  - name: set /etc/timezone to desired timezone
+    copy:
+      content: "{{ timezone }}"
+      dest: /etc/timezone
+      force: yes
+      owner: root
+      group: root
+      mode: 0644
+
   - name: update tzdata
     command: /usr/sbin/dpkg-reconfigure --frontend noninteractive tzdata
 
   # Populate network configuration
-  - copy: content="{{ network_interfaces }}" dest=/etc/network/interfaces force=yes owner=root group=root mode=0644
+  - name: write network configuration if one interface file
+    copy:
+      content: "{{ network_interfaces }}"
+      dest: /etc/network/interfaces
+      force: yes
+      owner: root
+      group: root
+      mode: 0644
     when: network_interfaces is defined
-  - copy: content="{{ item.contents }}" dest=/etc/network/interfaces.d/{{ item.filename }} force=yes owner=root group=root mode=0644
+    tags: network_config
+
+  - name: remove any existing configurations
+    file:
+      path: /etc/network/interfaces.d
+      state: absent
+    tags:
+      - network_config
+      - danger
+
+  - name: create interfaces.d directory if multiple interface files
+    file:
+      state: directory
+      path: /etc/network/interfaces.d
+      mode: 0755
+    when: network_interfaces_d is defined
+    tags: network_config
+
+  - name: write network configuration if multiple interface files
+    copy:
+      content: "{{ item.contents }}"
+      dest: /etc/network/interfaces.d/{{ item.filename }}
+      force: yes
+      owner: root
+      group: root
+      mode: 0644
     when: network_interfaces_d is defined
     with_items: network_interfaces_d
+    tags: network_config
 
-  # Create internal network OVS bridge (not using ovs-bridge library since Ruby may not yet be installed)
-  - command: ovs-vsctl --may-exist add-br br-eth0
-
-  # Add eth0 to OVS bridge which will break our SSH connection and reboot
-  # in one command
-  # Redirecting stdin and stdout to /dev/null because ovs-vsctl hangs on Ubuntu
-  # 12.04 when run via Ansible shell module
-  - shell: ovs-vsctl --may-exist add-port br-eth0 eth0 < /dev/null > /dev/null && reboot
+  # booting with new networking config so we can't wait for restart
+  - command: shutdown -r now
     async: 0
     poll: 0
     failed_when: False
+    tags:
+      - network_config
+      - danger
