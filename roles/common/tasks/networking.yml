@@ -16,6 +16,7 @@
 - name: hosts file
   template: src=etc/hosts dest=/etc/hosts owner=root group=root mode=0644
             backup=yes
+  tags: etc_hosts
 
 - name: netfilter tuning
   template: src=etc/sysctl.d/60-netfilter-tuning.conf

@@ -38,8 +38,9 @@ import grp
 def main():
     module = AnsibleModule(
         argument_spec  = dict(
-            dev       = dict(required=False, default=None),
-            partition_path      = dict(required=False, default=None)
+            dev  = dict(required=False, default=None),
+            partition_path = dict(required=False, default=None),
+            mount_point = dict(required=False, default=None),
         ),
         required_one_of = [['dev', 'partition_path']],
         mutually_exclusive = [['dev', 'partition_path']]
@@ -49,18 +50,21 @@ def main():
     part_path = module.params.get('partition_path')
 
     dev_path = None
-    mount_point = "/srv/node/"
-    if dev is not None:
-        dev_path = "/dev/%s" % dev
-        part_path = "/dev/%s1" % dev
-        mount_point += ("%s1" % dev)
+
+    if not module.params.get('mount_point'):
+        mount_point = "/srv/node/"
+        if dev is not None:
+            dev_path = "/dev/%s" % dev
+            part_path = "/dev/%s1" % dev
+            mount_point += ("%s1" % dev)
+        else:
+            # Get the last part of partition path
+            mount_point += (part_path.split("/")[-1])
     else:
-        # Get the last part of partition path
-        mount_point += (part_path.split("/")[-1])
+        mount_point = module.params.get('mount_point')
 
     if dev_path is not None and not os.path.exists(dev_path):
         module.fail_json(msg="no such device: %s" % dev)
-
 
     if os.path.exists(part_path) and os.path.ismount(mount_point):
         module.exit_json(changed=False)

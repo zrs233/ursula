@@ -58,14 +58,16 @@
   keystone_user: user=heat_stack_user
                  password="{{ secrets.service_password }}"
                  tenant=admin
-                 token={{ admin_token }}
+                 token="{{ admin_token }}"
+                 endpoint="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}/"
   when: heat.enabled|bool
 
 - name: heat stack user role
   keystone_user: role=heat_stack_user
                  user=heat_stack_user
                  tenant=admin
-                 token={{ admin_token }}
+                 token="{{ admin_token }}"
+                 endpoint="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}/"
   when: heat.enabled|bool
 
 - name: keystone endpoint

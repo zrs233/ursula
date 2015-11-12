@@ -277,7 +277,7 @@
       haproxy_type: swift
       tags: ['openstack', 'swift', 'control', 'haproxy', 'infra']
     - role: swift-object
-      tags: ['openstack', 'swift', 'data']
+      tags: ['openstack', 'swift', 'swift-object', 'data']
     - role: swift-account
       tags: ['openstack', 'swift', 'data']
     - role: swift-container

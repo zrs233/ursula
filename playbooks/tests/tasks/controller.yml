@@ -88,7 +88,7 @@
     when: haproxy.rc != 0
 
   - name: give novanovncproxy time to get up
-    pause: seconds=30
+    pause: seconds=5
     when: haproxy.rc != 0
 
   - name: all backends are up in haproxy

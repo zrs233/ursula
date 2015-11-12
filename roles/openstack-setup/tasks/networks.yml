@@ -25,7 +25,7 @@
     ipv6_ra_mode: "{{ item.ipv6_ra_mode | default(omit) }}"
     ipv6_address_mode: "{{ item.ipv6_ra_mode | default(omit) }}"
     ip_version: "{{ item.ip_version }}"
-    dns_nameservers: "{{ item.dns_nameservers }}"
+    dns_nameservers: "{{ item.dns_nameservers|default(omit) }}"
     state: present
     auth:
       auth_url: "{{ endpoints.auth_uri }}"

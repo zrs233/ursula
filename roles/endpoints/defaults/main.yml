@@ -3,6 +3,8 @@ endpoints:
   main: "{{ fqdn }}"
   db: "{{ undercloud_floating_ip }}"
   rabbit: "{{ undercloud_floating_ip }}"
+  mongodb: "{{ undercloud_floating_ip }}"
+  magnum: "{{ fqdn }}"
   identity_uri: https://{{ fqdn }}:35357
   auth_uri: https://{{ fqdn }}:5000/v2.0
   nova:

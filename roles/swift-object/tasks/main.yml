@@ -33,7 +33,9 @@
     - swift-object-expirer
 
 - name: configure disks
-  swift_disk: dev={{ item }}
+  swift_disk: dev={{ item.disk|default(omit) }}
+              partition_path={{ item.partition_path|default(omit) }}
+              mount_point={{ item.mount_point|default(omit) }}
   with_items: swift.disks
 
 - name: configure shared ssd partition if it exist
