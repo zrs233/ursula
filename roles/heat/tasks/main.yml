@@ -52,8 +52,8 @@
 - name: create heat stack admin
   command: heat-keystone-setup-domain --stack-user-domain-name heat --stack-domain-admin heat_domain_admin --stack-domain-admin-password "{{ secrets.stack_domain_admin_password }}"
   environment:
-      OS_USERNAME: provider_admin
-      OS_PASSWORD: "{{ secrets.provider_admin_password }}"
+      OS_USERNAME: admin
+      OS_PASSWORD: "{{ secrets.admin_password }}"
       OS_AUTH_URL: "{{ endpoints.auth_uri }}"
       OS_CACERT: /opt/stack/ssl/openstack.crt
   run_once: true
