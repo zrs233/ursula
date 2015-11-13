@@ -1,6 +1,6 @@
 ---
 heat:
-  enabled: False
+  enabled: True
   source:
     rev: 'stable/kilo'
     python_dependencies:

@@ -561,7 +561,7 @@ common:
     #  - servertime.service.softlayer.com
 
 heat:
-  enabled: False
+  enabled: True
   logging:
     debug: True
     verbose: True
