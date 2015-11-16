@@ -8,7 +8,6 @@ openstack_install_method: 'source'
 
 primary_interface: 'ansible_eth0'
 primary_ip: "{{ hostvars[inventory_hostname][primary_interface]['ipv4']['address'] }}"
-undercloud_cidr: 10.0.0.0/8
 
 secrets:
   db_password:      asdf

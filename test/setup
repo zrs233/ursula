@@ -53,6 +53,7 @@ cat >> ${ROOT}/envs/test/group_vars/all.yml <<eof
   key: |
 eof
 cat ${CERT_DIR}/openstack.example.com.key | sed 's/^/    /' >> ${ROOT}/envs/test/group_vars/all.yml
+UNDERCLOUD_CIDR="$(python -c 'import shade; cloud = shade.openstack_cloud(); print cloud.search_subnets("internal")[0]["cidr"]')"
 cat >> ${ROOT}/envs/test/defaults.yml <<eof
 logging:
   follow:
@@ -61,6 +62,7 @@ logging:
   forward:
     host: kibana.sea03.blueboxgrid.com
     port: 4560
+undercloud_cidr: ${UNDERCLOUD_CIDR}
 eof
 popd
 rm -rf ${CERT_DIR}
