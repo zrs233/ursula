@@ -8,27 +8,30 @@
 
   vars:
     timezone: Etc/UTC
+  environment: "{{ env_vars|default({}) }}"
 
   tasks:
   - name: disable apt sources
-    command: sed -i 's/^deb-src/#deb-src/' /etc/apt/sources.list
+    lineinfile: 
+      dest: /etc/apt/sources.list
+      regexp: "^deb-src"
+      state: absent
 
   - name: ensure pycurl on precise
     apt:
       pkg: python-pycurl
-      cache_valid_time: 3600
       update_cache: yes
     when: ansible_distribution_version == "12.04"
 
   - name: install basic packages for setup
     apt:
       pkg: "{{ item }}"
-      cache_valid_time: 3600
       update_cache: yes
     with_items:
     - vlan
     - ifenslave-2.6
     - ucarp
+    tags: ["packages"]
 
   - name: do a dist upgrade
     apt:
@@ -51,8 +54,15 @@
     lineinfile:
       dest: /etc/modules
       line: "8021q"
-    when: ansible_distribution_version == "14.04" and
-          tenant_network_type == "vlan"
+    when: ansible_distribution_version == "14.04"
+
+  # related to this https://bugs.launchpad.net/ubuntu/+source/ifupdown/+bug/1337873
+  - name: fix network on trusty
+    lineinfile:
+      dest: /etc/rc.local
+      line: "ifdown -a; ifup -a"
+      insertbefore: "^exit"
+    when: ansible_distribution_version == "14.04"
 
   # Set Locale
   - name: Generate locales
