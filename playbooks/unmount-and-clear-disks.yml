@@ -17,7 +17,7 @@
     apt: pkg="gdisk"
 
   - name: define disk list
-    set_fact: disk_list="{{ swift.disks }}"
+    set_fact: disk_list="{{ swift.disks | selectattr('disk', 'defined') | map(attribute='disk') | list }}"
     when: hosts == "swiftnode"
 
   - name: define disk list
