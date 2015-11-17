@@ -5,7 +5,7 @@ swift:
     debug: False
   hash_path_prefix: a57b0dfd61b5fe3a
   disks:
-    - sdb
+    - disk: sdb
   allow_versions: True
   source:
     rev: 'stable/kilo'
