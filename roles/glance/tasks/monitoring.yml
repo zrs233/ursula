@@ -18,7 +18,10 @@
     state: present
 
 - name: glance-store check
-  sensu_check: name=check-glance-store plugin=check-glance-store.py
+  sensu_check:
+    name: check-glance-store
+    plugin: check-glance-store.py
+    args: "--imagedir={{ glance.sync.dir }}"
   notify: restart sensu-client
 
 - name: glance metrics

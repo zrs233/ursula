@@ -39,6 +39,7 @@ cp ${ROOT}/envs/example/defaults.yml ${ROOT}/envs/test/defaults.yml
 cp -r ${ROOT}/envs/example/ci/* ${ROOT}/envs/test
 echo "---" > ${ROOT}/envs/test/group_vars/all.yml
 echo "testenv_instance_prefix: ${testenv_instance_prefix}" >> ${ROOT}/envs/test/group_vars/all.yml
+echo "state_path_base: /opt/stack/data" >> ${ROOT}/envs/test/group_vars/all.yml
 
 echo "generating ssl cert for openstack.example.com"
 CERT_DIR=$(mktemp -d 2> /dev/null || mktemp -d -t 'setup')

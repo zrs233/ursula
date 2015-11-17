@@ -12,7 +12,10 @@
   apt: pkg=sysfsutils
 
 - name: nova instances directory
-  file: dest=/var/lib/nova/instances state=directory owner=nova
+  file:
+    dest: "{{ nova.state_path }}/instances"
+    state: directory
+    owner: nova
 
 - name: nbd module
   lineinfile: dest=/etc/modules line="nbd"

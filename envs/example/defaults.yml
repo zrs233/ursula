@@ -33,6 +33,8 @@ etc_hosts:
   - name: "{{ fqdn }}"
     ip: "{{ floating_ip }}"
 
+state_path_base: /var/lib
+
 rabbitmq:
   port: 5672
   user: openstack

@@ -48,8 +48,8 @@
   notify:
     - update timezone
 
-- name: /opt/stack
-  file: dest=/opt/stack state=directory
+- name: state path base directory
+  file: dest={{ state_path_base }} state=directory
 
 - include: ssl.yml tags=ssl
 

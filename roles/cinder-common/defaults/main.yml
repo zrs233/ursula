@@ -8,6 +8,7 @@ cinder:
     #- name: rbd_volumes
     #  volume_driver: cinder.volume.drivers.rbd.RBDDriver
   api_workers: 5
+  state_path: "{{ state_path_base }}/cinder"
   volume_type: file
   volume_group: cinder-volumes
   create_vg: true

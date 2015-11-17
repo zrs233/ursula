@@ -3,6 +3,7 @@ glance:
   api_workers: 5
   rbd_store_chunk_size: 8
   registry_workers: 5
+  state_path: "{{ state_path_base }}/glance"
   sync:
     enabled: true
     listening_port: 25307
@@ -11,7 +12,10 @@ glance:
     folder_rescan_interval: 600
     storage_path: /var/lib/btsync
     device_name: image-cache
-    dir: /var/lib/glance/images
+    # This needs to match the leading paths from state_path above
+    # and match the path listed in glance-api.conf for local image
+    # store. TODO: find a way to use a variable for all of these
+    dir: "{{ state_path_base }}/glance/images"
   store_smart: True
   store_swift: False
   store_ceph: False

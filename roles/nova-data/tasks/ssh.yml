@@ -5,20 +5,36 @@
   register: nova_user
 
 - name: nova authorized_keys
-  template: src=var/lib/nova/ssh/authorized_keys
-            dest=/var/lib/nova/.ssh/authorized_keys owner=nova group=nova
-            mode=0600
+  template:
+    src: var/lib/nova/ssh/authorized_keys
+    dest: "{{ nova.state_path }}/.ssh/authorized_keys"
+    owner: nova
+    group: nova
+    mode: 0600
 
 - name: nova known_hosts
-  template: src=var/lib/nova/ssh/known_hosts
-            dest=/var/lib/nova/.ssh/known_hosts owner=nova group=nova mode=0600
+  template:
+    src: var/lib/nova/ssh/known_hosts
+    dest: "{{ nova.state_path }}/.ssh/known_hosts"
+    owner: nova
+    group: nova
+    mode: 0600
 
 - name: nova bin directory
-  file: dest=/var/lib/nova/bin state=directory owner=nova group=nova mode=0755
+  file:
+    dest: "{{ nova.state_path }}/bin"
+    state: directory
+    owner: nova
+    group: nova
+    mode: 0755
 
 - name: nova verify-ssh
-  template: src=var/lib/nova/bin/verify-ssh dest=/var/lib/nova/bin/verify-ssh
-            owner=nova group=nova mode=0755
+  template:
+    src: var/lib/nova/bin/verify-ssh
+    dest: "{{ nova.state_path }}/bin/verify-ssh"
+    owner: nova
+    group: nova
+    mode: 0755
 
 - name: verify ssh among compute nodes
-  command: sudo -u nova -H /bin/sh -c /var/lib/nova/bin/verify-ssh
+  command: sudo -u nova -H /bin/sh -c {{ nova.state_path }}/bin/verify-ssh
