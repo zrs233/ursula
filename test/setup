@@ -20,9 +20,9 @@ cat > ${ROOT}/envs/test/hosts <<eof
 # Tell ansible to use the python in PATH instead of /usr/bin/python
 localhost ansible_python_interpreter=python ansible_connection=local
 eof
-cp ${ROOT}/envs/example/defaults.yml ${ROOT}/envs/test/defaults.yml
+cp ${ROOT}/envs/example/defaults-2.0.yml ${ROOT}/envs/test/defaults-2.0.yml
 
-echo "testenv_instance_prefix: ${testenv_instance_prefix}" >> ${ROOT}/envs/test/defaults.yml
+echo "testenv_instance_prefix: ${testenv_instance_prefix}" >> ${ROOT}/envs/test/defaults-2.0.yml
 
 echo "destroying: ${VMS}"
 ${ROOT}/test/cleanup
@@ -35,7 +35,7 @@ CONTROLLER_IP=$(private_ip ${testenv_instance_prefix}-controller-0)
 rm -rf ${ROOT}/envs/test/group_vars/
 rm -f ${ROOT}/envs/test/hosts
 mkdir -p ${ROOT}/envs/test/group_vars
-cp ${ROOT}/envs/example/defaults.yml ${ROOT}/envs/test/defaults.yml
+cp ${ROOT}/envs/example/defaults-2.0.yml ${ROOT}/envs/test/defaults-2.0.yml
 cp -r ${ROOT}/envs/example/ci/* ${ROOT}/envs/test
 echo "---" > ${ROOT}/envs/test/group_vars/all.yml
 echo "testenv_instance_prefix: ${testenv_instance_prefix}" >> ${ROOT}/envs/test/group_vars/all.yml
@@ -55,7 +55,7 @@ cat >> ${ROOT}/envs/test/group_vars/all.yml <<eof
 eof
 cat ${CERT_DIR}/openstack.example.com.key | sed 's/^/    /' >> ${ROOT}/envs/test/group_vars/all.yml
 UNDERCLOUD_CIDR="$(python -c 'import shade; cloud = shade.openstack_cloud(); print cloud.search_subnets("internal")[0]["cidr"]')"
-cat >> ${ROOT}/envs/test/defaults.yml <<eof
+cat >> ${ROOT}/envs/test/defaults-2.0.yml <<eof
 logging:
   follow:
     global_fields:

@@ -15,6 +15,7 @@
 # along with this software.  If not, see <http://www.gnu.org/licenses/>.
 
 import collections
+import os
 import yaml
 
 from ansible.constants import DEFAULTS, get_config, load_config_file
@@ -44,8 +45,15 @@ class VarsModule(object):
         p = load_config_file()
         defaults_file = get_config(p, DEFAULTS, 'var_defaults_file',
                                    'ANSIBLE_VAR_DEFAULTS_FILE', None)
-        if defaults_file:
-            return yaml.load(open(defaults_file))
+        if not defaults_file:
+            return None
+
+        ursula_env = os.environ.get('URSULA_ENV', '')
+        defaults_path = os.path.join(ursula_env, defaults_file)
+        if os.path.exists(defaults_path):
+            with open(defaults_path) as fh:
+                return yaml.load(fh)
+        return None
 
     def run(self, host, vault_password=None):
         default_vars = self._get_defaults()

@@ -14,7 +14,7 @@ SSH_ARGS=\
 ' -o UserKnownHostsFile=/dev/null'\
 " -i ${KEY_PATH}"
 export ANSIBLE_SSH_ARGS="${SSH_ARGS}"
-export ANSIBLE_VAR_DEFAULTS_FILE="${ROOT}/envs/test/defaults.yml"
+export ANSIBLE_VAR_DEFAULTS_FILE="${ROOT}/envs/test/defaults-2.0.yml"
 export IMAGE_ID=${IMAGE_ID:=1525c3f3-1224-4958-bd07-da9feaedf18b}
 
 if [[ -n ${BUILD_TAG} ]]; then
