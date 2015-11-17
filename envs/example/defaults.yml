@@ -167,8 +167,8 @@ ceph:
 
 cinder:
   enabled: True
-  enabled_backends: # rbd_volumes for ceph
-  backends: [] # remove this if you add a backend below
+  enabled_backends: [] # rbd_volumes for Ceph
+  backends: []
     # Ceph
     #- name: rbd_volumes
     #  volume_driver: cinder.volume.drivers.rbd.RBDDriver
