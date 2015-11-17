@@ -7,6 +7,7 @@
 - name: iscsid process check
   sensu_process_check: service=iscsid
   notify: restart sensu-client
+  when: "'rbd_volumes' not in cinder.enabled_backends"
 
 - name: cinder volume group metrics
   sensu_metrics_check: name=cinder-vg-metrics plugin=metrics-volgroup.sh
@@ -17,4 +18,3 @@
 - name: cinder-backup process check
   sensu_process_check: service=cinder-backup
   notify: restart sensu-client
-

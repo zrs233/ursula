@@ -13,6 +13,7 @@
   sensu_metrics_check: name=check-cinder-sessions plugin=check-cinder-sessions.py
                        interval=10
   notify: restart sensu-client
+  when: "'rbd_volumes' not in cinder.enabled_backends"
 
 # ovs
 
