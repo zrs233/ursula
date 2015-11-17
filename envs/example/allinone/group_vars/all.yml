@@ -7,7 +7,3 @@ xtradb:
 
 percona:
   replication: False
-
-heat:
-  enabled: True
-  debug: True

@@ -13,9 +13,3 @@ ceilometer:
   logging:
     debug: True
     verbose: True
-
-heat:
-  enabled: True
-  logging:
-    debug: True
-    verbose: True
