@@ -17,6 +17,6 @@
   notify: restart sensu-client
 
 - name: heat sla metrics
-  sensu_metrics_check: name=cinder-sla-metrics plugin=metrics-os-api.py
+  sensu_metrics_check: name=heat-sla-metrics plugin=metrics-os-api.py
                        args='-S heat --scheme {{ monitoring.graphite.host_prefix }}'
   notify: restart sensu-client
