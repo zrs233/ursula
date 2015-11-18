@@ -13,7 +13,9 @@
   with_items: common.ssh.allow_from
 
 - name: Permit unrestricted access from remainder of cluster
-  ufw: rule=allow from_ip={{ undercloud_cidr }} proto=any
+  ufw: rule=allow from_ip={{ item }} proto=any
+  with_items: undercloud_cidr
+  when: undercloud_cidr is defined
 
 - name: Do not enforce forwarding rules with UFW
   lineinfile: dest=/etc/default/ufw regexp="^DEFAULT_FORWARD_POLICY"
