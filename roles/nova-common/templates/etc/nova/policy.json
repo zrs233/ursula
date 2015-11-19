@@ -22,13 +22,13 @@
     "compute:create:attach_volume": "",
     "compute:create:forced_host": "is_admin:True",
     "compute:get_all": "",
-    "compute:get_all_tenants": "rule:admin_or_projAdmin_or_cloudAdmin_or_member",
+    "compute:get_all_tenants": "",
     "compute:start": "rule:admin_or_projAdmin_or_cloudAdmin_or_owner",
     "compute:stop": "rule:admin_or_projAdmin_or_cloudAdmin_or_owner",
     "compute:unlock_override": "rule:admin_or_projAdmin_or_cloudAdmin",
 
     "compute:shelve": "",
-    "compute:shelve_offload": "rule:admin_or_projAdmin_or_cloudAdmin",
+    "compute:shelve_offload": "",
     "compute:unshelve": "",
     "compute:resize": "",
     "compute:confirm_resize": "",
@@ -36,8 +36,8 @@
     "compute:rebuild": "",
     "compute:reboot": "",
     
-    "compute:volume_snapshot_create": "is_admin:True",
-    "compute:volume_snapshot_delete": "is_admin:True",
+    "compute:volume_snapshot_create": "",
+    "compute:volume_snapshot_delete": "",
 
     "compute_extension:accounts": "rule:admin_api",
     "compute_extension:admin_actions": "rule:admin_or_projAdmin_or_cloudAdmin",
