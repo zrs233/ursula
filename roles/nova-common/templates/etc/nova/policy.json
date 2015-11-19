@@ -125,7 +125,7 @@
     "compute_extension:server_groups": "",
     "compute_extension:server_password": "",
     "compute_extension:server_usage": "",
-    "compute_extension:services": "rule:admin_or_projAdmin_or_cloudAdmin",
+    "compute_extension:services": "role:admin",
     "compute_extension:shelve": "",
     "compute_extension:shelveOffload": "rule:admin_or_projAdmin_or_cloudAdmin",
     "compute_extension:simple_tenant_usage:show": "rule:admin_or_projAdmin_or_cloudAdmin or rule:is_owner",
