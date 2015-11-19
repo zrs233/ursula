@@ -363,7 +363,9 @@
   roles:
     - role: 'openstack-network'
       tags: ['openstack', 'setup', 'openstack-network']
+      when: neutron.enable_external_interface|bool
   environment: "{{ env_vars|default({}) }}"
+
 
 - name: extra neutron setup
   hosts: network:compute

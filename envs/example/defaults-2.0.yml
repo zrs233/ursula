@@ -254,6 +254,7 @@ neutron:
   tenant_nameservers:
     - 8.8.4.4
     - 8.8.8.8
+  enable_external_interface: True
 
 glance:
   api_workers: 1
