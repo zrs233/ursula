@@ -6,3 +6,5 @@ envs/test/group_vars/all.yml
 .tox
 build
 *.DS_Store
+*~
+*\#*\#
