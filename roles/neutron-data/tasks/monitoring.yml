@@ -2,3 +2,7 @@
 - name: neutron agents check
   sensu_check: name=check-neutron-agents plugin=check-neutron-agents.sh
   notify: restart sensu-client
+
+- name: neutron agents duplicate check
+  sensu_check: name=check-neutron-agents-duplicate plugin=check-neutron-agents-duplicate.py
+  notify: restart sensu-client
