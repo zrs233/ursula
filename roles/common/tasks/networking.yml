@@ -32,17 +32,6 @@
   notify:
     - apply-sysctl
 
-- name: sysctl config file
-  sysctl:
-    state: present
-    name: "{{ item.name }}"
-    value: "{{ item.value }}"
-    reload: yes
-  with_items:
-    - { name: "net.ipv4.tcp_syncookies", value: 1 }
-    - { name: "net.ipv4.icmp_echo_ignore_broadcasts", value: 1 }
-    - { name: "net.ipv4.conf.all.accept_redirects", value: 0 }
-
 - name: ipv6 privacy
   lineinfile: dest=/etc/sysctl.d/10-ipv6-privacy.conf
               regexp="{{ item.value.regex }}"
