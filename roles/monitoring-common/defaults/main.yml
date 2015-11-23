@@ -1,5 +1,6 @@
 ---
 monitoring:
+  client_name: ~
   checks:
     memory:
       warning: 4096
