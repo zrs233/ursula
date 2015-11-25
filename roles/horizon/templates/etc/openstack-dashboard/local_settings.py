@@ -160,6 +160,14 @@ OPENSTACK_HYPERVISOR_FEATURES = {
     'can_set_mount_point': False,
 }
 
+{% if swift.enabled|bool %}
+# The OPENSTACK_CINDER_FEATURES settings can be used to enable optional
+# services provided by cinder that is not exposed by its extension API.
+OPENSTACK_CINDER_FEATURES = {
+    'enable_backup': True,
+}
+{% endif %}
+
 # The OPENSTACK_QUANTUM_NETWORK settings can be used to enable optional
 # services provided by quantum.  Currently only the load balancer service
 # is available.
