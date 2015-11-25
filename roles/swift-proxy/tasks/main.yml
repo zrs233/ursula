@@ -1,4 +1,15 @@
 ---
+- name: comment out default memcached ip address
+  lineinfile: dest=/etc/memcached.conf
+              regexp='^-l 0.0.0.0'
+              line="# -l 0.0.0.0" state=present
+
+- name: use bond0 ip address for memcached
+  lineinfile: dest=/etc/memcached.conf insertafter="^# -l"
+              line="-l {{ hostvars[inventory_hostname][primary_interface]['ipv4']['address'] }}"
+              state=present
+  notify: restart memcached
+
 - name: permit swift proxy from anywhere
   ufw: rule=allow to_port=8090 proto=tcp
 
