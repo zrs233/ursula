@@ -100,8 +100,15 @@
 
 # run this last so we only update if run was successful
 - name: drop an motd with ursula metadata
-  action: template src=etc/motd.tail dest=/etc/motd.tail mode=0644
+  template: src=etc/update-motd.d/90-ursula-motd dest=/etc/update-motd.d/90-ursula-motd mode=0755
   changed_when: False
+
+- name: drop ursula release file
+  template: src=etc/ursula-release dest=/etc/ursula-release mode=0640
+
+- name: enable the motd to print
+  lineinfile: dest=/etc/pam.d/sshd regexp="^session.*optional.*pam_motd.so.*motd=.*" 
+              line="session    optional     pam_motd.so  motd=/run/motd.dynamic" state=present
 
 - name: include stack name in /etc/issue
   lineinfile: dest=/etc/issue regexp="^{{ stack_env }} OpenStack Node" line="{{ stack_env }} OpenStack Node"
