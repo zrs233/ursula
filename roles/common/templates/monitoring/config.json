@@ -1,6 +1,6 @@
 {
   "client": {
-    "name": "{{ monitoring.client_name|default(ansible_hostname ~ '.' ~ ansible_domain ~ '-' ~ stack_env|default('unknown_site')) }}",
+    "name": "{{ monitoring.client_name|default(ansible_hostname ~ '.' ~ ansible_domain ~ '-' ~ stack_env|default('unknown_site'), true) }}",
     "address": "{{ primary_ip }}",
     "subscriptions": [
       "openstack"
