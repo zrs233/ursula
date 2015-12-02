@@ -22,6 +22,8 @@
     name: check-glance-store
     plugin: check-glance-store.py
     args: "--imagedir={{ glance.sync.dir }}"
+  when: (glance.store_smart|bool and not swift.enabled|bool and not ceph.enabled|bool) or
+        (not glance.store_swift|bool and not glance.store_ceph|bool and glance.store_file|bool)
   notify: restart sensu-client
 
 - name: glance metrics
