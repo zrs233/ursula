@@ -77,9 +77,7 @@
   when: logging.enabled|default('True')|bool
 
 - name: include swift warning in message of the day
-  lineinfile: dest=/etc/motd.tail
-              regexp="^WARNING Swift node"
-              line='WARNING Swift node -- do not replace disks without consulting Swift specific procedures'
+  template: src=etc/update-motd.d/99-swift-motd dest=/etc/update-motd.d/99-swift-motd mode=0755
 
 - name: system tuning recommendations for swift per deployment guide
   sysctl: name="{{ item.key }}" value="{{ item.value }}"
