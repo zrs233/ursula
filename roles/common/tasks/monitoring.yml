@@ -159,11 +159,6 @@
                        args='--scheme {{ monitoring.graphite.host_prefix }}'
   notify: restart sensu-client
 
-- name: network interface traffic metrics check
-  sensu_metrics_check: name=network-interface-traffic-metrics plugin=metrics-netif.rb
-                       args='--scheme {{ monitoring.graphite.host_prefix }}.network --interface eth0,eth1,bond0,bond1'
-  notify: restart sensu-client
-
 - name: syslog check
   sensu_check: name=syslog-socket plugin=check-syslog-socket.rb
   notify: restart sensu-client
@@ -219,8 +214,3 @@
 - name: raid check
   sensu_check: name=check-raid plugin=check-raid.sh interval=300 occurrences=1
   notify: restart sensu-client
-
-- name: kernel-options
-  sensu_check: name=kernel-options plugin=check-kernel-options.rb
-  notify: restart sensu-client
-
