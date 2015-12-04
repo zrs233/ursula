@@ -4,6 +4,19 @@
     path: /etc/ceph
     state: directory
 
+- name: create ceph log directory
+  file: dest=/var/log/ceph state=directory mode=2750 owner=root group=adm
+
+- name: Change ceph log dir acl
+  acl: name=/var/log/ceph state=present default=yes etype={{ item.etype }} permissions={{ item.permission }}
+  with_items:
+    - etype: user
+      permission: rw
+    - etype: group
+      permission: r
+    - etype: other
+      permission: r
+
 - name: install dependencies
   apt: pkg={{ item }}
        state=present
