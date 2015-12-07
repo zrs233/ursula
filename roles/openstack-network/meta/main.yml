@@ -1,3 +1,3 @@
----                                                                             
-dependencies:                                                                   
-  - role: endpoints 
+---
+dependencies:
+  - role: endpoints

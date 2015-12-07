@@ -127,7 +127,7 @@
 
 - include: monitoring.yml tags=monitoring,common
   when: monitoring.enabled|default('True')|bool
-  
+
 - include: logging.yml
   tags:
     - logrotate
