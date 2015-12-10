@@ -33,7 +33,7 @@
     - ntp
     - vlan
     - lvm2
-    - libpam-cracklib    
+    - libpam-cracklib
 
 - name: load vlan module
   lineinfile: dest=/etc/modules

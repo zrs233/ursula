@@ -35,7 +35,7 @@
   keystone_user: tenant={{ item }}
                  tenant_description="{{ item }} tenant"
                  token={{ admin_token }}
-                 endpoint="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}/" 
+                 endpoint="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}/"
   with_items: keystone.tenants
 
 - name: keystone users

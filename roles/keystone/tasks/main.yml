@@ -36,7 +36,7 @@
                    config_dirs=/etc/keystone
 
 - name: configure keystone
-  template: src={{ item }} dest=/etc/keystone/ 
+  template: src={{ item }} dest=/etc/keystone/
             mode={{ 0644 if 'policy.json' in item else 0640 }}
             owner=keystone group=keystone
   with_fileglob: ../templates/etc/keystone/*

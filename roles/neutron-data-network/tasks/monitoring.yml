@@ -28,7 +28,7 @@
   notify: restart sensu-client
 
 - name: l3 router check
-  sensu_check: name=check-l3-router plugin=check-l3-router.sh 
+  sensu_check: name=check-l3-router plugin=check-l3-router.sh
                args="-e {{ ansible_default_ipv4.interface }}"
                use_sudo=true
   with_items: neutron.networks 
