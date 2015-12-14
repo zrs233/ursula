@@ -7,4 +7,7 @@
       - rotate 7
       - missingok
       - compress
+      - postrotate
+      - test -x /usr/bin/mysqladmin && /usr/bin/mysqladmin ping > /dev/null && /usr/bin/mysqladmin flush-logs > /dev/null
+      - endscript
       - minsize 100k
