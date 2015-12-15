@@ -36,6 +36,20 @@
            --keyring /var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
            creates=/var/lib/ceph/mon/ceph-{{ ansible_hostname }}/keyring
 
+- name: make sure ceph.log has proper permissions for logstash
+  file: dest=/var/log/ceph/ceph.log
+        state=touch
+        owner=root
+        group=adm
+        mode=0644
+
+- name: make sure ceph.audit.log has proper permissions for logstash
+  file: dest=/var/log/ceph/ceph.audit.log
+        state=touch
+        owner=root
+        group=adm
+        mode=0644
+
 - name: activate monitor with upstart
   file: path=/var/lib/ceph/mon/ceph-{{ ansible_hostname }}/{{ item }}
         state=touch
