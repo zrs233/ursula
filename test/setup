@@ -21,9 +21,13 @@ cat > ${ROOT}/envs/test/hosts <<eof
 # Tell ansible to use the python in PATH instead of /usr/bin/python
 localhost ansible_python_interpreter=python ansible_connection=local
 eof
-cp ${ROOT}/envs/example/defaults-2.0.yml ${ROOT}/envs/test/defaults-2.0.yml
 
-echo "testenv_instance_prefix: ${testenv_instance_prefix}" >> ${ROOT}/envs/test/defaults-2.0.yml
+cp ${ROOT}/envs/example/defaults-2.0.yml ${ANSIBLE_VAR_DEFAULTS_FILE}
+cat <<eof >> ${ANSIBLE_VAR_DEFAULTS_FILE}
+testenv_instance_prefix: ${testenv_instance_prefix}
+testenv_keypair_name: ${KEY_NAME}
+testenv_keypair_path: ${KEY_PATH}
+eof
 
 echo "destroying: ${VMS}"
 ${ROOT}/test/cleanup
@@ -36,7 +40,6 @@ CONTROLLER_IP=$(private_ip ${testenv_instance_prefix}-controller-0)
 rm -rf ${ROOT}/envs/test/group_vars/
 rm -f ${ROOT}/envs/test/hosts
 mkdir -p ${ROOT}/envs/test/group_vars
-cp ${ROOT}/envs/example/defaults-2.0.yml ${ROOT}/envs/test/defaults-2.0.yml
 cp -r ${ROOT}/envs/example/ci/* ${ROOT}/envs/test
 echo "---" > ${ROOT}/envs/test/group_vars/all.yml
 echo "testenv_instance_prefix: ${testenv_instance_prefix}" >> ${ROOT}/envs/test/group_vars/all.yml
