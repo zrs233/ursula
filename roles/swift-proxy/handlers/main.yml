@@ -5,5 +5,3 @@
 - name: restart haproxy
   service: name=haproxy state=restarted
 
-- name: restart memcached
-  action: service name=memcached state=restarted enabled=yes
