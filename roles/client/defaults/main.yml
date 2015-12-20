@@ -12,3 +12,5 @@ client:
     - python-ironicclient
     - python-swiftclient
     - python-magnumclient
+  apt_packages:
+    - python-prettytable
