@@ -2,6 +2,12 @@
 - name: openstack creds
   template: src=root/stackrc dest=/root/stackrc
 
+- name: install required packages for clients
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items: client.apt_packages
+
 - name: install openstack clients
   pip: name={{ item }}
   with_items: client.names
