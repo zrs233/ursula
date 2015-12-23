@@ -5,6 +5,16 @@
     - vlan
     - bridge-utils
 
+- name: unload openvswitch if present
+  modprobe: name=openvswitch state=absent
+
+- name: blacklist openvswitch
+  template: dest=/etc/modprobe.d/blacklist-openvswitch.conf 
+            src=etc/modprobe.d/blacklist-openvswitch.conf
+            mode=0644
+            owner=root
+            group=root
+
 - name: configure VXLAN to use IANA assigned port 4789
   copy: content="options vxlan udp_port=4789"
         dest=/etc/modprobe.d/vxlan-port.conf owner=root group=root mode=0644
