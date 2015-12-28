@@ -3,7 +3,7 @@ endpoints:
   main: "{{ fqdn }}"
   db: "{{ undercloud_floating_ip }}"
   rabbit: "{{ undercloud_floating_ip }}"
-  mongodb: "{{ hostvars[groups['mongo_db'][0]][primary_interface]['ipv4']['address'] }}"
+  mongodb: "{{ hostvars[groups['db'][0]][primary_interface]['ipv4']['address'] }}"
   memcache: "{{ undercloud_floating_ip }}:11211"
   magnum: "{{ fqdn }}"
   identity_uri: https://{{ fqdn }}:35357
