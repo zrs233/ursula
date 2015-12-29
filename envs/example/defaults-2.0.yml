@@ -57,7 +57,6 @@ swift:
 endpoints:
   main:     "{{ fqdn }}"
   db:       "{{ undercloud_floating_ip }}"
-  mongodb:  "{{ hostvars[groups['mongo_db'][0]][primary_interface]['ipv4']['address'] }}"
   rabbit:   "{{ undercloud_floating_ip }}"
   magnum: "{{ fqdn }}"
   identity_uri: https://{{ fqdn }}:35357
