@@ -39,3 +39,4 @@ heat:
     verbose: True
   cafile: "{{ ssl.cafile|default('/etc/ssl/certs/ca-certificates.crt') }}"
   plugin_dirs: []
+  engine_workers: 4
