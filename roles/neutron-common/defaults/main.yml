@@ -1,6 +1,23 @@
 ---
 neutron:
   l2_population: False
+  vxlan:
+    # The multicast prefix to use for broadcast, multicast and unknown frames
+    # Consider using a larger prefix (e.g. a /24) on deployments with a
+    # dedicated network infrastructure between nodes. For example with
+    # group_prefix = 239.1.1.0/24, the last eight bits of the VXLAN VNID would
+    # be used pick a group address within this prefix. This is a compromise
+    # between network resource allocation, and efficient delivery to BUM
+    # frames.
+    group_prefix: 239.1.1.1
+    # If using multicast, limit the L3 diameter of VXLAN multicast traffic by
+    # specifying the TTL on VXLAN packets. By default we limit the TTL to one,
+    # so VXLAN multicast frames are only used on the local subnet. If nodes
+    # where spread between multiple subnets and intervening routers are
+    # configured to route multicast, configure this value to the longest L3
+    # path between nodes within the deployment.
+    ttl: 1
+    vni_ranges: 1:4095
   allow_overlapping_ips: False
   api_workers: 3
   metadata_workers: 3
