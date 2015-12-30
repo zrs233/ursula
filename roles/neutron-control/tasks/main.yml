@@ -2,21 +2,13 @@
 - name: neutron api cache dir
   file: dest=/var/cache/neutron/api owner=neutron state=directory
 
-- name: set ml2 config path
-  set_fact: neutron_plugin_config=/etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini
-  when: neutron.plugin == 'ovs'
-
-- name: set ovs config path
-  set_fact: neutron_plugin_config=/etc/neutron/plugins/ml2/ml2_plugin.ini
-  when: neutron.plugin == 'ml2'
-
 - name: install neutron-server service
   upstart_service:
     name: neutron-server
     user: neutron
     cmd: /usr/local/bin/neutron-server
     config_dirs: /etc/neutron
-    config_files: "/etc/neutron/neutron.conf,{{ neutron_plugin_config }}"
+    config_files: /etc/neutron/plugins/ml2/ml2_plugin.ini
     envs: "{{ neutron.service.envs }}"
 
 - name: stop neutron service before db sync

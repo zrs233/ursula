@@ -12,19 +12,6 @@
   ufw: rule=allow to_port=4789 proto=udp
   when: neutron.plugin == 'ml2' and 'vxlan' in neutron.tunnel_types
 
-- name: install neutron-openvswitch-agent service
-  upstart_service: name=neutron-openvswitch-agent
-                   user=neutron
-                   cmd=/usr/local/bin/neutron-openvswitch-agent
-                   config_dirs=/etc/neutron
-                   config_files=/etc/neutron/neutron.conf,/etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini
-                   prestart_script=/usr/local/bin/neutron-ovs-cleanup
-  when: neutron.plugin == 'ovs'
-
-- name: start neutron-openvswitch-agent
-  service: name=neutron-openvswitch-agent state=started
-  when: neutron.plugin == 'ovs'
-
 - name: ml2 dataplane config
   template: src=etc/neutron/plugins/ml2/ml2_plugin_dataplane.ini
             dest=/etc/neutron/plugins/ml2/ml2_plugin_dataplane.ini

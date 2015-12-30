@@ -17,12 +17,6 @@
 
 - include: dnsmasq.yml
 
-- name: ensure ovs br-ex bridge present
-  ovs_bridge: name=br-ex state=present
-  when: neutron.plugin == 'ovs'
-  notify:
-    - ifup br-ex
-
 - include: igmp-router.yml
   when: neutron.plugin == 'ml2' and 'vxlan' in neutron.tunnel_types
 
@@ -38,22 +32,14 @@
   failed_when: iproute_out.rc == 255
   when: "'vxlan' in neutron.tunnel_types"
 
-- name: set ovs data path agent fact
-  set_fact: neutron_data_path_agent=neutron-openvswitch-agent
-  when: neutron.plugin == 'ovs'
-
-- name: set ml2 data path agent fact
-  set_fact: neutron_data_path_agent=neutron-linuxbridge-agent
-  when: neutron.plugin == 'ml2'
-
 - name: install neutron-data-network services
   upstart_service:
     name: "{{ item.key }}"
     user: neutron
     cmd: "/usr/local/bin/{{ item.key }}"
     pidfile: "{{ item.value.pidfile|default(omit) }}"
-    start_on: "starting {{ neutron_data_path_agent }}"
-    stop_on: "stopping {{ neutron_data_path_agent }}"
+    start_on: "starting neutron-linuxbridge-agent"
+    stop_on: "stopping neutron-linuxbridge-agent"
     config_dirs: /etc/neutron
     config_files: /etc/neutron/neutron.conf,{{ item.value.config_files }}
     envs: "{{ neutron.service.envs }}"
@@ -94,8 +80,8 @@
     user: neutron
     cmd: "/usr/local/bin/{{ item.key }}"
     pidfile: "{{ item.value.pidfile|default(omit) }}"
-    start_on: "starting {{ neutron_data_path_agent }}"
-    stop_on: "stopping {{ neutron_data_path_agent }}"
+    start_on: "starting neutron-linuxbridge-agent"
+    stop_on: "stopping neutron-linuxbridge-agent"
     config_dirs: /etc/neutron
     config_files: "{{ item.value.config_files|join(',') }}"
     envs: "{{ neutron.service.envs }}"

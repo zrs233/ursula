@@ -115,14 +115,6 @@
       tags: ['infra']
   environment: "{{ env_vars|default({}) }}"
 
-- name: openvswitch
-  hosts: network:compute
-  roles:
-    - role: openvswitch
-      when: neutron.plugin == 'ovs'
-      tags: ['infra', 'data', 'openvswitch']
-  environment: "{{ env_vars|default({}) }}"
-
 - name: controller haproxy
   gather_facts: force
   hosts: controller
@@ -366,11 +358,3 @@
       when: neutron.enable_external_interface|bool
   environment: "{{ env_vars|default({}) }}"
 
-
-- name: extra neutron setup
-  hosts: network:compute
-  tasks:
-    - name: restart neutron-openvswitch-agent to ensure VXLAN mesh is configured
-      service: name=neutron-openvswitch-agent state=restarted
-      when: neutron.plugin == 'ovs'
-  environment: "{{ env_vars|default({}) }}"
