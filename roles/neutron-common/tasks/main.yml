@@ -96,7 +96,7 @@
     group: root
 
 - name: error for unknown plugin
-  fail: msg="Invalid Neutron plugin: must be ml2"
+  fail: msg="Invalid Neutron plugin, must be ml2"
   when: neutron.plugin != 'ml2'
 
 - name: ml2 plugin dir
