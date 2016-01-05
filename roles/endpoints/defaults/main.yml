@@ -1,4 +1,5 @@
 ---
+swift_fqdn: "{{ fqdn }}"
 endpoints:
   main: "{{ fqdn }}"
   db: "{{ undercloud_floating_ip }}"
