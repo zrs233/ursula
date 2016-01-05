@@ -67,7 +67,7 @@
   tags: ntp
 
 # Include serial console before kernel-tuning to build serial_console_cmdline
-- include: serial-console.yml tty=ttyS0
+- include: serial-console.yml tty={{ common.serial_console }}
   tags: ['prereboot']
 
 - include: ipmi.yml

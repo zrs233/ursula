@@ -43,3 +43,4 @@ common:
   logging:
     debug: False
     verbose: True
+  serial_console: ttyS0
