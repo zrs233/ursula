@@ -9,7 +9,7 @@
   modprobe: name=openvswitch state=absent
 
 - name: blacklist openvswitch
-  template: dest=/etc/modprobe.d/blacklist-openvswitch.conf 
+  template: dest=/etc/modprobe.d/blacklist-openvswitch.conf
             src=etc/modprobe.d/blacklist-openvswitch.conf
             mode=0644
             owner=root
@@ -96,30 +96,16 @@
     group: root
 
 - name: error for unknown plugin
-  fail: msg="Invalid Neutron plugin, must be either ml2 or ovs"
-  when: neutron.plugin != 'ovs' and neutron.plugin != 'ml2'
+  fail: msg="Invalid Neutron plugin, must be ml2"
+  when: neutron.plugin != 'ml2'
 
 - name: ml2 plugin dir
   file: dest=/etc/neutron/plugins/ml2 state=directory
-  when: neutron.plugin == 'ml2'
 
 - name: ml2 config
   template: src=etc/neutron/plugins/ml2/ml2_plugin.ini
             dest=/etc/neutron/plugins/ml2/ml2_plugin.ini
             mode=0644
-  when: neutron.plugin == 'ml2'
-  notify:
-    - restart neutron services
-
-- name: ovs plugin dir
-  file: dest=/etc/neutron/plugins/openvswitch state=directory
-  when: neutron.plugin == 'ovs'
-
-- name: ovs config
-  template: src=etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini
-            dest=/etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini
-            mode=0644
-  when: neutron.plugin == 'ovs'
   notify:
     - restart neutron services
 
