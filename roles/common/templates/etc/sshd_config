@@ -91,5 +91,9 @@ MACs hmac-sha1,hmac-ripemd160
 UsePAM yes
 
 PermitUserEnvironment no
+{% if common.ssh.max_auth_tries is defined %}
+MaxAuthTries {{ common.ssh.max_auth_tries }}
+{% else %}
 MaxAuthTries 5
+{% endif %}
 GatewayPorts no
