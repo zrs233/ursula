@@ -25,7 +25,11 @@ LogLevel INFO
 
 # Authentication:
 LoginGraceTime 120
+{% if common.ssh.disable_root|bool %}
+PermitRootLogin no
+{% else %}
 PermitRootLogin without-password
+{% endif %}
 StrictModes yes
 
 RSAAuthentication yes
@@ -97,3 +101,7 @@ MaxAuthTries {{ common.ssh.max_auth_tries }}
 MaxAuthTries 5
 {% endif %}
 GatewayPorts no
+
+{% if common.ssh.disable_dns|bool %}
+UseDNS no
+{% endif %}
