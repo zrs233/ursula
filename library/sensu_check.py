@@ -38,7 +38,7 @@ def main():
             prefix=dict(required=False,default=''),
             env_vars=dict(required=False,default=''),
             command=dict(required=False,default=''),
-            handler=dict(required=False,default='pagerduty'),
+            handler=dict(required=False,default='default'),
             plugin_dir=dict(default='/etc/sensu/plugins', required=False),
             check_dir=dict(default='/etc/sensu/conf.d/checks', required=False),
             state=dict(default='present', required=False, choices=['present','absent'])
@@ -60,7 +60,6 @@ def main():
                     command = '%s %s' % (module.params['prefix'], command)
                 if module.params['use_sudo']:
                     command = "sudo %s" % (command)
-            notification = '%s check failed' % (module.params['name'])
             check=dict({
                 'checks': {
                     module.params['name']: {
@@ -68,7 +67,6 @@ def main():
                         'standalone': True,
                         'handlers': [ module.params['handler'] ],
                         'interval': int(module.params['interval']),
-                        'notification': notification,
                         'occurrences': int(module.params['occurrences']),
                         'auto_resolve': module.params['auto_resolve'],
                         'handle': module.params['handle']

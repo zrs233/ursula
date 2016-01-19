@@ -12,3 +12,5 @@ monitoring:
     vhost: /sensu
     username: sensu
     password: sensu
+  check_handler: pagerduty
+  metrics_handler: graphite

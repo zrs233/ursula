@@ -49,7 +49,7 @@ def main():
                     short_service_name: {
                         'command': command,
                         'standalone': True,
-                        'handlers': [ 'pagerduty' ],
+                        'handlers': [ 'default' ],
                         'interval': int(module.params['interval']),
                         'notification': notification,
                         'occurrences':  int(module.params['occurrences'])

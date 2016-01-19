@@ -56,7 +56,7 @@ def main():
                         'command': command,
                         'standalone': True,
                         'interval': int(module.params['interval']),
-                        'handlers': [ 'graphite' ]
+                        'handlers': [ 'metrics' ]
                     }
                 }
             })
