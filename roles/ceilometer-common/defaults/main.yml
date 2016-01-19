@@ -7,6 +7,8 @@ ceilometer:
       - { name: pymongo, version: '3.0.3' }
       - { name: functools32 }
       - { name: simplegeneric }
+      - { name: kombu>=3.0.7 }
+      - { name: amqp>=1.4.0 }
   alternatives:
     - ceilometer-api
     - ceilometer-collector
@@ -19,6 +21,7 @@ ceilometer:
   mongodb_database: ceilometer
   mongodb_user: ceilometer
   mongodb_password: "{{ secrets.mongodb_password }}"
+  heartbeat_timeout_threshold: 30
   logs:
     - paths:
         - /var/log/ceilometer/api.log

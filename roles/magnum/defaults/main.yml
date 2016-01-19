@@ -2,12 +2,15 @@
 magnum:
   port: 9512
   host: 127.0.0.1
+  heartbeat_timeout_threshold: 30
   source:
     rev: 'stable/kilo'
     virtualenv: "/opt/openstack/magnum"
     python_dependencies:
       - { name: mysql-python }
       - { name: keystonemiddleware<4.1.0 }
+      - { name: kombu>=3.0.7 }
+      - { name: amqp>=1.4.0 }
     system_dependencies:
       - libmysqlclient-dev
   package: ~

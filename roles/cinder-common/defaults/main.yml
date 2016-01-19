@@ -22,12 +22,15 @@ cinder:
       - cinder-scheduler
       - cinder-volume
       - cinder-volume-usage-audit
+  heartbeat_timeout_threshold: 30
   source:
     rev: 'stable/kilo'
     python_dependencies:
       - { name: mysql-python }
       - { name: functools32 }
       - { name: requests, version: '2.7.0' }
+      - { name: kombu>=3.0.7 }
+      - { name: amqp>=1.4.0 }
     system_dependencies:
       - libmysqlclient-dev
       - libpq-dev

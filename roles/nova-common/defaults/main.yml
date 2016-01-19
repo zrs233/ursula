@@ -32,6 +32,7 @@ nova:
   state_path: "{{ state_path_base }}/nova"
   block_device_allocate_retries: 200
   block_device_allocate_retries_interval: 3
+  heartbeat_timeout_threshold: 30
   install_packages:
     - python-numpy
     - virt-top
@@ -46,6 +47,8 @@ nova:
       - { name: mysql-python }
       - { name: python-memcached }
       - { name: requests, version: 2.7.0 }
+      - { name: kombu>=3.0.7 }
+      - { name: amqp>=1.4.0 }
     system_dependencies:
       - libjs-jquery-tablesorter
       - libmysqlclient-dev
