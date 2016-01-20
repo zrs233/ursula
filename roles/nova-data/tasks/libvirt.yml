@@ -8,6 +8,7 @@
 - name: install nova-compute packages
   apt: pkg={{ item }}
   with_items:
+    - cpu-checker
     - libvirt-bin={{ nova.libvirt_bin_version }}
     - python-libvirt={{ nova.python_libvirt_version }}
     - qemu-kvm={{ nova.qemu_kvm_version }}
@@ -23,6 +24,7 @@
 - name: install nova-compute packages (trusty)
   apt: pkg={{ item }}
   with_items:
+    - cpu-checker
     - libvirt-bin
     - python-libvirt
     - qemu-kvm
