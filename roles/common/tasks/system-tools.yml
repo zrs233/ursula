@@ -14,12 +14,12 @@
     - ethtool
     - git
     - htop
+    - iftop
     - iotop
     - iperf
     - ltrace
     - mtr
     - netcat
-    - pstack
     - pv
     - ruby1.9.1
     - ruby1.9.1-dev
