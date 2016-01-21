@@ -23,6 +23,10 @@
 - name: probe nbd
   modprobe: name=nbd state=present
 
+- name: disable SMT for ppc64le
+  command: "ppc64_cpu --smt=off"
+  when: ansible_architecture == "ppc64le"
+
 - lineinfile: dest=/etc/modules line="nbd"
 
 - modprobe: name=nbd state=present
