@@ -18,3 +18,4 @@
 - name: cinder-backup process check
   sensu_process_check: service=cinder-backup
   notify: restart sensu-client
+  when: swift.enabled|default("False")|bool
