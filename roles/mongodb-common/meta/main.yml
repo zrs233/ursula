@@ -1,6 +1,7 @@
 ---
 dependencies:
   - role: monitoring-common
+    when: monitoring.enabled is not defined or monitoring.enabled|bool
   - role: apt-repos
     repos:
       - repo: 'deb {{ apt_repos.mongodb.repo }} {{ ansible_distribution_release }}/mongodb-org/3.0 multiverse'

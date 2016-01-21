@@ -7,5 +7,6 @@ dependencies:
         repo: 'deb {{ apt_repos.haproxy.repo }} {{ ansible_lsb.codename }} main'
         key_url: '{{ apt_repos.haproxy.key_url }}'
   - role: monitoring-common
+    when: monitoring.enabled is not defined or monitoring.enabled|bool
   - role: collectd-plugin
     when: collectd is defined and collectd.enabled|bool

@@ -7,6 +7,7 @@ dependencies:
         key_package: ubuntu-cloud-keyring
     when: ansible_distribution_version == "12.04"
   - role: monitoring-common
+    when: monitoring.enabled is not defined or monitoring.enabled|bool
   - role: logging-config
     service: nova
     logdata: "{{ nova.logs }}"

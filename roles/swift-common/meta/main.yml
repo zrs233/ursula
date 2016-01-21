@@ -2,6 +2,7 @@
 dependencies:
   - role: endpoints
   - role: monitoring-common
+    when: monitoring.enabled is not defined or monitoring.enabled|bool
   - role: logging-config
     service: swift
     logdata: "{{ swift.logs }}"
