@@ -3,7 +3,7 @@ dependencies:
   - role: endpoints
   - role: apt-repos
   - role: monitoring-common
-    when: monitoring.enabled is not defined or monitoring.enabled|bool
+    when: monitoring.enabled|default(True)|bool
   - role: logging-config
     when: logging.enabled|default(True)|bool
     service: neutron
