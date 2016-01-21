@@ -5,7 +5,6 @@
 - name: install system tools
   apt: pkg={{ item }}
   with_items:
-    - ack-grep
     - acl
     - auditd
     - build-essential
@@ -34,6 +33,12 @@
     - vlan
     - lvm2
     - libpam-cracklib
+
+- name: install tools for x86
+  apt: pkg={{ item }}
+  with_items:
+    - ack-grep
+  when: ansible_architecture != "ppc64le"
 
 - name: load vlan module
   lineinfile: dest=/etc/modules
