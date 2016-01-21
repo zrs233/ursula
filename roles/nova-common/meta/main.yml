@@ -3,7 +3,7 @@ dependencies:
   - role: endpoints
   - role: apt-repos
     repos:
-      - repo: 'deb {{ apt_repos.cloud_archive.repo }} precise-updates/icehouse main'
+      - repo: 'deb {{ apt_repos.cloud_archive.repo }} {{ ansible_distribution_release }}-updates/kilo main'
         key_package: ubuntu-cloud-keyring
     when: ansible_distribution_version == "12.04"
   - role: monitoring-common
