@@ -1,3 +1,4 @@
+{% raw %}
 #!/bin/bash
 #
 # File: percona-xtrabackup.sh
@@ -36,3 +37,4 @@ fi
 
 echo Removing backups older than "$backup_retention_days" days
 find "$backup_root_dir" -maxdepth 1 -type f -mtime +"$backup_retention_days" -print -delete
+{% endraw %}
