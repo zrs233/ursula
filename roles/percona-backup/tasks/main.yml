@@ -1,7 +1,4 @@
 ---
-- name: mailutils package
-  apt: pkg=mailutils
-
 - name: create backup directory
   file: path=/backup/percona state=directory mode=0755
 
