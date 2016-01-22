@@ -16,3 +16,5 @@ dependencies:
     project_name: heat
     alternatives: "{{ heat.alternatives }}"
     when: openstack_install_method == 'package'
+  - role: openstack-database
+    database_name: heat

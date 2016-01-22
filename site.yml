@@ -157,9 +157,6 @@
   gather_facts: force
   hosts: controller
   roles:
-    - role: openstack-database
-      database_name: keystone
-      tags: ['openstack', 'keystone', 'control']
     - role: keystone
       tags: ['openstack', 'keystone', 'control']
   environment: "{{ env_vars|default({}) }}"
@@ -180,9 +177,6 @@
   gather_facts: force
   hosts: controller
   roles:
-    - role: openstack-database
-      database_name: glance
-      tags: ['openstack', 'glance', 'control', 'ceph']
     - role: glance
       tags: ['openstack', 'glance', 'control', 'ceph']
   environment: "{{ env_vars|default({}) }}"
@@ -289,10 +283,6 @@
   gather_facts: force
   hosts: controller
   roles:
-    - role: openstack-database
-      database_name: heat
-      tags: ['openstack', 'heat', 'control']
-      when: heat.enabled|bool
     - role: heat
       tags: ['openstack', 'heat', 'control']
       when: heat.enabled|bool
@@ -318,10 +308,6 @@
   gather_facts: force
   hosts: controller
   roles:
-    - role: openstack-database
-      database_name: magnum
-      tags: ['openstack', 'magnum', 'control']
-      when: magnum.enabled|bool
     - role: magnum
       tags: ['openstack', 'magnum', 'control']
       when: magnum.enabled|bool
@@ -357,4 +343,3 @@
       tags: ['openstack', 'setup', 'openstack-network']
       when: neutron.enable_external_interface|bool
   environment: "{{ env_vars|default({}) }}"
-
