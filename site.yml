@@ -163,14 +163,11 @@
 
 - name: keystone setup
   hosts: controller[0]
-  vars_files:
-    - roles/keystone/defaults/main.yml
-
   roles:
     - role: keystone-setup
       keystone_configured: false
       tags: ['openstack', 'setup', 'keystone-setup']
-      #when: not keystone_configured
+      when: not keystone_configured
   environment: "{{ env_vars|default({}) }}"
 
 - name: glance code and config
