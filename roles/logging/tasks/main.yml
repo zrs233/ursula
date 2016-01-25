@@ -4,29 +4,32 @@
   with_fileglob: ../templates/etc/rsyslog.d/*
   notify: restart rsyslog
 
-- name: stop logstash-forwarder service
-  service: name=logstash-forwarder state=stopped enabled=yes
-  register: lsfstop
-  failed_when: lsfstop|failed and ("service not found" not in lsfstop.msg)
-
 - name: create logstash user
   user: name=logstash comment="Logstash Service User" shell=/sbin/nologin system=yes home=/var/lib/logstash
 
 - name: install logstash-forwarder
   apt: pkg=logstash-forwarder
-  when: ansible_distribution_version == "12.04"
+  when: logging.install_method == 'apt'
+
+- name: stop logstash-forwarder service
+  service: name=logstash-forwarder state=stopped enabled=yes
+  register: lsfstop
+  failed_when: lsfstop|failed and ("service not found" not in lsfstop.msg)
 
 - name: download logstash
   get_url: url={{ logging.download.url }}
            dest=/tmp/logstash-forwarder_{{ logging.version }}_amd64.deb
-  when: ansible_distribution_version == "14.04"
+  when: logging.install_method == 'file'
 
 - name: install logstash
   apt: deb=/tmp/logstash-forwarder_{{ logging.version }}_amd64.deb
-  when: ansible_distribution_version == "14.04"
+  when: logging.install_method == 'file'
 
 - name: install logstash-forwarder service
-  copy: src=etc/init/logstash-forwarder.conf dest=/etc/init/logstash-forwarder.conf mode=0644
+  template: src=etc/init/logstash-forwarder.conf dest=/etc/init/logstash-forwarder.conf mode=0644
+
+- name: remove logstash-forwarder init.d
+  file: dest=/etc/init.d/logstash-forwarder state=absent
 
 - name: custom cert auth directory
   file: dest=/usr/local/share/ca-certificates state=directory mode=0755
