@@ -5,7 +5,7 @@ dependencies:
     repos:
       - repo: 'deb {{ apt_repos.cloud_archive.repo }} {{ ansible_distribution_release }}-updates/kilo main'
         key_package: ubuntu-cloud-keyring
-    when: ansible_distribution_version == "12.04"
+    when: ansible_architecture == "ppc64le"
   - role: monitoring-common
     when: monitoring.enabled|default(True)|bool
   - role: logging-config
