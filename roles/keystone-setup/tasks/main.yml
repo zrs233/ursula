@@ -21,7 +21,7 @@
 
 - name: add admin_token_auth to keystone pipeline
   template: dest=/etc/keystone/keystone-paste.ini
-            src=roles/keystone/templates/etc/keystone/keystone-paste.ini
+            src='{{ role_path }}/../keystone/templates/etc/keystone/keystone-paste.ini'
 
 - name: restart keystone api
   service: name=keystone state=restarted
@@ -93,7 +93,7 @@
 
 - name: remove admin_token_auth from keystone pipeline
   template: dest=/etc/keystone/keystone-paste.ini
-            src=roles/keystone/templates/etc/keystone/keystone-paste.ini
+            src='{{ role_path }}/../keystone/templates/etc/keystone/keystone-paste.ini'
 
 - name: restart keystone api
   service: name=keystone state=restarted
