@@ -18,7 +18,7 @@
 - include: dnsmasq.yml
 
 - include: igmp-router.yml
-  when: neutron.plugin == 'ml2' and 'vxlan' in neutron.tunnel_types
+  when: neutron.plugin == 'ml2' and 'vxlan' in neutron.tunnel_types and not neutron.l2_population
 
 - name: assert kernel supports vxlan
   command: modinfo -F version vxlan
