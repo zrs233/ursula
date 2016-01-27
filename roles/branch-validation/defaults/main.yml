@@ -1,0 +1,5 @@
+---
+validate_ha_environment: false
+temp_key_dest: /tmp/validate-key
+instance_group: compute
+ha_instance_group: controller

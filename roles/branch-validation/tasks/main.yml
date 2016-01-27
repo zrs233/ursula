@@ -1,0 +1,205 @@
+---
+- name: create keypair
+  os_keypair:
+    auth:
+      username: admin
+      project_name: admin
+      password: "{{ secrets.admin_password }}"
+      auth_url: "http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}"
+    name: validate
+    state: present
+  register: keypair
+
+- name: persist private key
+  sudo: no
+  local_action:
+    module: copy
+    content: "{{ keypair.key.private_key }}"
+    dest: "{{ temp_key_dest }}"
+    mode: 0600
+  when: keypair|changed
+
+- name: create security group
+  os_security_group:
+    auth:
+      username: admin
+      project_name: admin
+      password: "{{ secrets.admin_password }}"
+      auth_url: "http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}"
+    name: validate_ssh
+    description: "validate group allowing ssh, icmp ipv4 ingress"
+    state: present
+
+- name: create security group rules
+  os_security_group_rule:
+    auth:
+      username: admin
+      project_name: admin
+      password: "{{ secrets.admin_password }}"
+      auth_url: "http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}"
+    security_group: validate_ssh
+    protocol: "{{ item.ip_protocol }}"
+    port_range_min: "{{ item.from_port }}"
+    port_range_max: "{{ item.to_port }}"
+    remote_ip_prefix: "{{ item.cidr }}"
+    state: present
+  with_items:
+    - ip_protocol: tcp
+      from_port: 22
+      to_port: 22
+      cidr: 0.0.0.0/0
+    - ip_protocol: icmp
+      from_port: -1
+      to_port: -1
+      cidr: 0.0.0.0/0
+      state: present
+
+- name: launch instances
+  os_server:
+    auth:
+      username: admin
+      project_name: admin
+      password: "{{ secrets.admin_password }}"
+      auth_url: "http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}"
+    flavor: 1
+    image: cirros
+    key_name: validate
+    auto_floating_ip: no
+    security_groups: default,validate_ssh
+    nics:
+      - net-name: internal
+    name: "validate-{{ item }}"
+    wait: yes
+  with_items: groups[instance_group]
+  register: instances
+
+- name: associate a floating ip
+  os_floating_ip:
+    auth:
+      username: admin
+      project_name: admin
+      password: "{{ secrets.admin_password }}"
+      auth_url: "http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}"
+    network: external
+    server: "validate-{{ groups[instance_group][0] }}"
+    reuse: true
+  register: fip
+  ignore_errors: yes
+
+- name: wait for instances to be reachable
+  sudo: no
+  local_action:
+    module: wait_for
+    port: 22
+    delay: 5
+    timeout: 300
+    host: "{{ fip.floating_ip.floating_ip_address }}"
+
+- name: add host
+  local_action:
+    module: add_host
+    hostname: floating_ip_host
+    ansible_ssh_user: cirros
+    ansible_ssh_host: "{{ fip.floating_ip.floating_ip_address }}"
+
+### Node connectivity tests
+- name: cross-node inter-instance connectivity test
+  local_action:
+    module: "command ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
+            -o IdentityFile={{ temp_key_dest }}
+            cirros@{{ fip.floating_ip.floating_ip_address }}
+            ping -c 5 {{ item.openstack.private_v4 }}"
+  sudo: no
+  changed_when: false
+  register: pings
+  until: pings|success
+  delay: 1
+  retries: 5
+  with_items: instances.results
+
+- name: instance internet connectivity test w/ floating-ip
+  local_action:
+    module: "command ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
+            -o IdentityFile={{ temp_key_dest }}
+            cirros@{{ fip.floating_ip.floating_ip_address }}
+            ping -c 5 google.com"
+  sudo: no
+  changed_when: false
+  register: pings
+  until: pings|success
+  delay: 1
+  retries: 5
+
+- name: wait for user to login
+  pause: prompt="From {{ groups['controller'][0] }} ssh -o
+                 UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
+                 -o IdentityFile={{ temp_key_dest }}
+                 cirros@{{ fip.floating_ip.floating_ip_address }}
+                 (press enter when done)"
+
+- name: disassociate the floating ip
+  os_floating_ip:
+    auth:
+      username: admin
+      project_name: admin
+      password: "{{ secrets.admin_password }}"
+      auth_url: "http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}"
+    network: external
+    server: "validate-{{ groups[instance_group][0] }}"
+    floating_ip_address: "{{ fip.floating_ip.floating_ip_address }}"
+    state: absent
+
+- name: instance internet connectivity test w/out floating-ip
+  pause: prompt="Can you ping -c 5 google.com ? (yes/no)"
+  register: ping
+
+- name: assert ping
+  assert:
+    that: ping.user_input|bool
+
+- include: ha.yml
+  when: validate_ha_environment
+
+### Tear down
+- name: delete instances
+  os_server:
+    auth:
+      username: admin
+      project_name: admin
+      password: "{{ secrets.admin_password }}"
+      auth_url: "http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}"
+    name: "{{ item.server.name }}"
+    state: absent
+    wait: yes
+  with_items: instances.results
+  tags: delete
+
+- name: delete security group
+  os_security_group:
+    auth:
+      username: admin
+      project_name: admin
+      password: "{{ secrets.admin_password }}"
+      auth_url: "http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}"
+    name: validate_ssh
+    state: absent
+  tags: delete
+
+- name: delete private key file
+  sudo: no
+  local_action:
+    module: file
+    dest: "{{ temp_key_dest }}"
+    state: absent
+  tags: delete
+
+- name: delete keypair
+  os_keypair:
+    auth:
+      username: admin
+      project_name: admin
+      password: "{{ secrets.admin_password }}"
+      auth_url: "http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}"
+    name: validate
+    state: absent
+  tags: delete
