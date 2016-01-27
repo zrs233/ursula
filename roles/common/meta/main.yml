@@ -13,7 +13,7 @@ dependencies:
     when: common.hwraid.enabled|bool
   - role: apt-repos
     repos:
-      - repo: 'deb {{ apt_repos.sensu.repo }} sensu main'
+      - repo: 'deb {{ apt_repos.sensu.repo }} {{ apt_repos.sensu.distribution }} {{ apt_repos.sensu.components }}'
         key_url: '{{ apt_repos.sensu.key_url }}'
         validate_certs: no
     when: monitoring.enabled|default(True)|bool
