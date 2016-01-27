@@ -105,3 +105,7 @@ GatewayPorts no
 {% if common.ssh.disable_dns|bool %}
 UseDNS no
 {% endif %}
+
+# Disconnect SSH when session is idle
+ClientAliveInterval {{ common.idle_session_timeout }}
+ClientAliveCountMax 0

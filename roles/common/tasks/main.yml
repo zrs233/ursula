@@ -108,6 +108,9 @@
 - name: include stack name in /etc/issue
   lineinfile: dest=/etc/issue regexp="^{{ stack_env }} OpenStack Node" line="{{ stack_env }} OpenStack Node"
 
+- name: set timeout on idle bash sessions
+  template: src=etc/profile.d/autologout.sh dest=/etc/profile.d/autologout.sh owner=root group=root mode=0755
+
 - include: monitoring.yml
   tags:
     - monitoring

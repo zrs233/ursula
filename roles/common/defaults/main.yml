@@ -1,5 +1,6 @@
 ---
 common:
+  idle_session_timeout: 1800 # 1800 seconds (30 min)
   hwraid:
     enabled: True
     clients:
