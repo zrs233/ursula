@@ -6,7 +6,7 @@ if [[ "$CI" == "jenkins" ]]; then
     VENV=$WORKSPACE/venv
     virtualenv $VENV
     source $VENV/bin/activate
-    pip install -I pip==7.1.2
+    pip install -U pip
     pip install -U -r requirements.txt
 fi
 
