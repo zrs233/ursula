@@ -94,18 +94,4 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
   end
 
-  config.vm.define "workstation" do |workstation_config|
-    workstation_config.vm.hostname = "workstation.ursula"
-    workstation_config.vm.provider "virtualbox" do |v|
-      v.memory = 1024
-    end
-    workstation_config.vm.provider "libvirt" do |v|
-      v.memory = 1024
-    end
-     config.vm.provision :shell, path: "bootstrap.sh"
-    if File.exist?("#{ENV['HOME']}/.stackrc")
-      workstation_config.vm.provision "file", source: "~/.stackrc", destination: ".stackrc"
-    end
-  end
-
 end
