@@ -129,6 +129,9 @@ disabling Percona replication by setting `percona.replication: False`.
 
 For the sake of simplicity, I recommend using `Vagrant` rather than `Manual` for your first install. 
 
+If you want to install manually, do not use `envs/examples/*` without modifications as it contains several circuit breakers such
+as invalid certificates and your installs will fail.
+
 ### Manually
 
 If you're not running `Vagrant` and have installed ubuntu onto a server and
