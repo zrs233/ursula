@@ -16,6 +16,8 @@ apt_repos:
   sensu:
     repo: 'http://repos.sensuapp.org/apt'
     key_url: 'https://repos.sensuapp.org/apt/pubkey.gpg'
+    distribution: 'sensu'
+    components: 'main'
   haproxy:
     repo: 'http://ppa.launchpad.net/vbernat/haproxy-1.5/ubuntu'
     key_url: 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xCFFB779AADC995E4F350A060505D97A41C61B9CD'

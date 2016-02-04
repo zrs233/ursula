@@ -3,7 +3,9 @@ dependencies:
   - role: endpoints
   - role: apt-repos
   - role: monitoring-common
+    when: monitoring.enabled|default(True)|bool
   - role: logging-config
+    when: logging.enabled|default(True)|bool
     service: neutron
     logdata: "{{ neutron.logs }}"
   - role: openstack-source

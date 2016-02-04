@@ -5,15 +5,23 @@ dependencies:
     repos:
       - repo: 'deb {{ apt_repos.bbg_ubuntu.repo }} {{ ansible_lsb.codename }} main'
         key_url: '{{ apt_repos.bbg_ubuntu.key_url }}'
+    when: ansible_architecture != "ppc64le"
+  - role: apt-repos
+    repos:
       - repo: 'deb {{ apt_repos.hwraid.repo }} precise main'
         key_url: '{{ apt_repos.hwraid.key_url }}'
-      - repo: 'deb {{ apt_repos.sensu.repo }} sensu main'
+    when: common.hwraid.enabled|bool
+  - role: apt-repos
+    repos:
+      - repo: 'deb {{ apt_repos.sensu.repo }} {{ apt_repos.sensu.distribution }} {{ apt_repos.sensu.components }}'
         key_url: '{{ apt_repos.sensu.key_url }}'
         validate_certs: no
+    when: monitoring.enabled|default(True)|bool
   - role: docker
     when: docker.enabled is defined and docker.enabled|bool
   - role: monitoring-common
-    when: monitoring.enabled is not defined or monitoring.enabled|bool
+    when: monitoring.enabled|default(True)|bool
   - role: logging-config
+    when: logging.enabled|default(True)|bool
     service: common
     logdata: "{{ common.logs }}"

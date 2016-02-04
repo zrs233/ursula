@@ -2,6 +2,7 @@
 dependencies:
   - role: endpoints
   - role: logging-config
+    when: logging.enabled|default(True)|bool
     service: ironic
     logdata: "{{ ironic.logs }}"
   - role: openstack-source

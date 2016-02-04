@@ -27,6 +27,17 @@
 
 - modprobe: name=nbd state=present
 
+- name: check if SMT is enabled
+  command: "ppc64_cpu --smt"
+  failed_when: False
+  changed_when: False
+  register: smt
+  when: ansible_architecture == "ppc64le"
+
+- name: disable SMT for ppc64le
+  command: "ppc64_cpu --smt=off"
+  when: ansible_architecture == "ppc64le" and not smt.stdout|search("SMT is off")
+
 - name: enable cinder encryption
   template: src=etc/nova/nova.cinder_encryption.conf dest=/etc/nova/nova.cinder_encryption.conf mode=0640
             owner=root group=nova
