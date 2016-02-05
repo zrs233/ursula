@@ -12,8 +12,7 @@
 
 - name: persist private key
   sudo: no
-  local_action:
-    module: copy
+  copy:
     content: "{{ keypair.key.private_key }}"
     dest: "{{ temp_key_dest }}"
     mode: 0600
@@ -88,16 +87,14 @@
 
 - name: wait for instances to be reachable
   sudo: no
-  local_action:
-    module: wait_for
+  wait_for:
     port: 22
     delay: 5
     timeout: 300
     host: "{{ fip.floating_ip.floating_ip_address }}"
 
 - name: add host
-  local_action:
-    module: add_host
+  add_host:
     hostname: floating_ip_host
     ansible_ssh_user: cirros
     ansible_ssh_host: "{{ fip.floating_ip.floating_ip_address }}"
