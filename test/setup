@@ -79,41 +79,33 @@ if [[ ${TEST_ENV} == "ci-full" ]]; then
   cat > ${ROOT}/envs/test/hosts <<eof
 [db]
 $(public_ip "${testenv_instance_prefix}-controller-0")
-$(private_ip "${testenv_instance_prefix}-controller-1")
+$(public_ip "${testenv_instance_prefix}-controller-1")
 
 [db_arbiter]
-$(private_ip "${testenv_instance_prefix}-compute-0")
+$(public_ip "${testenv_instance_prefix}-compute-0")
 
 [mongo_db]
 $(public_ip "${testenv_instance_prefix}-controller-0")
-$(private_ip "${testenv_instance_prefix}-controller-1")
+$(public_ip "${testenv_instance_prefix}-controller-1")
 
 [mongo_arbiter]
-$(private_ip "${testenv_instance_prefix}-compute-0")
+$(public_ip "${testenv_instance_prefix}-compute-0")
 
 [controller]
 $(public_ip "${testenv_instance_prefix}-controller-0")
-$(private_ip "${testenv_instance_prefix}-controller-1")
+$(public_ip "${testenv_instance_prefix}-controller-1")
 
 [compute]
-$(private_ip "${testenv_instance_prefix}-compute-0")
+$(public_ip "${testenv_instance_prefix}-compute-0")
 $(public_ip "${testenv_instance_prefix}-controller-0")
-$(private_ip "${testenv_instance_prefix}-controller-1")
+$(public_ip "${testenv_instance_prefix}-controller-1")
 
 [network]
 $(public_ip "${testenv_instance_prefix}-controller-0")
-$(private_ip "${testenv_instance_prefix}-controller-1")
+$(public_ip "${testenv_instance_prefix}-controller-1")
 
 [cinder_volume]
-$(private_ip "${testenv_instance_prefix}-compute-0")
-eof
-cat > ${ROOT}/envs/test/ssh_config <<eof
-Host *
-    ProxyCommand ssh -vvvv -W %h:%p -o "StrictHostKeyChecking no" -i ${ROOT}/envs/test/${KEY_NAME}.pem ubuntu@$(public_ip "${testenv_instance_prefix}-controller-0")
-    IdentityFile ${ROOT}/envs/test/${KEY_NAME}.pem
-    StrictHostKeyChecking no
-    ServerAliveInterval 60
-    TCPKeepAlive yes
+$(public_ip "${testenv_instance_prefix}-compute-0")
 eof
 else
   CONTROLLER_IP=$(private_ip ${testenv_instance_prefix}-allinone)
