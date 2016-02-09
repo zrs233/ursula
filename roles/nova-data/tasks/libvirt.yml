@@ -56,29 +56,45 @@
   notify: restart nova services
   when: openstack_install_method == 'source'
 
-- name: update various lines in libvirtd.conf
-  lineinfile: dest=/etc/libvirt/libvirtd.conf regexp="{{ item.value.regexp }}"
-              line="{{ item.value.line }}"
+- name: delete lines in libvirtd.conf
+  lineinfile:
+    dest: /etc/libvirt/libvirtd.conf
+    regexp: "{{ item.value.regexp }}"
+    line: "{{ item.value.line }}"
+    state: absent
   with_dict:
-    ltcp:
+    listen_tcp:
       regexp: '^listen_tcp\s*='
       line: "listen_tcp = 1"
-    ltls:
-      regexp: '^listen_tls\s*='
-      line: "listen_tls = 0"
-    atcp:
+    auth_tcp:
       regexp: '^auth_tcp\s*='
       line: 'auth_tcp = \"none\"'
   notify: restart libvirt-bin
 
-- name: update libvirtd default
-  lineinfile: dest=/etc/default/libvirt-bin regexp="^libvirtd_opts\s*="
-              line="libvirtd_opts=\"-d -l\""
+- name: add/update various lines in libvirtd.conf
+  lineinfile:
+    dest: /etc/libvirt/libvirtd.conf
+    regexp: "{{ item.value.regexp }}"
+    line: "{{ item.value.line }}"
+  with_dict:
+    listen_tls:
+      regexp: '^listen_tls\s*='
+      line: "listen_tls = 0"
+  notify: restart libvirt-bin
+
+- name: remove libvirtd defaults
+  lineinfile:
+    dest: /etc/default/libvirt-bin
+    regexp: '^libvirtd_opts\s*='
+    line: 'libvirtd_opts=\"-d -l\"'
+    state: absent
   notify: restart libvirt-bin
 
 - name: update qemu migration option
-  lineinfile: dest=/etc/libvirt/qemu.conf regexp="^allow_incoming_qemukvm\s*="
-              line="allow_incoming_qemukvm = 1"
+  lineinfile:
+    dest: /etc/libvirt/qemu.conf
+    regexp: '^allow_incoming_qemukvm\s*='
+    line: 'allow_incoming_qemukvm = 1'
   notify: restart libvirt-bin
 
 - name: ensure kvm is supported by cpu and enabled in bios

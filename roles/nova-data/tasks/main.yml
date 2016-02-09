@@ -1,9 +1,14 @@
 ---
 - include: ssh.yml
   when: nova.enable_ssh|bool
+  tags:
+    - ssh
 
 - include: libvirt.yml
   when: nova.compute_driver == "nova.virt.libvirt.LibvirtDriver"
+  tags:
+    - libvirt
+    - libvirtd
 
 - include: docker.yml
   when: nova.compute_driver == "novadocker.virt.docker.DockerDriver"

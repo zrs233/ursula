@@ -38,3 +38,17 @@
 
 - name: verify ssh among compute nodes
   command: sudo -u nova -H /bin/sh -c {{ nova.state_path }}/bin/verify-ssh
+
+- name: Install nova ssh keys for root
+  authorized_key:
+    user: root
+    key: "{{ hostvars[item].nova_user.ssh_public_key }}"
+  with_items: groups['compute']
+
+- name: root known_hosts
+  template:
+    src: root/ssh/known_hosts
+    dest: "/root/.ssh/known_hosts"
+    owner: root
+    group: root
+    mode: 0600
