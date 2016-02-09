@@ -7,7 +7,6 @@ ceph:
   #  - sdc
   #  - sdd
 
-  ceph_version: v0.94.5
   stable_release: hammer
 
   openstack_keys:
@@ -55,6 +54,8 @@ ceph:
   rbd_default_features: 3
   rbd_default_map_options: rw
   rbd_default_format: 2
+  rbd_url: https://raw.githubusercontent.com/ceph/ceph/v0.94.5/src/pybind/rbd.py
+  rados_url: https://raw.githubusercontent.com/ceph/ceph/v0.94.5/src/pybind/rados.py
 
   # Monitor options
   monitor_interface: bond0

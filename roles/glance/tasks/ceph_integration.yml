@@ -1,6 +1,6 @@
 ---
 - name: fetch rados.py
-  get_url: url=https://raw.githubusercontent.com/ceph/ceph/{{ ceph.ceph_version }}/src/pybind/rados.py
+  get_url: url={{ ceph.rados_url }}
            dest="{{ openstack_source.virtualenv_base }}/glance/lib/python2.7/site-packages/rados.py"
            owner=root
            group=root
@@ -8,7 +8,7 @@
   when: openstack_install_method == 'source'
 
 - name: fetch rbd.py
-  get_url: url=https://raw.githubusercontent.com/ceph/ceph/{{ ceph.ceph_version }}/src/pybind/rbd.py
+  get_url: url={{ ceph.rbd_url }}
            dest="{{ openstack_source.virtualenv_base }}/glance/lib/python2.7/site-packages/rbd.py"
            owner=root
            group=root
@@ -16,7 +16,7 @@
   when: openstack_install_method == 'source'
 
 - name: fetch rados.py
-  get_url: url=https://raw.githubusercontent.com/ceph/ceph/{{ ceph.ceph_version }}/src/pybind/rados.py
+  get_url: url={{ ceph.rados_url }}
            dest="{{ lookup('items', 'openstack_package.virtualenv_base') }}/glance/lib/python2.7/site-packages/rados.py"
            owner=root
            group=root
@@ -24,7 +24,7 @@
   when: openstack_install_method == 'package'
 
 - name: fetch rbd.py
-  get_url: url=https://raw.githubusercontent.com/ceph/ceph/{{ ceph.ceph_version }}/src/pybind/rbd.py
+  get_url: url={{ ceph.rbd_url }}
            dest="{{ lookup('items', 'openstack_package.virtualenv_base') }}/glance/lib/python2.7/site-packages/rbd.py"
            owner=root
            group=root
