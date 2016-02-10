@@ -8,3 +8,5 @@ rabbitmq:
   port: 5672
   management_port: 15672
   admin_cli_url: 'http://localhost:15672/cli/rabbitmqadmin'
+  numqueues_warning_multiplier: 60
+  numqueues_critical_multiplier: 120
