@@ -5,8 +5,8 @@ apt_repos:
     repo: 'https://get.docker.com/ubuntu'
     key_url: 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xD8576A8BA88D21E9'
   bbg_ubuntu:
-    repo: 'http://repo.openstack.blueboxgrid.com/ubuntu/'
-    key_url: 'http://repo.openstack.blueboxgrid.com/blue_box_cloud.gpg.key'
+    repo: 'https://apt-mirror.openstack.blueboxgrid.com/bbg_ubuntu/ubuntu'
+    key_url: 'https://apt-mirror.openstack.blueboxgrid.com/keys/bbg_ubuntu.key'
   blueboxcloud_giftwrap:
     repo: 'https://packagecloud.io/blueboxcloud/giftwrap/ubuntu/'
     key_url: 'https://packagecloud.io/gpg.key'
