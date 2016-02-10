@@ -7,6 +7,14 @@
             dest=/usr/local/share/ca-certificates/{{ endpoints.main }}.crt
   notify: refresh CAs
 
+- name: Install any additional CA certificates
+  copy:
+    content: "{{ item.content | default(omit) }}"
+    dest: "/usr/local/share/ca-certificates/{{ item.name }}.crt"
+    src: "{{ item.src | default(omit) }}"
+  with_items: "{{ ssl.extracacerts | default([]) }}"
+  notify: refresh CAs
+
 - name: ssl directory
   file: dest=/opt/stack/ssl state=directory
 
