@@ -1,4 +1,4 @@
-{% raw %}
+{% raw -%}
 #!/bin/bash
 #
 # File: percona-xtrabackup.sh
