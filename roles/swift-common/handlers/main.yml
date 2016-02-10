@@ -1,6 +1,6 @@
 ---
 - name: pip install swifttool
-  pip: name="/opt/stack/swifttool" extra_args='-i https://pypi.python.org/simple/'
+  pip: name="/opt/stack/{{ swift.swifttool_dir  }}" extra_args='-i https://pypi.python.org/simple/'
   register: result
   until: result|success
   retries: 3

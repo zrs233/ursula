@@ -78,3 +78,8 @@ swift:
       net.ipv4.tcp_syncookies: 0
       net.ipv4.tcp_tw_recycle: 1
       net.ipv4.tcp_tw_reuse: 1
+  # NOTE: Make sure you update the swifttool version in both places
+  swifttool_dir: 'swifttool'
+  swifttool_url: https://github.com/blueboxgroup/swifttool/archive/v0.0.1.tar.gz
+  swifttool_version: 'v0.0.1'
+  swifttool_method: 'git'
