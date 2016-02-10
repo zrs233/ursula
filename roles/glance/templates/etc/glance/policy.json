@@ -7,7 +7,7 @@
     "get_image": "",
     "get_images": "",
     "modify_image": "",
-    "publicize_image": "role:admin",
+    "publicize_image": "role:admin or role:cloud_admin",
     "copy_from": "",
 
     "download_image": "",
