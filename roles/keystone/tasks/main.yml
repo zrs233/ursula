@@ -67,6 +67,7 @@
   with_items:
     - "{{ endpoints.keystone.port.haproxy_api }}"
     - "{{ endpoints.keystone_admin.port.haproxy_api }}"
+    - "{{ endpoints.keystone_legacy.port.haproxy_api }}"
 
 - name: add cron job to clean up expired tokens
   template:
