@@ -20,8 +20,8 @@
 
 - name: rabbit queue num check
   sensu_check: name=rabbitmq-numqueues plugin=check-rabbitmq-queues.rb
-               args="-t number -w {{ cluster_node_count|int * 50 }}
-                     -c {{ cluster_node_count|int * 100 }}
+               args="-t number -w {{ cluster_node_count|int * rabbitmq.numqueues_warning_multiplier|int }}
+                     -c {{ cluster_node_count|int * rabbitmq.numqueues_critical_multiplier|int }}
                      --timeout 2"
                use_sudo=true
   notify: restart sensu-client
