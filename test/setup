@@ -58,6 +58,10 @@ cat >> ${ROOT}/envs/test/group_vars/all.yml <<eof
   key: |
 eof
 cat ${CERT_DIR}/openstack.example.com.key | sed 's/^/    /' >> ${ROOT}/envs/test/group_vars/all.yml
+cat >> ${ROOT}/envs/test/group_vars/all.yml <<eof
+neutron:
+   enable_external_interface: True
+eof
 UNDERCLOUD_CIDR="$(python -c 'import shade; cloud = shade.openstack_cloud(); print cloud.search_subnets("internal")[0]["cidr"]')"
 cat >> ${ROOT}/envs/test/defaults-2.0.yml <<eof
 logging:
