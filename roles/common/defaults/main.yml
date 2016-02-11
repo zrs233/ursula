@@ -44,3 +44,7 @@ common:
     debug: False
     verbose: True
   serial_console: ttyS0
+
+openstack:
+  gem_sources:
+    - https://gem-mirror.openstack.blueboxgrid.com
