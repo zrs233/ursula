@@ -31,11 +31,22 @@
 - name: get swifttool repo
   git: |
     repo=https://github.com/blueboxgroup/swifttool.git
-    dest=/opt/stack/swifttool
+    dest=/opt/stack/{{ swift.swifttool_dir  }}
     depth=50
     update={{ openstack.git_update }}
   notify:
     - pip install swifttool
+  when: swift.swifttool_method == 'git'
+
+- name: fetch swifttool tarball
+  get_url: url={{ swift.swifttool_url }} dest=/opt/stack/swifttool/swifttool-{{ swift.swifttool_version }}.tar.gz
+  when: swift.swifttool_method == 'file'
+
+- name: unzip swifttool tarball
+  unarchive: src=/opt/stack/swifttool/swifttool-{{ swift.swifttool_version }}.tar.gz dest=/opt/stack copy=no
+  notify:
+    - pip install swifttool
+  when: swift.swifttool_method == 'file'
 
 - name: create swift configuration diectory
   file: dest=/etc/swift state=directory owner=swiftops
