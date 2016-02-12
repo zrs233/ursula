@@ -23,10 +23,6 @@
 - name: probe nbd
   modprobe: name=nbd state=present
 
-- lineinfile: dest=/etc/modules line="nbd"
-
-- modprobe: name=nbd state=present
-
 - name: check if SMT is enabled
   command: "ppc64_cpu --smt"
   failed_when: False
