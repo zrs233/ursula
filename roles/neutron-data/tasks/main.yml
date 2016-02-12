@@ -10,6 +10,7 @@
 
 - name: permit VXLAN traffic
   ufw: rule=allow to_port=4789 proto=udp
+  tags: ufw
   when: neutron.plugin == 'ml2' and 'vxlan' in neutron.tunnel_types
 
 - name: ml2 dataplane config

@@ -45,6 +45,7 @@
 
 - name: permit access to glance
   ufw: rule=allow to_port={{ item }} proto=tcp
+  tags: ufw
   with_items:
     - "{{ endpoints.glance.port.haproxy_api }}"
     - "{{ endpoints.glance.port.backend_api }}"

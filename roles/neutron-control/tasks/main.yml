@@ -46,6 +46,7 @@
 
 - name: Permit access to Neutron
   ufw: rule=allow to_port={{ endpoints.neutron.port.haproxy_api }} proto=tcp
+  tags: ufw
 
 - include: monitoring.yml tags=monitoring,common
   when: monitoring.enabled|default('True')|bool

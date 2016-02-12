@@ -65,13 +65,16 @@
 - name: permit access to ironic
   ufw: rule=allow port={{ ironic.api_url.port }} proto=tcp
        to_ip={{ ironic.api_url.host }}
+  tags: ufw
 
 - name: permit access to tftpd
   ufw: rule=allow port=69 proto=udp
        to_ip={{ ironic.tftp_server }}
+  tags: ufw
 
 - name: permit access to dns
   ufw: rule=allow port=53
        to_ip={{ ironic.dns_server }}
+  tags: ufw
 
 - meta: flush_handlers

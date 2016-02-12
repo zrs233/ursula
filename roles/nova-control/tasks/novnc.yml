@@ -32,3 +32,4 @@
 
 - name: Permit access to NoVNC
   ufw: rule=allow to_port={{ endpoints.novnc.port.haproxy_api }} proto=tcp
+  tags: ufw
