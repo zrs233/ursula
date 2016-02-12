@@ -1,4 +1,5 @@
 ---
 dependencies:
+  - role: swift-common
   - role: memcached
   - role: endpoints
