@@ -1,0 +1,51 @@
+---
+- name: is this a converged stack?
+  debug:
+    msg: This is a converged stack.
+
+- name: check controller 1 instance connectivity
+  command: "ping -c 5 {{ fip_controllers.results[1].floating_ip.floating_ip_address }}"
+  changed_when: false
+  register: pings
+  until: pings|success
+  delay: 1
+  retries: 5
+  become: no
+  delegate_to: localhost
+
+- name: wait for the controller to come online (master)
+  wait_for:
+    host: "{{ inventory_hostname }}"
+    port: 22
+    delay: 10
+    timeout: 300
+  delegate_to: "{{ groups['compute'][1] }}"
+
+# Check internets
+- name: instance internet connectivity test w/ floating-ip (ping)
+  command: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
+           -o IdentityFile={{ temp_key_dest }}
+           cirros@{{ item.floating_ip.floating_ip_address }}
+           ping -c 5 google.com"
+  with_items: "{{ fip_controllers.results }}"
+  register: pings
+  until: pings|success
+  delay: 1
+  retries: 5
+  changed_when: false
+  become: no
+  delegate_to: localhost
+
+- name: instace internet connectivity w/ floating ip (curl)
+  command: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
+           -o IdentityFile={{ temp_key_dest }}
+           cirros@{{ item.floating_ip.floating_ip_address }}
+           curl -IL --fail --connect-timeout 10 http://google.com"
+  with_items: "{{ fip_controllers.results }}"
+  register: curl
+  until: curl|success
+  delay: 1
+  retries: 5
+  changed_when: false
+  become: no
+  delegate_to: localhost

@@ -1,114 +1,78 @@
 ---
-## HA testing
+- name: begin ha.yml
+  debug:
+    msg: Running ha.yml playbook
+
 - name: add floating IPs to instances on controllers
   os_floating_ip:
-    auth:
-      username: admin
-      project_name: admin
-      password: "{{ secrets.admin_password }}"
-      auth_url: "http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}"
+    auth: "{{ auth }}"
     network: external
     server: "validate-{{ item }}"
     reuse: true
   register: fip_controllers
-  with_items: groups[ha_instance_group]
+  with_items: groups['controller']
+  when: converged
 
-- name: add floating ip to a non-controller instance
+- name: floating ips are reachable
+  command: "ping -c 5 {{ item.floating_ip.floating_ip_address }}"
+  with_items: fip_controllers.results
+  register: pings
+  until: pings|success
+  delay: 1
+  retries: 5
+  become: no
+  delegate_to: localhost
+  when: converged
+
+- name: add floating IP to a non-controller instance
   os_floating_ip:
-    auth:
-      username: admin
-      project_name: admin
-      password: "{{ secrets.admin_password }}"
-      auth_url: "http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}"
+    auth: "{{ auth }}"
     network: external
     server: "validate-{{ item }}"
     reuse: true
   register: fip_compute
+  ignore_errors: yes
   with_items:
-    - "{{ (groups['compute']|difference(groups[ha_instance_group]))[0] }}"
+    - "{{ (groups['compute'][1:]|difference(groups['controller']))[0] }}"
+  when: not converged
 
 - name: floating ips are reachable
   command: "ping -c 5 {{ item.floating_ip.floating_ip_address }}"
-  with_items: fip_controllers.results + fip_compute.results
-  changed_when: false
+  with_items: fip_compute.results
   register: pings
   until: pings|success
-  delay: 1
+  delay: 10
   retries: 5
+  become: no
   delegate_to: localhost
+  when: not converged
 
-- name: define ha master
-  set_fact: master=true
-  when: floating_ip in ansible_all_ipv4_addresses
+# initiate hard reboot on controller 0
+- name: reboot controller 0
+  shell: shutdown -r now
 
-# initiate hard reboot on the current master controller
-- name: initiate a failover on controller 0
-  shell: echo 'b' | tee /proc/sysrq-trigger
-  when: master is defined
+- name: wait for the panic controller 0
+  wait_for:
+    host: "{{ inventory_hostname }}"
+    port: 22
+    state: stopped
+    delay: 10
+    timeout: 30
+  delegate_to: "{{ groups['controller'][1] }}"
 
-- name: initiate a failover on controller 1
-  delegate_to: "{{ groups[ha_instance_group][1] }}"
-  shell: echo 'b' | tee /proc/sysrq-trigger
-  when: master is not defined
+# Check API
+- include: api.yml
+  vars:
+    ip_addr: "{{ fip_controllers.results[0].floating_ip.floating_ip_address }}"
+  when: converged
 
-- name: wait for the panic
-  wait_for: "host={{ inventory_hostname }} port=22 state=stopped delay=10 timeout=30"
-  when: master is defined
-  delegate_to: localhost
+- include: api.yml
+  vars:
+    ip_addr: "{{ fip_compute.results[0].floating_ip.floating_ip_address }}"
+  when: not converged
 
-- name: wait for the panic
-  wait_for: "host={{ groups[ha_instance_group][1] }} port=22 state=stopped delay=10 timeout=30"
-  when: master is not defined
-  delegate_to: localhost
+- include: converged.yml
+  when: converged
 
-- name: wait for the node to boot
-  pause: seconds=30
-
-- name: check non-controller instance connectivity by way of floating IPs
-  command: "ping -c 5 {{ fip_compute.results[0].floating_ip.floating_ip_address }}"
-  changed_when: false
-  register: pings
-  until: pings|success
-  delay: 1
-  retries: 5
-  delegate_to: localhost
-
-- name: check remaining controller instance connectivity
-  command: "ping -c 5 {{ fip_controllers.results[0].floating_ip.floating_ip_address }}"
-  changed_when: false
-  register: pings
-  until: pings|success
-  delay: 1
-  retries: 5
-  when: master is not defined
-  delegate_to: localhost
-
-- name: check remaining controller instance connectivity
-  command: "ping -c 5 {{ fip_controllers.results[1].floating_ip.floating_ip_address }}"
-  changed_when: false
-  register: pings
-  until: pings|success
-  delay: 1
-  retries: 5
-  delegate_to: localhost
-  when: master is defined
-
-- name: wait for the reboot
-  wait_for: "host={{ inventory_hostname }} port=22 delay=10 timeout=300"
-  delegate_to: localhost
-  when: master is defined
-
-- name: wait for the reboot
-  wait_for: "host={{ groups[ha_instance_group][1] }} port=22 delay=10 timeout=300"
-  delegate_to: localhost
-  when: master is not defined
-
-- name: floating ips are reachable
-  command: "ping -c 5 {{ item.floating_ip.floating_ip_address }}"
-  with_items: fip_controllers.results + fip_compute.results
-  changed_when: false
-  register: pings
-  until: pings|success
-  delay: 1
-  retries: 5
-  delegate_to: localhost
+- include: dedicated.yml
+  when: not converged

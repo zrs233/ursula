@@ -1,0 +1,26 @@
+---
+- name: is this a dedicated stack?
+  debug:
+    msg: This is a dedicated stack.
+
+- name: check non-controller instance connectivity by way of floating IPs
+  command: "ping -c 5 {{ fip_compute.results[0].floating_ip.floating_ip_address }}"
+  changed_when: false
+  register: pings
+  until: pings|success
+  delay: 1
+  retries: 5
+  become: no
+  delegate_to: localhost
+
+- name: wait for the controller to come online
+  wait_for:
+    host: "{{ groups['compute'][1] }}"
+    port: 22
+    delay: 10
+    timeout: 300
+  failed_when: false
+
+- include: node_internet_connectivity.yml
+  vars:
+    ip_addr: "{{ fip_compute.results[0].floating_ip.floating_ip_address }}"
