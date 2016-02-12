@@ -1,0 +1,5 @@
+---
+- name: setup swift rings
+  command: sudo -u swiftops /usr/local/bin/swifttool -i /home/swiftops/.ssh/id_rsa
+           bootstrap --config /etc/swift/ring_definition.yml --outdir /etc/swift
+
