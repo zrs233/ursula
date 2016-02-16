@@ -40,7 +40,7 @@
 - name: "Kernel boot parameters: disable console screen blanking, enabled serial console on IPMI serial over LAN, optional maxcpus"
   lineinfile: dest=/etc/default/grub
               regexp="^GRUB_CMDLINE_LINUX="
-              line="GRUB_CMDLINE_LINUX=\"consoleblank=0 crashkernel=256M nmi_watchdog=1 {{ serial_console_cmdline|default('') }} console=tty0 biosdevname=0 {{- ' maxcpus=%s' % cpulimit if cpulimit is defined else '' }} {{- 'smt-enabled=off' if ansible_architecture == 'ppc64le' else '' }} \""
+              line="GRUB_CMDLINE_LINUX=\"consoleblank=0 nmi_watchdog=1 {{ serial_console_cmdline|default('') }} console=tty0 biosdevname=0 {{- ' maxcpus=%s' % cpulimit if cpulimit is defined else '' }} {{- 'smt-enabled=off' if ansible_architecture == 'ppc64le' else '' }} \""
   notify: update grub config
 
 # This was removed in later distributions, but is in grub-common and if present
