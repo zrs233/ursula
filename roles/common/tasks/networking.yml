@@ -16,6 +16,7 @@
 - name: hosts file
   template: src=etc/hosts dest=/etc/hosts owner=root group=root mode=0644
             backup=yes
+  when: etc_hosts is defined
   tags: etc_hosts
 
 - name: netfilter tuning
