@@ -265,6 +265,7 @@ glance:
   images:
     - name: cirros
       url: https://file-mirror.openstack.blueboxgrid.com/cloud-images/cirros-0.3.3-x86_64-disk.img
+      filename: cirros-0.3.3-x86_64-disk.img
 
 keystone:
   token_expiration_in_seconds: 86400

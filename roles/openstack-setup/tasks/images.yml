@@ -1,7 +1,12 @@
 ---
+# NOTE: Glance does not know how to proxy copy-from URLs, so we should instead
+# download the image files locally and create images using the file method.
+- name: download images locally
+  get_url: url={{ item.url }} dest=/tmp/{{ item.filename }}
+  with_items: glance.images
 - name: default images
   glance_image: name={{ item.name }}
-                copy_from={{ item.url }}
+                file=/tmp/{{ item.filename }}
                 container_format=bare
                 disk_format=qcow2
                 auth_url={{ endpoints.auth_uri }}
@@ -12,3 +17,6 @@
                 timeout=12000
   with_items: glance.images
   run_once: true
+- name: remove local images
+  file: path=/tmp/{{ item.filename }} state=absent
+  with_items: glance.images
