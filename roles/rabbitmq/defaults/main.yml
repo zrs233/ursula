@@ -10,3 +10,4 @@ rabbitmq:
   admin_cli_url: 'http://localhost:15672/cli/rabbitmqadmin'
   numqueues_warning_multiplier: 60
   numqueues_critical_multiplier: 120
+  nofile: 10240

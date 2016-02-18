@@ -16,6 +16,28 @@
             dest=/etc/rabbitmq/rabbitmq-env.conf
             owner=rabbitmq group=rabbitmq mode=0600
 
+- name: add rabbitmq security limits file
+  template:
+    src: etc/security/limits.d/10-rabbitmq.conf
+    dest: /etc/security/limits.d/10-rabbitmq.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - login as rabbitmq to update limits
+    - restart rabbitmq
+
+- name: add rabbitmq defaults
+  template:
+    src: etc/default/rabbitmq-server
+    dest: /etc/default/rabbitmq-server
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - login as rabbitmq to update limits
+    - restart rabbitmq
+
 # Create the cluster if desired
 - include: cluster.yml
   when: rabbitmq.cluster|bool
