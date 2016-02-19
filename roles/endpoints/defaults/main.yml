@@ -21,6 +21,10 @@ endpoints:
     port:
       backend_api: 9774
       haproxy_api: 8774
+    haproxy:
+      health_check: 'httpchk /'
+      balance: 'roundrobin'
+      prefer_primary_backend: False
   glance:
     name: glance
     type: image
@@ -32,6 +36,10 @@ endpoints:
     port:
       backend_api: 9393
       haproxy_api: 9292
+    haproxy:
+      health_check: 'httpchk GET /versions'
+      balance: 'source'
+      prefer_primary_backend: True
   cinder:
     name: cinder
     type: volume
@@ -45,6 +53,10 @@ endpoints:
     port:
       backend_api: 8778
       haproxy_api: 8776
+    haproxy:
+      health_check: 'httpchk /'
+      balance: 'source'
+      prefer_primary_backend: False
   cinderv2:
     name: cinderv2
     type: volume
@@ -67,14 +79,26 @@ endpoints:
     port:
       backend_api: 5002
       haproxy_api: 5000
+    haproxy:
+      health_check: 'httpchk /'
+      balance: 'roundrobin'
+      prefer_primary_backend: False
   keystone_admin:
     port:
       backend_api: 35358
       haproxy_api: 35357
+    haproxy:
+      health_check: 'httpchk /'
+      balance: 'roundrobin'
+      prefer_primary_backend: False
   keystone_legacy:
     port:
       backend_api: 5002
       haproxy_api: 5001
+    haproxy:
+      health_check: 'httpchk /'
+      balance: 'roundrobin'
+      prefer_primary_backend: False
   keystonev3:
     name: keystonev3
     type: identity
@@ -87,6 +111,10 @@ endpoints:
     port:
       backend_api: 5002
       haproxy_api: 5000
+    haproxy:
+      health_check: 'httpchk /'
+      balance: 'roundrobin'
+      prefer_primary_backend: False
   novnc:
     url:
       admin: https://{{ fqdn }}:6080
@@ -95,6 +123,10 @@ endpoints:
     port:
       backend_api: 6081
       haproxy_api: 6080
+    haproxy:
+      health_check: 'tcp-check /'
+      balance: 'source'
+      prefer_primary_backend: True
   neutron:
     name: neutron
     type: network
@@ -106,6 +138,10 @@ endpoints:
     port:
       backend_api: 9797
       haproxy_api: 9696
+    haproxy:
+      health_check: 'httpchk /'
+      balance: 'source'
+      prefer_primary_backend: False
   heat:
     name: heat
     type: orchestration
@@ -119,6 +155,10 @@ endpoints:
     port:
       backend_api: 8005
       haproxy_api: 8004
+    haproxy:
+      health_check: 'httpchk /'
+      balance: 'source'
+      prefer_primary_backend: False
   heat_cfn:
     name: heat-cfn
     type: cloudformation
@@ -131,6 +171,10 @@ endpoints:
     port:
       backend_api: 8001
       haproxy_api: 8000
+    haproxy:
+      health_check: 'httpchk /'
+      balance: 'source'
+      prefer_primary_backend: False
   ceilometer:
     name: ceilometer
     type: metering
@@ -142,6 +186,10 @@ endpoints:
     port:
       backend_api: 9777
       haproxy_api: 8777
+    haproxy:
+      health_check: 'tcp-check /'
+      balance: 'source'
+      prefer_primary_backend: False
   ironic:
     name: ironic
     type: baremetal
@@ -153,6 +201,10 @@ endpoints:
     port:
       backend_api: 6384
       haproxy_api: 6385
+    haproxy:
+      health_check: 'httpchk GET /v1'
+      balance: 'source'
+      prefer_primary_backend: False
   swift:
     name: swift
     type: object-storage
@@ -168,3 +220,7 @@ endpoints:
       haproxy_api: 8090
       cinder_backup: 8091
       proxy_api: 8080
+    haproxy:
+      health_check: 'httpchk HEAD /healthcheck HTTP/1.0'
+      balance: 'source'
+      prefer_primary_backend: False
