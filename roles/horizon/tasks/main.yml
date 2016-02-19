@@ -95,6 +95,7 @@
     - { name: img/logo.png, url: "{{ horizon.logo_url }}"  }
     - { name: img/logo-splash.png, url: "{{ horizon.logo_url }}" }
     - { name: img/favicon.ico, url: "{{ horizon.favicon_url }}" }
+  when: (horizon.logo_url is defined and horizon.favicon_url is defined)
 
 - name: gather static assets from openstack package install
   environment:
