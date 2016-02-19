@@ -11,7 +11,7 @@ cinder:
   state_path: "{{ state_path_base }}/cinder"
   volume_type: file
   volume_group: cinder-volumes
-  create_vg: true
+  create_vg: False
   alternatives:
       - cinder-all
       - cinder-api
