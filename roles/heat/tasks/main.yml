@@ -15,6 +15,7 @@
 
 - name: permit access to heat
   ufw: rule=allow to_port={{ item }} proto=tcp
+  tags: ufw
   with_items:
     - "{{ endpoints.heat.port.haproxy_api }}"
     - "{{ endpoints.heat_cfn.port.haproxy_api }}"

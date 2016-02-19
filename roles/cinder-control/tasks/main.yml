@@ -35,6 +35,7 @@
 
 - name: Permit access to Cinder
   ufw: rule=allow to_port={{ endpoints.cinder.port.haproxy_api }} proto=tcp
+  tags: ufw
 
 - include: monitoring.yml tags=monitoring,common
   when: monitoring.enabled|default('True')|bool

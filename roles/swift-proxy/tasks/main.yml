@@ -1,6 +1,7 @@
 ---
 - name: permit swift proxy from anywhere
   ufw: rule=allow to_port=8090 proto=tcp
+  tags: ufw
 
 - name: swift-proxy service script
   template: src=roles/swift-common/templates/etc/init/swift-service.conf
