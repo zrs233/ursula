@@ -609,6 +609,3 @@ magnum:
   enabled: True
   debug: True
 
-horizon:
-  logo_url: https://file-mirror.openstack.blueboxgrid.com/horizon-branding/bluebox-u1.1.x.png
-  favicon_url: https://file-mirror.openstack.blueboxgrid.com/horizon-branding/bluebox.ico
