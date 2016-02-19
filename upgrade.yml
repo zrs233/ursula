@@ -333,7 +333,7 @@
     - role: neutron-control
       force_sync: true
       restart: False
-      database_created:
+      database_create:
         changed: false
 
 - name: restart neutron data service
