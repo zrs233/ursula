@@ -14,6 +14,9 @@ common:
   ntpd:
     servers: []
     #  - servertime.service.softlayer.com
+  serial_console:
+    enabled: True
+    name: ttyS0
   ssh_private_keys: []
   ssh:
     allow_from:
@@ -43,7 +46,6 @@ common:
   logging:
     debug: False
     verbose: True
-  serial_console: ttyS0
   monitoring:
     sensu_checks:
       check_raid:
