@@ -29,13 +29,13 @@
 
 - name: l3 router check
   sensu_check: name=check-l3-router plugin=check-l3-router.sh
-               args="-e {{ ansible_default_ipv4.interface }}"
+               args="-e {{ ansible_default_ipv4.interface }} -z {{ neutron.monitoring.sensu_checks.check_l3_router.criticality }}"
                use_sudo=true
-  with_items: neutron.networks 
+  with_items: neutron.networks
   when: item['name'] == 'external' and item['network_type'] == 'local'
   notify: restart sensu-client
 
 - name: gateway ip duplicate check
   sensu_check: name=check-gateway-ip-duplicate plugin=check-arping.sh
-               args="-I {{ ansible_default_ipv4.interface }} -d {{ ansible_default_ipv4.gateway }}"
+               args="-I {{ ansible_default_ipv4.interface }} -d {{ ansible_default_ipv4.gateway }} -z {{ neutron.monitoring.sensu_checks.check_arping.criticality }}"
   notify: restart sensu-client

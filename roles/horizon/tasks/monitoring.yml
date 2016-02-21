@@ -5,6 +5,6 @@
 
 - name: dashboard port check
   sensu_check: name=check-dashboard-clear-port-redirects plugin=check-http.rb
-               args='-u http://localhost/ -r'
+               args='-u http://localhost/ -r -z {{ horizon.monitoring.sensu_checks.check_http.criticality }}'
   when: haproxy.enabled|bool
   notify: restart sensu-client

@@ -44,6 +44,10 @@ common:
     debug: False
     verbose: True
   serial_console: ttyS0
+  monitoring:
+    sensu_checks:
+      check_raid:
+        criticality: 'critical'
 
 openstack:
   gem_sources:

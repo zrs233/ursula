@@ -121,3 +121,13 @@ neutron:
     verbose: True
   cafile: "{{ ssl.cafile|default('/etc/ssl/certs/ca-certificates.crt') }}"
   enable_external_interface: False
+  monitoring:
+    sensu_checks:
+      check_arping:
+        criticality: 'critical'
+      check_l3_router:
+        criticality: 'critical'
+      check_neutron_agents:
+        criticality: 'critical'
+      check_neutron_agents_duplicate:
+        criticality: 'critical'

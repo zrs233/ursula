@@ -148,3 +148,8 @@ ceph:
       fields:
         type: openstack
         tags: ceph,ceph-mon
+
+  monitoring:
+    sensu_checks:
+      check_ceph_status:
+        criticality: 'critical'

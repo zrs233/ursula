@@ -1,7 +1,7 @@
 ---
 - name: ceph status check
   sensu_check: name=check-ceph-status plugin=check-ceph.rb
-               use_sudo=true
+               use_sudo=true args='--criticality {{ ceph.monitoring.sensu_checks.check_ceph_status.criticality }}'
   notify: restart sensu-client
 
 - name: ceph sla metrics

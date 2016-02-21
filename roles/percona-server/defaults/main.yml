@@ -1,3 +1,7 @@
 ---
 percona:
   replication: True
+  monitoring:
+    sensu_checks:
+      percona_cluster_size:
+        criticality: 'critical'

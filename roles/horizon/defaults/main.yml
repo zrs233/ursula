@@ -35,3 +35,7 @@ horizon:
   logging:
     debug: False
     verbose: True
+  monitoring:
+    sensu_checks:
+      check_http:
+        criticality: 'critical'

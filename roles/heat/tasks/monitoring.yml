@@ -13,7 +13,7 @@
 
 - name: heat-api check
   sensu_check: name=check-heat-api plugin=check-os-api.rb
-               args="--service heat"
+               args="--service heat --criticality {{ heat.monitoring.sensu_checks.check_heat_api.criticality }}"
   notify: restart sensu-client
 
 - name: heat sla metrics

@@ -14,12 +14,12 @@
 
 - name: nova-api check
   sensu_check: name=check-nova-api plugin=check-os-api.rb
-               args="--service nova"
+               args="--service nova --criticality {{ nova.monitoring.sensu_checks.check_nova_api.criticality }}"
   notify: restart sensu-client
 
 - name: nova-services check
   sensu_check: name=check-nova-services plugin=check-nova-services.sh
-               use_sudo=true
+               use_sudo=true args="-z {{ nova.monitoring.sensu_checks.check_nova_services.criticality }}"
   notify: restart sensu-client
 
 - name: nova metrics check

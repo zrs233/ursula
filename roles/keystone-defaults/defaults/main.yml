@@ -34,3 +34,7 @@ keystone:
   logging:
     debug: False
     verbose: True
+  monitoring:
+    sensu_checks:
+      check_keystone_api:
+        criticality: 'critical'

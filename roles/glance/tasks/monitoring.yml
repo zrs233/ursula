@@ -9,7 +9,7 @@
 
 - name: glance-api check
   sensu_check: name=check-glance-api plugin=check-os-api.rb
-               args="--service glance"
+               args="--service glance --criticality {{ glance.monitoring.sensu_checks.check_glance_api.criticality }}"
   notify: restart sensu-client
 
 - name: install functools32 for glance-store check
@@ -21,7 +21,7 @@
   sensu_check:
     name: check-glance-store
     plugin: check-glance-store.py
-    args: "--imagedir={{ glance.sync.dir }}"
+    args: "--imagedir={{ glance.sync.dir }} --criticality {{ glance.monitoring.sensu_checks.check_glance_store.criticality }}"
   when: (glance.store_smart|bool and not swift.enabled|bool and not ceph.enabled|bool) or
         (not glance.store_swift|bool and not glance.store_ceph|bool and glance.store_file|bool)
   notify: restart sensu-client

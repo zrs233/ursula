@@ -5,7 +5,7 @@
 
 - name: keystone-api check
   sensu_check: name=check-keystone-api plugin=check-os-api.rb
-               args="--service keystone"
+               args="--service keystone --criticality {{ keystone.monitoring.sensu_checks.check_keystone_api.criticality }}"
   notify: restart sensu-client
 
 - name: keystone token buildup check
