@@ -11,7 +11,6 @@ dependencies:
   - role: openstack-source
     project_name: neutron
     project_rev: "{{ neutron.source.rev }}"
-    python_requirements: "{{ neutron.source.python_requirements }}"
     rootwrap: True
     alternatives: "{{ neutron.alternatives }}"
     system_dependencies: "{{ neutron.source.system_dependencies }}"
