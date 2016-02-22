@@ -54,20 +54,22 @@
   notify:
     - update ca-certs
 
-- name: setup current symlink if it doesnt exist
-  file: dest=/opt/openstack
-        state=directory
+- name: setup openstack current base path
+  file:
+    dest: /opt/openstack
+    state: directory
 
 - name: test whether current {{ project_name }} symlink exists
-  shell: 'test -h /opt/openstack/current'
+  stat:
+    path: /opt/openstack/current
   register: symlink_exists
-  ignore_errors: True
 
-- name: setup current symlink if it doesnt exist
-  file: src="{{ openstack_source.virtualenv_base }}"
-        dest=/opt/openstack/current
-        state=link
-  when: symlink_exists.rc != 0
+- name: setup current symlink
+  file:
+    src: "{{ openstack_source.virtualenv_base }}"
+    dest: /opt/openstack/current
+    state: link
+  when: not symlink_exists.stat.exists or upgrade | default(false) | bool
 
 - name: ensure project config directory exists
   file: name="/etc/{{ project_name }}" state=directory
