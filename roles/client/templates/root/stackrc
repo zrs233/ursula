@@ -4,6 +4,8 @@ export OS_USERNAME=admin
 export OS_TENANT_NAME=admin
 {% if client.self_signed_cert -%}
 export OS_CACERT=/opt/stack/ssl/openstack.crt
+{% else %}
+export OS_CACERT=/etc/ssl/certs/ca-certificates.crt
 {% endif -%}
 export OS_NO_CACHE=True
 export OS_VOLUME_API_VERSION=2
