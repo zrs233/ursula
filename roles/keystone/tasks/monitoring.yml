@@ -1,6 +1,6 @@
 ---
 - name: keystone process check
-  sensu_process_check: service=keystone-all
+  sensu_process_check: service=uwsgi
   notify: restart sensu-client
 
 - name: keystone-api check

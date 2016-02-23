@@ -9,6 +9,7 @@ keystone:
       - { name: babel, version: 1.3 }
       - { name: mysql-python }
       - { name: functools32 }
+      - { name: uwsgi }
     system_dependencies:
       - openssl
       - libldap2-dev
