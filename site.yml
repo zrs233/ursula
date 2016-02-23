@@ -345,5 +345,5 @@
   roles:
     - role: 'openstack-network'
       tags: ['openstack', 'setup', 'openstack-network']
-      when: neutron.enable_external_interface|bool
+      when: neutron.enable_external_interface|default('false')|bool
   environment: "{{ env_vars|default({}) }}"
