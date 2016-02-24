@@ -8,6 +8,9 @@
     - role: manage-disks
       tags: ['common', 'manage-disks']
       when: manage_disks.enabled|default('False')|bool
+    - role: serverspec
+      tags: ['common', 'serverspec']
+      when: serverspec.enabled|default("False")|bool
     - role: collectd-client
       tags: ['collectd-client','collectd']
       when: collectd.enabled|default('False')|bool
