@@ -609,4 +609,3 @@ heat-cfn:
 magnum:
   enabled: True
   debug: True
-
