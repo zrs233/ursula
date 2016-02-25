@@ -45,14 +45,6 @@
       tags: ['infra', 'rabbitmq']
   environment: "{{ env_vars|default({}) }}"
 
-- name: setup serverspec
-  hosts: all
-  roles:
-    - role: serverspec
-      tags: ['serverspec']
-      when: serverspec.enabled|bool
-  environment: "{{ env_vars|default({}) }}"
-
 - name: install common percona components and gather facts
   gather_facts: force
   hosts: db

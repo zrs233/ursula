@@ -23,3 +23,4 @@ dependencies:
     when: collectd is defined and collectd.enabled|bool
   - role: openstack-database
     database_name: keystone
+  - role: serverspec
