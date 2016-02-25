@@ -4,3 +4,4 @@ dependencies:
     when: monitoring.enabled|default(True)|bool
   - role: collectd-plugin
     when: collectd is defined and collectd.enabled|bool
+  - role: serverspec
