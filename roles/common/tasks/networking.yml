@@ -13,6 +13,39 @@
   with_items: network_interfaces_d
   tags: ['prereboot']
 
+#Set gateway for each undercloud_cidr subnet. gateway is a member of undercloud_cidr list for every subnet.
+#Each host can belong to only one undercloud_cidr, so there will be only one nw_gw set per host.
+- name: set gateway address for multi subnet 
+  set_fact: nw_gw="{{ item.gateway }}"
+  when: (update_routes|default('false')|bool) and ((ansible_default_ipv4.network ==  ( item.cidr | ipaddr('network') ))) 
+  with_items: "{{ undercloud_cidr }}"
+
+#Add or replace a static route to all undercloud_cidr subnets via the nw_gw of the current subnet.
+- name: add static route for multi subnet
+  command: "/sbin/ip route replace {{ item.cidr }} via {{ nw_gw }}"
+  when: (update_routes|default('false')|bool) and (not (ansible_default_ipv4.network ==  ( item.cidr | ipaddr('network') )))
+  with_items: "{{ undercloud_cidr }}"
+
+- name: Check if interface has its own config file
+  stat: path=/etc/network/interfaces.d/{{ ansible_default_ipv4.interface }}.cfg
+  register: found_in_interfaces_d 
+  when: (update_routes|default('false')|bool)
+
+- name: Set network config file
+  set_fact: nw_config_file="/etc/network/interfaces.d/{{ ansible_default_ipv4.interface }}.cfg"
+  when: (update_routes|default('false')|bool) and found_in_interfaces_d.stat.exists is defined and found_in_interfaces_d.stat.exists
+
+- name: Set network config file
+  set_fact: nw_config_file="/etc/network/interfaces"
+  when: (update_routes|default('false')|bool) and ( not found_in_interfaces_d.stat.exists|bool )
+
+#Check if the static routes are present in interface configuration file, so that they are persistant across reboots.
+- name: Check for static routes in {{ nw_config_file }}
+  command: "grep -h 'ip route add {{ item.cidr }} via {{ nw_gw }}' {{ nw_config_file }}"
+  with_items: "{{ undercloud_cidr }}"
+  changed_when: False
+  when: (update_routes|default('false')|bool) and (not ( ansible_default_ipv4.network  == ( item.cidr | ipaddr('network') )))
+
 - name: hosts file
   template: src=etc/hosts dest=/etc/hosts owner=root group=root mode=0644
             backup=yes

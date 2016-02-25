@@ -1,7 +1,7 @@
 ---
 primary_interface: ansible_eth1
 undercloud_cidr:
-  - 172.16.0.0/24
+  - cidr: 172.16.0.0/24
 
 fqdn: openstack.example.org
 
