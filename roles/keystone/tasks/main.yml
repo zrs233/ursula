@@ -36,7 +36,8 @@
   when: openstack_install_method == 'source'
   
 - name: set uwsgi path (package install)
-  set_fact: uwsgi_path={{ openstack_package.virtualenv_base }}/keystone/bin/uwsgi
+  set_fact:
+    uwsgi_path: "{{ lookup('items', 'openstack_package.virtualenv_base') }}/keystone/bin/uwsgi"
   when: openstack_install_method == 'package'
   
 - name: install keystone uwsgi service
