@@ -1,7 +1,7 @@
 ---
 - name: ceilometer-api check
   sensu_check: name=check-ceilometer-api plugin=check-os-api.rb
-               args="--service ceilometer"
+               args="--service ceilometer --criticality {{ ceilometer.monitoring.sensu_checks.check_ceilometer_api.criticality }}"
   notify: restart sensu-client
 
 - name: ceilometer sla metrics

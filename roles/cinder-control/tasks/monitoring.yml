@@ -9,7 +9,7 @@
 
 - name: cinder services check
   sensu_check: name=check-cinder-services plugin=check-cinder-services.sh
-               use_sudo=true
+               use_sudo=true args="-z {{ cinder.monitoring.sensu_checks.check_cinder_services.criticality }}"
   notify: restart sensu-client
 
 - include: nimble-monitoring.yml

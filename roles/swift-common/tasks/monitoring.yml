@@ -39,7 +39,8 @@
     - memcached
 
 - name: sensu check for mounted drives
-  sensu_check: name=fstab-mounts plugin=check-fstab-mounts.rb args='-t xfs'
+  sensu_check: name=fstab-mounts plugin=check-fstab-mounts.rb
+               args='-t xfs -z {{ swift.monitoring.sensu_checks.fstab_mounts.criticality }}'
                interval=60
 
 - name: ucarp failover alert
@@ -50,6 +51,7 @@
 
 - name: ucarp processes check
   sensu_check: name=check-ucarp-procs plugin=check-ucarp-procs.sh use_sudo=true
+               args="-z {{ swift.monitoring.sensu_checks.check_ucarp_procs.criticality }}"
   notify: restart sensu-client
 
 - name: swift sla metrics
