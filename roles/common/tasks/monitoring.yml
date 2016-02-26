@@ -134,7 +134,7 @@
   notify: restart sensu-client
 
 - name: network interface traffic check
-  sensu_check: name=network_interface_traffic plugin=check-netif.rb args="-c 500 -w 350 --interfaces eth0,eth1,bond0,bond1"
+  sensu_check: name=network_interface_traffic plugin=check-netif.rb state=absent 
   notify: restart sensu-client
 
 - name: disk check
