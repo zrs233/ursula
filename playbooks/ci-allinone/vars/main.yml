@@ -9,14 +9,15 @@ testenv_security_group_rules:
   - { proto: 'tcp', port: 22, cidr: '0.0.0.0/0' }     # SSH (Ansible)
   - { proto: 'tcp', port: 80, cidr: '0.0.0.0/0' }     # HTTPS redirect
   - { proto: 'tcp', port: 443, cidr: '0.0.0.0/0' }    # Horizon SSL
-  - { proto: 'tcp', port: 5001, cidr: '0.0.0.0/0' }   # Keystone SSL
+  - { proto: 'tcp', port: 35357, cidr: '0.0.0.0/0' }   # Keystone Admin SSL
+  - { proto: 'tcp', port: 5000, cidr: '0.0.0.0/0' }   # Keystone SSL
   - { proto: 'tcp', port: 6080, cidr: '0.0.0.0/0' }   # NoVNC proxy
-  - { proto: 'tcp', port: 8777, cidr: '0.0.0.0/0' }   # Nova SSL
-  - { proto: 'tcp', port: 8778, cidr: '0.0.0.0/0' }   # Cinder SSL
-  - { proto: 'tcp', port: 9292, cidr: '0.0.0.0/0' }   # Glance
-  - { proto: 'tcp', port: 9393, cidr: '0.0.0.0/0' }   # Glance SSL
-  - { proto: 'tcp', port: 9797, cidr: '0.0.0.0/0' }   # Neutron SSL
-  - { proto: 'tcp', port: 9798, cidr: '0.0.0.0/0' }   # Cinder SSL
+  - { proto: 'tcp', port: 8774, cidr: '0.0.0.0/0' }   # Nova SSL
+  - { proto: 'tcp', port: 8776, cidr: '0.0.0.0/0' }   # Cinder SSL
+  - { proto: 'tcp', port: 8777, cidr: '0.0.0.0/0' }   # Ceilometer SSL
+  - { proto: 'tcp', port: 9393, cidr: '0.0.0.0/0' }   # Glance
+  - { proto: 'tcp', port: 9292, cidr: '0.0.0.0/0' }   # Glance SSL
+  - { proto: 'tcp', port: 9696, cidr: '0.0.0.0/0' }   # Neutron SSL
   - { proto: 'icmp', port: -1, cidr: '0.0.0.0/0' }
   - { ethertype: 'IPv4', group: "{{ testenv_security_group.id }}" }
   - { ethertype: 'IPv6', group: "{{ testenv_security_group.id }}" }
