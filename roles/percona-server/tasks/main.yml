@@ -42,6 +42,16 @@
     owner: mysql
     group: mysql
 
+- name: Change mysql log dir acl
+  acl: name=/var/log/mysql state=present default=yes etype={{ item.etype }} permissions={{ item.permission }}
+  with_items:
+    - etype: user
+      permission: rw
+    - etype: group
+      permission: r
+    - etype: other
+      permission: r
+
 # Workaround for 0.8.6 to 0.9.1 upgrade path
 - name: fix config header in replication.cnf
   lineinfile: dest=/etc/mysql/conf.d/replication.cnf create=yes
@@ -126,3 +136,8 @@
     - logrotate
     - logging
   when: logging.enabled|default('True')|bool
+
+- include: serverspec.yml
+  tags:
+    - serverspec
+  when: serverspec.enabled|default('False')|bool
