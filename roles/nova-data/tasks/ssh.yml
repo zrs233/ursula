@@ -1,7 +1,8 @@
 ---
 - name: gather nova pubkeys
-  user: name=nova
-        generate_ssh_key=yes
+  user:
+    name: nova
+    generate_ssh_key: yes
   register: nova_user
 
 - name: nova authorized_keys
@@ -19,6 +20,18 @@
     owner: nova
     group: nova
     mode: 0600
+
+- name: root ssh dir
+  file:
+    path: /root/.ssh
+    mode: 0700
+    state: directory
+
+- name: nova known_hosts root symlink (for libvirt)
+  file:
+    src: "{{ nova.state_path }}/.ssh/known_hosts"
+    path: /root/.ssh/known_hosts
+    state: link
 
 - name: nova bin directory
   file:
@@ -38,17 +51,3 @@
 
 - name: verify ssh among compute nodes
   command: sudo -u nova -H /bin/sh -c {{ nova.state_path }}/bin/verify-ssh
-
-- name: Install nova ssh keys for root
-  authorized_key:
-    user: root
-    key: "{{ hostvars[item].nova_user.ssh_public_key }}"
-  with_items: groups['compute']
-
-- name: root known_hosts
-  template:
-    src: root/ssh/known_hosts
-    dest: "/root/.ssh/known_hosts"
-    owner: root
-    group: root
-    mode: 0600
