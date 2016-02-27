@@ -24,3 +24,4 @@ dependencies:
     when: ceph.enabled|bool
   - role: openstack-database
     database_name: glance
+  - role: serverspec 
