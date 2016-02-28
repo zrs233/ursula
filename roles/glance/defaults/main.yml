@@ -24,7 +24,7 @@ glance:
   source:
     rev: 'stable/mitaka'
     python_dependencies:
-      - { name: mysql-python }
+      - { name: PyMySQL }
       - { name: functools32 }
       - { name: ipaddr }
       - { name: simplegeneric }

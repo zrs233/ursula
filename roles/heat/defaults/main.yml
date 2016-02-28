@@ -5,7 +5,7 @@ heat:
   source:
     rev: 'stable/mitaka'
     python_dependencies:
-      - { name: mysql-python }
+      - { name: PyMySQL }
       - { name: functools32 }
       - { name: requests, version: 2.7.0 }
       - { name: kombu>=3.0.7 }

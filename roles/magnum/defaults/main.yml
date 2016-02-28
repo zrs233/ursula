@@ -7,7 +7,7 @@ magnum:
     rev: 'stable/mitaka'
     virtualenv: "/opt/openstack/magnum"
     python_dependencies:
-      - { name: mysql-python }
+      - { name: PyMySQL }
       - { name: keystonemiddleware<4.1.0 }
       - { name: kombu>=3.0.7 }
       - { name: amqp>=1.4.0 }

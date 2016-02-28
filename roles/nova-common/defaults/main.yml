@@ -46,7 +46,7 @@ nova:
   source:
     rev: 'stable/mitaka'
     python_dependencies:
-      - { name: mysql-python }
+      - { name: PyMySQL }
       - { name: python-memcached }
       - { name: requests, version: 2.7.0 }
       - { name: kombu>=3.0.7 }
