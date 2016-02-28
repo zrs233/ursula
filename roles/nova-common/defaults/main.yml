@@ -48,12 +48,8 @@ nova:
     python_dependencies:
       - { name: PyMySQL }
       - { name: python-memcached }
-      - { name: requests, version: 2.7.0 }
-      - { name: kombu>=3.0.7 }
-      - { name: amqp>=1.4.0 }
     system_dependencies:
       - libjs-jquery-tablesorter
-      - libmysqlclient-dev
       - python-libvirt
   alternatives:
     - nova-all

@@ -5,10 +5,6 @@ ceilometer:
     rev: 'stable/mitaka'
     python_dependencies:
       - { name: pymongo, version: '3.0.3' }
-      - { name: functools32 }
-      - { name: simplegeneric }
-      - { name: kombu>=3.0.7 }
-      - { name: amqp>=1.4.0 }
   alternatives:
     - ceilometer-api
     - ceilometer-collector

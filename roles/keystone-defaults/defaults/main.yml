@@ -6,16 +6,13 @@ keystone:
   source:
     rev: 'stable/mitaka'
     python_dependencies:
-      - { name: babel, version: 1.3 }
       - { name: PyMySQL }
-      - { name: functools32 }
       - { name: uwsgi }
     system_dependencies:
       - openssl
       - libldap2-dev
       - libsasl2-dev
       - libkrb5-dev
-      - libmysqlclient-dev
   alternatives:
     - keystone-manage
     - keystone-all

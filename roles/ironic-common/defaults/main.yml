@@ -21,11 +21,7 @@ ironic:
     rev: 'stable/mitaka'
     python_dependencies:
       - { name: PyMySQL }
-      - { name: functools32 }
-      - { name: kombu>=3.0.7 }
-      - { name: amqp>=1.4.0 }
-    system_dependencies:
-      - libmysqlclient-dev
+    system_dependencies: []
   alternatives:
     - ironic-api
     - ironic-conductor

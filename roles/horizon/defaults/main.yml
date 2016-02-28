@@ -7,15 +7,11 @@ horizon:
     rev: 'stable/mitaka'
     python_dependencies:
       - { name: PyMySQL }
-      - { name: functools32 }
-      - { name: requests, version: '2.7.0' }
       - { name: python-memcached, version: '1.48' }
-      - { name: stevedore, version: '1.5.0' }
       #- { name: "git+https://github.com/blueboxgroup/horizon-customization#egg=horizon-customization"}
     system_dependencies:
       - apache2
       - libapache2-mod-wsgi
-      - libmysqlclient-dev
   logs:
     - paths:
         - /var/log/apache2/access.log

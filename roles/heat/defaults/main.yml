@@ -6,12 +6,7 @@ heat:
     rev: 'stable/mitaka'
     python_dependencies:
       - { name: PyMySQL }
-      - { name: functools32 }
-      - { name: requests, version: 2.7.0 }
-      - { name: kombu>=3.0.7 }
-      - { name: amqp>=1.4.0 }
-    system_dependencies:
-      - libmysqlclient-dev
+    system_dependencies: []
   alternatives:
     - heat-api
     - heat-api-cfn
