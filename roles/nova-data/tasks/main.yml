@@ -55,3 +55,7 @@
 - include: monitoring.yml tags=monitoring,common
   when: monitoring.enabled|default('True')|bool
 
+- include: serverspec.yml
+  tags: 
+    - serverspec
+  when: serverspec.enabled|default('False')|bool
