@@ -22,10 +22,14 @@
   notify:
     - apply-sysctl
 
+- stat: path=/etc/default/grub
+  register: grub_defaults
+
 - name: "Kernel boot parameters: disable quiet boot"
   lineinfile: dest=/etc/default/grub
               regexp="^GRUB_CMDLINE_LINUX_DEFAULT="
               line="GRUB_CMDLINE_LINUX_DEFAULT=\"\""
+  when: grub_defaults.stat.exists
   notify: update grub config
 
 #
@@ -41,6 +45,7 @@
   lineinfile: dest=/etc/default/grub
               regexp="^GRUB_CMDLINE_LINUX="
               line="GRUB_CMDLINE_LINUX=\"consoleblank=0 nmi_watchdog=1 {{ serial_console_cmdline|default('') }} console=tty0 biosdevname=0 {{- ' maxcpus=%s' % cpulimit if cpulimit is defined else '' }} {{- 'smt-enabled=off' if ansible_architecture == 'ppc64le' else '' }} \""
+  when: grub_defaults.stat.exists
   notify: update grub config
 
 # This was removed in later distributions, but is in grub-common and if present
@@ -54,6 +59,7 @@
 - name: "Disable GRUB OS prober so we don't try to boot instance's cinder volumes"
   lineinfile: dest=/etc/default/grub
               line="GRUB_DISABLE_OS_PROBER=true"
+  when: grub_defaults.stat.exists
   notify: update grub config
 
 - name: Remove any forced boot kernel
