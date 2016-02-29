@@ -1,0 +1,23 @@
+---
+# we check for a ceph partition to avoid destructive tasks below
+- name: check if 'ceph' partition exists on osd disks
+  shell: "parted --script /dev/{{ item }} print | egrep -sq 'ceph'"
+  with_items: ceph.disks
+  ignore_errors: true
+  changed_when: false
+  register: ceph_partitions
+
+# journal_collocation
+- name: prepare osd disks
+  command: ceph-disk prepare /dev/{{ item.1 }}
+  with_together:
+    - ceph_partitions.results
+    - ceph.disks
+  when: item.0.rc != 0
+
+- name: activate osds
+  command: ceph-disk activate /dev/{{ item.1 }}1
+  with_together:
+    - ceph_partitions.results
+    - ceph.disks
+  when: item.0.rc != 0

@@ -1,0 +1,75 @@
+---
+# we check for journal and bcache partitions to skip destructive tasks below
+- name: check if journal partitions exist on ssd device
+  shell: "parted --script /dev/{{ ceph.bcache_ssd_device }} print | egrep -sq 'journal'"
+  ignore_errors: true
+  changed_when: false
+  register: journal_partitions
+
+- name: check if bcache partition exists on ssd device
+  shell: "parted --script /dev/{{ ceph.bcache_ssd_device }} print | egrep -sq 'bcache'"
+  ignore_errors: true
+  changed_when: false
+  register: bcache_partition
+
+- name: initialize ok_to_deploy flag
+  set_fact:
+    ok_to_deploy: false
+
+- name: set ok_to_deploy flag
+  set_fact: 
+    ok_to_deploy: true
+  when: journal_partitions.rc != 0 and
+        bcache_partition.rc != 0
+
+- name: mklabel gpt
+  command: "parted -s /dev/{{ ceph.bcache_ssd_device }} mklabel gpt"
+  when: ok_to_deploy
+
+- name: make journal partitions
+  command: parted --script /dev/{{ ceph.bcache_ssd_device }}
+           mkpart journal {{ (item|int * 10000) + 1 }}MiB {{ (item|int * 10000) + 10000 }}MiB
+  with_sequence: start=0 end={{ ceph.disks|length - 1 }}
+  when: ok_to_deploy
+
+- name: make bcache partition
+  command: parted --script /dev/{{ ceph.bcache_ssd_device }}
+           mkpart bcache {{ ceph.disks|length * 10000 + 1 }}MiB 100%
+  when: ok_to_deploy
+
+- name: make-bcache -C <ssd device>
+  command: make-bcache -C /dev/{{ ceph.bcache_ssd_device }}{{ ceph.disks|length + 1 }}
+  ignore_errors: true
+  when: ok_to_deploy
+
+- name: make-bcache -B <sata disks>
+  command: "make-bcache -B /dev/{{ item }}"
+  with_items: ceph.disks
+  when: ok_to_deploy
+
+- name: set cache mode to writeback
+  shell: echo writeback > /sys/block/bcache{{ item }}/bcache/cache_mode
+  with_sequence: start=0 end={{ ceph.disks|length - 1 }}
+  when: ok_to_deploy
+
+- name: determine bcache uuid
+  shell: bcache-super-show /dev/{{ ceph.bcache_ssd_device }}{{ ceph.disks|length + 1 }} |
+         grep cset.uuid | awk '{print $2}'
+  changed_when: false
+  register: bcache_uuid
+  when: ok_to_deploy
+
+- name: attach to bcache devices
+  shell: echo {{ bcache_uuid.stdout }} > /sys/block/bcache{{ item }}/bcache/attach
+  with_sequence: start=0 end={{ ceph.disks|length - 1 }}
+  when: ok_to_deploy
+
+- name: make xfs on bcache devices
+  command: "mkfs -t xfs -f -i size=2048 -- /dev/bcache{{ item }}"
+  with_sequence: start=0 end={{ ceph.disks|length - 1 }}
+  when: ok_to_deploy
+
+- name: activate osds
+  ceph_bcache:
+    disks: "{{ ceph.disks }}"
+    ssd_device: "{{ ceph.bcache_ssd_device }}"
