@@ -70,16 +70,6 @@
     - etype: other
       permission: r
 
-# Neutron needs the service tenant id. This goes away after juno
-# when neutron can use tenant_name.
-- name: Fetch service tenant info from keystone
-  keystone_user: tenant=service
-                 endpoint="{{ endpoints.keystone.url.admin }}/{{ endpoints.keystone.version }}/"
-                 login_tenant_name=admin
-                 login_user=admin
-                 login_password={{ secrets.admin_password }}
-  register: service_tenant
-
 - name: neutron config
   template: src={{ item }} dest=/etc/neutron mode={{ 0644 if 'policy.json' in item else 0640 }}
             owner=neutron group=neutron
