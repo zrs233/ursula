@@ -1,0 +1,37 @@
+---
+- name: install apache package
+  apt: pkg=apache2
+
+- name: install apache module packages
+  apt: pkg={{ item }}
+  with_items: apache.modules
+
+- name: enable apache modules
+  apache2_module: name={{ item }}
+  with_items:
+    - headers
+    - ssl
+    - rewrite
+    - uwsgi
+  notify: reload apache
+  
+- name: disable apache status
+  command: a2dismod status
+  notify:
+    - reload apache
+
+- name: disable default vhost
+  apache2_site: name={{ item }} state=absent
+  with_items:
+    - 000-default
+    - default-ssl
+  notify: restart apache
+
+- name: do not include ports.conf
+  lineinfile: dest=/etc/apache2/apache2.conf
+              regexp="^Include ports\.conf$"
+              state=absent
+
+- name: remove ports.conf
+  file: dest=/etc/apache2/ports.conf state=absent
+
