@@ -1,5 +1,7 @@
 ---
 neutron:
+  enable_fatal_deprecations: True
+  overlay_interface: "{{ neutron.vxlan_interface|default(primary_interface) }}"
   l2_population: False
   vxlan:
     # The multicast prefix to use for broadcast, multicast and unknown frames
