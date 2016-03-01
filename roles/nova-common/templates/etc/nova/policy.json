@@ -53,7 +53,7 @@
     "compute_extension:admin_actions:migrateLive": "rule:admin_or_projAdmin_or_cloudAdmin",
     "compute_extension:admin_actions:resetState": "rule:admin_or_projAdmin_or_cloudAdmin",
     "compute_extension:admin_actions:migrate": "rule:admin_or_projAdmin_or_cloudAdmin",
-    "compute_extension:aggregates": "rule:admin_api",
+    "compute_extension:aggregates": "role:admin",
     "compute_extension:agents": "rule:admin_api",
     "compute_extension:attach_interfaces": "",
     "compute_extension:baremetal_nodes": "rule:admin_api",
