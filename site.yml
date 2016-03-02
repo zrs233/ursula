@@ -12,6 +12,8 @@
     - role: serverspec
       tags: ['common', 'serverspec']
       when: serverspec.enabled|default("False")|bool
+    - role: logging
+      tags: ['common', 'logging']
     - role: collectd-client
       tags: ['collectd-client','collectd']
       when: collectd.enabled|default('False')|bool
