@@ -17,7 +17,7 @@
     ok_to_deploy: false
 
 - name: set ok_to_deploy flag
-  set_fact: 
+  set_fact:
     ok_to_deploy: true
   when: journal_partitions.rc != 0 and
         bcache_partition.rc != 0
