@@ -2,6 +2,7 @@
 - name: "install {{ project_name }} package"
   apt: pkg="{{ package_name|default(openstack_package.package_name) }}"
        update_cache=yes cache_valid_time=3600
+  register: project_package
 
 - name: setup openstack current base path
   file: dest=/opt/openstack state=directory

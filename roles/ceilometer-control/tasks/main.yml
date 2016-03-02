@@ -16,6 +16,14 @@
     - ceilometer-alarm-notifier
   notify: restart ceilometer services
 
+- name: trigger restart on upgrades
+  debug:
+    msg: "Triggering service restart for upgrade"
+  changed_when: True
+  notify: restart ceilometer services
+  when: (project_package.changed or git_result.changed) and
+        upgrade | default('False') | bool
+
 - name: create ceilometer user in mongodb
   mongodb_user: database={{ ceilometer.mongodb_database }} name={{ ceilometer.mongodb_user }} password={{ ceilometer.mongodb_password }} roles='readWrite,dbAdmin' state=present
   when: inventory_hostname in groups['controller'][0]

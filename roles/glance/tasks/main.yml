@@ -86,6 +86,14 @@
 - include: ceph_integration.yml
   when: ceph.enabled|bool
 
+- name: trigger restart on upgrades
+  debug:
+    msg: "Triggering service restart for upgrade"
+  changed_when: True
+  notify: restart glance services
+  when: (project_package.changed or git_result.changed) and
+        upgrade | default('False') | bool
+
 - meta: flush_handlers
 
 - name: start glance services

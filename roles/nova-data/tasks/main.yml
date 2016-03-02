@@ -54,6 +54,16 @@
   upstart_service: name=nova-compute user=nova cmd=/usr/local/bin/nova-compute
                    config_dirs=/etc/nova
 
+- name: trigger restart on upgrades
+  debug:
+    msg: "Triggering service restart for upgrade"
+  changed_when: True
+  notify: restart nova services
+  when: (project_package.changed or git_result.changed) and
+        upgrade | default('False') | bool
+
+- meta: flush_handlers
+
 - name: start nova-compute
   service: name=nova-compute state=started
 

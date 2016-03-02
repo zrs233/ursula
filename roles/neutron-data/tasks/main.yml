@@ -29,6 +29,16 @@
                    config_files=/etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2_plugin.ini,/etc/neutron/plugins/ml2/ml2_plugin_dataplane.ini
   when: neutron.plugin == 'ml2'
 
+- name: trigger restart on upgrades
+  debug:
+    msg: "Triggering service restart for upgrade"
+  changed_when: True
+  notify: restart neutron services
+  when: (project_package.changed or git_result.changed) and
+        upgrade | default('False') | bool
+
+- meta: flush_handlers
+
 - name: start neutron-linuxbridge-agent
   service: name=neutron-linuxbridge-agent state=started
   when: neutron.plugin == 'ml2'
