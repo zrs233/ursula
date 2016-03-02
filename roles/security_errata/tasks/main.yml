@@ -26,34 +26,5 @@
   - dpkg
   tags: CVE-2015-0860
 
-- name: Check glibc minor version
-  shell: dpkg -s libc6 | grep 'Version' | cut -d '.' -f3
-  register: glibc_minor_ver
-  tags: CVE-2015-7547
-
-- name: update glibc for CVE-2015-7547
-  apt: pkg={{ item }} state=latest force=yes
-  with_items:
-  - libc-bin
-  - libc-dev-bin
-  - libc6
-  - libc6-dev
-  tags: CVE-2015-7547
-
-- name: restart services with public ports
-  service: name={{ item }} state=restarted must_exist=false
-  with_items:
-    - apache2
-    - cinder-api
-    - glance-api
-    - heat-api
-    - keystone
-    - neutron-server
-    - nova-api
-    - ssh
-    - ironic-api
-    - haproxy
-    - swift-proxy
-  ignore_errors: true
-  when: glibc_minor_ver.stdout|int < 7
+- include: CVE-2015-7547.yml
   tags: CVE-2015-7547
