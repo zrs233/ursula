@@ -22,6 +22,14 @@
             owner=swift group=swift mode=0640
   notify: restart swift-object-expirer service
 
+- name: trigger restart on upgrades
+  debug:
+    msg: "Triggering service restart for upgrade"
+  changed_when: True
+  notify: restart swift-object service
+  when: (project_package.changed or git_result.changed) and
+        upgrade | default('False') | bool
+
 - meta: flush_handlers
 
 - name: start swift-object services

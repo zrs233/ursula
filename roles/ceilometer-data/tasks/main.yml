@@ -15,6 +15,14 @@
   notify: restart ceilometer services
   when: openstack_install_method == 'source'
 
+- name: trigger restart on upgrades
+  debug:
+    msg: "Triggering service restart for upgrade"
+  changed_when: True
+  notify: restart ceilometer services
+  when: (project_package.changed or git_result.changed) and
+        upgrade | default('False') | bool
+
 - meta: flush_handlers
 
 - name: start ceilometer-compute service

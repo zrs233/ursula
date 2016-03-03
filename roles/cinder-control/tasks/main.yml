@@ -25,6 +25,14 @@
   # we want this to always be changed so that it can notify the service restart
   tags: db-migrate
 
+- name: trigger restart on upgrades
+  debug:
+    msg: "Triggering service restart for upgrade"
+  changed_when: True
+  notify: restart cinder services
+  when: (project_package.changed or git_result.changed) and
+        upgrade | default('False') | bool
+
 - meta: flush_handlers
 
 - name: start cinder controller services

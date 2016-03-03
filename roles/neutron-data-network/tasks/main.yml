@@ -96,6 +96,20 @@
         - /etc/neutron/services/loadbalancer/haproxy/lbaas_agent.ini
         - /etc/neutron/neutron_lbaas.conf
 
+- name: kill neutron-ns-metdata-proxy on upgrade
+  command: pkill -f neutron-ns-metadata-proxy
+  failed_when: False
+  when: (project_package.changed or git_result.changed) and
+        upgrade | default('False') | bool
+
+- name: trigger restart on upgrades
+  debug:
+    msg: "Triggering service restart for upgrade"
+  changed_when: True
+  notify: restart neutron services
+  when: (project_package.changed or git_result.changed) and
+        upgrade | default('False') | bool
+
 - meta: flush_handlers
 
 - name: start neutron-data-network services

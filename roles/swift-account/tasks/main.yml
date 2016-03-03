@@ -13,6 +13,14 @@
             dest=/etc/swift/account-server.conf owner=swift group=swift
   notify: restart swift-account service
 
+- name: trigger restart on upgrades
+  debug:
+    msg: "Triggering service restart for upgrade"
+  changed_when: True
+  notify: restart swift-account service
+  when: (project_package.changed or git_result.changed) and
+        upgrade | default('False') | bool
+
 - meta: flush_handlers
 
 - name: start swift-account services

@@ -47,15 +47,26 @@
                    cmd=/usr/local/bin/cinder-volume
                    config_dirs=/etc/cinder
 
-- name: start cinder-volume
-  service: name=cinder-volume state=started
-
 - name: install cinder backup service
   upstart_service: name=cinder-backup
                    user=cinder
                    cmd=/usr/local/bin/cinder-backup
                    config_dirs=/etc/cinder
   when: swift.enabled|default("false")|bool
+
+- name: trigger restart on upgrades
+  debug:
+    msg: "Triggering service restart for upgrade"
+  changed_when: True
+  notify: restart cinder services
+  notify: restart cinder backup service
+  when: (project_package.changed or git_result.changed) and
+        upgrade | default('False') | bool
+
+- meta: flush_handlers
+
+- name: start cinder-volume
+  service: name=cinder-volume state=started
 
 - name: start cinder backup
   service: name=cinder-backup state=started
