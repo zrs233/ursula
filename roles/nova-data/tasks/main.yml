@@ -5,7 +5,7 @@
     - ssh
 
 - include: libvirt.yml
-  when: nova.compute_driver == "nova.virt.libvirt.LibvirtDriver"
+  when: nova.compute_driver == "libvirt.LibvirtDriver"
   tags:
     - libvirt
     - libvirtd
