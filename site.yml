@@ -1,6 +1,7 @@
 ---
 - name: common role for all hosts
   hosts: all
+  any_errors_fatal: true
   gather_facts: force
   roles:
     - role: common
@@ -18,6 +19,7 @@
 
 - name: security and errata
   hosts: all
+  any_errors_fatal: true
   roles:
     - role: security_errata
       tags: ['common', 'security', 'errata']
@@ -25,6 +27,7 @@
 
 - name: install logging and dependencies
   hosts: all
+  any_errors_fatal: true
   roles:
     - role: logging
       tags: ['common', 'logging']
@@ -34,6 +37,7 @@
 - name: setup IPv6 router advertisements
   gather_facts: force
   hosts: controller
+  any_errors_fatal: true
   roles:
     - role: ipv6ra
       tags: ['infra']
@@ -42,6 +46,7 @@
 - name: rabbitmq used by openstack
   gather_facts: force
   hosts: controller
+  any_errors_fatal: true
   serial: 1 # serial because clustering
   roles:
     - role: rabbitmq
@@ -51,6 +56,7 @@
 - name: install common percona components and gather facts
   gather_facts: force
   hosts: db
+  any_errors_fatal: true
   roles:
     - role: percona-common
       tags: ['infra', 'percona', 'percona-facts']
@@ -59,6 +65,7 @@
 - name: install percona on primary
   gather_facts: force
   hosts: db[0]
+  any_errors_fatal: true
   vars:
     should_bootstrap_as_primary: True
   roles:
@@ -69,6 +76,7 @@
 - name: install percona on secondaries
   gather_facts: force
   hosts: db:!db[0]
+  any_errors_fatal: true
   vars:
     should_bootstrap_as_primary: False
   roles:
@@ -79,6 +87,7 @@
 - name: install percona arbiter
   gather_facts: force
   hosts: db_arbiter
+  any_errors_fatal: true
   roles:
     - role: percona-common
       tags: ['infra', 'percona']
@@ -89,6 +98,7 @@
 
 - name: configure percona backups on primary
   hosts: db[0]
+  any_errors_fatal: true
   roles:
     - role: percona-backup
       tags: ['infra', 'percona']
@@ -97,6 +107,7 @@
 - name: install mongodb server
   gather_facts: force
   hosts: mongo_db
+  any_errors_fatal: true
   roles:
     - role: mongodb-server
       tags: ['mongodb', 'mongodb-server']
@@ -106,6 +117,7 @@
 - name: install mongodb arbiter
   gather_facts: force
   hosts: mongo_arbiter
+  any_errors_fatal: true
   roles:
     - role: mongodb-arbiter
       tags: ['mongodb', 'mongodb-arbiter']
@@ -115,6 +127,7 @@
 - name: memcached for keystone and horizon
   gather_facts: force
   hosts: controller
+  any_errors_fatal: true
   roles:
     - role: memcached
       tags: ['infra']
@@ -123,6 +136,7 @@
 - name: controller haproxy
   gather_facts: force
   hosts: controller
+  any_errors_fatal: true
   roles:
     - role: haproxy
       haproxy_type: openstack
@@ -132,6 +146,7 @@
 
 - name: iptables
   hosts: network
+  any_errors_fatal: true
   roles:
     - role: iptables
       tags: ['iptables', 'infra']
@@ -139,6 +154,7 @@
 
 - name: ceph monitors
   hosts: ceph_monitors
+  any_errors_fatal: true
   roles:
     - role: ceph-monitor
       tags: ['ceph', 'ceph-monitor']
@@ -147,6 +163,7 @@
 - name: ceph osds
   gather_facts: force
   hosts: ceph_osds
+  any_errors_fatal: true
   roles:
     - role: ceph-osd
       tags: ['ceph', 'ceph-osd']
@@ -155,6 +172,7 @@
 # OPENSTACK SERVICES
 - name: openstack client tools
   hosts: all
+  any_errors_fatal: true
   roles:
     - role: client
       tags: ['openstack', 'client']
@@ -163,6 +181,7 @@
 - name: keystone code and config
   gather_facts: force
   hosts: controller
+  any_errors_fatal: true
   roles:
     - role: keystone
       tags: ['openstack', 'keystone', 'control']
@@ -170,6 +189,7 @@
 
 - name: keystone setup
   hosts: controller[0]
+  any_errors_fatal: true
   roles:
     - role: keystone-setup
       keystone_configured: false
@@ -180,6 +200,7 @@
 - name: glance code and config
   gather_facts: force
   hosts: controller
+  any_errors_fatal: true
   roles:
     - role: glance
       tags: ['openstack', 'glance', 'control', 'ceph']
@@ -188,6 +209,7 @@
 - name: nova control plane
   gather_facts: force
   hosts: controller
+  any_errors_fatal: true
   roles:
     - role: nova-control
       tags: ['openstack', 'nova', 'control']
@@ -196,6 +218,7 @@
 - name: nova data plane
   gather_facts: force
   hosts: compute
+  any_errors_fatal: true
   roles:
     - role: nova-data
       tags: ['openstack', 'nova', 'data']
@@ -205,6 +228,7 @@
 - name: cinder control plane
   gather_facts: force
   hosts: controller
+  any_errors_fatal: true
   roles:
     - role: cinder-control
       tags: ['openstack', 'cinder', 'control', 'ceph']
@@ -214,6 +238,7 @@
 - name: cinder data plane
   gather_facts: force
   hosts: cinder_volume
+  any_errors_fatal: true
   roles:
     - role: cinder-data
       tags: ['openstack', 'cinder', 'data', 'cinder-data', 'ceph']
@@ -222,6 +247,7 @@
 
 - name: ceph compute
   hosts: compute
+  any_errors_fatal: true
   gather_facts: force
   roles:
     - role: ceph-compute
@@ -232,6 +258,7 @@
 - name: neutron control plane
   gather_facts: force
   hosts: controller
+  any_errors_fatal: true
   roles:
     - role: neutron-control
       tags: ['openstack', 'neutron', 'control']
@@ -240,6 +267,7 @@
 - name: neutron core data plane
   gather_facts: force
   hosts: compute:network
+  any_errors_fatal: true
   roles:
     - role: neutron-data
       tags: ['openstack', 'neutron', 'data']
@@ -247,6 +275,7 @@
 
 - name: neutron network services data plane
   hosts: network
+  any_errors_fatal: true
   roles:
     - role: neutron-data-network
       tags: ['openstack', 'neutron', 'data']
@@ -254,6 +283,7 @@
 
 - name: horizon code and config
   hosts: controller
+  any_errors_fatal: true
   roles:
     - role: horizon
       tags: ['openstack', 'horizon', 'control']
@@ -262,6 +292,7 @@
 - name: swift code and config
   gather_facts: force
   hosts: swiftnode
+  any_errors_fatal: true
   gather_facts: force
   roles:
     - role: haproxy
@@ -279,6 +310,7 @@
 
 - name: swift bootstrap rings
   hosts: swiftnode_primary
+  any_errors_fatal: true
   roles:
     - role: swift-ring
       tags: ['openstack', 'swift', 'swift-ring', 'data']
@@ -287,6 +319,7 @@
 - name: heat code and config
   gather_facts: force
   hosts: controller
+  any_errors_fatal: true
   roles:
     - role: heat
       tags: ['openstack', 'heat', 'control']
@@ -296,6 +329,7 @@
 - name: ceilometer control plane
   gather_facts: force
   hosts: controller
+  any_errors_fatal: true
   roles:
     - role: ceilometer-control
       tags: ['openstack', 'ceilometer', 'control']
@@ -305,6 +339,7 @@
 - name: ceilometer data plane
   gather_facts: force
   hosts: compute
+  any_errors_fatal: true
   roles:
     - role: ceilometer-data
       tags: ['openstack', 'ceilometer', 'data']
@@ -314,6 +349,7 @@
 - name: magnum code and config
   gather_facts: force
   hosts: controller
+  any_errors_fatal: true
   roles:
     - role: magnum
       tags: ['openstack', 'magnum', 'control']
@@ -322,6 +358,7 @@
 - name: ironic control plane
   gather_facts: force
   hosts: controller
+  any_errors_fatal: true
   roles:
     - role: ironic-control
       tags: ['openstack', 'ironic', 'control']
@@ -330,6 +367,7 @@
 
 - name: ironic data plane
   hosts: controller
+  any_errors_fatal: true
   roles:
     - role: ironic-data
       tags: ['openstack', 'ironic', 'data']
@@ -338,6 +376,7 @@
 
 - name: openstack base setup
   hosts: controller
+  any_errors_fatal: true
   roles:
     - role: 'openstack-setup'
       tags: ['openstack-setup', 'openstack', 'setup']
@@ -345,6 +384,7 @@
 
 - name: openstack network setup
   hosts: network
+  any_errors_fatal: true
   roles:
     - role: 'openstack-network'
       tags: ['openstack', 'setup', 'openstack-network']
