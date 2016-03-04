@@ -3,7 +3,7 @@ stack_env: example_swift
 swift_floating_ip: "{{ hostvars[groups['swiftnode'][0]][primary_interface]['ipv4']['address'] }}"
 
 undercloud_cidr: 
-  - 10.1.1.0/24
+  - cidr: 10.1.1.0/24
 
 etc_hosts:
   - name: "{{ fqdn }}"

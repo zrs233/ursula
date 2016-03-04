@@ -72,7 +72,7 @@ logging:
     host: kibana.sea03.blueboxgrid.com
     port: 4560
 undercloud_cidr: 
-  - ${UNDERCLOUD_CIDR}
+  - cidr: ${UNDERCLOUD_CIDR}
 eof
 popd
 rm -rf ${CERT_DIR}
