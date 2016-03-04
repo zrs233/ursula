@@ -134,7 +134,7 @@
   notify: restart sensu-client
 
 - name: network interface traffic check
-  sensu_check: name=network_interface_traffic plugin=check-netif.rb state=absent 
+  sensu_check: name=network_interface_traffic plugin=check-netif.rb state=absent
   notify: restart sensu-client
 
 - name: disk check
@@ -184,6 +184,13 @@
 - name: network metrics check
   sensu_metrics_check: name=network-metrics plugin=metrics-net.rb
                        args='--scheme {{ monitoring.graphite.host_prefix }}.network'
+  notify: restart sensu-client
+
+- name: check for static route on multi subnet
+  sensu_check: name=check-static-route-{{ item.cidr | regex_replace('(?P<host>.+)/(?P<size>.+)', '\\g<host>_\\g<size>') }} plugin=check-static-route.py
+               args='--subnet {{ item.cidr }} --gateway {{ item.gateway }} --criticality {{ common.monitoring.sensu_checks.check_static_route.criticality}}'
+  with_items: "{{ undercloud_cidr }}"
+  when: "{{undercloud_cidr is defined and undercloud_cidr | length > 1}}"
   notify: restart sensu-client
 
 - name: add sensu to adm group so it can read log files

@@ -48,6 +48,8 @@ common:
     verbose: True
   monitoring:
     sensu_checks:
+      check_static_route:
+        criticality: 'critical'
       check_raid:
         criticality: 'critical'
 
