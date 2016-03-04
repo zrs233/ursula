@@ -100,7 +100,7 @@ openstack:
   easy_install_mirror: https://pypi-mirror.openstack.blueboxgrid.com/root/pypi/+simple
   pip_trusted: pypi-mirror.openstack.blueboxgrid.com
   gem_sources:
-    - https://gem-mirror.openstack.blueboxgrid.com
+    - https://rubygems.org
   git_mirror:  https://github.com/openstack
   git_update: yes
   ubuntu_mirror: https://apt-mirror.openstack.blueboxgrid.com/archive.ubuntu.com/ubuntu
