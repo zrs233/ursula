@@ -390,3 +390,13 @@
       tags: ['openstack', 'setup', 'openstack-network']
       when: neutron.enable_external_interface|default('false')|bool
   environment: "{{ env_vars|default({}) }}"
+
+# This is the last role because ceph health checks can take up to 2 hours
+- name: ceph update
+  hosts: ceph_monitors:ceph_osds
+  serial: 1 # serial because tracking cluster osd count
+  roles:
+    - role: ceph-update
+      tags: ['ceph', 'ceph-update']
+      when: ceph.scaleout|default('False')|bool
+  environment: "{{ env_vars|default({}) }}"

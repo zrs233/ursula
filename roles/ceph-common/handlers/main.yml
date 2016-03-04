@@ -1,8 +1,8 @@
 ---
 - name: restart ceph mons
   service: name=ceph-mon-all state=restarted
-  when: ceph_socket.rc == 0
+  when: ceph_socket.rc == 0 and not ceph.scaleout|default('False')|bool
 
 - name: restart ceph osds
   service: name=ceph-osd-all state=restarted
-  when: ceph_socket.rc == 0
+  when: ceph_socket.rc == 0 and not ceph.scaleout|default('False')|bool

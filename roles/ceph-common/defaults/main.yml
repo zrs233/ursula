@@ -91,7 +91,7 @@ ceph:
   filestore_split_multiple: 8
   osd_op_threads: 8
   filestore_op_threads: 8
-  filestore_max_sync_interval: 5
+  filestore_max_sync_interval: 30
   osd_max_scrubs: 1
 
   # OS tuning

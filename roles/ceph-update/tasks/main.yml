@@ -1,0 +1,48 @@
+---
+# Wait for a max of 30 minutes
+- name: wait for ceph cluster to be in health ok state
+  shell: ceph health | egrep -q "HEALTH_OK"
+  register: result
+  until: result.rc == 0
+  retries: 30
+  delay: 60
+  delegate_to: "{{ groups['ceph_monitors'][0] }}"
+
+- name: restart ceph mons
+  service: name=ceph-mon-all state=restarted
+
+# Setting noout to prevent cluster from rebalancing after service restart
+- name: set osd noout
+  command: ceph osd set noout
+  delegate_to: "{{ groups['ceph_monitors'][0] }}"
+  when: inventory_hostname == groups['ceph_osds'][0]
+
+# Setting osd values for first osd to reduce performance degradation of client I/O
+- name: set osd noscrub
+  command: ceph osd set noscrub
+  delegate_to: "{{ groups['ceph_monitors'][0] }}"
+  when: inventory_hostname == groups['ceph_osds'][0]
+
+- name: set osd nodeep scrub
+  command: ceph osd set nodeep-scrub
+  delegate_to: "{{ groups['ceph_monitors'][0] }}"
+  when: inventory_hostname == groups['ceph_osds'][0]
+
+- name: restart ceph osds
+  service: name=ceph-osd-all state=restarted
+
+# Unset the osd values only after ceph on last osd node has restarted
+- name: unset osd noout
+  command: ceph osd unset noout
+  delegate_to: "{{ groups['ceph_monitors'][0] }}"
+  when: inventory_hostname == groups['ceph_osds'][-1]
+
+- name: unset osd noscrub
+  command: ceph osd unset noscrub
+  delegate_to: "{{ groups['ceph_monitors'][0] }}"
+  when: inventory_hostname == groups['ceph_osds'][-1]
+
+- name: unset osd nodeep scrub
+  command: ceph osd unset nodeep-scrub
+  delegate_to: "{{ groups['ceph_monitors'][0] }}"
+  when: inventory_hostname == groups['ceph_osds'][-1]
