@@ -1,42 +1,21 @@
 ---
-- name: install apache
-  apt: pkg={{ item }}
-  with_items:
-    - apache2
-    - libapache2-mod-wsgi
-
 - name: lesscpy must be in apache PATH
   pip: name=lesscpy version=0.9j
-
-- name: disable apache status
-  command: a2dismod status
-  notify:
-    - restart apache
 
 - name: enable apache mod-headers
   apache2_module: state=present name=headers
   notify:
-    - restart apache
+    - reload apache
 
 - name: disable apache status
   template: src=etc/apache2/mods-enabled/headers.conf
             dest=/etc/apache2/mods-enabled/headers.conf
   notify:
-    - restart apache
+    - reload apache
 
 - name: create horizon config directory
   file: dest=/etc/openstack-dashboard state=directory
 
-- name: apache ports config
-  template: src=etc/apache2/ports.conf
-            dest=/etc/apache2/ports.conf
-  notify:
-    - restart apache
-
-- name: disable default apache site
-  command: a2dissite 000-default
-  notify:
-    - restart apache
 
 - name: create horizon config directory
   file: dest=/etc/openstack-dashboard state=directory
@@ -46,19 +25,19 @@
             dest=/etc/apache2/sites-available/openstack_dashboard
   when: ansible_distribution_version == "12.04"
   notify:
-    - restart apache
+    - reload apache
 
 - name: openstack dashboard config
   template: src=etc/apache2/sites-available/openstack_dashboard.conf
             dest=/etc/apache2/sites-available/openstack_dashboard.conf
   when: ansible_distribution_version != "12.04"
   notify:
-    - restart apache
+    - reload apache
 
 - name: enable horizon apache site
-  command: a2ensite openstack_dashboard
+  apache2_site: name=openstack_dashboard state=present
   notify:
-    - restart apache
+    - reload apache
 
 - name: horizon local settings
   template: src=etc/openstack-dashboard/{{ item }}
@@ -68,7 +47,7 @@
     - local_settings.py
     - __init__.py
   notify:
-    - restart apache
+    - reload apache
 
 - name: create static assets directory
   file: dest="{{ 'horizon'|ursula_package_path(openstack_package_version) }}/static"
@@ -136,6 +115,11 @@
   with_items:
   - 80
   - 443
+
+- meta: flush_handlers
+
+- name: ensure apache is enabled
+  service: name=apache2 state=started enabled=true
 
 - include: monitoring.yml tags=monitoring,common
   when: monitoring.enabled|default('True')|bool
