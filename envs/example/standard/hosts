@@ -30,5 +30,12 @@ compute1
 [ceph_monitors]
 # when expanding cluster, place new hosts BELOW existing hosts
 
-[ceph_osds]
+[ceph_osds:children]
+ceph_osds_standard
+ceph_osds_bcache
+
+[ceph_osds_standard]
+# when expanding cluster, place new hosts BELOW existing hosts
+
+[ceph_osds_bcache]
 # when expanding cluster, place new hosts BELOW existing hosts

@@ -6,6 +6,7 @@ ceph:
   #  - sdb
   #  - sdc
   #  - sdd
+  #bcache_ssd_device: sdg 
 
   stable_release: hammer
 
@@ -24,6 +25,8 @@ ceph:
     - ceph-common
   osd_pkgs:
     - parted
+  bcache_pkgs:
+    - bcache-tools
 
   # Ceph options
   cephx: true
