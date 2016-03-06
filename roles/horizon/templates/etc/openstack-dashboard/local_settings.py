@@ -59,7 +59,7 @@ HORIZON_CONFIG = {
         'fade_duration': 1500,
         'types': ['alert-success', 'alert-info']
     },
-    'help_url': "http://docs.openstack.org/kilo/",
+    'help_url': "http://docs.openstack.org",
     'exceptions': {'recoverable': exceptions.RECOVERABLE,
                    'not_found': exceptions.NOT_FOUND,
                    'unauthorized': exceptions.UNAUTHORIZED},
@@ -139,6 +139,16 @@ OPENSTACK_KEYSTONE_URL = "https://%s:{{ endpoints.keystone.port.haproxy_api }}/v
 OPENSTACK_KEYSTONE_DEFAULT_ROLE = "_member_"
 SESSION_TIMEOUT = {{ horizon.session_timeout }}
 
+#TODO: parameterize strings that get shown on the login page
+{% if keystone.federation.enabled|bool -%}
+WEBSSO_ENABLED = True
+WEBSSO_CHOICES = (
+    ("credentials", _("Keystone Credentials")),
+    ("oidc", _("BlueBox Auth"))
+)
+
+WEBSSO_INITIAL_CHOICE = "credentials"
+{% endif -%}
 
 # Disable SSL certificate checks (useful for self-signed certificates):
 OPENSTACK_SSL_NO_VERIFY = True

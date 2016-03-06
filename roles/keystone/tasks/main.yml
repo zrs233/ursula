@@ -69,6 +69,48 @@
             dest=/etc/keystone/uwsgi/keystone-main.ini mode=0775
             owner=keystone group=keystone
 
+- name: install mod_auth_openidc deps
+  apt: name={{ item }} state=present
+  with_items:
+    - libjansson4
+    - libhiredis0.10
+    - libcurl3
+  when: keystone.federation.sp.oidc.enabled|bool
+
+- name: download mod_auth_openidc
+  get_url: url={{ keystone.federation.sp.oidc.download.url }}
+           dest=/tmp/libapache2-mod-auth-openidc_{{ keystone.federation.sp.oidc.version }}-1_amd64.deb
+  when: keystone.federation.sp.oidc.enabled|bool
+
+- name: install mod_auth_openidc
+  apt: deb=/tmp/libapache2-mod-auth-openidc_{{ keystone.federation.sp.oidc.version }}-1_amd64.deb
+       install_recommends=yes
+  notify: reload apache
+  when: keystone.federation.sp.oidc.enabled|bool
+
+- name: enable apache mod auth_openidc
+  apache2_module: name=auth_openidc
+  when: keystone.federation.sp.oidc.enabled|bool
+  notify: reload apache
+
+# if mod auth_openidc is enabled but not configured or used by any sites
+# it blocks apache start
+#- name: configure default auth provider
+#  lineinfile: dest=/etc/apache2/mods-available/auth_openidc.conf
+#              line="OIDCProviderIssuer auth.bluebox.net"
+#  notify: restart apache
+#  when: keystone.federation.sp.oidc.enabled|bool
+
+#- name: update keystone apache vhost with oidc
+#  template: src=etc/apache2/sites-available/keystone.conf.oidc
+#            dest=/etc/apache2/sites-available/keystone.conf
+#  notify:
+#    - reload apache
+- name: setup keystone sso template
+  template: src=etc/keystone/sso_callback_template.html
+            dest=/etc/keystone/sso_callback_template.html
+  when: keystone.federation.enabled|bool
+
 - name: keystone apache vhost
   template: src=etc/apache2/sites-available/keystone.conf
             dest=/etc/apache2/sites-available/keystone.conf
