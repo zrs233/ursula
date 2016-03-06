@@ -70,6 +70,7 @@
 - name: custom horizon logo
   get_url: url={{ item.url }}
            dest=/etc/openstack-dashboard/static/dashboard/{{ item.name }}
+           force=True
   with_items:
     - { name: img/logo.png, url: "{{ horizon.logo_url }}"  }
     - { name: img/logo-splash.png, url: "{{ horizon.logo_url }}" }
