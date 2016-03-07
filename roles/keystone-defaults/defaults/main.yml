@@ -61,3 +61,4 @@ keystone:
         client_secret: 'client_secret'
         crypto_passphrase: 'openstack'
         redirect_uri: 'https://openstack.example.org:5000/v3/auth/OS-FEDERATION/websso/oidc/redirect'
+        ssl_validate_server: True
