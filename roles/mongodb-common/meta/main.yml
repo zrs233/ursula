@@ -1,5 +1,6 @@
 ---
 dependencies:
+  - role: endpoints
   - role: monitoring-common
     when: monitoring.enabled|default(True)|bool
   - role: apt-repos
