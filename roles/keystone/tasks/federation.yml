@@ -1,0 +1,24 @@
+---
+- name: install mod_auth_openidc deps
+  apt: name={{ item }} state=present
+  with_items:
+    - libjansson4
+    - libhiredis0.10
+    - libcurl3
+
+- name: download mod_auth_openidc
+  get_url: url={{ keystone.federation.sp.oidc.download.url }}
+           dest=/tmp/libapache2-mod-auth-openidc_{{ keystone.federation.sp.oidc.version }}-1_amd64.deb
+
+- name: install mod_auth_openidc
+  apt: deb=/tmp/libapache2-mod-auth-openidc_{{ keystone.federation.sp.oidc.version }}-1_amd64.deb
+       install_recommends=yes
+  notify: reload apache
+
+- name: enable apache mod auth_openidc
+  apache2_module: name=auth_openidc
+  notify: reload apache
+
+- name: setup keystone sso template
+  template: src=etc/keystone/sso_callback_template.html
+            dest=/etc/keystone/sso_callback_template.html
