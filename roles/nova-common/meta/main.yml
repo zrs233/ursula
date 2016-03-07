@@ -25,4 +25,3 @@ dependencies:
     rootwrap: True
     alternatives: "{{ nova.alternatives }}"
     when: openstack_install_method == 'package'
-  - role: serverspec

@@ -17,4 +17,3 @@ dependencies:
     project_name: ceilometer
     alternatives: "{{ ceilometer.alternatives }}"
     when: openstack_install_method == 'package'
-  - role: serverspec

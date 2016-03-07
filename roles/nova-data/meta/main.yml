@@ -3,4 +3,3 @@ dependencies:
   - role: nova-common
   - role: docker
     when: nova.compute_driver == "novadocker.virt.docker.DockerDriver"
-  - role: serverspec
