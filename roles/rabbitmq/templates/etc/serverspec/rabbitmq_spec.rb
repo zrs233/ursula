@@ -33,6 +33,7 @@ files.each do |file|
 end 
 
 describe file('/etc/logrotate.d/rabbitmq-server') do
+  it { should exist }
   file_contents = [ '/var/log/rabbitmq/*.log {',
          '  weekly',
          '  missingok',
