@@ -1,9 +1,4 @@
 ---
-- name: install ruby packages
-  apt: pkg={{ item }}
-  with_items:
-    - ruby1.9.1-full
-
 - name: install serverspec and dependency gems
   shell: GEM_PATH=/opt/sensu/embedded/lib/ruby/gems/2.0.0 /opt/sensu/embedded/bin/gem install {{ item.name }} -v {{ item.version }} --no-user-install
   with_items: serverspec.gems
