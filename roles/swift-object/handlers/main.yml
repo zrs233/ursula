@@ -4,3 +4,14 @@
 
 - name: restart swift-object-expirer service
   service: name=swift-object-expirer state=restarted
+
+- name: restart swift-object-services
+  service:
+    name: "{{ item }}"
+    state: restarted
+  with_items:
+    - swift-object-replicator
+    - swift-object-updater
+    - swift-object
+    - swift-object-expirer
+    - swift-object-auditor
