@@ -1,0 +1,10 @@
+---
+- name: ensure serverspec directory exist
+  file: dest=/etc/serverspec/spec/localhost state=directory
+        owner=root mode=0755 recurse=true
+
+- name: serverspec checks for neutron
+  template: src={{ item }}
+            dest=/etc/serverspec/spec/localhost/
+            mode=0755
+  with_fileglob: ../templates/etc/serverspec/*

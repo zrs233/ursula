@@ -97,3 +97,8 @@
 - name: disable swift directory parsing by updatedb
   command: updatedb -e /srv/node
 
+- include: serverspec.yml
+  tags:
+    - serverspec
+  when: serverspec.enabled|default('False')|bool
+
