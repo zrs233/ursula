@@ -62,10 +62,10 @@ end
 
 describe command('rabbitmqctl environment | grep log') do
   output = ["     [{error_logger,tty},\n",
-            "      {error_logger,{file,\"/var/log/rabbitmq/rabbit@controller1.log\"}},\n",
+            "      {error_logger,{file,\"/var/log/rabbitmq/rabbit@#{hostname}.log\"}},\n",
             "      {log_levels,[{connection,info}]},\n",
             "      {sasl_error_logger,\n",
-            "          {file,\"/var/log/rabbitmq/rabbit@controller1-sasl.log\"}},\n",
+            "          {file,\"/var/log/rabbitmq/rabbit@#{hostname}-sasl.log\"}},\n",
             "      {ssl_cert_login_from,distinguished_name},\n",
             "          [{backlog,128},\n",
             "     [{http_log_dir,none},\n {sasl,[{errlog_type,error},{sasl_error_logger,false}]},\n"].join()
