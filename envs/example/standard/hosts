@@ -31,11 +31,11 @@ compute1
 # when expanding cluster, place new hosts BELOW existing hosts
 
 [ceph_osds:children]
-ceph_osds_standard
-ceph_osds_bcache
+ceph_osds_ssd
+ceph_osds_hybrid
 
-[ceph_osds_standard]
+[ceph_osds_ssd]
 # when expanding cluster, place new hosts BELOW existing hosts
 
-[ceph_osds_bcache]
+[ceph_osds_hybrid]
 # when expanding cluster, place new hosts BELOW existing hosts
