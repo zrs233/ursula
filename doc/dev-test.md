@@ -13,7 +13,7 @@ Confirm that you have followed the [installation instructions for ursula](https:
 Vagrant support is built in. To get started, run:
 
 ```
-$ ursula --vagrant envs/example/allinone site.yml
+$ ursula --provisioner=vagrant envs/example/allinone site.yml
 ```
 
 ## Unit tests
