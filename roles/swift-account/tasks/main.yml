@@ -11,13 +11,13 @@
 - name: account-server config
   template: src=etc/swift/account-server.conf mode=0640
             dest=/etc/swift/account-server.conf owner=swift group=swift
-  notify: restart swift-account service
+  notify: restart swift-account-services
 
 - name: trigger restart on upgrades
   debug:
     msg: "Triggering service restart for upgrade"
   changed_when: True
-  notify: restart swift-account service
+  notify: restart swift-account-services
   when: (project_package.changed or git_result.changed) and
         upgrade | default('False') | bool
 

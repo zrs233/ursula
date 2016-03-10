@@ -26,7 +26,7 @@
   debug:
     msg: "Triggering service restart for upgrade"
   changed_when: True
-  notify: restart swift-object service
+  notify: restart swift-object-services
   when: (project_package.changed or git_result.changed) and
         upgrade | default('False') | bool
 

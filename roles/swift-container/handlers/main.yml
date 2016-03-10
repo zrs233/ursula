@@ -1,3 +1,11 @@
 ---
-- name: restart swift-container service
-  service: name=swift-container state=restarted
+- name: restart-swift-container-services
+  service:
+    name: "{{ item }}"
+    state: restarted
+  with_items:
+    - swift-container
+    - swift-container-auditor
+    - swift-container-replicator
+    - swift-container-sync
+    - swift-container-updater
