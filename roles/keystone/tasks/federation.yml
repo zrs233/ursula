@@ -8,10 +8,10 @@
 
 - name: download mod_auth_openidc
   get_url: url={{ keystone.federation.sp.oidc.download.url }}
-           dest=/tmp/libapache2-mod-auth-openidc_{{ keystone.federation.sp.oidc.version }}-1_amd64.deb
+           dest=/tmp/{{ keystone.federation.sp.oidc.module_name }}
 
 - name: install mod_auth_openidc
-  apt: deb=/tmp/libapache2-mod-auth-openidc_{{ keystone.federation.sp.oidc.version }}-1_amd64.deb
+  apt: deb=/tmp/{{ keystone.federation.sp.oidc.module_name }}
        install_recommends=yes
   notify: reload apache
 

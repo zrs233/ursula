@@ -18,7 +18,17 @@
                   domain="{{item.domain|default(omit)}}"
   with_items: keystone.federation.groups
 
-- name: craete keystone federation mappings
+- name: add role to keystone group
+  keystone_role: auth_url="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/v3"
+                  username="admin"
+                  password="{{secrets.admin_password}}"
+                  group="{{item.group}}"
+                  domain="{{item.domain|default(omit)}}"
+                  role="{{item.role}}"
+                  project="{{item.project}}"
+  with_items: keystone.federation.role
+
+- name: create keystone federation mappings
   keystone_federation_mapping: auth_url="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/v3"
                                username="admin"
                                password="{{secrets.admin_password}}"
@@ -34,3 +44,4 @@
                                 identity_provider="{{item.identity_provider}}"
                                 mapping="{{item.mapping}}"
   with_items: keystone.federation.protocols
+

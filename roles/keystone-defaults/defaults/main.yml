@@ -47,7 +47,7 @@ keystone:
         enabled: True
         download:
           url: https://github.com/pingidentity/mod_auth_openidc/releases/download/v1.8.3/libapache2-mod-auth-openidc_1.8.3-1_amd64.deb
-        version: 1.8.3
+        module_name: libapache2-mod-auth-openidc_1.8.3-1_amd64.deb
         scope: 'openid'
         issuer: 'issuer'
         remote_user_claim: 'Email'
@@ -60,20 +60,22 @@ keystone:
         crypto_passphrase: 'openstack'
         redirect_uri: 'https://openstack.example.org:5000/v3/auth/OS-FEDERATION/websso/oidc/redirect'
         ssl_validate_server: True
-  identity_providers:
-    - { name: someprovider, remote_ids: oidc }
-  groups:
-    - { name: someprovider-admins }
-  mappings:
-    - name: someprovider-admins
-      rules:
-        - local:
+    identity_providers:
+      - { name: someprovider, remote_ids: oidc }
+    groups:
+      - { name: someprovider-admins }
+    role:
+      - { group: someprovider-admins, role: some-role, project: some-project }
+    mappings:
+      - name: someprovider-admins
+        rules:
+          - local:
             - group:
                 name: someprovider-admins
                 domain:
                   name: Default
-          remote:
+            remote:
             - type: HTTP_OIDC_CLAIM_USERNAME
               any_one_of: ['user@someprovider.com'] 
-  protocols:
-    - { name: oidc, mapping: someprovider-admins, identity_provider: someprovider } 
+    protocols:
+      - { name: oidc, mapping: someprovider-admins, identity_provider: someprovider } 

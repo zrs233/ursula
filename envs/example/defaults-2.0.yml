@@ -164,6 +164,7 @@ ceph:
   #  - sdb
   #  - sdc
   #  - sdd
+  #bcache_ssd_device: sdg
 
 cinder:
   enabled: True
@@ -454,26 +455,7 @@ keystone:
       internal_url: https://{{ endpoints.main }}:9511
       admin_url: https://{{ endpoints.main }}:9511
   federation:
-    enabled: True
-    sp:
-      oidc:
-        enabled: True
-        download:
-          url: https://github.com/pingidentity/mod_auth_openidc/releases/download/v1.8.3/libapache2-mod-auth-openidc_1.8.3-1_amd64.deb
-        version: 1.8.3
-        scope: 'openid'
-        issuer: 'issuer'
-        remote_user_claim: 'Email'
-        user_info_endpoint: 'https://op.example.org/oauth/userinfo'
-        authorization_endpoint: 'https://op.example.org/oauth/authorize'
-        token_endpoint: 'https://op.example.org/oauth/token'
-        introspection_endpoint: 'https://op/example.org/oauth/introspection'
-        introspection_endpoint_parameters: 'grant_type=authorization_code&client_id='
-        introspection_endpoint_method: 'GET'
-        client_id: 'clientid'
-        client_secret: 'client_secret'
-        crypto_passphrase: 'openstack'
-        redirect_uri: 'https://openstack.example.org:5000/v3/auth/OS-FEDERATION/websso/oidc/redirect'
+    enabled: False
 
 ssl:
   crt: |
