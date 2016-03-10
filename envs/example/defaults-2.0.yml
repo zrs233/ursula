@@ -326,8 +326,14 @@ keystone:
       tenant: admin
       role: admin
     - user: admin
+      tenant: admin
+      role: heat_stack_owner
+    - user: admin
       tenant: demo
       role: cloud_admin
+    - user: admin
+      tenant: demo
+      role: heat_stack_owner
     - user: admin
       tenant: service
       role: admin
@@ -370,6 +376,9 @@ keystone:
     - user: cloud_admin
       tenant: demo
       role: cloud_admin
+    - user: cloud_admin
+      tenant: demo
+      role: heat_stack_owner
     - user: project_admin
       tenant: demo
       role: project_admin
