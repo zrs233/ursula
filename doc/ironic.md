@@ -23,7 +23,7 @@ Vagrant and Vbox
 Boot ironic allinone node:
 
 ```
-$ ursula --vagrant envs/example/ironic site.yml --skip-tags=cinder,horizon
+$ ursula --provisioner=vagrant envs/example/ironic site.yml --skip-tags=cinder,horizon
 ```
 
 Create a ssh key-pair on the vagrant box:

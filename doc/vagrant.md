@@ -46,7 +46,7 @@ Vagrant can be used to stand up three types of environments:  allinone, standard
 
 Do not use `vagrant up` directly.
 
-Use `$ ursula --vagrant envs/example/allinone site.yml`
+Use `$ ursula --provisioner=vagrant envs/example/allinone site.yml`
 
 
 allinone
@@ -55,7 +55,7 @@ allinone
 This will stand up a single monolithic Openstack VM.  It's much quicker than standard, but sacrifices HA and multi-node:
 
 ```
-$ ursula --vagrant envs/example/allinone site.yml
+$ ursula --provisioner=vagrant envs/example/allinone site.yml
 $ vagrant ssh  allinone
 $ vagrant destroy allinone
 ```
@@ -66,7 +66,7 @@ standard
 This will stand up two controllers and a compute node.  It includes all the appropriate HA pieces and is a fairly good facsimile of a production install:
 
 ```
-$ ursula --vagrant envs/example/standard site.yml
+$ ursula --provisioner=vagrant envs/example/standard site.yml
 ```
 
 swift
@@ -75,5 +75,5 @@ swift
 This will stand up a multi-node swift cluster:
 
 ```
-$ ursula --vagrant envs/example/swift site.yml
+$ ursula --provisioner=vagrant envs/example/swift site.yml
 ```
