@@ -143,8 +143,8 @@ SESSION_TIMEOUT = {{ horizon.session_timeout }}
 {% if keystone.federation.enabled|bool -%}
 WEBSSO_ENABLED = True
 WEBSSO_CHOICES = (
-    ("credentials", _("Keystone Credentials")),
-    ("oidc", _("BlueBox Auth"))
+    ("credentials", _("{{ horizon.websso.choices.credentials }}")),
+    ("oidc", _("{{ horizon.websso.choices.oidc }}"))
 )
 
 WEBSSO_INITIAL_CHOICE = "credentials"
