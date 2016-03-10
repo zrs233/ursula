@@ -22,7 +22,6 @@ secrets:
   monitor_password: asdf
   telemetry_secret: asdf
   cloud_admin_password: asdf
-  project_admin_password: asdf
 
 fqdn: openstack.example.com
 swift_fqdn: "{{ fqdn }}"
@@ -318,9 +317,6 @@ keystone:
     - name: cloud_admin
       password: "{{ secrets.cloud_admin_password }}"
       tenant: demo
-    - name: project_admin
-      password: "{{ secrets.project_admin_password }}"
-      tenant: demo
   user_roles:
     - user: admin
       tenant: admin
@@ -379,9 +375,6 @@ keystone:
     - user: cloud_admin
       tenant: demo
       role: heat_stack_owner
-    - user: project_admin
-      tenant: demo
-      role: project_admin
   services:
     - name: keystone
       type: identity
