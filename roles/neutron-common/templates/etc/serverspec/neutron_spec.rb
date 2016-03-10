@@ -43,6 +43,6 @@ describe file('/etc/logrotate.d/neutron') do
 end
 
 describe file('/etc/neutron/neutron.conf') do
-  it { should contain 'debug =  {{ neutron.logging.debug }}' }
+  it { should contain 'debug = {{ neutron.logging.debug }}' }
 end
 
