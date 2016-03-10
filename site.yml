@@ -192,11 +192,23 @@
 - name: keystone setup
   hosts: controller[0]
   any_errors_fatal: true
+  tags: ['openstack', 'setup', 'keystone-setup']
+  pre_tasks:
+    # These pre-tasks determine if keystone has been setup before. If so, the
+    # keystone-setup role tasks are skipped.
+    - name: discover keystone setup status
+      command: mysql --batch --silent keystone -e "select type from service where type = 'compute'"
+      failed_when: false
+      changed_when: false
+      register: keystone_setup
+
+    - name: set keystone_configured fact
+      set_fact: keystone_configured=True
+      when: keystone_setup.stdout|search("compute")
+
   roles:
     - role: keystone-setup
-      keystone_configured: false
-      tags: ['openstack', 'setup', 'keystone-setup']
-      when: not keystone_configured
+      when: not hostvars[inventory_hostname].keystone_configured | default(False)
   environment: "{{ env_vars|default({}) }}"
 
 - name: glance code and config

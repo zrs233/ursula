@@ -1,13 +1,4 @@
 ---
-- name: discover keystone setup status
-  command: mysql --batch --silent keystone -e "select type from service where type = 'compute'"
-  failed_when: false
-  register: keystone_setup
-
-- name: set keystone_configured fact
-  set_fact: keystone_configured=True
-  when: keystone_setup.stdout|search("compute")
-
 - name: generate admin_token
   set_fact: admin_token="{{ 'asdf' * 9|random(start=2) }}"
             insert_token=True
