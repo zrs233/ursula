@@ -1,4 +1,8 @@
 ---
+- name: ensure serverspec directory exists
+  file: dest=/etc/serverspec/spec/localhost state=directory
+        owner=root mode=0755 recurse=true
+
 - name: serverspec checks for keystone
   template: src={{ item }}
             dest=/etc/serverspec/spec/localhost/

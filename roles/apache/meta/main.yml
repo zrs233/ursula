@@ -3,4 +3,3 @@ dependencies:
   - role: logging-config
     service: apache
     logdata: "{{ apache.logs }}"
-  - role: serverspec
