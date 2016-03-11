@@ -41,7 +41,7 @@ keystone:
       check_keystone_api:
         criticality: 'critical'
   federation:
-    enabled: True
+    enabled: False
     sp:
       oidc:
         enabled: True
