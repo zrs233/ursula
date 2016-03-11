@@ -20,6 +20,8 @@ keystone:
     - keystone-manage
     - keystone-all
   jellyroll: False # custom middleware for password compliance
+  roles:
+    - project_admin
   logs:
     - paths:
       - /var/log/keystone/keystone-all.log

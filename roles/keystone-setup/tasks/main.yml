@@ -38,6 +38,12 @@
   with_items: keystone.users
 
 - name: keystone roles
+  keystone_user: role={{ item }}
+                 token={{ admin_token }}
+                 endpoint="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}/"
+  with_items: keystone.roles
+
+- name: keystone user roles
   keystone_user: role={{ item.role }}
                  user={{ item.user }}
                  tenant={{ item.tenant }}
