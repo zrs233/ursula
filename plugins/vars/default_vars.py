@@ -57,7 +57,10 @@ class VarsModule(object):
 
     def run(self, host, vault_password=None):
         default_vars = self._get_defaults()
-        group_vars = host.get_variables()
+        if hasattr(host, 'get_group_vars'):
+            group_vars = host.get_group_vars()
+        else:
+            group_vars = host.get_variables()
         if default_vars:
             return deep_update_dict(default_vars, group_vars)
         return group_vars
