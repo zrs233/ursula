@@ -2,6 +2,7 @@ envs/test
 envs/test/group_vars/all.yml
 *.pyc
 *.vdi
+*.retry
 .vagrant
 .tox
 build

@@ -4,7 +4,7 @@
 
 - name: install apache module packages
   apt: pkg={{ item }}
-  with_items: apache.modules
+  with_items: "{{ apache.modules }}"
 
 - name: enable apache modules
   apache2_module: name={{ item }}

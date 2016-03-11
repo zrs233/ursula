@@ -31,7 +31,7 @@
   sensu_check: name=check-l3-router plugin=check-l3-router.sh
                args="-e {{ ansible_default_ipv4.interface }} -z {{ neutron.monitoring.sensu_checks.check_l3_router.criticality }}"
                use_sudo=true
-  with_items: neutron.networks
+  with_items: "{{ neutron.networks }}"
   when: item['name'] == 'external' and item['network_type'] == 'local'
   notify: restart sensu-client
 

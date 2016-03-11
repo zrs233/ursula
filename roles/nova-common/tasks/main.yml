@@ -13,7 +13,7 @@
 - name: nova packages
   apt:
     pkg="{{ item }}"
-  with_items: nova.install_packages
+  with_items: "{{ nova.install_packages }}"
 
 - name: create nova config dir
   file: dest=/etc/nova state=directory

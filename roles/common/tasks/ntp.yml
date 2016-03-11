@@ -6,7 +6,7 @@
 - name: ntp servers
   lineinfile: dest=/etc/ntp.conf
               line="server {{ item }} iburst" state=present
-  with_items: common.ntpd.servers
+  with_items: "{{ common.ntpd.servers }}"
   notify:
     - restart-ntp
 

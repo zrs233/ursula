@@ -51,7 +51,8 @@
 - name: state path base directory
   file: dest={{ state_path_base }} state=directory
 
-- include: ssl.yml tags=ssl
+- include: ssl.yml
+  tags: ssl
 
 - include: ssh.yml
 
@@ -89,7 +90,7 @@
   apt:
     name: "{{ item }}"
     state: absent
-  with_items: common.packages_to_remove
+  with_items: "{{ common.packages_to_remove }}"
 
 - name: fetch Ursula revision
   local_action: command git describe --tags

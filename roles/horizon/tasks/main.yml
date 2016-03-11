@@ -72,9 +72,9 @@
            dest=/etc/openstack-dashboard/static/dashboard/{{ item.name }}
            force=True
   with_items:
-    - { name: img/logo.png, url: "{{ horizon.logo_url }}"  }
-    - { name: img/logo-splash.png, url: "{{ horizon.logo_url }}" }
-    - { name: img/favicon.ico, url: "{{ horizon.favicon_url }}" }
+    - { name: img/logo.png, url: "{{ horizon.logo_url|default('') }}"  }
+    - { name: img/logo-splash.png, url: "{{ horizon.logo_url|default('') }}" }
+    - { name: img/favicon.ico, url: "{{ horizon.favicon_url|default('') }}" }
   when: (horizon.logo_url is defined and horizon.favicon_url is defined)
 
 - name: gather static assets from openstack package install
@@ -122,7 +122,10 @@
 - name: ensure apache is enabled
   service: name=apache2 state=started enabled=true
 
-- include: monitoring.yml tags=monitoring,common
+- include: monitoring.yml
+  tags:
+    - monitoring
+    - common
   when: monitoring.enabled|default('True')|bool
 
 - include: logging.yml

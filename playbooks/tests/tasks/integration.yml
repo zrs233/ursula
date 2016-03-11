@@ -65,8 +65,9 @@
         server: turtle-stack
         reuse: true
         fixed_address: "{{ item.addr }}"
+        wait: true
       register: floating_ip
-      with_items: turtle_stack.openstack.addresses.internal
+      with_items: "{{ turtle_stack.openstack.addresses.internal }}"
       when: item.version == 4
 
     - name: nova can create a volume via cinder
@@ -94,7 +95,7 @@
         host: "{{ item.floating_ip.floating_ip_address }}"
         port: 22
         timeout: 180
-      with_items: floating_ip.results
+      with_items: "{{ floating_ip.results }}"
       when: item.floating_ip is defined
 
     # (due to 1450 MTU on VXLAN this doesn't work with recent version of SSH)
@@ -103,6 +104,6 @@
                -i /root/.ssh/id_rsa
                cirros@{{ item.floating_ip.floating_ip_address }}
                ping -c 5 www.google.com
-      with_items: floating_ip.results
+      with_items: "{{ floating_ip.results }}"
       when: item.floating_ip is defined and
             ansible_distribution_version == "12.04"

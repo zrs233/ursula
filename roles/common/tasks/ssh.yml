@@ -12,5 +12,5 @@
   template: src=ssh-private-key dest={{ item.dest }}
             owner={{ item.owner|default("root") }}
             group={{ item.group|default("root") }} mode=0600
-  with_items: common.ssh_private_keys
+  with_items: "{{ common.ssh_private_keys }}"
 

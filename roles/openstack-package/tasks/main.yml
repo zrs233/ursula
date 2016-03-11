@@ -41,5 +41,5 @@
   alternatives: name={{ item }}
                 path={{ openstack_package.virtualenv_base }}/{{ project_name }}/bin/{{ item }}
                 link=/usr/local/bin/{{ item }}
-  with_items: alternatives
+  with_items: "{{ alternatives|default([]) }}"
   when: alternatives is defined

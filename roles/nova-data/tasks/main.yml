@@ -67,7 +67,10 @@
 - name: start nova-compute
   service: name=nova-compute state=started
 
-- include: monitoring.yml tags=monitoring,common
+- include: monitoring.yml
+  tags:
+    - monitoring
+    - common
   when: monitoring.enabled|default('True')|bool
 
 - include: serverspec.yml

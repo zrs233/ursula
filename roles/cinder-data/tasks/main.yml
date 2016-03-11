@@ -58,8 +58,9 @@
   debug:
     msg: "Triggering service restart for upgrade"
   changed_when: True
-  notify: restart cinder services
-  notify: restart cinder backup service
+  notify:
+    - restart cinder services
+    - restart cinder backup service
   when: (project_package.changed or git_result.changed) and
         upgrade | default('False') | bool
 
@@ -72,5 +73,8 @@
   service: name=cinder-backup state=started
   when: swift.enabled|default("false")|bool
 
-- include: monitoring.yml tags=monitoring,common
+- include: monitoring.yml
   when: monitoring.enabled|default('True')|bool
+  tags:
+    - monitoring
+    - common

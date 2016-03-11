@@ -48,5 +48,8 @@
             dest=/etc/cron.daily/cleanup-neutron-interfaces
             mode=0755 owner=root
 
-- include: monitoring.yml tags=monitoring,common
+- include: monitoring.yml
+  tags:
+    - monitoring
+    - common
   when: monitoring.enabled|default('True')|bool
