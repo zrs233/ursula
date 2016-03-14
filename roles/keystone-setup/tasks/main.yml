@@ -15,18 +15,18 @@
     OS_BOOTSTRAP_PASSWORD: "{{ keystone.bootstrap.password }}"
     OS_BOOTSTRAP_PROJECT_NAME: "{{ keystone.bootstrap.project }}"
     OS_BOOTSTRAP_ROLE_NAME: "{{ keystone.bootstrap.role }}"
-    OS_BOOTSTRAP_ADMIN_URL: "{{ endpoints.keystone.url.public }}"
+    OS_BOOTSTRAP_ADMIN_URL: "{{ endpoints.keystone.url.admin }}"
     OS_BOOTSTRAP_INTERNAL_URL: "{{ endpoints.keystone.url.internal }}"
     OS_BOOTSTRAP_PUBLIC_URL: "{{ endpoints.keystone.url.public }}"
-    OS_BOOTSTRAP_SERVICE_NAME: "keystone"
-    OS_BOOTSTRAP_REGION_NAME: "RegionOne"
+    OS_BOOTSTRAP_SERVICE_NAME: "{{ 'keystone' }}"  # otherwise it uses the keystone variable
+    OS_BOOTSTRAP_REGION_ID: "RegionOne"
 
 - name: keystone tenants
   keystone_user: tenant={{ item }}
                  tenant_description="{{ item }} tenant"
-                 endpoint="http://127.0.0.1:5002"
-                 login_tenant_name=admin
-                 login_username=admin
+                 endpoint=http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/v2.0
+                 login_tenant_name={{ keystone.bootstrap.project }}
+                 login_user={{ keystone.bootstrap.user }}
                  login_password={{ secrets.admin_password }}
   with_items: "{{ keystone.tenants }}"
 
@@ -34,17 +34,17 @@
   keystone_user: user={{ item.name }}
                  password={{ item.password }}
                  tenant={{ item.tenant }}
-                 endpoint="http://127.0.0.1:5002"
-                 login_tenant_name=admin
-                 login_username=admin
+                 endpoint=http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/v2.0
+                 login_tenant_name={{ keystone.bootstrap.project }}
+                 login_user={{ keystone.bootstrap.user }}
                  login_password={{ secrets.admin_password }}
   with_items: "{{ keystone.users }}"
 
 - name: keystone roles
   keystone_user: role={{ item }}
-                 endpoint="http://127.0.0.1:5002"
-                 login_tenant_name=admin
-                 login_username=admin
+                 endpoint=http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/v2.0
+                 login_tenant_name={{ keystone.bootstrap.project }}
+                 login_user={{ keystone.bootstrap.user }}
                  login_password={{ secrets.admin_password }}
   with_items: "{{ keystone.roles }}"
 
@@ -52,19 +52,19 @@
   keystone_user: role={{ item.role }}
                  user={{ item.user }}
                  tenant={{ item.tenant }}
-                 endpoint="http://127.0.0.1:5002"
-                 login_tenant_name=admin
-                 login_username=admin
+                 endpoint=http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/v2.0
+                 login_tenant_name={{ keystone.bootstrap.project }}
+                 login_user={{ keystone.bootstrap.user }}
                  login_password={{ secrets.admin_password }}
   with_items: "{{ keystone.user_roles }}"
 
 - name: heat stack user
   keystone_user: user=heat_stack_user
-                 password="{{ secrets.service_password }}"
+                 password={{ secrets.service_password }}
                  tenant=admin
-                 endpoint="http://127.0.0.1:5002"
-                 login_tenant_name=admin
-                 login_username=admin
+                 endpoint=http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/v2.0
+                 login_tenant_name={{ keystone.bootstrap.project }}
+                 login_user={{ keystone.bootstrap.user }}
                  login_password={{ secrets.admin_password }}
   when: heat.enabled|bool
 
@@ -72,9 +72,9 @@
   keystone_user: role=heat_stack_user
                  user=heat_stack_user
                  tenant=admin
-                 endpoint="http://127.0.0.1:5002"
-                 login_tenant_name=admin
-                 login_username=admin
+                 endpoint=http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/v2.0
+                 login_tenant_name={{ keystone.bootstrap.project }}
+                 login_user={{ keystone.bootstrap.user }}
                  login_password={{ secrets.admin_password }}
   when: heat.enabled|bool
 
