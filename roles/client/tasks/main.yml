@@ -1,6 +1,7 @@
 ---
 - name: openstack creds
   template: src=root/stackrc dest=/root/stackrc
+  when: client.write_stackrc|bool
 
 - name: install required packages for clients
   apt:
@@ -20,7 +21,6 @@
         owner=root
         mode=0644 state=link force=yes
   when: ansible_distribution_version == "14.04"
-
 
 - name: migrate neutron services script
   template: src=usr/local/bin/migrate_neutron_services
