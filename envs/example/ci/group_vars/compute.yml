@@ -1,4 +1,5 @@
 ---
+compute_ag: ci
 logs_to_scan:
 - nova-compute
 - cinder-volume

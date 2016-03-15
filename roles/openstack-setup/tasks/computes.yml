@@ -1,0 +1,28 @@
+---
+- name: create host aggs
+  os_nova_host_agg:
+    name: "{{ hostvars[item]['compute_ag'] }}"
+    az: "{{ hostvars[item]['compute_ag'] }}"
+    state: present 
+    auth:
+      auth_url: "{{ endpoints.auth_uri }}"
+      project_name: admin
+      username: admin
+      password: "{{ secrets.admin_password }}"
+  run_once: True
+  when: hostvars[item]['compute_ag'] is defined
+  with_items: "{{ groups['compute'] }}"
+
+- name: assign hosts to aggs
+  os_nova_host_agg_host:
+    name: "{{ hostvars[item]['compute_ag'] }}"
+    host: "{{ hostvars[item]['ansible_nodename'] }}"
+    state: present 
+    auth:
+      auth_url: "{{ endpoints.auth_uri }}"
+      project_name: admin
+      username: admin
+      password: "{{ secrets.admin_password }}"
+  run_once: True
+  when: hostvars[item]['compute_ag'] is defined
+  with_items: "{{ groups['compute'] }}"

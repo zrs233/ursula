@@ -33,6 +33,7 @@ nova:
   block_device_allocate_retries: 200
   block_device_allocate_retries_interval: 3
   heartbeat_timeout_threshold: 30
+  default_availability_zone: nova
   install_packages:
     - python-numpy
     - virt-top
