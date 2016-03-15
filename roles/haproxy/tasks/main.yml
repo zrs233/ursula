@@ -27,5 +27,8 @@
 - name: start and enable haproxy
   service: name=haproxy state=started enabled=yes
 
-- include: monitoring.yml tags=monitoring,common
+- include: monitoring.yml
+  tags:
+    - monitoring
+    - common
   when: monitoring.enabled|default('True')|bool

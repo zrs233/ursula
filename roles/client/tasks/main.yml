@@ -6,11 +6,11 @@
   apt:
     name: "{{ item }}"
     state: present
-  with_items: client.apt_packages
+  with_items: "{{ client.apt_packages }}"
 
 - name: install openstack clients
   pip: name={{ item }}
-  with_items: client.names
+  with_items: "{{ client.names }}"
   notify:
     - update ca certs
 

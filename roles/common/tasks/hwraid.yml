@@ -1,4 +1,4 @@
 ---
 - name: install raid utilities
   apt: pkg={{ item }}
-  with_items: common.hwraid.clients
+  with_items: "{{ common.hwraid.clients }}"

@@ -151,7 +151,10 @@
     path: /etc/cron.hourly/drop-expired-keystone-tokens
     state: absent
 
-- include: monitoring.yml tags=monitoring,common
+- include: monitoring.yml
+  tags:
+    - monitoring
+    - common
   when: monitoring.enabled|default('True')|bool
 
 

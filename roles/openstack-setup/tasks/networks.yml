@@ -11,7 +11,7 @@
                    login_tenant_name=admin
                    login_username=admin
                    login_password={{ secrets.admin_password }}
-  with_items: neutron.networks
+  with_items: "{{ neutron.networks }}"
   run_once: true
 
 - name: neutron subnets
@@ -24,7 +24,6 @@
     ip_version: "{{ item.ip_version }}"
     ipv6_ra_mode: "{{ item.ipv6_ra_mode | default(omit) }}"
     ipv6_address_mode: "{{ item.ipv6_ra_mode | default(omit) }}"
-    ip_version: "{{ item.ip_version }}"
     dns_nameservers: "{{ item.dns_nameservers|default(omit) }}"
     allocation_pool_start: "{{ item.pool_start|default(omit) }}"
     allocation_pool_end: "{{ item.pool_end|default(omit) }}"
@@ -34,7 +33,7 @@
       project_name: admin
       username: admin
       password: "{{ secrets.admin_password }}"
-  with_items: neutron.subnets
+  with_items: "{{ neutron.subnets }}"
   run_once: true
 
 - name: neutron routers
@@ -46,7 +45,7 @@
                   login_tenant_name=admin
                   login_username=admin
                   login_password={{ secrets.admin_password }}
-  with_items: neutron.routers
+  with_items: "{{ neutron.routers }}"
   run_once: true
 
 - name: neutron routers gateways
@@ -58,7 +57,7 @@
                           login_tenant_name=admin
                           login_username=admin
                           login_password={{ secrets.admin_password }}
-  with_items: neutron.routers
+  with_items: "{{ neutron.routers }}"
   run_once: true
 
 - name: neutron router interfaces
@@ -70,5 +69,5 @@
                             login_tenant_name=admin
                             login_username=admin
                             login_password={{ secrets.admin_password }}
-  with_items: neutron.router_interfaces
+  with_items: "{{ neutron.router_interfaces }}"
   run_once: true

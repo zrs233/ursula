@@ -90,7 +90,10 @@
     - heat-api-cfn
     - heat-engine
 
-- include: monitoring.yml tags=monitoring,common
+- include: monitoring.yml
+  tags:
+    - monitoring
+    - common
   when: monitoring.enabled|default('True')|bool
 
 - include: logging.yml

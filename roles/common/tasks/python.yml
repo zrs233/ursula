@@ -39,14 +39,14 @@
 - name: install additional python packages
   git: repo={{ item.repo }} dest=/opt/stack/{{ item.name }}
        version={{ item.rev }} accept_hostkey=True
-  with_items: common.python_extra_packages
+  with_items: "{{ common.python_extra_packages }}"
 
 - name: pip install eventlet
   pip: name=eventlet
 
 - name: install drivers
   command: python setup.py install chdir=/opt/stack/{{ item.name }}
-  with_items: common.python_extra_packages
+  with_items: "{{ common.python_extra_packages }}"
 
 - name: install shade for ansible modules
   pip: name=shade version=0.16.0

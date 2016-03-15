@@ -22,7 +22,7 @@
 
   - name: keystone config has memcached servers
     shell: grep memcached_servers | grep {{ item }} /etc/keystone/keystone.conf
-    with_items: controller_ips
+    with_items: "{{ controller_ips }}"
 
   - name: neutron dnsmasq has 8.8.8.8 upstream resolver
     shell: grep 8.8.8.8 /etc/dnsmasq.conf
@@ -38,7 +38,7 @@
 
   - name: nova config has memcached servers
     shell: grep memcached_servers | grep {{ item }} /etc/nova/nova.conf
-    with_items: controller_ips
+    with_items: "{{ controller_ips }}"
 
   - name: nova config has rabbit server
     shell: egrep "rabbit_host=[0-9.]+" /etc/nova/nova.conf
@@ -100,7 +100,7 @@
   tasks:
   - name: horizon config has memcached servers
     shell: grep memcached_servers | grep {{ item }} /etc/openstack-dashboard/local_settings.py
-    with_items: controller_ips
+    with_items: "{{ controller_ips }}"
 
   - name: keystone should include OpenStack services
     shell: . /root/stackrc; keystone service-list | grep {{ item }}

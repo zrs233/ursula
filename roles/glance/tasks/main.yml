@@ -105,7 +105,10 @@
 - include: image-sync.yml
   when: glance.sync.enabled
 
-- include: monitoring.yml tags=monitoring,common
+- include: monitoring.yml
+  tags:
+    - monitoring
+    - common
   when: monitoring.enabled|default('True')|bool
 
 - include: logging.yml

@@ -22,12 +22,12 @@
        state=present
        update_cache=yes
        cache_valid_time=3600
-  with_items: ceph.debian_pkgs
+  with_items: "{{ ceph.debian_pkgs }}"
 
 - name: install ceph
   apt: pkg={{ item }}
        state=present
-  with_items: ceph.ceph_pkgs
+  with_items: "{{ ceph.ceph_pkgs }}"
 
 - name: check for a ceph socket
   shell: "stat /var/run/ceph/*.asok > /dev/null 2>&1"

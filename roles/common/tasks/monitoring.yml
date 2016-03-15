@@ -211,13 +211,13 @@
   sensu_check: name=check-log-{{ item }} plugin=check-log.rb use_sudo=true
                auto_resolve=false interval=60
                args="-f /var/log/upstart/{{ item }}.log -q ERROR --silent"
-  with_items: logs_to_scan
+  with_items: "{{ logs_to_scan }}"
   when: monitoring.scan_for_log_errors
   notify: restart sensu-client
 
 - name: disable log scanning
   file: path=/etc/sensu/conf.d/checks/check-log-{{ item }}.json state=absent
-  with_items: logs_to_scan
+  with_items: "{{ logs_to_scan }}"
   when: monitoring.scan_for_log_errors == false
   notify: restart sensu-client
 

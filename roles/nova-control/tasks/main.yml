@@ -59,7 +59,11 @@
   ufw: rule=allow to_port={{ endpoints.nova.port.haproxy_api }} proto=tcp
   tags: ufw
 
-- include: novnc.yml tags=novnc
+- include: novnc.yml
+  tags: novnc
 
-- include: monitoring.yml tags=monitoring,common
+- include: monitoring.yml
+  tags:
+    - monitoring
+    - common
   when: monitoring.enabled|default('True')|bool

@@ -11,23 +11,23 @@
 
 - name: create volume groups
   lvg:  vg={{ item.name }} pvs={{ item.pvs|join(',') }} pesize={{ item.pesize|default(manage_disks.defaults.pesize) }}
-  with_items: manage_disks.volume_groups
+  with_items: "{{ manage_disks.volume_groups }}"
 
 - name: create logical volumes
   lvol: vg={{ item.volume_group }} lv={{ item.name }} size={{ item.size }}
-  with_items: manage_disks.logical_volumes
+  with_items: "{{ manage_disks.logical_volumes }}"
 
 - name: create filesystems
   filesystem: fstype={{ item.filesystem }}
               dev="/dev/{{ item.volume_group }}/{{ item.name }}"
               opts={{ item.filesystem_opts|default(omit) }}
   when: item.filesystem is defined
-  with_items: manage_disks.logical_volumes
+  with_items: "{{ manage_disks.logical_volumes }}"
 
 - name: create mount points
   file: path={{ item.mount_point }} state=directory
   when: item.mount_point is defined
-  with_items: manage_disks.logical_volumes
+  with_items: "{{ manage_disks.logical_volumes }}"
 
 - name: mount filesystems
   mount: name={{ item.mount_point }}
@@ -36,4 +36,4 @@
          opts={{ item.mount_opts|default(omit) }}
   when: item.mount_point is defined and
         item.filesystem is defined
-  with_items: manage_disks.logical_volumes
+  with_items: "{{ manage_disks.logical_volumes }}"

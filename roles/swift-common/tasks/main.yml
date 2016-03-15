@@ -78,7 +78,10 @@
   template: src=etc/swift/dispersion.conf dest=/etc/swift/dispersion.conf
             owner=swift group=swift mode=0640
 
-- include: monitoring.yml tags=monitoring,common
+- include: monitoring.yml
+  tags:
+    - monitoring
+    - common
   when: monitoring.enabled|default('True')|bool
 
 - include: logging.yml

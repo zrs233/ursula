@@ -27,7 +27,7 @@
                  tenant_description="{{ item }} tenant"
                  token={{ admin_token }}
                  endpoint="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}/"
-  with_items: keystone.tenants
+  with_items: "{{ keystone.tenants }}"
 
 - name: keystone users
   keystone_user: user={{ item.name }}
@@ -35,13 +35,13 @@
                  tenant={{ item.tenant }}
                  token={{ admin_token }}
                  endpoint="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}/"
-  with_items: keystone.users
+  with_items: "{{ keystone.users }}"
 
 - name: keystone roles
   keystone_user: role={{ item }}
                  token={{ admin_token }}
                  endpoint="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}/"
-  with_items: keystone.roles
+  with_items: "{{ keystone.roles }}"
 
 - name: keystone user roles
   keystone_user: role={{ item.role }}
@@ -49,7 +49,7 @@
                  tenant={{ item.tenant }}
                  token={{ admin_token }}
                  endpoint="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}/"
-  with_items: keystone.user_roles
+  with_items: "{{ keystone.user_roles }}"
 
 - name: heat stack user
   keystone_user: user=heat_stack_user
@@ -77,7 +77,7 @@
                     region=RegionOne
                     token={{ admin_token }}
   # TODO refactor keystone.services data to be easier to pull out individual services
-  with_items: keystone.services
+  with_items: "{{ keystone.services }}"
   when: endpoints[item.name] is defined and item.name == 'keystone'
 
 - name: remove admin_token from keystone api

@@ -12,7 +12,7 @@
       os_server:
         name: "{{ item }}"
         state: absent
-      with_items: testenv_instance_names
+      with_items: "{{ testenv_instance_names }}"
 
     - name: remove security group
       os_security_group:
