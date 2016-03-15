@@ -20,7 +20,7 @@ end
 
 describe file('/etc/libvirt/libvirtd.conf') do
   it { should contain "^listen_tls = 0" }
-  it { should contain "^listen_tcp = 1" }
+  it { should_not contain "^listen_tcp = 1" }
 end
 
 describe file('/etc/libvirt/qemu.conf') do
