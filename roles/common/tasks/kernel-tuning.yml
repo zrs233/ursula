@@ -10,6 +10,9 @@
     - makedumpfile
     - crash
 
+- name: Set crash directory permissions to 0775
+  file: path=/var/crash state=directory mode=0775
+
 - name: Enable kdump
   lineinfile: dest=/etc/default/kdump-tools
               regexp="^USE_KDUMP="
