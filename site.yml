@@ -266,7 +266,7 @@
   roles:
     - role: ceph-compute
       tags: ['ceph', 'ceph-compute']
-      when: ceph.enabled|bool and ansible_architecture != "ppc64le"
+      when: ceph.enabled|bool
   environment: "{{ env_vars|default({}) }}"
 
 - name: neutron control plane
