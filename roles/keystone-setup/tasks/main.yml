@@ -97,4 +97,5 @@
 
 - include: federation.yml
   when: keystone.federation.enabled|bool
-  tags: [ 'keystone-federation']
+  tags:
+    - keystone-federation

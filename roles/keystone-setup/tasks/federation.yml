@@ -2,46 +2,46 @@
 - name: create keystone identity providers
   keystone_identity_provider: auth_url="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/v3"
                               username="admin"
-                              password="{{secrets.admin_password}}"
-                              name="{{item.name}}"
-                              description="{{item.description|default(omit)}}"
-                              remote_ids="{{item.remote_ids|default(omit)}}"
-                              enabled="{{item.enabled|default(omit)}}"
-  with_items: keystone.federation.identity_providers
+                              password="{{ secrets.admin_password }}"
+                              name="{{ item.name }}"
+                              description="{{ item.description|default(omit) }}"
+                              remote_ids="{{ item.remote_ids|default(omit) }}"
+                              enabled="{{ item.enabled|default(omit) }}"
+  with_items: "{{ keystone.federation.identity_providers }}"
 
 - name: create keystone groups
   keystone_group: auth_url="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/v3"
                   username="admin"
-                  password="{{secrets.admin_password}}"
-                  name="{{item.name}}"
-                  description="{{item.description|default(omit)}}"
-                  domain="{{item.domain|default(omit)}}"
-  with_items: keystone.federation.groups
+                  password="{{ secrets.admin_password }}"
+                  name="{{ item.name }}"
+                  description="{{ item.description|default(omit) }}"
+                  domain="{{ item.domain|default(omit) }}"
+  with_items: "{{ keystone.federation.groups }}"
 
 - name: add role to keystone group
   keystone_role: auth_url="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/v3"
                   username="admin"
-                  password="{{secrets.admin_password}}"
-                  group="{{item.group}}"
-                  domain="{{item.domain|default(omit)}}"
-                  role="{{item.role}}"
-                  project="{{item.project}}"
-  with_items: keystone.federation.role
+                  password="{{ secrets.admin_password }}"
+                  group="{{ item.group }}"
+                  domain="{{ item.domain|default(omit) }}"
+                  role="{{ item.role }}"
+                  project="{{ item.project }}"
+  with_items: "{{ keystone.federation.role }}"
 
 - name: create keystone federation mappings
   keystone_federation_mapping: auth_url="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/v3"
                                username="admin"
-                               password="{{secrets.admin_password}}"
-                               name="{{item.name}}"
-                               rules="{{item.rules}}"
-  with_items: keystone.federation.mappings
+                               password="{{ secrets.admin_password }}"
+                               name="{{ item.name }}"
+                               rules="{{ item.rules }}"
+  with_items: "{{ keystone.federation.mappings }}"
 
 - name: create keystone protocols
   keystone_federation_protocol: auth_url="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/v3"
                                 username="admin"
-                                password="{{secrets.admin_password}}"
-                                name="{{item.name}}"
-                                identity_provider="{{item.identity_provider}}"
-                                mapping="{{item.mapping}}"
-  with_items: keystone.federation.protocols
+                                password="{{ secrets.admin_password }}"
+                                name="{{ item.name }}"
+                                identity_provider="{{ item.identity_provider }}"
+                                mapping="{{ item.mapping }}"
+  with_items: "{{ keystone.federation.protocols }}"
 

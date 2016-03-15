@@ -76,6 +76,6 @@ keystone:
                   name: Default
             remote:
             - type: HTTP_OIDC_CLAIM_USERNAME
-              any_one_of: ['user@someprovider.com'] 
+              any_one_of: ['user@someprovider.com']
     protocols:
-      - { name: oidc, mapping: someprovider-admins, identity_provider: someprovider } 
+      - { name: oidc, mapping: someprovider-admins, identity_provider: someprovider }
