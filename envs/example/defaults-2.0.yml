@@ -454,6 +454,9 @@ keystone:
       public_url: https://{{ endpoints.main }}:9511
       internal_url: https://{{ endpoints.main }}:9511
       admin_url: https://{{ endpoints.main }}:9511
+  federation:
+    enabled: False
+
 ssl:
   crt: |
     -----BEGIN CERTIFICATE-----

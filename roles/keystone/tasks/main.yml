@@ -69,6 +69,9 @@
             dest=/etc/keystone/uwsgi/keystone-main.ini mode=0775
             owner=keystone group=keystone
 
+- include: federation.yml
+  when: keystone.federation.enabled|bool
+
 - name: keystone apache vhost
   template: src=etc/apache2/sites-available/keystone.conf
             dest=/etc/apache2/sites-available/keystone.conf

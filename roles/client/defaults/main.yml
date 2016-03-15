@@ -1,5 +1,6 @@
 ---
 client:
+  write_stackrc: True
   self_signed_cert: false
   names:
     - python-keystoneclient

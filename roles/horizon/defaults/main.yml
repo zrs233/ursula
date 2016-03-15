@@ -39,3 +39,7 @@ horizon:
     sensu_checks:
       check_http:
         criticality: 'critical'
+  websso:
+     choices:
+       credentials: 'Keystone Authentication'
+       oidc: 'OpenID Connect Authentication'

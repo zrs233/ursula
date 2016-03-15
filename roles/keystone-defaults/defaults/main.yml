@@ -40,3 +40,42 @@ keystone:
     sensu_checks:
       check_keystone_api:
         criticality: 'critical'
+  federation:
+    enabled: False
+    sp:
+      oidc:
+        enabled: False
+        download:
+          url: https://github.com/pingidentity/mod_auth_openidc/releases/download/v1.8.3/libapache2-mod-auth-openidc_1.8.3-1_amd64.deb
+        module_name: libapache2-mod-auth-openidc_1.8.3-1_amd64.deb
+        scope: 'openid'
+        issuer: 'issuer'
+        remote_user_claim: 'Email'
+        user_info_endpoint: 'https://op.example.org/oauth/userinfo'
+        authorization_endpoint: 'https://op.example.org/oauth/authorize'
+        token_endpoint: 'https://op.example.org/oauth/token'
+        introspection_endpoint: 'https://op.example.org/oauth/introspection'
+        client_id: 'clientid'
+        client_secret: 'client_secret'
+        crypto_passphrase: 'openstack'
+        redirect_uri: 'https://openstack.example.org:5000/v3/auth/OS-FEDERATION/websso/oidc/redirect'
+        ssl_validate_server: True
+    identity_providers:
+      - { name: someprovider, remote_ids: oidc }
+    groups:
+      - { name: someprovider-admins }
+    role:
+      - { group: someprovider-admins, role: some-role, project: some-project }
+    mappings:
+      - name: someprovider-admins
+        rules:
+          - local:
+            - group:
+                name: someprovider-admins
+                domain:
+                  name: Default
+            remote:
+            - type: HTTP_OIDC_CLAIM_USERNAME
+              any_one_of: ['user@someprovider.com'] 
+    protocols:
+      - { name: oidc, mapping: someprovider-admins, identity_provider: someprovider } 

@@ -2,8 +2,11 @@
 - name: lesscpy must be in apache PATH
   pip: name=lesscpy version=0.9j
 
-- name: enable apache mod-headers
-  apache2_module: state=present name=headers
+- name: enable apache modules
+  apache2_module: state=present name="{{item}}"
+  with_items:
+    - alias
+    - headers
   notify:
     - reload apache
 
