@@ -12,3 +12,6 @@
   when: cinder.enabled|default('True')|bool
 
 - include: flavors.yml
+
+- include: computes.yml
+  tags: hostagg
