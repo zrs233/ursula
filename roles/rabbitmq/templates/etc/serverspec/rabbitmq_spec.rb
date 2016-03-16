@@ -40,7 +40,7 @@ describe file('/etc/logrotate.d/rabbitmq-server') do
          '  rotate 20',
          '  compress',
          '  delaycompress',
-         '  notifyempty',
+         '  notifempty',
          '  sharedscripts',
          '  postrotate',
          '  /etc/init.d/rabbitmq-server rotate-logs > /dev/null',
