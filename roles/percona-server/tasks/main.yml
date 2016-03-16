@@ -35,12 +35,8 @@
   - percona-xtradb-cluster-server-{{ xtradb.server_version }}
   - percona-xtrabackup
 
-- name: set mysql data path permissions
-  file:
-    path: /var/lib/mysql
-    state: directory
-    owner: mysql
-    group: mysql
+- name: mysql log dir
+  file: dest=/var/log/mysql state=directory mode=2750 owner=mysql group=adm
 
 - name: Change mysql log dir acl
   acl: name=/var/log/mysql state=present default=yes etype={{ item.etype }} permissions={{ item.permission }}
@@ -49,8 +45,13 @@
       permission: rw
     - etype: group
       permission: r
-    - etype: other
-      permission: r
+
+- name: set mysql data path permissions
+  file:
+    path: /var/lib/mysql
+    state: directory
+    owner: mysql
+    group: mysql
 
 # Workaround for 0.8.6 to 0.9.1 upgrade path
 - name: fix config header in replication.cnf
