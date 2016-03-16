@@ -84,9 +84,11 @@ end
 files = ['backups', 'cache', 'crash', 'lib', 'local',
   'log', 'mail', 'opt', 'spool', 'www']
 files.each do |file|
-  describe file("/var/#{file}/") do
-    it {should be_directory }
-    it {should be_mode '[0-2]*[0-7][0-7][0-5]'}
+  if File.exist?("/var/#{file}/")
+    describe file("/var/#{file}/") do
+      it {should be_directory }
+      it {should be_mode '[0-2]*[0-7][0-7][0-5]'}
+    end
   end
 end
 
@@ -127,8 +129,10 @@ end
 files = ['/etc/init/', '/var/spool/cron/', '/etc/cron.d/', '/etc/cron.d/drop-expired-keystone-tokens','/etc/cron.d/glance-image-sync', '/etc/cron.d/sysstat',
   '/etc/init.d/', '/etc/rc0.d/', '/etc/rc1.d/', '/etc/rc2.d/','/etc/rc3.d/','/etc/rc4.d/','/etc/rc5.d/','/etc/rc6.d/','/etc/rcS.d/']
 files.each do |file|
-  describe file("#{file}") do
-    it {should be_mode '[0-7][0-7][0-5]'}
+  if File.exist?("#{file}")
+    describe file("#{file}") do
+      it {should be_mode '[0-7][0-7][0-5]'}
+    end
   end
 end
 
