@@ -52,7 +52,10 @@ common:
         criticality: 'critical'
       check_raid:
         criticality: 'critical'
+    scan_for_log_errors: False
 
 openstack:
   gem_sources:
     - https://gem-mirror.openstack.blueboxgrid.com
+
+logs_to_scan: []
