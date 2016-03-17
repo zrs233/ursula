@@ -51,7 +51,7 @@ neutron:
   service:
     envs: []
   source:
-    rev: 'stable/kilo'
+    rev: 'kilo-bbg'
     python_dependencies:
       - { name: mysql-python }
       - { name: "git+git://github.com/openstack/neutron-lbaas.git@stable/kilo#egg=neutron-lbaas" }
