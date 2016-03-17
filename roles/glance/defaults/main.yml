@@ -28,6 +28,7 @@ glance:
       - { name: functools32 }
       - { name: ipaddr }
       - { name: simplegeneric }
+      - { name: "git+https://github.com/blueboxgroup/bbc-openstack-plugins.git#egg=bbc_openstack_plugins" }
     system_dependencies:
       - libxml2-dev
       - libmysqlclient-dev
