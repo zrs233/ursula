@@ -3,7 +3,7 @@
   pip: name=lesscpy version=0.9j
 
 - name: enable apache modules
-  apache2_module: state=present name="{{item}}"
+  apache2_module: state=present name="{{ item }}"
   with_items:
     - alias
     - headers
