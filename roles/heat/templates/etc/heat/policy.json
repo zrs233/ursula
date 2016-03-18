@@ -57,6 +57,7 @@
     "stacks:show_snapshot": "rule:deny_stack_user",
     "stacks:delete_snapshot": "rule:deny_stack_user",
     "stacks:list_snapshots": "rule:deny_stack_user",
+    "stacks:restore_snapshot": "rule:deny_stack_user",
 
     "software_configs:create": "rule:deny_stack_user",
     "software_configs:show": "rule:deny_stack_user",
@@ -66,5 +67,7 @@
     "software_deployments:show": "rule:deny_stack_user",
     "software_deployments:update": "rule:deny_stack_user",
     "software_deployments:delete": "rule:deny_stack_user",
-    "software_deployments:metadata": ""
+    "software_deployments:metadata": "",
+
+    "service:index": "rule:context_is_admin"
 }
