@@ -173,6 +173,17 @@
   environment: "{{ env_vars|default({}) }}"
 
 # OPENSTACK SERVICES
+# # this next play can go away after 2.1.0+ is everywhere
+- name: deal with current symlink
+  hosts: all
+  any_errors_fatal: true
+  gather_facts: false
+  roles:
+    - role: current_symlink
+      tags:
+        - openstack
+        - symlink
+
 - name: openstack client tools
   hosts: all
   any_errors_fatal: true

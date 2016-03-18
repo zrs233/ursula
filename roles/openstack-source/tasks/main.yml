@@ -56,18 +56,18 @@
 
 - name: setup openstack current base path
   file:
-    dest: /opt/openstack
+    dest: /opt/openstack/current
     state: directory
 
 - name: test whether current project symlink exists
   stat:
-    path: /opt/openstack/current
+    path: /opt/openstack/current/{{ project_name }}
   register: symlink_exists
 
 - name: setup current symlink
   file:
-    src: "{{ openstack_source.virtualenv_base }}"
-    dest: /opt/openstack/current
+    src: "{{ openstack_source.virtualenv_base }}/{{ project_name }}"
+    dest: /opt/openstack/current/{{ project_name }}
     state: link
   when: not symlink_exists.stat.exists or upgrade | default(false) | bool
 
