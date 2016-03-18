@@ -68,6 +68,6 @@ describe command('rabbitmqctl environment | grep log') do
             "      {ssl_cert_login_from,distinguished_name},\n",
             "          [{backlog,128},\n",
             "     [{http_log_dir,none},\n {sasl,[{errlog_type,error},{sasl_error_logger,false}]},\n"].join()
-  its(:stdout){ should eq output }
+  its(:stdout){ should match (output) }
 end
 
