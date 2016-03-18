@@ -24,7 +24,7 @@ files.each do |file , mode|
 end 
 
 hostname = Socket.gethostname
-files = ["rabbit@#{hostname}.log.1", "rabbit@#{hostname}-sasl.log", 'shutdown_err', 'shutdown_log', 'startup_err', 'startup_log']
+files = ["rabbit@#{hostname}.log", "rabbit@#{hostname}-sasl.log", 'shutdown_err', 'shutdown_log', 'startup_err', 'startup_log']
 files.each do |file|
   describe file("/var/log/rabbitmq/#{file}") do
     it { should be_file }
@@ -40,7 +40,7 @@ describe file('/etc/logrotate.d/rabbitmq-server') do
          '  rotate 20',
          '  compress',
          '  delaycompress',
-         '  notifyempty',
+         '  notifempty',
          '  sharedscripts',
          '  postrotate',
          '  /etc/init.d/rabbitmq-server rotate-logs > /dev/null',
