@@ -5,6 +5,19 @@
 - name: create mysql config directory
   file: path=/etc/mysql/conf.d state=directory
 
+- name: check to see if /var/log/mysql/mysql.err exists
+  stat: path=/var/log/mysql/mysql.err
+  register: mysql_error_log
+
+- name: change /var/log/mysql/mysql.err to mode 644
+  file: dest=/var/log/mysql/mysql.err mode=0644
+  when: mysql_error_log.stat.exists|bool
+
+- name: configure the mysql defaults
+  template: src=etc/default/mysql dest=/etc/default/mysql mode=644
+  notify:
+    - restart mysql server
+
 - name: configure my.cnf
   template: src=etc/my.cnf dest=/etc/my.cnf mode=0644
   when: ansible_distribution_version == "12.04"
