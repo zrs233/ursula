@@ -103,7 +103,7 @@
         upgrade | default('False') | bool
   with_items:
     - neutron-keepalived-state-change
-    - neutron-ns-metdata-proxy
+    - neutron-ns-metadata-proxy
 
 - name: trigger restart on upgrades
   debug:
