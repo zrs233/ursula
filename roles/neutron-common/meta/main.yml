@@ -10,6 +10,7 @@ dependencies:
     logdata: "{{ neutron.logs }}"
   - role: openstack-source
     project_name: neutron
+    git_mirror: "https://github.com/blueboxgroup"
     project_rev: "{{ neutron.source.rev }}"
     rootwrap: True
     alternatives: "{{ neutron.alternatives }}"
