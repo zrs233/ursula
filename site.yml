@@ -165,6 +165,7 @@
 - name: ceph osds
   gather_facts: force
   hosts: ceph_osds
+  serial: 1
   any_errors_fatal: true
   roles:
     - role: ceph-osd
