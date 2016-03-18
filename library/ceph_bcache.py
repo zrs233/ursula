@@ -3,7 +3,7 @@
 
 DOCUMENTATION = """
 ---
-author: Michael Sambol
+author: Michael Sambol, Siva Nandyala
 module: ceph_bcache
 short_description: Activates OSDs in a Bcache Ceph cluster
 description: Because of the nature of a Bcache Ceph cluster,
@@ -58,7 +58,7 @@ def main():
 
       # running this command with the uuid argument will return the same value each time
       cmd = ['ceph', 'osd', 'create', uuids_in_order[i]]
-      rc, out, err = module.run_command(cmd, check_rc=False)
+      rc, out, err = module.run_command(cmd, check_rc=True)
       osd_id = out.rstrip()
 
       # if first time running 'ceph osd create' against this uuid, create the osd dir
@@ -72,24 +72,24 @@ def main():
         partition_index = bcache_index + 1
 
         cmd = ['mount', '/dev/bcache' + str(bcache_index), '/var/lib/ceph/osd/ceph-' + osd_id]
-        rc, out, err = module.run_command(cmd, check_rc=False)
+        rc, out, err = module.run_command(cmd, check_rc=True)
 
         cmd = ['ceph-osd', '-i', osd_id, '--mkfs', '--mkkey', '--osd-uuid', uuids_in_order[i]]
-        rc, out, err = module.run_command(cmd, check_rc=False)
+        rc, out, err = module.run_command(cmd, check_rc=True)
 
         os.remove('/var/lib/ceph/osd/ceph-' + osd_id + '/journal')
 
         cmd = ['ln', '-s', '/dev/' + ssd_device + str(partition_index), '/var/lib/ceph/osd/ceph-' + osd_id + '/journal']
-        rc, out, err = module.run_command(cmd, check_rc=False)
+        rc, out, err = module.run_command(cmd, check_rc=True)
 
         cmd = ['ceph-osd', '-i', osd_id, '--mkjournal']
-        rc, out, err = module.run_command(cmd, check_rc=False)
+        rc, out, err = module.run_command(cmd, check_rc=True)
 
         cmd = ['umount', '/var/lib/ceph/osd/ceph-' + osd_id]
-        rc, out, err = module.run_command(cmd, check_rc=False)
+        rc, out, err = module.run_command(cmd, check_rc=True)
 
         cmd = ['ceph-disk', 'activate', '/dev/bcache' + str(bcache_index)]
-        rc, out, err = module.run_command(cmd, check_rc=False)
+        rc, out, err = module.run_command(cmd, check_rc=True)
 
         with open("/etc/fstab", "a") as fstab:
           fstab.write('UUID=' + uuids_in_order[i] + ' /var/lib/ceph/osd/ceph-' + osd_id + ' xfs defaults 0 0\n')
