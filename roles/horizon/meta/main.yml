@@ -19,3 +19,4 @@ dependencies:
     project_name: horizon
     when: openstack_install_method == 'package'
   - role: apache
+  - role: keystone-defaults
