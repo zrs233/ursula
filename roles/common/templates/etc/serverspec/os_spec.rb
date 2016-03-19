@@ -57,7 +57,8 @@ files = ['backup', 'bin', 'boot', 'dev', 'etc', 'home','lib',
   'lib64', 'lost+found', 'media', 'mnt', 'opt', 'proc', 'root',
   'run', 'sbin', 'srv', 'sys', 'usr', 'var']
 files.each do |file|
-  describe file("/#{file}/") do
+  has_backup_or_other_file = (file != 'backup' || file('/backup/').exists?)
+  describe file("/#{file}/"), :if => has_backup_or_other_file do
     it {should be_directory }
     it {should be_mode '[0-7][0-7][0-5]'}
   end
