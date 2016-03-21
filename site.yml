@@ -1,6 +1,6 @@
 ---
 - name: common role for all hosts
-  hosts: all
+  hosts: all:!vyatta-*
   any_errors_fatal: true
   gather_facts: force
   roles:
@@ -20,7 +20,7 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: security and errata
-  hosts: all
+  hosts: all:!vyatta-*
   any_errors_fatal: true
   roles:
     - role: security_errata
@@ -28,7 +28,7 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: install logging and dependencies
-  hosts: all
+  hosts: all:!vyatta-*
   any_errors_fatal: true
   roles:
     - role: logging
@@ -175,7 +175,7 @@
 # OPENSTACK SERVICES
 # # this next play can go away after 2.1.0+ is everywhere
 - name: deal with current symlink
-  hosts: all
+  hosts: all:!vyatta-*
   any_errors_fatal: true
   gather_facts: false
   roles:
@@ -185,7 +185,7 @@
         - symlink
 
 - name: openstack client tools
-  hosts: all
+  hosts: all:!vyatta-*
   any_errors_fatal: true
   roles:
     - role: client

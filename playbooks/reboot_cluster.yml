@@ -1,5 +1,5 @@
 ---
-- hosts: all:!db
+- hosts: all:!db:!vyatta-*
   serial: 1
   tasks:
   - name: Reboot

@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: all:!vyatta-*
   tasks:
   - apt: update_cache=yes cache_valid_time=3600
   - name: Patch CVE-2014-0160 & CVE-2014-0224 & CVE-2015-3281
