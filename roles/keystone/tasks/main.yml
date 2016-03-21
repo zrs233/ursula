@@ -170,3 +170,4 @@
 - include: serverspec.yml
   tags:
     - serverspec
+  when: serverspec.enabled|default('False')|bool
