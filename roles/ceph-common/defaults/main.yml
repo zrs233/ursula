@@ -19,7 +19,6 @@ ceph:
     - python-pycurl
     - ntp
     - hdparm
-    - libvirt-bin
   ceph_pkgs:
     - ceph
     - ceph-common
