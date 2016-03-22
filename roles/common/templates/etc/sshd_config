@@ -72,7 +72,11 @@ PrintLastLog yes
 TCPKeepAlive yes
 #UseLogin no
 
+{% if common.ssh.max_startups is defined %}
+MaxStartups {{ common.ssh.max_startups }}
+{% else %}
 MaxStartups 100
+{% endif %}
 #Banner /etc/issue.net
 
 # Allow client to pass locale environment variables
