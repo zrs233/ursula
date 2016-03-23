@@ -1,6 +1,6 @@
 ---
 - name: cleanup old configs
-  hosts: all
+  hosts: all:!vyatta-*
   handlers:
     - include: ../roles/cleanup/handlers/main.yml
   tasks:
@@ -11,7 +11,7 @@
     - include: ../roles/cleanup/tasks/logging.yml
 
 - name: install or update logstash-forwarder
-  hosts: all
+  hosts: all:!vyatta-*
   roles:
     - ../roles/logging
 
@@ -122,7 +122,7 @@
     - include: ../roles/heat/tasks/logging.yml
 
 - name: start and check logstash-forwarder is running
-  hosts: all
+  hosts: all:!vyatta-*
   tasks:
     - name: start and enable logstash-forwarder service
       service: name=logstash-forwarder state=started enabled=yes

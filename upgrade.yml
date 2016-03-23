@@ -5,7 +5,7 @@
 # Assumes ml2 networking
 ---
 - name: Remove existing package symlink
-  hosts: all
+  hosts: all:!vyatta-*
   max_fail_percentage: 0
 
   tasks:
@@ -15,7 +15,7 @@
       when: openstack_install_method == 'package'
 
 - name: Upgrade kernel to supported HWE
-  hosts: all
+  hosts: all:!vyatta-*
   max_fail_percentage: 1
   tags: kernelupgrade
 
@@ -28,7 +28,7 @@
       when: ansible_distribution_version == "12.04"
 
 - name: upgrade common bits first
-  hosts: all
+  hosts: all:!vyatta-*
   max_fail_percentage: 1
   tags: common
   roles:
