@@ -12,6 +12,7 @@ cinder:
   volume_type: file
   volume_group: cinder-volumes
   create_vg: False
+  common_volume_name: True
   alternatives:
       - cinder-all
       - cinder-api
