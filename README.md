@@ -39,6 +39,8 @@ $ source /usr/local/bin/virtualenvwrapper.sh
 $ mkvirtualenv ursula
 ```
 
+Note: If you're using OSX El Capitan, you need to use ```pip install --ignore-installed six virtualenvwrapper``` to get pip to not attempt to uninstall the existing version of six which the system will not allow.
+
 You will want to add `source /usr/local/bin/virtualenvwrapper.sh` to your shell startup file, changing the path to virtualenvwrapper.sh
 depending on where it was installed by pip.
 
