@@ -76,7 +76,9 @@ def main():
     else:
         try:
             changed = False
-            check_path = '%s/%s.json' % (module.params['check_dir'], module.params['name'])
+            if not module.params['short_service_name']:
+                short_service_name = os.path.basename(module.params['service'])
+            check_path = '%s/%s-service.json' % (module.params['check_dir'], short_service_name)
             if os.path.isfile(check_path):
                 os.remove(check_path)
                 module.exit_json(changed=True, result="changed")
