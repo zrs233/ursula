@@ -1,4 +1,8 @@
 ---
+- name: remove keystone eventlet check
+  sensu_process_check: service=keystone-all state=absent
+  notify: restart sensu-client
+
 - name: keystone process check
   sensu_process_check: service=uwsgi
   notify: restart sensu-client
