@@ -39,6 +39,10 @@
   command: "ppc64_cpu --smt=off"
   when: ansible_architecture == "ppc64le" and not smt.stdout|search("SMT is off")
 
+- name: ensure that SMT is off at runtime before we startup libvirt (ppc64)
+  lineinfile: dest=/etc/default/libvirt-bin line="ppc64_cpu --smt=off"
+  when: ansible_architecture == "ppc64le"
+
 - name: enable cinder encryption
   template: src=etc/nova/nova.cinder_encryption.conf dest=/etc/nova/nova.cinder_encryption.conf mode=0640
             owner=root group=nova
