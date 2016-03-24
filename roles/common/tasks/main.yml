@@ -83,7 +83,7 @@
 - include: disable-swap.yml
 
 - include: hwraid.yml
-  when: common.hwraid.enabled
+  when: common.hwraid.enabled and ansible_architecture != "ppc64le"
   tags: hwraid
 
 - name: remove unwanted packages
