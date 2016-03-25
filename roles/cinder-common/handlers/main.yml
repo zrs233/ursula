@@ -1,12 +1,26 @@
 ---
+# some ugly bit to serialize restarts, and only restart on impacted
+# hosts.
+# This works in ansible 1.9 as play_hosts value is ONLY the hosts that have
+# triggered each particular notification handler. Re-test with 2.0
 - name: restart cinder services
-  service: name={{ item }} state=restarted must_exist=false
+  service:
+    name: "{{ item[1] }}"
+    state: restarted
+    must_exist: false
+  run_once: True
+  delegate_to: "{{ item[0] }}"
   when: restart|default('True')
-  with_items:
-    - cinder-api
-    - cinder-scheduler
-    - cinder-volume
+  with_nested:
+    - "{{ play_hosts }}"
+    - ['cinder-api', 'cinder-scheduler', 'cinder-volume']
 
 - name: restart cinder backup service
-  service: name=cinder-backup state=restarted must_exist=false
+  service:
+    name: cinder-backup
+    state: restarted
+    must_exist: false
+  run_once: True
+  delegate_to: "{{ item }}"
   when: restart|default('True') and swift.enabled|default('False')
+  with_items: "{{ play_hosts }}"
