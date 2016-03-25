@@ -23,7 +23,7 @@ files.each do |file , mode|
   end
 end 
 
-hostname = Socket.gethostname
+hostname = `hostname -s`.strip
 files = ["rabbit@#{hostname}.log", "rabbit@#{hostname}-sasl.log", 'shutdown_err', 'shutdown_log', 'startup_err', 'startup_log']
 files.each do |file|
   describe file("/var/log/rabbitmq/#{file}") do

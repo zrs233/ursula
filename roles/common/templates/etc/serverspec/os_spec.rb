@@ -39,7 +39,7 @@ describe file('/etc/ssh/sshd_config') do
 end
 
 describe file('/etc/adduser.conf') do
-  it {should contain '^DIR_MODE=0700'}
+  it {should contain '^DIR_MODE=700'}
 end
 
 describe file('/etc/passwd') do

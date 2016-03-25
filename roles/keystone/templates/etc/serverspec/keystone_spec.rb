@@ -14,8 +14,8 @@ describe file('/var/log/keystone/keystone-all.log') do
   it { should be_grouped_into 'adm' }
 end
 
-
-describe file('/var/log/keystone/keystone-manage.log') do
+has_file = file('/var/log/keystone/keystone-manage.log').exists?
+describe file('/var/log/keystone/keystone-manage.log'), :if => has_file do
   it { should be_mode 644 }
   it { should be_owned_by 'root' }
   it { should be_grouped_into 'adm' }
