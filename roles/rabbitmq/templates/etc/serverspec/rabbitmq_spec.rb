@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'socket'
 
 describe user('rabbitmq') do
     it { should exist }
