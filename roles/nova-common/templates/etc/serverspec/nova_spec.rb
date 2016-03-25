@@ -60,5 +60,5 @@ end
 
 has_file = file('{{ nova.state_path }}/instances').exists?
 describe file( '{{ nova.state_path }}/instances' ), :if => has_file do
-  it { should be a directory }
+  it { should be_directory }
 end
