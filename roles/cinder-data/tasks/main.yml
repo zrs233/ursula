@@ -67,11 +67,21 @@
 - meta: flush_handlers
 
 - name: start cinder-volume
-  service: name=cinder-volume state=started
+  service:
+    name: cinder-volume
+    state: started
+  delegate_to: "{{ item }}"
+  run_once: True
+  with_items: "{{ play_hosts }}"
 
 - name: start cinder backup
-  service: name=cinder-backup state=started
+  service:
+    name: cinder-backup
+    state: started
+  delegate_to: "{{ item }}"
+  run_once: True
   when: swift.enabled|default("false")|bool
+  with_items: "{{ play_hosts }}"
 
 - include: monitoring.yml
   when: monitoring.enabled|default('True')|bool
