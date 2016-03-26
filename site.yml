@@ -402,6 +402,7 @@
 
 - name: openstack base setup
   hosts: controller
+  gather_facts: force
   any_errors_fatal: true
   roles:
     - role: 'openstack-setup'
