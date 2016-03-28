@@ -92,7 +92,7 @@ def main():
         rc, out, err = module.run_command(cmd, check_rc=True)
 
         with open("/etc/fstab", "a") as fstab:
-          fstab.write('UUID=' + uuids_in_order[i] + ' /var/lib/ceph/osd/ceph-' + osd_id + ' xfs defaults 0 0\n')
+          fstab.write('UUID=' + uuids_in_order[i] + ' /var/lib/ceph/osd/ceph-' + osd_id + ' xfs defaults,noatime,largeio,inode64,swalloc 0 0\n')
 
     module.exit_json(changed=changed)
 
