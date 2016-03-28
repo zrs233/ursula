@@ -609,9 +609,6 @@ keystonev3:
 cinderv2:
   enabled: True
 
-heat-cfn:
-  enabled: True
-
 magnum:
   enabled: True
   debug: True
