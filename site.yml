@@ -91,9 +91,6 @@
   hosts: db_arbiter
   any_errors_fatal: true
   roles:
-    - role: percona-common
-      tags: ['infra', 'percona']
-
     - role: percona-arbiter
       tags: ['infra', 'percona']
   environment: "{{ env_vars|default({}) }}"
