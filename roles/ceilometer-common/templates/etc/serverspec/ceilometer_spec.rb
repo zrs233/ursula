@@ -20,6 +20,7 @@ files.each do |file|
   end
 end
 
+{% if inventory_hostname in groups['controller'] %}
 processes = ['ceilometer-api',
   'ceilometer-collector',
   'ceilometer-agent-notification',
@@ -31,6 +32,7 @@ processes.each do |process|
     its(:user) { should eq 'ceilometer' }
   end
 end
+{% endif %}
 
 files = Dir['/var/log/ceilometer/*']
 files.each do |file|
