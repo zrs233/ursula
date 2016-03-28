@@ -1,24 +1,6 @@
 ---
-  # swift-dispersion-populate needs to be run only once when rings are copied for first time
-- name: register whether rings are present
-  # ansible command doesn't return the right return code for this
-  shell: /usr/bin/test -f /etc/swift/account.ring.gz || /usr/bin/test -f /etc/swift/container.ring.gz || /usr/bin/test -f /etc/swift/object.ring.gz
-  failed_when: False
-  register: rings_present
-
 - name: drop our ring configuration
   copy: src={{ swift_ring.ring_definition_file }} owner=root group=root
         dest=/etc/swift/ring_definition.yml mode=644 backup=yes
   notify: setup swift rings
-
-- name: make sure rings are built if needed by flushing handlers
-  meta: flush_handlers
-
-- name: run insecure swift dispersion populate
-  command: swift-dispersion-populate --insecure 
-  when: rings_present|failed and client.self_signed_cert == True
-
-- name: run swift dispersion populate
-  command: swift-dispersion-populate
-  when: rings_present|failed and client.self_signed_cert == False
 
