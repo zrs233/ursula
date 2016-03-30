@@ -1,0 +1,13 @@
+---
+- name: run insecure swift dispersion populate
+  command: swift-dispersion-populate --insecure
+  when: client.self_signed_cert == True
+  run_once: True
+  delegate_to: "{{ groups['swiftnode_primary'][0] }}"
+
+- name: run swift dispersion populate
+  command: swift-dispersion-populate
+  when: client.self_signed_cert == False
+  run_once: True
+  delegate_to: "{{ groups['swiftnode_primary'][0] }}"
+
