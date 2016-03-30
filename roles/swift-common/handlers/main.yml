@@ -11,8 +11,14 @@
 - name: update ca-certs
   command: update-ca-certificates
 
+# Restarting rsync failing with pid file exists error
+# Adding retry logic to workaround
 - name: restart rsync
   service: name=rsync state=restarted
+  register: result
+  until: result|success
+  retries: 3
+  delay: 10
 
 - name: restart rsyslog
   service: name=rsyslog state=restarted
