@@ -43,7 +43,7 @@ nova:
       git_mirror: https://github.com/stackforge/nova-docker.git
       dest: /opt/stack/novadocker
   source:
-    rev: 'stable/kilo'
+    rev: 'kilo-bbg'
     python_dependencies:
       - { name: mysql-python }
       - { name: python-memcached }
