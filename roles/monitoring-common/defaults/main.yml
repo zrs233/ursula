@@ -5,6 +5,9 @@ monitoring:
     memory:
       warning: 4096
       critical: 1024
+    cpu:
+      warning: 80
+      critical: 99
   graphite:
     cluster_prefix: "stats.bbc.{{ stack_env }}.openstack"
     host_prefix: "stats.bbc.{{ stack_env }}.{{ ansible_nodename|regex_replace('\\\\.*$', '') }}"

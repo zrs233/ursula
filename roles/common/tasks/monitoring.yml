@@ -133,7 +133,7 @@
     - check-neutron-fip.sh
 
 - name: cpu check
-  sensu_check: name=cpu plugin=check-cpu.rb args='-w 80 -c 90 -p kvm'
+  sensu_check: name=cpu plugin=check-cpu.rb args='-w {{ monitoring.checks.cpu.warning }} -c {{ monitoring.checks.cpu.critical }} -p kvm'
   notify: restart sensu-client
 
 - name: network interface traffic check
