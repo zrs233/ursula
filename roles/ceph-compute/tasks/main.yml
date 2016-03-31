@@ -20,6 +20,7 @@
   copy:
     dest: /etc/ceph/client.cinder.key
     content: "{{ client_cinder_key['content'] | b64decode }}"
+    mode: 0600
 
 # used in secret.xml
 - name: fetch contents of uuid file
@@ -29,11 +30,12 @@
   register: cinder_uuid_file
 
 - name: generate ceph secret xml file
-  template: src=etc/ceph/secret.xml
-            dest=/etc/ceph/secret.xml
-            owner=root
-            group=root
-            mode=0644
+  template:
+    src: etc/ceph/secret.xml
+    dest: /etc/ceph/secret.xml
+    owner: root
+    group: root
+    mode: 0600
 
 - name: define virsh secret
   shell: virsh secret-define --file /etc/ceph/secret.xml
