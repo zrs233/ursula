@@ -1,5 +1,3 @@
-# (C) 2012-2013, Michael DeHaan, <michael.dehaan@gmail.com>
-
 # This file is part of Ansible
 #
 # Ansible is free software: you can redistribute it and/or modify
@@ -16,135 +14,66 @@
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 
 import time
-from ansible.callbacks import display
+from ansible.plugins.callback import CallbackBase
 
-# define start time
-t0 = tn = time.time()
 
-def secondsToStr(t):
-
+def secs_to_str(seconds):
     # http://bytes.com/topic/python/answers/635958-handy-short-cut-formatting-elapsed-time-floating-point-seconds
-    rediv = lambda ll,b : list(divmod(ll[0],b)) + ll[1:]
-    return "%d:%02d:%02d.%03d" % tuple(reduce(rediv,[[t*1000,], 1000,60,60]))
+    def rediv(ll, b):
+        return list(divmod(ll[0], b)) + ll[1:]
 
-def filled(msg, fchar="*"):
+    numbers = tuple(reduce(rediv, [[seconds * 1000, ], 1000, 60, 60]))
+    return "%d:%02d:%02d.%03d" % numbers
 
-    if len(msg) == 0:
+
+def fill_str(string, fchar="*"):
+    if len(string) == 0:
         width = 79
     else:
-        msg = "%s " % msg
-        width = 79 - len(msg)
+        string = "%s " % string
+        width = 79 - len(string)
+
     if width < 3:
         width = 3
     filler = fchar * width
-    return "%s%s " % (msg, filler)
 
-def timestamp():
-
-    global tn
-    time_current = time.strftime('%A %d %B %Y  %H:%M:%S %z')
-    time_elapsed = secondsToStr(time.time() - tn)
-    time_total_elapsed = secondsToStr(time.time() - t0)
-    display( filled( '%s (%s)%s%s' % (time_current, time_elapsed, ' ' * 7, time_total_elapsed )))
-    tn = time.time()
+    return "%s%s " % (string, filler)
 
 
-
-class CallbackModule(object):
-
-    """
-    this is an example ansible callback file that does nothing.  You can drop
-    other classes in the same directory to define your own handlers.  Methods
-    you do not use can be omitted.
-
-    example uses include: logging, emailing, storing info, etc
-    """
-    def __init__(self):
+class CallbackModule(CallbackBase):
+    def __init__(self, *args, **kwargs):
+        self.count = 0
         self.stats = {}
         self.current = None
-        self.count = 0
+        self.tn = self.t0 = time.time()
+        super(CallbackModule, self).__init__(*args, **kwargs)
 
-    def on_any(self, *args, **kwargs):
-        pass
-
-    def runner_on_failed(self, host, res, ignore_errors=False):
-        pass
-
-    def runner_on_ok(self, host, res):
-        pass
-
-    def runner_on_error(self, host, msg):
-        pass
-
-    def runner_on_skipped(self, host, item=None):
-        pass
-
-    def runner_on_unreachable(self, host, res):
-        pass
-
-    def runner_on_no_hosts(self):
-        pass
-
-    def runner_on_async_poll(self, host, res, jid, clock):
-        pass
-
-    def runner_on_async_ok(self, host, res, jid):
-        pass
-
-    def runner_on_async_failed(self, host, res, jid):
-        pass
-
-    def playbook_on_start(self):
-        pass
-
-    def playbook_on_notify(self, host, handler):
-        pass
-
-    def playbook_on_no_hosts_matched(self):
-        pass
-
-    def playbook_on_no_hosts_remaining(self):
-        pass
-
-    def playbook_on_task_start(self, name, is_conditional):
-        timestamp()
+    def v2_playbook_on_task_start(self, task, is_conditional):
+        self.timestamp()
 
         if self.current is not None:
             # Record the running time of the last executed task
             self.stats[self.current] = time.time() - self.stats[self.current]
 
         # Record the start time of the current task
-        self.current = name
+        self.current = task.get_name()
         self.stats[self.current] = time.time()
         self.count += 1
 
-        pass
+    def v2_playbook_on_setup(self):
+        self.timestamp()
 
-    def playbook_on_vars_prompt(self, varname, private=True, prompt=None, encrypt=None, confirm=False, salt_size=None, salt=None, default=None):
-        pass
+    def v2_playbook_on_play_start(self, play):
+        self.timestamp()
+        self._display.display(fill_str("", fchar="="))
 
-    def playbook_on_setup(self):
-        timestamp()
-        pass
-
-    def playbook_on_import_for_host(self, host, imported_file):
-        pass
-
-    def playbook_on_not_import_for_host(self, host, missing_file):
-        pass
-
-    def playbook_on_play_start(self, pattern):
-        timestamp()
-        display(filled("", fchar="="))
-        pass
-
-    def playbook_on_stats(self, stats):
-        timestamp()
-        display(filled("", fchar="="))
-        print "Total tasks: %d" % ( self.count )
-        display(filled("", fchar="="))
-        print "Slowest 25 Tasks"
-        display(filled("", fchar="="))
+    def v2_playbook_on_stats(self, play):
+        self.timestamp()
+        self._display.display(fill_str("", fchar="="))
+        self._display.display("Total tasks: %d" % self.count)
+        self._display.display(fill_str("", fchar="="))
+        self._display.display("Slowest 25 Tasks")
+        self._display.display(fill_str("", fchar="="))
         # Record the timing of the very last task
         if self.current is not None:
             self.stats[self.current] = time.time() - self.stats[self.current]
@@ -156,16 +85,21 @@ class CallbackModule(object):
             reverse=True,
         )
 
-        # Just keep the top 10
-        results = results[:25]
-
         # Print the timings
-        for name, elapsed in results:
-            print(
-                "{0:-<70}{1:->9}".format(
-                    '{0} '.format(name),
-                    ' {0:.02f}s'.format(elapsed),
-                )
-            )
-        pass
+        for name, elapsed in results[:25]:
+            name = '{0} '.format(name)
+            elapsed = ' {0:.02f}s'.format(elapsed)
+            self._display.display("{0:-<70}{1:->9}".format(name, elapsed))
 
+    def timestamp(self):
+        time_current = time.strftime('%A %d %B %Y  %H:%M:%S %z')
+        time_elapsed = secs_to_str(time.time() - self.tn)
+        time_total_elapsed = secs_to_str(time.time() - self.t0)
+        self._display.display(
+            fill_str(
+                '%s (%s)       %s' % (time_current,
+                                      time_elapsed,
+                                      time_total_elapsed)
+            )
+        )
+        self.tn = time.time()
