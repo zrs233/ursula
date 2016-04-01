@@ -107,7 +107,7 @@ files = ['syslog', 'wtmp', 'auth.log']
 files.each do |file|
   describe file ("/var/log/#{file}") do
     it {should exist}
-    it {should be_mode '[0-7][0-5][0-5]'}
+    it {should be_mode '[0-7][0-6][0-5]'}
   end
 end
 
