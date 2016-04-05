@@ -83,6 +83,7 @@ endpoints:
       health_check: 'httpchk /'
       balance: 'roundrobin'
       prefer_primary_backend: False
+      oidc_cookie: 'mod_auth_openidc_session prefix'
   keystone_admin:
     port:
       backend_api: 35358
