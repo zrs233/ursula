@@ -457,6 +457,11 @@ keystone:
   federation:
     enabled: False
 
+logging:
+  follow:
+    global_fields:
+      cluster_name: "example-dev"
+
 ssl:
   crt: |
     -----BEGIN CERTIFICATE-----
