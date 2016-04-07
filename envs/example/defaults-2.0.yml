@@ -457,11 +457,6 @@ keystone:
   federation:
     enabled: False
 
-logging:
-  follow:
-    global_fields:
-      cluster_name: "example-dev"
-
 ssl:
   crt: |
     -----BEGIN CERTIFICATE-----
@@ -605,6 +600,9 @@ haproxy:
 
 logging:
   enabled: True
+  follow:
+    global_fields:
+      cluster_name: "example-dev"
   download:
     url: https://file-mirror.openstack.blueboxgrid.com/logstash/logstash-forwarder_0.3.1_amd64.deb
 
