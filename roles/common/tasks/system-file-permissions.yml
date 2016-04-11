@@ -1,7 +1,4 @@
 ---
-- name: Set permissions for wtmp
-  file: path=/var/log/wtmp state=file mode=755
-
 - name: Set permissions for faillog
   file: path=/var/log/faillog state=touch mode=600
 
