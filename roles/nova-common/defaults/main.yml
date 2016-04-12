@@ -128,3 +128,6 @@ nova:
         criticality: 'critical'
       check_nova_services:
         criticality: 'critical'
+  auditing:
+    enabled: False
+    logging: False

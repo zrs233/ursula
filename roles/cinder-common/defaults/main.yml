@@ -64,3 +64,6 @@ cinder:
     sensu_checks:
       check_cinder_services:
         criticality: 'critical'
+  auditing:
+    enabled: False
+    logging: False

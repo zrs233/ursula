@@ -36,6 +36,7 @@
     - heat.conf
     - policy.json
     - api-paste.ini
+    - heat_api_audit_map.conf
   notify:
     - restart heat services
 

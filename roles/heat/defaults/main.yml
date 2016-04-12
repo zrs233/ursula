@@ -47,3 +47,6 @@ heat:
     sensu_checks:
       check_heat_api:
         criticality: 'critical'
+  auditing:
+    enabled: False
+    logging: False
