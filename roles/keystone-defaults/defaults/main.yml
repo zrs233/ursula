@@ -19,6 +19,8 @@ keystone:
   alternatives:
     - keystone-manage
     - keystone-all
+    - keystone-wsgi-admin
+    - keystone-wsgi-public
   jellyroll: False # custom middleware for password compliance
   roles:
     - project_admin

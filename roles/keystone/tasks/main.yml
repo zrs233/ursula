@@ -48,17 +48,8 @@
   file: path={{ item }} state=directory
         owner=keystone group=keystone mode=0775
   with_items:
-    - /var/www/keystone 
     - /etc/keystone/uwsgi
 
-- name: install keystone uwsgi service
-  template: src=var/www/keystone/keystone.py
-            dest=/var/www/keystone/{{ item }} mode=0775
-            owner=keystone group=keystone
-  with_items:
-    - admin
-    - main
-                    
 - name: configure keystone admin wsgi
   template: src=etc/keystone/uwsgi/keystone-admin.ini
             dest=/etc/keystone/uwsgi/keystone-admin.ini mode=0775
