@@ -56,7 +56,16 @@ enter the `virtualenv`
 ## Install ursula and dependencies:
 
 Now that your python environment is ready, you can clone ursula and install
-its prerequisites:
+its prerequisites.
+
+You'll need a modern version of pip, so if you're using a version <7,
+run:
+
+```
+$ pip install -U pip
+```
+
+Now you can continue cloning and installing ursula:
 
 ```bash
 $ cd ~/development
