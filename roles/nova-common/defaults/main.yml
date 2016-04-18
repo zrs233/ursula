@@ -46,6 +46,7 @@ nova:
   source:
     rev: 'stable/mitaka'
     python_dependencies:
+      - { name: Babel==2.2.0 }
       - { name: PyMySQL }
       - { name: python-memcached }
     system_dependencies:
