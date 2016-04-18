@@ -52,7 +52,7 @@ swift:
         - /var/log/swift/account.log
       fields:
         type: openstack
-        tags: swift,swift-acount
+        tags: swift,swift-account
     - paths:
         - /var/log/swift/container.log
       fields:
