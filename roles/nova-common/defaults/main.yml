@@ -40,11 +40,11 @@ nova:
     - virt-top
   driver:
     docker:
-      rev: 'stable/kilo'
+      rev: 'stable/mitaka'
       git_mirror: https://github.com/stackforge/nova-docker.git
       dest: /opt/stack/novadocker
   source:
-    rev: 'kilo-bbg'
+    rev: 'stable/mitaka'
     python_dependencies:
       - { name: mysql-python }
       - { name: python-memcached }

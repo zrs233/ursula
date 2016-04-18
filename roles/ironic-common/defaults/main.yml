@@ -18,7 +18,7 @@ ironic:
     - pxe_ipmitool
   heartbeat_timeout_threshold: 30
   source:
-    rev: 'stable/kilo'
+    rev: 'stable/mitaka'
     python_dependencies:
       - { name: mysql-python }
       - { name: functools32 }

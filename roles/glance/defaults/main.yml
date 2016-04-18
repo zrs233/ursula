@@ -22,7 +22,7 @@ glance:
   store_file: False
   show_multiple_locations: True
   source:
-    rev: 'stable/kilo'
+    rev: 'stable/mitaka'
     python_dependencies:
       - { name: mysql-python }
       - { name: functools32 }

@@ -8,7 +8,7 @@ swift:
     - disk: sdb
   allow_versions: True
   source:
-    rev: 'stable/kilo'
+    rev: 'stable/mitaka'
     python_dependencies:
       - { name: keystonemiddleware }
       - { name: python-swiftclient }
