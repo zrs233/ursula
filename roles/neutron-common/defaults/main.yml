@@ -131,3 +131,6 @@ neutron:
         criticality: 'critical'
       check_neutron_agents_duplicate:
         criticality: 'critical'
+  auditing:
+    enabled: False
+    logging: False

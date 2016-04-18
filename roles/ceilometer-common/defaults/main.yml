@@ -66,3 +66,6 @@ ceilometer:
     sensu_checks:
       check_ceilometer_api:
         criticality: 'critical'
+  auditing:
+    enabled: False
+    logging: False

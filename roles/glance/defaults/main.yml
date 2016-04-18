@@ -69,3 +69,6 @@ glance:
         criticality: 'critical'
       check_glance_store:
         criticality: 'critical'
+  auditing:
+    enabled: False
+    logging: False

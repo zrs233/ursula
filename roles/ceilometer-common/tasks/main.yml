@@ -22,6 +22,7 @@
     - event_definitions.yaml
     - event_pipeline.yaml
     - pipeline.yaml
+    - ceilometer_api_audit_map.conf
 
 - include: logging.yml
   tags:
