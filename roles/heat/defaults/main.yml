@@ -13,8 +13,6 @@ heat:
     - heat-api-cloudwatch
     - heat-db-setup
     - heat-engine
-    - heat-keystone-setup
-    - heat-keystone-setup-domain
     - heat-manage
   logs:
     - paths:
