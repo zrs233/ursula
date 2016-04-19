@@ -8,6 +8,7 @@ magnum:
     virtualenv: "/opt/openstack/magnum"
     python_dependencies:
       - { name: PyMySQL }
+      - { name: Babel==2.2.0 }
     system_dependencies: []
   package: ~
   cafile: "{{ ssl.cafile|default('/etc/ssl/certs/ca-certificates.crt') }}"
