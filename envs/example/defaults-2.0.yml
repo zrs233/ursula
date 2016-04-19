@@ -613,7 +613,7 @@ cinderv2:
   enabled: True
 
 magnum:
-  enabled: True
+  enabled: False
   debug: True
 
 serverspec:
