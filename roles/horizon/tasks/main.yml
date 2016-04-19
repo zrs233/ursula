@@ -87,7 +87,7 @@
   shell: "{{ item }}"
   with_items:
     - "{{ 'horizon'|ursula_package_path(openstack_package_version) }}/bin/django-admin.py collectstatic --noinput"
-    - "{{ 'horizon'|ursula_package_path(openstack_package_version) }}/bin/django-admin.py compress"
+    - "{{ 'horizon'|ursula_package_path(openstack_package_version) }}/bin/django-admin.py compress --force"
   when: openstack_install_method == 'package'
 
 - name: gather static assets from openstack source install
@@ -97,7 +97,7 @@
   shell: "{{ item }}"
   with_items:
     - "{{ openstack_source.virtualenv_base }}/horizon/bin/django-admin.py collectstatic --noinput"
-    - "{{ openstack_source.virtualenv_base }}/horizon/bin/django-admin.py compress"
+    - "{{ openstack_source.virtualenv_base }}/horizon/bin/django-admin.py compress --force"
   when: openstack_install_method == 'source'
 
 - name: trigger restart on upgrades
