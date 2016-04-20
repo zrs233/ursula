@@ -4,6 +4,7 @@
 # to allow concurrent runs.
 if [[ "$CI" == "jenkins" ]]; then
     VENV=$WORKSPACE/venv
+    USE_PRIVATE_IPS="true"
     virtualenv $VENV
     source $VENV/bin/activate
     pip install -U pip
@@ -11,6 +12,8 @@ if [[ "$CI" == "jenkins" ]]; then
 fi
 
 source $(dirname $0)/common
+
+USE_PRIVATE_IPS=${USE_PRIVATE_IPS:-"false"}
 
 ${ROOT}/test/check-deps
 
@@ -33,7 +36,7 @@ echo "destroying: ${VMS}"
 ${ROOT}/test/cleanup
 
 echo "booting ${VMS}"
-ursula "envs/test" ${ROOT}/playbooks/${TEST_ENV}/tasks/create.yml
+ursula "envs/test" ${ROOT}/playbooks/${TEST_ENV}/tasks/create.yml --extra-vars="use_private_ips=${USE_PRIVATE_IPS}"
 
 echo "building config"
 CONTROLLER_IP=$(private_ip ${testenv_instance_prefix}-controller-0)
@@ -83,37 +86,43 @@ rm -rf ${CERT_DIR}
 
 echo "writing inventory file"
 if [[ ${TEST_ENV} == "ci-full" ]]; then
+  shopt -s expand_aliases
   CONTROLLER_IP=$(private_ip ${testenv_instance_prefix}-controller-0)
+  if [[ ${USE_PRIVATE_IPS} == "true" ]]; then
+    alias get_ip=private_ip
+  else
+    alias get_ip=public_ip
+  fi
   cat > ${ROOT}/envs/test/hosts <<eof
 [db]
-$(public_ip "${testenv_instance_prefix}-controller-0")
-$(public_ip "${testenv_instance_prefix}-controller-1")
+$(get_ip "${testenv_instance_prefix}-controller-0")
+$(get_ip "${testenv_instance_prefix}-controller-1")
 
 [db_arbiter]
-$(public_ip "${testenv_instance_prefix}-compute-0")
+$(get_ip "${testenv_instance_prefix}-compute-0")
 
 [mongo_db]
-$(public_ip "${testenv_instance_prefix}-controller-0")
-$(public_ip "${testenv_instance_prefix}-controller-1")
+$(get_ip "${testenv_instance_prefix}-controller-0")
+$(get_ip "${testenv_instance_prefix}-controller-1")
 
 [mongo_arbiter]
-$(public_ip "${testenv_instance_prefix}-compute-0")
+$(get_ip "${testenv_instance_prefix}-compute-0")
 
 [controller]
-$(public_ip "${testenv_instance_prefix}-controller-0")
-$(public_ip "${testenv_instance_prefix}-controller-1")
+$(get_ip "${testenv_instance_prefix}-controller-0")
+$(get_ip "${testenv_instance_prefix}-controller-1")
 
 [compute]
-$(public_ip "${testenv_instance_prefix}-compute-0")
-$(public_ip "${testenv_instance_prefix}-controller-0")
-$(public_ip "${testenv_instance_prefix}-controller-1")
+$(get_ip "${testenv_instance_prefix}-compute-0")
+$(get_ip "${testenv_instance_prefix}-controller-0")
+$(get_ip "${testenv_instance_prefix}-controller-1")
 
 [network]
-$(public_ip "${testenv_instance_prefix}-controller-0")
-$(public_ip "${testenv_instance_prefix}-controller-1")
+$(get_ip "${testenv_instance_prefix}-controller-0")
+$(get_ip "${testenv_instance_prefix}-controller-1")
 
 [cinder_volume]
-$(public_ip "${testenv_instance_prefix}-compute-0")
+$(get_ip "${testenv_instance_prefix}-compute-0")
 eof
 else
   CONTROLLER_IP=$(private_ip ${testenv_instance_prefix}-allinone)
