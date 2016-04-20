@@ -2,7 +2,7 @@
 nova:
   enable_fatal_deprecations: True
   patches:
-  compute_driver: nova.virt.libvirt.LibvirtDriver
+  compute_driver: libvirt.LibvirtDriver
   firewall_driver: nova.virt.firewall.NoopFirewallDriver
   scheduler_host_manager: nova.scheduler.host_manager.HostManager
   compute_manager: nova.compute.manager.ComputeManager
