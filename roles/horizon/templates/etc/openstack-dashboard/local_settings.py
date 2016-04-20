@@ -12,7 +12,9 @@ from openstack_dashboard.settings import HORIZON_CONFIG
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
-COMPRESS_OFFLINE = True
+## FIXME disable offline compression until we sort out static file location
+## issues
+COMPRESS_OFFLINE = False
 
 # WEBROOT is the location relative to Webserver root
 # should end with a slash.
