@@ -1,11 +1,11 @@
-python-novaclient<2.27.0
-python-neutronclient==2.6.0
-python-keystoneclient
-python-glanceclient<=0.19.0
-python-cinderclient
-oslo.utils
 tox
 pep8
--e git://github.com/blueboxgroup/ansible.git@1.9.2-bbg#egg=ansible
--e git://github.com/blueboxgroup/ursula-cli.git#egg=ursula-cli
--e git://github.com/openstack-infra/shade.git@ab1c566cb8afbf477492180e2cc8257817a06893#egg=shade
+oslo.utils
+shade>=1.7.0
+ansible<=2.0.2.0,<3
+python-novaclient
+python-glanceclient
+python-cinderclient
+python-neutronclient
+python-keystoneclient
+-e git://github.com/blueboxgroup/ursula-cli.git@ansible-2.0#egg=ursula-cli
