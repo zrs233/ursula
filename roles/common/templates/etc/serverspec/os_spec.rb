@@ -14,6 +14,7 @@ end
 describe file('/etc/login.defs') do
   it { should contain '^PASS_MAX_DAYS   90' }
   it { should contain '^PASS_MIN_DAYS   1' }
+  it { should contain '^UMASK 077'}
 end
 
 describe file('/etc/ssh/sshd_config') do
