@@ -47,6 +47,10 @@
   with_items: ceph.disks
   when: ok_to_deploy
 
+- name: udevadm trigger
+  command: "udevadm trigger"
+  when: ok_to_deploy
+
 - name: wait for bcache directories to be created before running next task
   wait_for: path=/sys/block/bcache{{ item }}
   with_sequence: start=0 end={{ ceph.disks|length - 1 }}
