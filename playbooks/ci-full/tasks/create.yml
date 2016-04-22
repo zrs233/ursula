@@ -39,6 +39,7 @@
           - net-name: internal
         auto_floating_ip: false
       with_items: "{{ testenv_instance_names }}"
+      register: instances
 
     - name: associate a floating IP to instances
       os_floating_ip:
@@ -48,11 +49,22 @@
         wait: true
       with_items: "{{ testenv_instance_names }}"
       register: testenv_floating_ips
+      when: not use_private_ips|default('False')|bool
 
-    - name: wait for instances to boot
+    - name: wait for instances to boot using public ip
       wait_for:
         port: 22
         delay: 5
         timeout: 600
         host: "{{ item.floating_ip.floating_ip_address }}"
       with_items: "{{ testenv_floating_ips.results }}"
+      when: not use_private_ips|default('False')|bool
+
+    - name: wait for instances to boot using private ip
+      wait_for:
+        port: 22
+        delay: 5
+        timeout: 600
+        host: "{{ item.openstack.addresses.internal.0.addr }}"
+      with_items: "{{ instances.results }}"
+      when: use_private_ips|default('False')|bool
