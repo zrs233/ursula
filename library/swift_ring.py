@@ -108,5 +108,6 @@ def main():
     module.exit_json(changed=changed)
 
 # this is magic, see lib/ansible/module_common.py
-#<<INCLUDE_ANSIBLE_MODULE_COMMON>>
+from ansible.module_utils.basic import *
+
 main()

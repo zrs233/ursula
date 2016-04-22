@@ -91,5 +91,6 @@ def main():
             module.fail_json(msg="removing the check failed: %s %s" % (e,formatted_lines))
 
 # this is magic, see lib/ansible/module_common.py
-#<<INCLUDE_ANSIBLE_MODULE_COMMON>>
+from ansible.module_utils.basic import *
+
 main()

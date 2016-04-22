@@ -219,5 +219,6 @@ def main():
         module.fail_json(msg="creating the volume type failed: %s" % str(e))
 
 # this is magic, see lib/ansible/module_common.py
-#<<INCLUDE_ANSIBLE_MODULE_COMMON>>
+from ansible.module_utils.basic import *
+
 main()
