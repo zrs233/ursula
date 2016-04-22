@@ -2,7 +2,7 @@
 - name: common role for all hosts
   hosts: all:!vyatta-*
   any_errors_fatal: true
-  gather_facts: force
+  strategy: bb_linear
   roles:
     - role: common
       tags: ['common','common-base']
@@ -37,7 +37,7 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: setup IPv6 router advertisements
-  gather_facts: force
+  strategy: bb_linear
   hosts: controller
   any_errors_fatal: true
   roles:
@@ -46,7 +46,7 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: rabbitmq used by openstack
-  gather_facts: force
+  strategy: bb_linear
   hosts: controller
   any_errors_fatal: true
   serial: 1 # serial because clustering
@@ -56,7 +56,7 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: install common percona components and gather facts
-  gather_facts: force
+  strategy: bb_linear
   hosts: db
   any_errors_fatal: true
   roles:
@@ -65,7 +65,7 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: install percona on primary
-  gather_facts: force
+  strategy: bb_linear
   hosts: db[0]
   any_errors_fatal: true
   vars:
@@ -76,7 +76,7 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: install percona on secondaries
-  gather_facts: force
+  strategy: bb_linear
   hosts: db:!db[0]
   any_errors_fatal: true
   vars:
@@ -87,7 +87,7 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: install percona arbiter
-  gather_facts: force
+  strategy: bb_linear
   hosts: db_arbiter
   any_errors_fatal: true
   roles:
@@ -104,7 +104,7 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: install mongodb server
-  gather_facts: force
+  strategy: bb_linear
   hosts: mongo_db
   any_errors_fatal: true
   roles:
@@ -114,7 +114,7 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: install mongodb arbiter
-  gather_facts: force
+  strategy: bb_linear
   hosts: mongo_arbiter
   any_errors_fatal: true
   roles:
@@ -124,7 +124,7 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: memcached for keystone and horizon
-  gather_facts: force
+  strategy: bb_linear
   hosts: controller
   any_errors_fatal: true
   roles:
@@ -133,7 +133,7 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: controller haproxy
-  gather_facts: force
+  strategy: bb_linear
   hosts: controller
   any_errors_fatal: true
   roles:
@@ -160,7 +160,7 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: ceph osds
-  gather_facts: force
+  strategy: bb_linear
   hosts: ceph_osds
   serial: 1
   any_errors_fatal: true
@@ -190,7 +190,7 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: keystone code and config
-  gather_facts: force
+  strategy: bb_linear
   hosts: controller
   any_errors_fatal: true
   roles:
@@ -208,7 +208,7 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: glance code and config
-  gather_facts: force
+  strategy: bb_linear
   hosts: controller
   any_errors_fatal: true
   roles:
@@ -217,7 +217,7 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: nova control plane
-  gather_facts: force
+  strategy: bb_linear
   hosts: controller
   any_errors_fatal: true
   roles:
@@ -226,7 +226,7 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: nova data plane
-  gather_facts: force
+  strategy: bb_linear
   hosts: compute
   any_errors_fatal: true
   roles:
@@ -236,7 +236,7 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: cinder control plane
-  gather_facts: force
+  strategy: bb_linear
   hosts: controller
   any_errors_fatal: true
   roles:
@@ -246,7 +246,7 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: cinder data plane
-  gather_facts: force
+  strategy: bb_linear
   hosts: cinder_volume
   any_errors_fatal: true
   roles:
@@ -258,7 +258,7 @@
 - name: ceph compute
   hosts: compute
   any_errors_fatal: true
-  gather_facts: force
+  strategy: bb_linear
   roles:
     - role: ceph-compute
       tags: ['ceph', 'ceph-compute']
@@ -266,7 +266,7 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: neutron control plane
-  gather_facts: force
+  strategy: bb_linear
   hosts: controller
   any_errors_fatal: true
   roles:
@@ -275,7 +275,7 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: neutron core data plane
-  gather_facts: force
+  strategy: bb_linear
   hosts: compute:network
   any_errors_fatal: true
   roles:
@@ -300,10 +300,10 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: swift code and config
-  gather_facts: force
+  strategy: bb_linear
   hosts: swiftnode
   any_errors_fatal: true
-  gather_facts: force
+  strategy: bb_linear
   roles:
     - role: haproxy
       haproxy_type: swift
@@ -327,7 +327,7 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: heat code and config
-  gather_facts: force
+  strategy: bb_linear
   hosts: controller
   any_errors_fatal: true
   roles:
@@ -337,7 +337,7 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: ceilometer control plane
-  gather_facts: force
+  strategy: bb_linear
   hosts: controller
   any_errors_fatal: true
   roles:
@@ -347,7 +347,7 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: ceilometer data plane
-  gather_facts: force
+  strategy: bb_linear
   hosts: compute
   any_errors_fatal: true
   roles:
@@ -357,7 +357,7 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: magnum code and config
-  gather_facts: force
+  strategy: bb_linear
   hosts: controller
   any_errors_fatal: true
   roles:
@@ -366,7 +366,7 @@
       when: magnum.enabled|bool
 
 - name: ironic control plane
-  gather_facts: force
+  strategy: bb_linear
   hosts: controller
   any_errors_fatal: true
   roles:
@@ -386,7 +386,7 @@
 
 - name: openstack base setup
   hosts: controller
-  gather_facts: force
+  strategy: bb_linear
   any_errors_fatal: true
   roles:
     - role: 'openstack-setup'
