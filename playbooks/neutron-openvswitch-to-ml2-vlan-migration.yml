@@ -85,7 +85,7 @@
           dest=/opt/stack/neutron/neutron/db/migration/migrate_to_ml2.py
 
   - name: Upgrade Neutron Database
-    command: python -m neutron.db.migration.migrate_to_ml2 openvswitch_to_linuxbridge mysql://neutron:{{ secrets.db_password }}@{{ endpoints.db }}/neutron?charset=utf8
+    command: python -m neutron.db.migration.migrate_to_ml2 openvswitch_to_linuxbridge mysql+pymysql://neutron:{{ secrets.db_password }}@{{ endpoints.db }}/neutron?charset=utf8
               chdir=/opt/stack/neutron
 
   - name: Backup Migrated Neutron Database

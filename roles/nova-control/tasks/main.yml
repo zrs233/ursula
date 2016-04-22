@@ -36,6 +36,15 @@
   # we want this to always be changed so that it can notify the service restart
   tags: db-migrate
 
+- name: sync nova api database
+  command: nova-manage api_db sync
+  when: database_create.changed or force_sync|default('false')|bool
+  run_once: true
+  changed_when: true
+  notify: restart nova services
+  # we want this to always be changed so that it can notify the service restart
+  tags: db-migrate
+
 - name: trigger restart on upgrades
   debug:
     msg: "Triggering service restart for upgrade"

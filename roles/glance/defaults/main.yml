@@ -22,16 +22,12 @@ glance:
   store_file: False
   show_multiple_locations: True
   source:
-    rev: 'stable/kilo'
+    rev: 'stable/mitaka'
     python_dependencies:
-      - { name: mysql-python }
-      - { name: functools32 }
-      - { name: ipaddr }
-      - { name: simplegeneric }
+      - { name: PyMySQL }
       - { name: "git+https://github.com/blueboxgroup/bbc-openstack-plugins.git#egg=bbc_openstack_plugins" }
     system_dependencies:
       - libxml2-dev
-      - libmysqlclient-dev
   alternatives:
     - glance-api
     - glance-cache-cleaner

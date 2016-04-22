@@ -1,5 +1,6 @@
 ---
 neutron:
+  enable_fatal_deprecations: True
   l2_population: False
   vxlan:
     # The multicast prefix to use for broadcast, multicast and unknown frames
@@ -51,40 +52,25 @@ neutron:
   service:
     envs: []
   source:
-    rev: 'kilo-bbg'
+    rev: 'stable/mitaka'
     python_dependencies:
-      - { name: mysql-python }
-      - { name: "git+git://github.com/openstack/neutron-lbaas.git@stable/kilo#egg=neutron-lbaas" }
-      - { name: jsonrpclib, version: "0.1.3" }
-      - { name: kombu>=3.0.7 }
-      - { name: amqp>=1.4.0 }
-    system_dependencies:
-      - libmysqlclient-dev
+      - { name: "git+git://github.com/openstack/neutron-lbaas.git@stable/mitaka#egg=neutron-lbaas" }
+      - { name: PyMySQL }
+    system_dependencies: []
   alternatives:
-    - neutron-cisco-apic-host-agent
-    - neutron-cisco-apic-service-agent
     - neutron-db-manage
     - neutron-debug
     - neutron-dhcp-agent
-    - neutron-hyperv-agent
-    - neutron-ibm-agent
-    - neutron-keepalived-state-change
     - neutron-l3-agent
     - neutron-lbaasv2-agent
     - neutron-linuxbridge-agent
     - neutron-metadata-agent
     - neutron-metering-agent
-    - neutron-mlnx-agent
-    - neutron-nec-agent
     - neutron-netns-cleanup
     - neutron-ns-metadata-proxy
-    - neutron-nvsd-agent
     - neutron-openvswitch-agent
     - neutron-ovs-cleanup
-    - neutron-ovsvapp-agent
-    - neutron-restproxy-agent
     - neutron-rootwrap
-    - neutron-rootwrap-daemon
     - neutron-rootwrap-xen-dom0
     - neutron-sanity-check
     - neutron-server

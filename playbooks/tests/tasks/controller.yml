@@ -31,17 +31,17 @@
     shell: grep 8.8.4.4 /etc/dnsmasq.conf
 
   - name: nova api has proper workers
-    shell: grep 'osapi_compute_workers=1' /etc/nova/nova.conf
+    shell: grep 'osapi_compute_workers = 1' /etc/nova/nova.conf
 
   - name: nova metadata api has proper workers
-    shell: grep 'metadata_workers=1' /etc/nova/nova.conf
+    shell: grep 'metadata_workers = 1' /etc/nova/nova.conf
 
   - name: nova config has memcached servers
     shell: grep memcached_servers | grep {{ item }} /etc/nova/nova.conf
     with_items: "{{ controller_ips }}"
 
   - name: nova config has rabbit server
-    shell: egrep "rabbit_host=[0-9.]+" /etc/nova/nova.conf
+    shell: egrep "rabbit_host = [0-9.]+" /etc/nova/nova.conf
     when: rabbitmq.cluster == false
 
   - name: cinder config has rabbit server

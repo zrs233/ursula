@@ -13,7 +13,6 @@ dependencies:
     service: nova
     logdata: "{{ nova.logs }}"
   - role: openstack-source
-    git_mirror: "https://github.com/blueboxgroup"
     project_name: nova
     project_rev: "{{ nova.source.rev }}"
     rootwrap: True

@@ -4,15 +4,12 @@ magnum:
   host: 127.0.0.1
   heartbeat_timeout_threshold: 30
   source:
-    rev: 'stable/kilo'
+    rev: 'stable/mitaka'
     virtualenv: "/opt/openstack/magnum"
     python_dependencies:
-      - { name: mysql-python }
-      - { name: keystonemiddleware<4.1.0 }
-      - { name: kombu>=3.0.7 }
-      - { name: amqp>=1.4.0 }
-    system_dependencies:
-      - libmysqlclient-dev
+      - { name: PyMySQL }
+      - { name: Babel==2.2.0 }
+    system_dependencies: []
   package: ~
   cafile: "{{ ssl.cafile|default('/etc/ssl/certs/ca-certificates.crt') }}"
   logs:

@@ -1,9 +1,4 @@
 ---
-- name: install system packages for ironic
-  apt: pkg={{ item }} state=installed
-  with_items:
-    - libmysqlclient-dev
-
 - name: create ironic user
   user: name=ironic
         comment=ironic

@@ -3,23 +3,16 @@ heat:
   enabled: True
   heartbeat_timeout_threshold: 30
   source:
-    rev: 'stable/kilo'
+    rev: 'stable/mitaka'
     python_dependencies:
-      - { name: mysql-python }
-      - { name: functools32 }
-      - { name: requests, version: 2.7.0 }
-      - { name: kombu>=3.0.7 }
-      - { name: amqp>=1.4.0 }
-    system_dependencies:
-      - libmysqlclient-dev
+      - { name: PyMySQL }
+    system_dependencies: []
   alternatives:
     - heat-api
     - heat-api-cfn
     - heat-api-cloudwatch
     - heat-db-setup
     - heat-engine
-    - heat-keystone-setup
-    - heat-keystone-setup-domain
     - heat-manage
   logs:
     - paths:

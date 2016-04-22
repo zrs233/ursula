@@ -9,7 +9,6 @@ dependencies:
     logdata: "{{ horizon.logs }}"
   - role: openstack-source
     project_name: horizon
-    git_mirror: "https://github.com/blueboxgroup"
     project_rev: "{{ horizon.source.rev }}"
     system_dependencies: "{{ horizon.source.system_dependencies }}"
     python_dependencies: "{{ horizon.source.python_dependencies }}"

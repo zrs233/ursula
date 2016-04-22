@@ -70,6 +70,17 @@
     - static/dashboard/img
     - static/dashboard/fonts
 
+## FIXME
+## We need to figure out the proper way to get horizon to use /etc/ when
+## using a venv
+- name: add local_settings to venv
+  file: src=/etc/openstack-dashboard/local_settings.py
+        dest=/opt/openstack/current/horizon/lib/python2.7/site-packages/openstack_dashboard/local/local_settings.py
+        owner=root
+        group=root
+        mode=0644
+        state=link
+
 - name: custom horizon logo
   get_url: url={{ item.url }}
            dest=/etc/openstack-dashboard/static/dashboard/{{ item.name }}
@@ -87,7 +98,7 @@
   shell: "{{ item }}"
   with_items:
     - "{{ 'horizon'|ursula_package_path(openstack_package_version) }}/bin/django-admin.py collectstatic --noinput"
-    - "{{ 'horizon'|ursula_package_path(openstack_package_version) }}/bin/django-admin.py compress"
+    - "{{ 'horizon'|ursula_package_path(openstack_package_version) }}/bin/django-admin.py compress --force"
   when: openstack_install_method == 'package'
 
 - name: gather static assets from openstack source install
@@ -97,7 +108,7 @@
   shell: "{{ item }}"
   with_items:
     - "{{ openstack_source.virtualenv_base }}/horizon/bin/django-admin.py collectstatic --noinput"
-    - "{{ openstack_source.virtualenv_base }}/horizon/bin/django-admin.py compress"
+    - "{{ openstack_source.virtualenv_base }}/horizon/bin/django-admin.py compress --force"
   when: openstack_install_method == 'source'
 
 - name: trigger restart on upgrades

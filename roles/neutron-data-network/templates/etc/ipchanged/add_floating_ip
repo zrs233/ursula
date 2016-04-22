@@ -4,8 +4,10 @@
 arping -A -I {{ ansible_default_ipv4.interface }} {{ undercloud_floating_ip }} -c 3
 arping -U -I {{ ansible_default_ipv4.interface }} {{ undercloud_floating_ip }} -c 3
 
+{% if floating_ip is defined %}
 # Send gratuitous ARP to default gateway (some discard broadcasts if already known)
 arping -A -I {{ ansible_default_ipv4.interface }} -s {{ floating_ip }} {{ ansible_default_ipv4.gateway }} -c 3
+{% endif %}
 
 
 . /root/stackrc

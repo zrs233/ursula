@@ -1,7 +1,8 @@
 ---
 nova:
+  enable_fatal_deprecations: True
   patches:
-  compute_driver: nova.virt.libvirt.LibvirtDriver
+  compute_driver: libvirt.LibvirtDriver
   firewall_driver: nova.virt.firewall.NoopFirewallDriver
   scheduler_host_manager: nova.scheduler.host_manager.HostManager
   compute_manager: nova.compute.manager.ComputeManager
@@ -14,6 +15,7 @@ nova:
   libvirt_cpu_model: null
   libvirt_type: kvm
   enable_ssh: False
+  enable_novnc: False
   novnc_method: git
   novnc_repo: https://github.com/kanaka/noVNC.git
   novnc_rev: 292f6a5d
@@ -29,7 +31,6 @@ nova:
   controller_reserve_ram: 4096
   compute_reserve_ram: 2048
   preallocate_images: space
-  floating_pool: external
   state_path: "{{ state_path_base }}/nova"
   block_device_allocate_retries: 200
   block_device_allocate_retries_interval: 3
@@ -40,25 +41,21 @@ nova:
     - virt-top
   driver:
     docker:
-      rev: 'stable/kilo'
+      rev: 'stable/mitaka'
       git_mirror: https://github.com/stackforge/nova-docker.git
       dest: /opt/stack/novadocker
   source:
-    rev: 'kilo-bbg'
+    rev: 'stable/mitaka'
     python_dependencies:
-      - { name: mysql-python }
+      - { name: Babel==2.2.0 }
+      - { name: PyMySQL }
       - { name: python-memcached }
-      - { name: requests, version: 2.7.0 }
-      - { name: kombu>=3.0.7 }
-      - { name: amqp>=1.4.0 }
     system_dependencies:
       - libjs-jquery-tablesorter
-      - libmysqlclient-dev
       - python-libvirt
   alternatives:
     - nova-all
     - nova-api
-    - nova-api-ec2
     - nova-api-metadata
     - nova-api-os-compute
     - nova-cells
@@ -72,7 +69,6 @@ nova:
     - nova-manage
     - nova-network
     - nova-novncproxy
-    - nova-objectstore
     - nova-rootwrap
     - nova-scheduler
     - nova-serialproxy
