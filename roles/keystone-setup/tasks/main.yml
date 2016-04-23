@@ -6,16 +6,16 @@
     OS_BOOTSTRAP_PASSWORD: "{{ keystone.bootstrap.password }}"
     OS_BOOTSTRAP_PROJECT_NAME: "{{ keystone.bootstrap.project }}"
     OS_BOOTSTRAP_ROLE_NAME: "{{ keystone.bootstrap.role }}"
-    OS_BOOTSTRAP_ADMIN_URL: "{{ endpoints.keystone.url.admin }}"
-    OS_BOOTSTRAP_INTERNAL_URL: "{{ endpoints.keystone.url.internal }}"
-    OS_BOOTSTRAP_PUBLIC_URL: "{{ endpoints.keystone.url.public }}"
+    OS_BOOTSTRAP_ADMIN_URL: "{{ endpoints.keystone.url.admin }}/{{ endpoints.keystone.version }}"
+    OS_BOOTSTRAP_INTERNAL_URL: "{{ endpoints.keystone.url.internal }}/{{ endpoints.keystone.version }}"
+    OS_BOOTSTRAP_PUBLIC_URL: "{{ endpoints.keystone.url.public }}/{{ endpoints.keystone.version }}"
     OS_BOOTSTRAP_SERVICE_NAME: "{{ 'keystone' }}"  # otherwise it uses the keystone variable
     OS_BOOTSTRAP_REGION_ID: "RegionOne"
 
 - name: keystone tenants
   keystone_user: tenant={{ item }}
                  tenant_description="{{ item }} tenant"
-                 endpoint=http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/v2.0
+                 endpoint="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}/"
                  login_tenant_name={{ keystone.bootstrap.project }}
                  login_user={{ keystone.bootstrap.user }}
                  login_password={{ secrets.admin_password }}
@@ -25,7 +25,7 @@
   keystone_user: user={{ item.name }}
                  password={{ item.password }}
                  tenant={{ item.tenant }}
-                 endpoint=http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/v2.0
+                 endpoint="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}/"
                  login_tenant_name={{ keystone.bootstrap.project }}
                  login_user={{ keystone.bootstrap.user }}
                  login_password={{ secrets.admin_password }}
@@ -33,7 +33,7 @@
 
 - name: keystone roles
   keystone_user: role={{ item }}
-                 endpoint=http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/v2.0
+                 endpoint="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}/"
                  login_tenant_name={{ keystone.bootstrap.project }}
                  login_user={{ keystone.bootstrap.user }}
                  login_password={{ secrets.admin_password }}
@@ -43,7 +43,7 @@
   keystone_user: role={{ item.role }}
                  user={{ item.user }}
                  tenant={{ item.tenant }}
-                 endpoint=http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/v2.0
+                 endpoint="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}/"
                  login_tenant_name={{ keystone.bootstrap.project }}
                  login_user={{ keystone.bootstrap.user }}
                  login_password={{ secrets.admin_password }}
@@ -53,7 +53,7 @@
   keystone_user: user=heat_stack_user
                  password={{ secrets.service_password }}
                  tenant=admin
-                 endpoint=http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/v2.0
+                 endpoint="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}/"
                  login_tenant_name={{ keystone.bootstrap.project }}
                  login_user={{ keystone.bootstrap.user }}
                  login_password={{ secrets.admin_password }}
@@ -63,7 +63,7 @@
   keystone_user: role=heat_stack_user
                  user=heat_stack_user
                  tenant=admin
-                 endpoint=http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/v2.0
+                 endpoint="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}/"
                  login_tenant_name={{ keystone.bootstrap.project }}
                  login_user={{ keystone.bootstrap.user }}
                  login_password={{ secrets.admin_password }}
