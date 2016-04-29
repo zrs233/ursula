@@ -52,7 +52,7 @@ class VarsModule(object):
         defaults_path = os.path.join(ursula_env, defaults_file)
         if os.path.exists(defaults_path):
             with open(defaults_path) as fh:
-                return yaml.load(fh)
+                return yaml.safe_load(fh)
         return None
 
     def run(self, host, vault_password=None):
