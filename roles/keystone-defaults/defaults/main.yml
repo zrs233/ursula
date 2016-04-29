@@ -78,3 +78,9 @@ keystone:
               any_one_of: ['user@someprovider.com']
     protocols:
       - { name: oidc, mapping: someprovider-admins, identity_provider: someprovider }
+
+  bootstrap:
+    user: admin
+    password: "{{ secrets.admin_password }}"
+    project: admin
+    role: admin

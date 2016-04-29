@@ -376,12 +376,6 @@ keystone:
       tenant: demo
       role: heat_stack_owner
   services:
-    - name: keystone
-      type: identity
-      description: 'Identity Service'
-      public_url: "{{ endpoints.keystone.url.public }}/{{ endpoints.keystone.version }}"
-      internal_url: "{{ endpoints.keystone.url.internal }}/{{ endpoints.keystone.version }}"
-      admin_url: "{{ endpoints.keystone.url.admin }}/{{ endpoints.keystone.version }}"
     - name: keystonev3
       type: identityv3
       description: 'Identity Service v3'

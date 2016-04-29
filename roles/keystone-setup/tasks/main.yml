@@ -1,99 +1,73 @@
 ---
-- name: generate admin_token
-  set_fact: admin_token="{{ 'asdf' * 9|random(start=2) }}"
-            insert_token=True
-
-- name: add admin_token to keystone conf
-  lineinfile: dest=/etc/keystone/keystone.conf
-              line="admin_token = {{ admin_token }}"
-              regexp="^admin_token"
-              insertafter='\[DEFAULT\]'
-              state=present
-
-- name: add admin_token_auth to keystone pipeline
-  template: dest=/etc/keystone/keystone-paste.ini
-            src='{{ role_path }}/../keystone/templates/etc/keystone/keystone-paste.ini'
-
-- name: restart keystone api
-  service: name=keystone state=restarted
-
-- name: wait for keystone to be functional
-  pause: seconds=3
-  # this could wait for a service uri to be up, but a 3 second sleep
-  # works fine. Service uri may need auth to validate.
+- name: keystone bootstrap user
+  command: keystone-manage bootstrap
+  environment:
+    OS_BOOTSTRAP_USERNAME: "{{ keystone.bootstrap.user }}"
+    OS_BOOTSTRAP_PASSWORD: "{{ keystone.bootstrap.password }}"
+    OS_BOOTSTRAP_PROJECT_NAME: "{{ keystone.bootstrap.project }}"
+    OS_BOOTSTRAP_ROLE_NAME: "{{ keystone.bootstrap.role }}"
+    OS_BOOTSTRAP_ADMIN_URL: "{{ endpoints.keystone.url.admin }}/{{ endpoints.keystone.version }}"
+    OS_BOOTSTRAP_INTERNAL_URL: "{{ endpoints.keystone.url.internal }}/{{ endpoints.keystone.version }}"
+    OS_BOOTSTRAP_PUBLIC_URL: "{{ endpoints.keystone.url.public }}/{{ endpoints.keystone.version }}"
+    OS_BOOTSTRAP_SERVICE_NAME: "{{ 'keystone' }}"  # otherwise it uses the keystone variable
+    OS_BOOTSTRAP_REGION_ID: "RegionOne"
 
 - name: keystone tenants
   keystone_user: tenant={{ item }}
                  tenant_description="{{ item }} tenant"
-                 token={{ admin_token }}
                  endpoint="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}/"
+                 login_tenant_name={{ keystone.bootstrap.project }}
+                 login_user={{ keystone.bootstrap.user }}
+                 login_password={{ secrets.admin_password }}
   with_items: "{{ keystone.tenants }}"
 
 - name: keystone users
   keystone_user: user={{ item.name }}
                  password={{ item.password }}
                  tenant={{ item.tenant }}
-                 token={{ admin_token }}
                  endpoint="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}/"
+                 login_tenant_name={{ keystone.bootstrap.project }}
+                 login_user={{ keystone.bootstrap.user }}
+                 login_password={{ secrets.admin_password }}
   with_items: "{{ keystone.users }}"
 
 - name: keystone roles
   keystone_user: role={{ item }}
-                 token={{ admin_token }}
                  endpoint="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}/"
+                 login_tenant_name={{ keystone.bootstrap.project }}
+                 login_user={{ keystone.bootstrap.user }}
+                 login_password={{ secrets.admin_password }}
   with_items: "{{ keystone.roles }}"
 
 - name: keystone user roles
   keystone_user: role={{ item.role }}
                  user={{ item.user }}
                  tenant={{ item.tenant }}
-                 token={{ admin_token }}
                  endpoint="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}/"
+                 login_tenant_name={{ keystone.bootstrap.project }}
+                 login_user={{ keystone.bootstrap.user }}
+                 login_password={{ secrets.admin_password }}
   with_items: "{{ keystone.user_roles }}"
 
 - name: heat stack user
   keystone_user: user=heat_stack_user
-                 password="{{ secrets.service_password }}"
+                 password={{ secrets.service_password }}
                  tenant=admin
-                 token="{{ admin_token }}"
                  endpoint="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}/"
+                 login_tenant_name={{ keystone.bootstrap.project }}
+                 login_user={{ keystone.bootstrap.user }}
+                 login_password={{ secrets.admin_password }}
   when: heat.enabled|bool
 
 - name: heat stack user role
   keystone_user: role=heat_stack_user
                  user=heat_stack_user
                  tenant=admin
-                 token="{{ admin_token }}"
                  endpoint="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}/"
+                 login_tenant_name={{ keystone.bootstrap.project }}
+                 login_user={{ keystone.bootstrap.user }}
+                 login_password={{ secrets.admin_password }}
   when: heat.enabled|bool
-
-- name: keystone endpoint
-  keystone_service: name={{ item.name }}
-                    type={{ item.type }}
-                    description='{{ item.description }}'
-                    public_url={{ item.public_url }}
-                    internal_url={{ item.internal_url }}
-                    admin_url={{ item.admin_url }}
-                    region=RegionOne
-                    token={{ admin_token }}
-  # TODO refactor keystone.services data to be easier to pull out individual services
-  with_items: "{{ keystone.services }}"
-  when: endpoints[item.name] is defined and item.name == 'keystone'
-
-- name: remove admin_token from keystone api
-  lineinfile: dest=/etc/keystone/keystone.conf
-              line="admin_token = {{ admin_token }}"
-              state=absent
-
-- name: set insert_token to false
-  set_fact: insert_token=False
-
-- name: remove admin_token_auth from keystone pipeline
-  template: dest=/etc/keystone/keystone-paste.ini
-            src='{{ role_path }}/../keystone/templates/etc/keystone/keystone-paste.ini'
-
-- name: restart keystone api
-  service: name=keystone state=restarted
 
 - include: federation.yml
   when: keystone.federation.enabled|bool
