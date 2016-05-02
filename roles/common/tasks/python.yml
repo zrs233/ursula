@@ -49,4 +49,4 @@
   with_items: "{{ common.python_extra_packages }}"
 
 - name: install shade for ansible modules
-  pip: name=shade version=0.16.0
+  pip: name=shade state=latest
