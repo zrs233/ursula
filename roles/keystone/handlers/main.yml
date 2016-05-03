@@ -2,3 +2,7 @@
 - name: restart keystone services
   service: name=keystone state=restarted must_exist=false
   when: restart|default('True')
+
+- name: restart shibboleth
+  service: name=shibd state=restarted
+  when: restart|default('True')
