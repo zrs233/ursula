@@ -95,7 +95,7 @@
 - name: fetch Ursula revision
   local_action: command git describe --tags
   run_once: true
-  sudo: no
+  become: no
   register: ursula_git_describe
 
 - name: store Ursula revision
