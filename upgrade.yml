@@ -1,31 +1,23 @@
 # Play for upgrading from one version of OpenStack to another.
-# Heavily flavored for Havana to Juno for now, but useful as a model for
+# Heavily flavored for Kilo to Mitaka for now, but useful as a model for
 # future upgrades. NOT a rolling upgrade optimized for downtime.
 #
 # Assumes ml2 networking
 ---
-- name: Remove existing package symlink
+- name: set the facts
   hosts: all:!vyatta-*
-  max_fail_percentage: 0
-
+  gather_facts: false
+  tags: always
   tasks:
-    - file:
-        dest: /opt/openstack/current
-        state: absent
-      when: openstack_install_method == 'package'
+    - name: set the upgrade fact
+      set_fact: upgrade=True
+      run_once: true
 
-- name: Upgrade kernel to supported HWE
-  hosts: all:!vyatta-*
-  max_fail_percentage: 1
-  tags: kernelupgrade
-
-  tasks:
-    - name: upgrade kernel to trusty lts
-      apt: pkg={{ item }}
-      with_items:
-        - linux-generic-lts-trusty
-        - linux-tools-lts-trusty
-      when: ansible_distribution_version == "12.04"
+    - name: set the git update fact
+      set_fact:
+        openstack_source:
+          git_update: yes
+      run_once: true
 
 - name: upgrade common bits first
   hosts: all:!vyatta-*
@@ -33,73 +25,6 @@
   tags: common
   roles:
     - role: common
-
-- name: upgrade percona cluster in compat mode
-  hosts: db
-  max_fail_percentage: 1
-  tags: dbupgrade
-  serial: 1
-
-  tasks:
-    - name: check db version
-      command: mysql -V
-      changed_when: False
-      register: mysqlver
-
-    - include: upgrade-db-cluster.yml
-      when: not mysqlver.stdout|search('Distrib 5\.6')
-
-- name: upgrade percona arbiter
-  hosts: db_arbiter
-  max_fail_percentage: 1
-  tags: dbupgrade
-
-  pre_tasks:
-    - name: purge old garbd and configs
-      apt: name=percona-xtradb-cluster-garbd-2.x state=absent purge=true
-
-    - name: remove old garb config
-      file: path=/etc/default/garb state=absent
-
-    - name: garbd.log permissions
-      file: path=/var/log/garbd.log owner=nobody state=touch
-
-  roles:
-    - role: percona-common
-
-    - role: percona-arbiter
-
-- name: remove percona compat settings
-  hosts: db
-  max_fail_percentage: 1
-  tags: dbupgrade
-  serial: 1
-
-  tasks:
-    - name: remove compat settings
-      lineinfile: regexp="{{ item }}" state=absent
-                  dest=/etc/mysql/conf.d/replication.cnf
-      with_items:
-        - '^wsrep_provider_options\s*='
-        - '^log_bin_use_v1_row_events\s*='
-        - '^gtid_mode\s*='
-        - '^binlog_checksum\s*='
-        - '^read_only\s*='
-      notify: restart mysql
-
-  handlers:
-    - name: restart mysql
-      service: name=mysql state=restarted
-
-- name: upgrade rabbitmq
-  gather_facts: force
-  hosts: controller
-  max_fail_percentage: 1
-  tags: rabbitmq
-  serial: 1
-
-  roles:
-    - role: rabbitmq
 
 - name: upgrade glance
   hosts: controller
@@ -126,6 +51,7 @@
 - name: stage cinder data software
   hosts: cinder_volume
   max_fail_percentage: 1
+  gather_facts: force
   tags:
     - cinder
     - cinder-volume
@@ -172,29 +98,41 @@
     - name: start cinder data services
       service: name=cinder-volume state=started
 
-- name: ensure cinder v2 endpoint
-  hosts: controller[0]
+- name: upgrade heat
+  hosts: controller
   max_fail_percentage: 1
-  tags:
-    - cinder
-    - cinder-endpoint
+  gather_facts: force
+  tags: heat
 
-  tasks:
-    - name: cinder v2 endpoint
-      keystone_service: name={{ item.name }}
-                        type={{ item.type }}
-                        description='{{ item.description }}'
-                        public_url={{ item.public_url }}
-                        internal_url={{ item.internal_url }}
-                        admin_url={{ item.admin_url }}
-                        region=RegionOne
-                        auth_url={{ endpoints.auth_uri }}
-                        tenant_name=admin
-                        login_user=admin
-                        login_password={{ secrets.admin_password }}
-      with_items: keystone.services
-      when: endpoints[item.name] is defined and endpoints[item.name]
-            and item.name == 'cinderv2'
+  roles:
+    - role: heat
+      force_sync: true
+      restart: False
+      database_create:
+        changed: false
+      when: heat.enabled|bool
+
+- name: upgrade keystone
+  hosts: controller
+  max_fail_percentage: 1
+  gather_facts: force
+  tags: keystone
+
+  pre_tasks:
+    - name: dump keystone db
+      mysql_db:
+        name: keystone
+        state: dump
+        target: /backup/keystone-preupgrade.sql
+      run_once: True
+      tags: dbdump
+
+  roles:
+    - role: keystone
+      force_sync: true
+      restart: False
+      database_create:
+        changed: False
 
 # Nova block
 - name: stage nova compute
@@ -249,37 +187,11 @@
       service: name=nova-compute state=started
       when: ironic.enabled == False
 
-# Ironic block
-- name: upgrade ironic control
-  hosts: controller
-  max_fail_percentage: 1
-  tags: ironic
-
-  roles:
-    - role: stop-services
-      services:
-        - nova-compute
-      when: ironic.enabled == True
-
-    - role: ironic-control
-      force_sync: true
-      restart: False
-      database_create:
-        changed: False
-      when: ironic.enabled == True
-
-    - role: ironic-data
-      when: ironic.enabled == True
-
-  tasks:
-    - name: start nova compute
-      service: name=nova-compute state=started
-      when: ironic.enabled == True
-
 # Neutron block
 - name: stage neutron core data
   hosts: compute:network
   max_fail_percentage: 1
+  gather_facts: force
   tags:
     - neutron
     - neutron-data
@@ -315,20 +227,6 @@
       run_once: True
       tags: dbdump
 
-    - name: check db version
-      command: neutron-db-manage --config-file /etc/neutron/neutron.conf
-               --config-file /etc/neutron/plugins/ml2/ml2_plugin.ini
-               current
-      register: neutron_db_ver
-      run_once: True
-
-    - name: stamp neutron to havana
-      command: neutron-db-manage --config-file /etc/neutron/neutron.conf
-               --config-file /etc/neutron/plugins/ml2/ml2_plugin.ini
-               stamp havana
-      when: not neutron_db_ver.stdout|search('juno')
-      run_once: True
-
   roles:
     - role: neutron-control
       force_sync: true
@@ -362,22 +260,10 @@
         - neutron-dhcp-agent
         - neutron-metadata-agent
 
-- name: upgrade heat
-  hosts: controller
-  max_fail_percentage: 1
-  tags: heat
-
-  roles:
-    - role: heat
-      force_sync: true
-      restart: False
-      database_create:
-        changed: false
-      when: heat.enabled|bool
-
 - name: upgrade swift
   hosts: swiftnode
   any_errors_fatal: true
+  gather_facts: force
   tags: swift
 
   roles:
@@ -397,30 +283,10 @@
     - role: swift-proxy
       tags: ['openstack', 'swift', 'control']
 
-- name: upgrade keystone
-  hosts: controller
-  max_fail_percentage: 1
-  tags: keystone
-
-  pre_tasks:
-    - name: dump keystone db
-      mysql_db:
-        name: keystone
-        state: dump
-        target: /backup/keystone-preupgrade.sql
-      run_once: True
-      tags: dbdump
-
-  roles:
-    - role: keystone
-      force_sync: true
-      restart: False
-      database_create:
-        changed: False
-
 - name: upgrade horizon
   hosts: controller
   max_fail_percentage: 1
+  gather_facts: force
   tags: horizon
 
   roles:
