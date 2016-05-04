@@ -22,15 +22,17 @@
     - "{{ images_downloaded.results }}"
 
 - name: default images
-  glance_image: name={{ item.name }}
-                file="/opt/stack/glance-images/{{ item.filename }}"
-                container_format=bare
-                disk_format=qcow2
-                auth_url={{ endpoints.auth_uri }}
-                login_tenant_name=admin
-                login_username=admin
-                login_password={{ secrets.admin_password }}
-                is_public=yes
-                timeout=12000
+  os_image:
+    api_timeout: 12000
+    auth:
+      auth_url: "{{ endpoints.auth_uri }}"
+      project_name: admin
+      username: admin
+      password: "{{ secrets.admin_password }}"
+    container_format: bare
+    disk_format: qcow2
+    filename: "/opt/stack/glance-images/{{ item.filename }}"
+    is_public: yes
+    name: "{{ item.name }}"
   with_items: "{{ glance.images }}"
   run_once: true
