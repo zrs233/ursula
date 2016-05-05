@@ -11,17 +11,24 @@
     "volume:get": "",
     "volume:get_all": "",
     "volume:get_volume_metadata": "",
+    "volume:delete_volume_metadata": "rule:admin_or_owner",
+    "volume:update_volume_metadata": "rule:admin_or_owner",
     "volume:get_volume_admin_metadata": "rule:admin_api",
-    "volume:delete_volume_admin_metadata": "rule:admin_api",
     "volume:update_volume_admin_metadata": "rule:admin_api",
     "volume:get_snapshot": "",
     "volume:get_all_snapshots": "",
+    "volume:create_snapshot": "rule:admin_or_owner",
+    "volume:delete_snapshot": "rule:admin_or_owner",
+    "volume:update_snapshot": "rule:admin_or_owner",
     "volume:extend": "",
     "volume:update_readonly_flag": "",
     "volume:retype": "",
+    "volume:update": "rule:admin_or_owner",
 
     "volume_extension:types_manage": "rule:admin_api",
     "volume_extension:types_extra_specs": "rule:admin_api",
+    "volume_extension:access_types_qos_specs_id": "rule:admin_api",
+    "volume_extension:access_types_extra_specs": "rule:admin_api",
     "volume_extension:volume_type_access": "",
     "volume_extension:volume_type_access:addProjectAccess": "rule:admin_api",
     "volume_extension:volume_type_access:removeProjectAccess": "rule:admin_api",
@@ -32,7 +39,9 @@
 
     "volume_extension:quotas:show": "",
     "volume_extension:quotas:update": "rule:admin_or_cloudadmin",
+    "volume_extension:quotas:delete": "rule:admin_api",
     "volume_extension:quota_classes": "",
+    "volume_extension:quota_classes:validate_setup_for_nested_quota_use": "rule:admin_api",
 
     "volume_extension:volume_admin_actions:reset_status": "rule:admin_api",
     "volume_extension:snapshot_admin_actions:reset_status": "rule:admin_api",
@@ -40,6 +49,7 @@
     "volume_extension:volume_admin_actions:force_delete": "rule:admin_api",
     "volume_extension:volume_admin_actions:force_detach": "rule:admin_api",
     "volume_extension:snapshot_admin_actions:force_delete": "rule:admin_api",
+    "volume_extension:backup_admin_actions:force_delete": "rule:admin_api",
     "volume_extension:volume_admin_actions:migrate_volume": "rule:admin_api",
     "volume_extension:volume_admin_actions:migrate_volume_completion": "rule:admin_api",
 
@@ -47,12 +57,13 @@
     "volume_extension:volume_tenant_attribute": "rule:admin_or_owner",
     "volume_extension:volume_mig_status_attribute": "rule:admin_api",
     "volume_extension:hosts": "rule:admin_api",
-    "volume_extension:services": "rule:admin_api",
+    "volume_extension:services:index": "rule:admin_api",
+    "volume_extension:services:update" : "rule:admin_api",
 
     "volume_extension:volume_manage": "rule:admin_api",
     "volume_extension:volume_unmanage": "rule:admin_api",
 
-    "volume:services": "rule:admin_api",
+    "volume_extension:capabilities": "rule:admin_api",
 
     "volume:create_transfer": "",
     "volume:accept_transfer": "",
@@ -61,6 +72,11 @@
 
     "volume_extension:replication:promote": "rule:admin_api",
     "volume_extension:replication:reenable": "rule:admin_api",
+
+    "volume:enable_replication": "rule:admin_api",
+    "volume:disable_replication": "rule:admin_api",
+    "volume:failover_replication": "rule:admin_api",
+    "volume:list_replication_targets": "rule:admin_api",
 
     "backup:create": "",
     "backup:delete": "",
@@ -71,6 +87,8 @@
     "backup:backup-export": "rule:admin_or_cloudadmin",
 
     "snapshot_extension:snapshot_actions:update_snapshot_status": "",
+    "snapshot_extension:snapshot_manage": "rule:admin_api",
+    "snapshot_extension:snapshot_unmanage": "rule:admin_api",
 
     "consistencygroup:create": "group:nobody",
     "consistencygroup:delete": "group:nobody",
