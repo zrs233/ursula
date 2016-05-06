@@ -225,3 +225,4 @@
   sensu_check: name=check-raid plugin=check-raid.sh interval=300 occurrences=1
                args="-z {{ common.monitoring.sensu_checks.check_raid.criticality }}"
   notify: restart sensu-client
+  when: common.hwraid.enabled|bool
