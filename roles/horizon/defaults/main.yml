@@ -3,6 +3,7 @@ horizon:
   keystone_api_version: 3
   session_timeout: 5400
   customize: false
+  horizon_lib_dir: "/opt/openstack/current/horizon"
   source:
     rev: 'stable/mitaka'
     python_dependencies:
