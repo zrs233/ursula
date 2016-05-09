@@ -25,6 +25,7 @@ glance:
     rev: 'stable/mitaka'
     python_dependencies:
       - { name: PyMySQL }
+      - { name: python-swiftclient }
       - { name: "git+https://github.com/blueboxgroup/bbc-openstack-plugins.git#egg=bbc_openstack_plugins" }
     system_dependencies:
       - libxml2-dev
