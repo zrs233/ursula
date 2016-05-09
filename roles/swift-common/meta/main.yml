@@ -10,6 +10,7 @@ dependencies:
   - role: openstack-source
     project_name: swift
     python_dependencies: "{{ swift.source.python_dependencies }}"
+    system_dependencies: "{{ swift.source.system_dependencies }}"
     project_rev: "{{ swift.source.rev }}"
     alternatives: "{{ swift.alternatives }}"
     when: openstack_install_method == 'source'
