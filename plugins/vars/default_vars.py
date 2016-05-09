@@ -20,10 +20,6 @@ import yaml
 
 from ansible.constants import DEFAULTS, get_config, load_config_file
 
-import ansible.errors as errors
-import ansible.inventory as inventory
-import ansible.utils as utils
-
 
 def deep_update_dict(d, u):
     for k, v in u.iteritems():

@@ -11,7 +11,7 @@
   register: keypair
 
 - name: persist private key
-  sudo: no
+  become: no
   copy:
     content: "{{ keypair.key.private_key }}"
     dest: "{{ temp_key_dest }}"
@@ -86,7 +86,7 @@
   ignore_errors: yes
 
 - name: wait for instances to be reachable
-  sudo: no
+  become: no
   wait_for:
     port: 22
     delay: 5
@@ -106,7 +106,7 @@
             -o IdentityFile={{ temp_key_dest }}
             cirros@{{ fip.floating_ip.floating_ip_address }}
             ping -c 5 {{ item.openstack.private_v4 }}"
-  sudo: no
+  become: no
   changed_when: false
   register: pings
   until: pings|success
@@ -120,7 +120,7 @@
             -o IdentityFile={{ temp_key_dest }}
             cirros@{{ fip.floating_ip.floating_ip_address }}
             ping -c 5 google.com"
-  sudo: no
+  become: no
   changed_when: false
   register: pings
   until: pings|success
@@ -183,7 +183,7 @@
   tags: delete
 
 - name: delete private key file
-  sudo: no
+  become: no
   local_action:
     module: file
     dest: "{{ temp_key_dest }}"

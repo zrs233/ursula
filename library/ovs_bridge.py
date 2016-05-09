@@ -60,5 +60,6 @@ def main():
         module.fail_json(msg="ovs_bridge error: %s" % (str(e)))
 
 # this is magic, see lib/ansible/module_common.py
-#<<INCLUDE_ANSIBLE_MODULE_COMMON>>
+from ansible.module_utils.basic import *
+
 main()
