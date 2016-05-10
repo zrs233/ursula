@@ -83,6 +83,8 @@ def main():
             auth_url=dict(default=None, required=True),
             username=dict(default=None, required=True),
             password=dict(default=None, required=True),
+            project_name_to_auth=dict(default=None, required=True),
+            domain_name_to_auth=dict(default=None, required=True),
             verify=dict(default=True, type='bool', required=False),
             group=dict(default=None, required=True),
             role=dict(default=None, required=True),
@@ -100,7 +102,9 @@ def main():
         keystone = Client(auth_url=module.params['auth_url'],
                           username=module.params['username'],
                           password=module.params['password'],
-                          verify=module.params['verify'])
+                          verify=module.params['verify'],
+                          project_name=module.params['project_name_to_auth'],
+                          project_domain_name=module.params['domain_name_to_auth'])
 
         if module.params['state'] == 'present':
             params = {
