@@ -11,10 +11,7 @@ from openstack_dashboard.settings import HORIZON_CONFIG
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
-
-## FIXME disable offline compression until we sort out static file location
-## issues
-COMPRESS_OFFLINE = False
+COMPRESS_OFFLINE = True
 
 # WEBROOT is the location relative to Webserver root
 # should end with a slash.
@@ -112,6 +109,7 @@ OPENSTACK_API_VERSIONS = {
 {% if horizon.customize %}
 HORIZON_CONFIG["customization_module"] = "horizon-customization.horizon_customization"
 {% endif %}
+HORIZON_CONFIG["help_url"] = "http://docs.openstack.org/mitaka"
 
 LOCAL_PATH = os.path.dirname(os.path.abspath(__file__))
 
@@ -415,7 +413,9 @@ POLICY_FILES = {
     'image': '/etc/glance/policy.json',
     'orchestration': '/etc/heat/policy.json',
     'network': '/etc/neutron/policy.json',
+{% if ceilometer.enabled|default('False')|bool -%}
     'telemetry': '/etc/ceilometer/policy.json',
+{% endif -%}
 }
 
 # TODO: (david-lyle) remove when plugins support adding settings.
@@ -715,11 +715,5 @@ REST_API_REQUIRED_SETTINGS = ['OPENSTACK_HYPERVISOR_FEATURES',
 # http://tinyurl.com/anticlickjack
 #DISALLOW_IFRAME_EMBED = True
 
-# Uncomment when we sort these static settings out
-#from openstack_dashboard.settings import STATICFILES_DIRS, STATIC_ROOT
-#{% if openstack_install_method == 'package' %}
-#STATIC_ROOT='/opt/bbc/openstack-{{ openstack_package_version }}/horizon/static'
-#{% else %}
-#STATIC_ROOT='/opt/stack/horizon/static'
-#{% endif %}
-#STATICFILES_DIRS.append(('/etc/openstack-dashboard/static'))
+
+STATIC_ROOT = "{{ horizon.horizon_lib_dir }}/lib/python2.7/site-packages/openstack_dashboard/static"

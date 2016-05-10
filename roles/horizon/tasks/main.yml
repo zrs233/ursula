@@ -52,22 +52,14 @@
   notify:
     - reload apache
 
+#Use current Symlink for both package/source install
 - name: create static assets directory
-  file: dest="{{ 'horizon'|ursula_package_path(openstack_package_version) }}/static"
+  file: dest="{{ horizon.horizon_lib_dir }}/lib/python2.7/site-packages/openstack_dashboard/{{ item }}"
         owner=www-data group=www-data state=directory
-  when: openstack_install_method == 'package'
-
-- name: create static assets directory
-  file: dest="/opt/stack/horizon/static"
-        owner=www-data group=www-data state=directory
-  when: openstack_install_method == 'source'
-
-- name: create customer-specific static assets directories
-  file: dest=/etc/openstack-dashboard/{{ item }} state=directory
   with_items:
     - static
     - static/dashboard
-    - static/dashboard/img
+    - static/img
     - static/dashboard/fonts
 
 ## FIXME
@@ -83,7 +75,7 @@
 
 - name: custom horizon logo
   get_url: url={{ item.url }}
-           dest=/etc/openstack-dashboard/static/dashboard/{{ item.name }}
+           dest={{ horizon.horizon_lib_dir }}/lib/python2.7/site-packages/openstack_dashboard/static/{{ item.name }}
            force=True
   with_items:
     - { name: img/logo.png, url: "{{ horizon.logo_url|default('') }}"  }
@@ -91,25 +83,16 @@
     - { name: img/favicon.ico, url: "{{ horizon.favicon_url|default('') }}" }
   when: (horizon.logo_url is defined and horizon.favicon_url is defined)
 
-- name: gather static assets from openstack package install
-  environment:
-    DJANGO_SETTINGS_MODULE: 'openstack_dashboard.settings'
-    PYTHONPATH: /etc/openstack-dashboard:$PYTHONPATH
-  shell: "{{ item }}"
-  with_items:
-    - "{{ 'horizon'|ursula_package_path(openstack_package_version) }}/bin/django-admin.py collectstatic --noinput"
-    - "{{ 'horizon'|ursula_package_path(openstack_package_version) }}/bin/django-admin.py compress --force"
-  when: openstack_install_method == 'package'
 
-- name: gather static assets from openstack source install
+#
+- name: gather static assets from openstack install
   environment:
     DJANGO_SETTINGS_MODULE: 'openstack_dashboard.settings'
-    PYTHONPATH: "/etc/openstack-dashboard:/opt/stack/horizon:$PYTHONPATH"
+    PYTHONPATH: "$PYTHONPATH"
   shell: "{{ item }}"
   with_items:
-    - "{{ openstack_source.virtualenv_base }}/horizon/bin/django-admin.py collectstatic --noinput"
-    - "{{ openstack_source.virtualenv_base }}/horizon/bin/django-admin.py compress --force"
-  when: openstack_install_method == 'source'
+    - "{{ horizon.horizon_lib_dir }}/bin/django-admin.py collectstatic --noinput"
+    - "{{ horizon.horizon_lib_dir }}/bin/django-admin.py compress --force"
 
 - name: trigger restart on upgrades
   debug:
