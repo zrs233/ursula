@@ -12,6 +12,9 @@ swift:
     python_dependencies:
       - { name: keystonemiddleware }
       - { name: python-swiftclient }
+      - { name: setuptools>=17.1 }
+    system_dependencies:
+      - liberasurecode-dev
   alternatives:
     - swift-account-audit
     - swift-account-auditor
