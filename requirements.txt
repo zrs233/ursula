@@ -2,7 +2,7 @@ tox
 pep8
 oslo.utils
 shade>=1.7.0
-ansible<=2.0.2.0,<3
+ansible>=2.0.2.0,<3
 python-novaclient
 python-glanceclient
 python-cinderclient
