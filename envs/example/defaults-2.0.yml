@@ -599,12 +599,7 @@ haproxy:
   enabled: True
 
 logging:
-  enabled: True
-  follow:
-    global_fields:
-      cluster_name: "example-dev"
-  download:
-    url: https://file-mirror.openstack.blueboxgrid.com/logstash/logstash-forwarder_0.3.1_amd64.deb
+  enabled: False
 
 keystonev3:
   enabled: True
