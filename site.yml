@@ -1,13 +1,17 @@
 ---
 - name: gather facts on all hosts
-  hosts: all
+  hosts: localhost
   tags: always
+  gather_facts: false
   become: no
   tasks:
+    # This forces the gathering of facts from every host in the inventory
+    # even if hosts were --limit'd out.
     - setup:
       delegate_to: "{{ item }}"
       delegate_facts: yes
       with_items: "{{ groups['all'] }}"
+      run_once: true
 
 - name: common role for all hosts
   hosts: all:!vyatta-*
