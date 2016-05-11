@@ -1,12 +1,24 @@
 ---
 - name: pip install swifttool
-  pip: name="/opt/stack/{{ swift.swifttool_dir  }}" extra_args='-i https://pypi.python.org/simple/'
+  pip: name=/opt/stack/{{ swift.swifttool_dir  }}
+       extra_args="-i {{ openstack.pypi_mirror | default(omit) }}"
+       virtualenv={{ swift.venv_dir }}
   register: result
   until: result|success
   retries: 3
   delay: 10
   notify:
     - update ca-certs
+    - pip clean swifttool outside venv
+    - setup swifttool alternatives
+
+- name: pip clean swifttool outside venv
+  pip: name=swifttool state=absent
+
+- name: setup swifttool alternatives
+  alternatives: name=swifttool
+                path={{ swift.venv_dir }}/bin/swifttool
+                link=/usr/local/bin/swifttool
 
 - name: update ca-certs
   command: update-ca-certificates

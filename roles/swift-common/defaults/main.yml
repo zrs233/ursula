@@ -104,3 +104,4 @@ swift:
         no_replicators: 2
         no_auditors: 1
         no_updaters: 1
+  venv_dir: '/opt/openstack/current/swift'
