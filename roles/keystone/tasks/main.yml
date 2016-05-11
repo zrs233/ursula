@@ -37,9 +37,9 @@
   
 - name: set uwsgi path (package install)
   set_fact:
-    uwsgi_path: "{{ lookup('items', 'openstack_package.virtualenv_base') }}/keystone/bin/uwsgi"
+    uwsgi_path: "{{ openstack_package.virtualenv_base }}/keystone/bin/uwsgi"
   when: openstack_install_method == 'package'
-  
+
 - name: install keystone uwsgi service
   template: src=etc/init/keystone.conf
             dest=/etc/init/keystone.conf mode=0644
