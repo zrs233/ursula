@@ -15,7 +15,7 @@ SSH_ARGS=\
 " -i ${KEY_PATH}"
 export ANSIBLE_SSH_ARGS="${SSH_ARGS}"
 export ANSIBLE_VAR_DEFAULTS_FILE="${ROOT}/envs/test/defaults-2.0.yml"
-export IMAGE_ID=${IMAGE_ID:=1525c3f3-1224-4958-bd07-da9feaedf18b}
+export IMAGE_ID=${IMAGE_ID:=ubuntu-14.04}
 
 if [[ -n ${BUILD_TAG} ]]; then
   export testenv_instance_prefix=${BUILD_TAG}
