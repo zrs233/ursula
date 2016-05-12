@@ -42,6 +42,21 @@
   notify:
     - reload apache
 
+- name: set horizon keystone policy fact
+  set_fact: policy_for_horizon=True
+  when: horizon.customize|default('False')|bool
+
+# Use custom policy to allow cloud_admin admin panel access
+- name: configure custom keystone policy
+  template:
+    src: "roles/keystone/templates/etc/keystone/policy.json"
+    dest: "/etc/openstack-dashboard/keystone_policy.json"
+    mode: 0640
+    owner: "www-data"
+    group: "www-data"
+  notify:
+    - reload apache
+
 - name: horizon local settings
   template: src=etc/openstack-dashboard/{{ item }}
             dest=/etc/openstack-dashboard/{{ item }}

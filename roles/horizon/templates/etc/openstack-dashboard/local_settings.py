@@ -407,7 +407,11 @@ TIME_ZONE = "UTC"
 # Having matching policy files on the Horizon and Keystone servers is essential
 # for normal operation. This holds true for all services and their policy files.
 POLICY_FILES = {
+{% if policy_for_horizon|default('False')|bool %}
+    'identity': '/etc/openstack-dashboard/keystone_policy.json',
+{% else %}
     'identity': '/etc/keystone/policy.json',
+{% endif %}
     'compute': '/etc/nova/policy.json',
     'volume': '/etc/cinder/policy.json',
     'image': '/etc/glance/policy.json',
