@@ -10,10 +10,8 @@
   with_items:
     - ceilometer-api
     - ceilometer-collector
+    - ceilometer-polling
     - ceilometer-agent-notification
-    - ceilometer-agent-central
-    - ceilometer-alarm-evaluator
-    - ceilometer-alarm-notifier
   notify: restart ceilometer services
 
 - name: trigger restart on upgrades
@@ -25,7 +23,14 @@
         upgrade | default('False') | bool
 
 - name: create ceilometer user in mongodb
-  mongodb_user: database={{ ceilometer.mongodb_database }} name={{ ceilometer.mongodb_user }} password={{ ceilometer.mongodb_password }} roles='readWrite,dbAdmin' state=present
+  mongodb_user:
+    database: "{{ ceilometer.mongodb_database }}"
+    name: "{{ ceilometer.mongodb_user }}"
+    password: "{{ ceilometer.mongodb_password }}"
+    roles: 'readWrite,dbAdmin'
+    state: present
+    login_password: "{{ secrets.mongodb_password }}"
+    login_user: admin
   when: inventory_hostname in groups['controller'][0]
 
 - meta: flush_handlers
@@ -35,10 +40,8 @@
   with_items:
     - ceilometer-api
     - ceilometer-collector
+    - ceilometer-polling
     - ceilometer-agent-notification
-    - ceilometer-agent-central
-    - ceilometer-alarm-evaluator
-    - ceilometer-alarm-notifier
 
 - include: monitoring.yml
   tags:

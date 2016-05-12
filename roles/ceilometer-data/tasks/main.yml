@@ -1,8 +1,8 @@
 ---
-- name: install ceilometer compute service
-  upstart_service: name=ceilometer-agent-compute
+- name: install ceilometer polling agent
+  upstart_service: name=ceilometer-polling
                    user=ceilometer
-                   cmd=/usr/local/bin/ceilometer-agent-compute
+                   cmd=/usr/local/bin/ceilometer-polling
   notify: restart ceilometer services
 
 - name: install libvirt-python in package venv
@@ -25,8 +25,10 @@
 
 - meta: flush_handlers
 
-- name: start ceilometer-compute service
-  service: name=ceilometer-agent-compute state=started
+- name: start ceilometer-polling service
+  service:
+    name: ceilometer-polling
+    state: started
 
 - include: monitoring.yml
   tags:

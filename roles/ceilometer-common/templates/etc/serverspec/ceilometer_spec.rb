@@ -23,10 +23,8 @@ end
 {% if inventory_hostname in groups['controller'] %}
 processes = ['ceilometer-api',
   'ceilometer-collector',
+  'ceilometer-polling',
   'ceilometer-agent-notification',
-  'ceilometer-agent-central',
-  'ceilometer-alarm-evaluator',
-  'ceilometer-alarm-notifier']
 processes.each do |process|
   describe process(process) do
     its(:user) { should eq 'ceilometer' }
