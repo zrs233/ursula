@@ -38,7 +38,7 @@ class VarsModule(object):
         self.inventory_basedir = inventory.basedir()
 
     def _get_defaults(self):
-        p = load_config_file()
+        p, cfg_path = load_config_file()
         defaults_file = get_config(p, DEFAULTS, 'var_defaults_file',
                                    'ANSIBLE_VAR_DEFAULTS_FILE', None)
         if not defaults_file:
