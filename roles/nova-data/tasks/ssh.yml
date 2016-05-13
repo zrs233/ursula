@@ -27,11 +27,13 @@
     mode: 0700
     state: directory
 
-- name: nova known_hosts root symlink (for libvirt)
-  file:
-    src: "{{ nova.state_path }}/.ssh/known_hosts"
-    path: /root/.ssh/known_hosts
-    state: link
+- name: root known_hosts (for libvirt)
+  template:
+    src: var/lib/nova/ssh/known_hosts
+    dest: "/root/.ssh/known_hosts"
+    owner: root
+    group: root
+    mode: 0600
 
 - name: nova bin directory
   file:
