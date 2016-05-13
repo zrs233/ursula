@@ -52,4 +52,6 @@
     mode: 0755
 
 - name: verify ssh among compute nodes
-  command: sudo -u nova -H /bin/sh -c {{ nova.state_path }}/bin/verify-ssh
+  command: "{{ nova.state_path }}/bin/verify-ssh"
+  become: yes
+  become_user: nova

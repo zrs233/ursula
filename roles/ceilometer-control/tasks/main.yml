@@ -31,7 +31,8 @@
     state: present
     login_password: "{{ secrets.mongodb_password }}"
     login_user: admin
-  when: inventory_hostname in groups['controller'][0]
+  run_once: true
+  delegate_to: "{{ groups['mongo_db'][0] }}"
 
 - meta: flush_handlers
 
