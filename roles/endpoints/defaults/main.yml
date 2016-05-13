@@ -37,7 +37,7 @@ endpoints:
       backend_api: 9393
       haproxy_api: 9292
     haproxy:
-      health_check: 'httpchk GET /versions'
+      health_check: 'httpchk GET /healthcheck'
       balance: 'source'
       prefer_primary_backend: True
   cinder:
