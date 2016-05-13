@@ -16,3 +16,13 @@
     - ceilometer-collector
     - ceilometer-agent-notification
   notify: restart sensu-client
+
+- name: remove old checks
+  sensu_process_check:
+    service: "{{ item }}"
+    state: absent
+  with_items:
+    - ceilometer-agent-central
+    - ceilometer-alarm-evaluator
+    - ceilometer-alarm-notifier
+  notify: restart sensu-client
