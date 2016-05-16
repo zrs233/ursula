@@ -38,6 +38,7 @@
         nics:
           - net-name: internal
         auto_floating_ip: false
+        availability_zone: "{{ ansible_env.AVAILABILITY_ZONE | default(omit) }}"
       with_items: "{{ testenv_instance_names }}"
       register: instances
 
