@@ -1,4 +1,12 @@
 ---
+- name: set federated domain name
+  ini_file: dest=/etc/keystone/keystone.conf
+            section=federation
+            option=federated_domain_name
+            value=Default
+  when: keystone.federation.sp.oidc.enabled|bool
+  notify: restart keystone services
+
 - name: create keystone identity providers
   keystone_identity_provider: auth_url="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/v3"
                               username="admin"
