@@ -13,6 +13,7 @@ cinder:
   volume_group: cinder-volumes
   create_vg: False
   common_volume_name: True
+  allow_availability_zone_fallback: True
   alternatives:
       - cinder-all
       - cinder-api
