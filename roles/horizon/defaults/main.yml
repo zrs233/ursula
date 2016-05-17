@@ -4,6 +4,8 @@ horizon:
   session_timeout: 5400
   customize: false
   horizon_lib_dir: "/opt/openstack/current/horizon"
+  nextgen_instance_panel: false
+  legacy_instance_panel: true
   source:
     rev: 'stable/mitaka'
     python_dependencies:

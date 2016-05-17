@@ -221,8 +221,17 @@ OPENSTACK_KEYSTONE_BACKEND = {
 # Toggle LAUNCH_INSTANCE_LEGACY_ENABLED and LAUNCH_INSTANCE_NG_ENABLED to
 # determine the experience to enable.  Set them both to true to enable
 # both.
-#LAUNCH_INSTANCE_LEGACY_ENABLED = True
-#LAUNCH_INSTANCE_NG_ENABLED = False
+{% if horizon.legacy_instance_panel|default('True')|bool %}
+LAUNCH_INSTANCE_LEGACY_ENABLED = True
+{% else %}
+LAUNCH_INSTANCE_LEGACY_ENABLED = False
+{% endif %}
+
+{% if horizon.nextgen_instance_panel|default('False')|bool %}
+LAUNCH_INSTANCE_NG_ENABLED = True
+{% else %}
+LAUNCH_INSTANCE_NG_ENABLED = False
+{% endif %}
 
 # A dictionary of settings which can be used to provide the default values for
 # properties found in the Launch Instance modal.

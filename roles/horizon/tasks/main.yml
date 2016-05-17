@@ -54,6 +54,7 @@
     mode: 0640
     owner: "www-data"
     group: "www-data"
+  when: horizon.customize|default('False')|bool
   notify:
     - reload apache
 
