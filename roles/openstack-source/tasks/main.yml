@@ -12,6 +12,11 @@
   until: git_result|success
   retries: 3
 
+- name: set code has changed fact
+  set_fact:
+    code_has_changed: True
+  when: git_result | changed
+
 - name: python requirements for project from alternative proxy
   pip:
     name: "{{ item.name }}"

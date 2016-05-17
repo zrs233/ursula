@@ -4,6 +4,11 @@
        update_cache=yes cache_valid_time=3600
   register: project_package
 
+- name: set code has changed fact
+  set_fact:
+    code_has_changed: True
+  when: project_package | changed
+
 - name: setup openstack current base path
   file:
     dest: /opt/openstack/current
