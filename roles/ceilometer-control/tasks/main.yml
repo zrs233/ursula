@@ -19,7 +19,7 @@
     msg: "Triggering service restart for upgrade"
   changed_when: True
   notify: restart ceilometer services
-  when: (project_package.changed or git_result.changed) and
+  when: code_has_changed | default('False') | bool and
         upgrade | default('False') | bool
 
 - name: create ceilometer user in mongodb
@@ -31,7 +31,8 @@
     state: present
     login_password: "{{ secrets.mongodb_password }}"
     login_user: admin
-  when: inventory_hostname in groups['controller'][0]
+  run_once: true
+  delegate_to: "{{ groups['mongo_db'][0] }}"
 
 - meta: flush_handlers
 

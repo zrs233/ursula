@@ -108,7 +108,7 @@
     msg: "Triggering service restart for upgrade"
   changed_when: True
   notify: restart keystone services
-  when: (project_package.changed or git_result.changed) and
+  when: code_has_changed | default('False') | bool and
         upgrade | default('False') | bool
   
 - name: enable keystone apache site

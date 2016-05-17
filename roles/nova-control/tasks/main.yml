@@ -50,7 +50,7 @@
     msg: "Triggering service restart for upgrade"
   changed_when: True
   notify: restart nova services
-  when: (project_package.changed or git_result.changed) and
+  when: code_has_changed | default('False') | bool and
         upgrade | default('False') | bool
 
 - meta: flush_handlers

@@ -6,18 +6,16 @@
 ---
 - name: set the facts
   hosts: all:!vyatta-*
-  gather_facts: false
+  gather_facts: yes
   tags: always
   tasks:
     - name: set the upgrade fact
       set_fact: upgrade=True
-      run_once: true
 
     - name: set the git update fact
       set_fact:
         openstack_source:
           git_update: yes
-      run_once: true
 
 - name: upgrade common bits first
   hosts: all:!vyatta-*
@@ -39,6 +37,7 @@
         target: /backup/glance-preupgrade.sql
       run_once: True
       tags: dbdump
+      delegate_to: "{{ groups['db'][0] }}"
 
   roles:
     - role: glance
@@ -51,7 +50,6 @@
 - name: stage cinder data software
   hosts: cinder_volume
   max_fail_percentage: 1
-  gather_facts: force
   tags:
     - cinder
     - cinder-volume
@@ -79,6 +77,7 @@
         target: /backup/cinder-preupgrade.sql
       run_once: True
       tags: dbdump
+      delegate_to: "{{ groups['db'][0] }}"
 
   roles:
     - role: cinder-control
@@ -101,7 +100,6 @@
 - name: upgrade heat
   hosts: controller
   max_fail_percentage: 1
-  gather_facts: force
   tags: heat
 
   roles:
@@ -112,10 +110,65 @@
         changed: false
       when: heat.enabled|bool
 
+# Ceilometer block
+- name: stage ceilometer data software
+  hosts: compute
+  max_fail_percentage: 1
+  tags:
+    - ceilometer
+    - ceilometer-data
+
+  roles:
+    - role: ceilometer-data
+      restart: False
+      when: ceilometer.enabled|bool
+
+    - role: stop-services
+      services:
+        - ceilometer-agent-compute
+      must_exist: False
+      when: ceilometer.enabled|bool
+
+- name: stage ceilomter control software and stop services
+  hosts: controller
+  max_fail_percentage: 1
+  tags:
+    - ceilometer
+    - ceilometer-control
+
+  roles:
+    - role: stop-services
+      services:
+        - ceilometer-agent-central
+        - ceilometer-alarm-evaluator
+        - ceilometer-alarm-notifier
+      must_exist: False
+      when: ceilometer.enabled|bool
+
+    - role: ceilometer-control
+      force_sync: true
+      restart: False
+      database_create:
+        changed: false
+      when: ceilometer.enabled|bool
+
+- name: start ceilometer data services
+  hosts: compute
+  max_fail_percentage: 1
+  tags:
+    - ceilometer
+    - ceilometer-data
+
+  tasks:
+    - name: start ceilometer data services
+      service:
+        name: ceilometer-polling
+        state: started
+      when: ceilometer.enabled|bool
+
 - name: upgrade keystone
   hosts: controller
   max_fail_percentage: 1
-  gather_facts: force
   tags: keystone
 
   pre_tasks:
@@ -126,6 +179,7 @@
         target: /backup/keystone-preupgrade.sql
       run_once: True
       tags: dbdump
+      delegate_to: "{{ groups['db'][0] }}"
 
   roles:
     - role: keystone
@@ -167,6 +221,7 @@
         target: /backup/nova-preupgrade.sql
       run_once: True
       tags: dbdump
+      delegate_to: "{{ groups['db'][0] }}"
 
   roles:
     - role: nova-control
@@ -191,7 +246,6 @@
 - name: stage neutron core data
   hosts: compute:network
   max_fail_percentage: 1
-  gather_facts: force
   tags:
     - neutron
     - neutron-data
@@ -226,6 +280,7 @@
         target: /backup/neutron-preupgrade.sql
       run_once: True
       tags: dbdump
+      delegate_to: "{{ groups['db'][0] }}"
 
   roles:
     - role: neutron-control
@@ -263,7 +318,6 @@
 - name: upgrade swift
   hosts: swiftnode
   any_errors_fatal: true
-  gather_facts: force
   tags: swift
 
   roles:
@@ -286,7 +340,6 @@
 - name: upgrade horizon
   hosts: controller
   max_fail_percentage: 1
-  gather_facts: force
   tags: horizon
 
   roles:
