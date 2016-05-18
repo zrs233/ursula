@@ -102,6 +102,33 @@
   when: "'{{ nova.libvirt_type }}' == 'kvm'"
   changed_when: False
 
+- name: generate really unique uuid
+  command: uuidgen -t
+  args:
+    creates: /etc/machine-id
+  register: machine_id
+
+- name: write machine-id for really uniqe uuid
+  copy:
+    dest: /etc/machine-id
+    content: "{{ machine_id.stdout + '\n'}}"
+    force: no
+  when: machine_id | changed
+  notify: restart nova compute
+
+- name: read machine-id to populate libvirt host_uuid
+  slurp:
+    src: /etc/machine-id
+  register: slurp_id
+
+- name: write machine-id to libvirtd.conf
+  lineinfile:
+    dest: /etc/libvirt/libvirtd.conf
+    regexp: '^host_uuid\s*='
+    line: host_uuid = "{{ slurp_id.content | b64decode | trim }}"
+    insertafter: '^#host_uuid\s*='
+  notify: restart libvirt-bin
+
 - name: shutdown default libvirt network if started
   shell: ip addr show virbr0 && virsh net-destroy default
   failed_when: False
