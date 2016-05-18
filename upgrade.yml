@@ -10,7 +10,8 @@
   tags: always
   tasks:
     - name: set the upgrade fact
-      set_fact: upgrade=True
+      set_fact:
+        upgrade: True
 
     - name: set the git update fact
       set_fact:
@@ -23,6 +24,16 @@
   tags: common
   roles:
     - role: common
+
+- name: stop the restarts
+  hosts: all:!vyatta-*
+  tags: always
+  tasks:
+    # work around Ansible 2.0 bug where parent roles do not see vars
+    # assigned to child roles
+    - name: turn restarts off
+      set_fact:
+        restart: False
 
 - name: upgrade glance
   hosts: controller
@@ -95,7 +106,9 @@
 
   tasks:
     - name: start cinder data services
-      service: name=cinder-volume state=started
+      service:
+        name: cinder-volume
+        state: started
 
 - name: upgrade heat
   hosts: controller
@@ -129,6 +142,16 @@
       must_exist: False
       when: ceilometer.enabled|bool
 
+- name: start the restarts
+  hosts: all:!vyatta-*
+  tags: always
+  tasks:
+    # work around Ansible 2.0 bug where parent roles do not see vars
+    # assigned to child roles
+    - name: turn restarts on
+      set_fact:
+        restart: True
+
 - name: stage ceilomter control software and stop services
   hosts: controller
   max_fail_percentage: 1
@@ -146,10 +169,6 @@
       when: ceilometer.enabled|bool
 
     - role: ceilometer-control
-      force_sync: true
-      restart: False
-      database_create:
-        changed: false
       when: ceilometer.enabled|bool
 
 - name: start ceilometer data services
@@ -165,6 +184,16 @@
         name: ceilometer-polling
         state: started
       when: ceilometer.enabled|bool
+
+- name: stop the restarts
+  hosts: all:!vyatta-*
+  tags: always
+  tasks:
+    # work around Ansible 2.0 bug where parent roles do not see vars
+    # assigned to child roles
+    - name: turn restarts off
+      set_fact:
+        restart: False
 
 - name: upgrade keystone
   hosts: controller
@@ -204,6 +233,7 @@
     - role: stop-services
       services:
         - nova-compute
+        - nova-novncproxy
       when: ironic.enabled == False
 
 - name: stage nova control and stop services
@@ -238,8 +268,13 @@
     - nova-data
 
   tasks:
-    - name: start nova compute
-      service: name=nova-compute state=started
+    - name: start nova data services
+      service:
+        name: "{{ item }}"
+        state: started
+      with_items:
+        - nova-compute
+        - nova-novncproxy
       when: ironic.enabled == False
 
 # Neutron block
@@ -298,7 +333,9 @@
 
   tasks:
     - name: restart neutron data service
-      service: name=neutron-linuxbridge-agent state=restarted
+      service:
+        name: neutron-linuxbridge-agent
+        state: restarted
 
 - name: restart neutron data network services
   hosts: network
@@ -309,7 +346,9 @@
 
   tasks:
     - name: restart neutron data network agent services
-      service: name={{ item }} state=restarted
+      service:
+        name: "{{ item }}"
+        state: restarted
       with_items:
         - neutron-l3-agent
         - neutron-dhcp-agent
@@ -336,6 +375,16 @@
 
     - role: swift-proxy
       tags: ['openstack', 'swift', 'control']
+
+- name: start the restarts
+  hosts: all:!vyatta-*
+  tags: always
+  tasks:
+    # work around Ansible 2.0 bug where parent roles do not see vars
+    # assigned to child roles
+    - name: turn restarts on
+      set_fact:
+        restart: True
 
 - name: upgrade horizon
   hosts: controller

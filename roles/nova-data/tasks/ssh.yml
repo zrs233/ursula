@@ -13,6 +13,17 @@
     group: nova
     mode: 0600
 
+- name: deal with known_hosts symlink
+  stat:
+    path: /root/.ssh/known_hosts
+  register: root_known_hosts
+
+- name: delete existing known_hosts symlink
+  file:
+    path: /root/.ssh/known_hosts
+    state: absent
+  when: root_known_hosts.stat.exists and root_known_hosts.stat.islnk
+
 - name: nova known_hosts
   template:
     src: var/lib/nova/ssh/known_hosts
