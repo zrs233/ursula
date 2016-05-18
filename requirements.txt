@@ -8,4 +8,4 @@ python-glanceclient
 python-cinderclient
 python-neutronclient
 python-keystoneclient
--e git://github.com/blueboxgroup/ursula-cli.git@ansible-2.0#egg=ursula-cli
+-e git://github.com/blueboxgroup/ursula-cli.git@master#egg=ursula-cli
