@@ -6,6 +6,7 @@ horizon:
   horizon_lib_dir: "/opt/openstack/current/horizon"
   nextgen_instance_panel: false
   legacy_instance_panel: true
+  session_engine: django.contrib.sessions.backends.cache
   source:
     rev: 'stable/mitaka'
     python_dependencies:
