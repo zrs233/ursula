@@ -138,8 +138,7 @@ def ensure_service_present(keystone, name, service_type, description,
     else:
         # See if it matches exactly
         if service.name == name and \
-           service.type == service_type and \
-           service.description == description:
+           service.type == service_type:
 
             # Same, no changes needed
             return (False, service.id)
