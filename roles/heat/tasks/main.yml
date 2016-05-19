@@ -53,6 +53,7 @@
 
 ## These heat openstack client calls can be replaced with ansible modules calls
 ## when we upgrade to ansible 2.0
+
 - name: create heat domain
   shell: . /root/stackrc; openstack --os-identity-api-version 3 --os-auth-url "{{ endpoints.keystone.url.admin }}/v3" domain create heat
   run_once: true
@@ -60,13 +61,21 @@
   failed_when: heat_domain|failed and "HTTP 409" not in heat_domain.stderr
 
 - name: create heat domain admin user
-  shell: . /root/stackrc; openstack --os-identity-api-version 3 --os-auth-url "{{ endpoints.keystone.url.admin }}/v3" user create --domain heat --password "{{ secrets.stack_domain_admin_password }}" heat_domain_admin
+  os_user:
+    auth:
+      auth_url: "{{ endpoints.keystone.url.admin }}"
+      project_name: admin
+      username: admin
+      password: "{{ secrets.admin_password }}"
+    state: present
+    name: heat_domain_admin
+    password: "{{ secrets.stack_domain_admin_password }}"
+    domain: heat
   run_once: true
   register: heat_user
-  failed_when: heat_user|failed and "HTTP 409" not in heat_user.stderr
 
 - name: add admin role to the heat domain admin user
-  shell: . /root/stackrc; openstack --os-identity-api-version 3 --os-auth-url "{{ endpoints.keystone.url.admin }}/v3" role add --domain heat --user heat_domain_admin admin
+  shell: . /root/stackrc; openstack --os-identity-api-version 3 --os-auth-url "{{ endpoints.keystone.url.admin }}/v3" role add --domain heat --user "{{ heat_user.user.id }}" admin
   run_once: true
 
 - name: stop heat services before db sync
