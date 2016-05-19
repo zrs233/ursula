@@ -41,7 +41,7 @@
     "identity:delete_endpoint": "rule:admin_required",
 
     "identity:get_domain": "rule:admin_or_cloudadmin_or_projectadmin_or_member",
-    "identity:list_domains": "rule:admin_required",
+    "identity:list_domains": "rule:admin_or_cloudadmin",
     "identity:create_domain": "rule:admin_required",
     "identity:update_domain": "rule:admin_required",
     "identity:delete_domain": "rule:admin_required",
