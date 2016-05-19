@@ -23,13 +23,6 @@
   file: src=/opt/stack/novnc/noVNC-0.5.1 dest=/usr/share/novnc state=link
   when: nova.novnc_method == 'file'
 
-- name: install nova-novncproxy service
-  upstart_service: name=nova-novncproxy user=nova
-                   cmd=/usr/local/bin/nova-novncproxy
-
-- name: start nova-novncproxy
-  service: name=nova-novncproxy state=started
-
 - name: Permit access to NoVNC
   ufw: rule=allow to_port={{ endpoints.novnc.port.haproxy_api }} proto=tcp
   tags: ufw

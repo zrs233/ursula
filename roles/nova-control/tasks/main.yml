@@ -1,4 +1,7 @@
 ---
+- include: novnc.yml
+  tags: novnc
+
 - name: install nova controller services
   upstart_service: name={{ item }} user=nova
                    cmd=/usr/local/bin/{{ item }}
@@ -9,6 +12,7 @@
     - nova-conductor
     - nova-consoleauth
     - nova-scheduler
+    - nova-novncproxy
 
 - name: install nova-quota-sync script
   copy: src=nova-quota-sync
@@ -24,6 +28,7 @@
     - nova-conductor
     - nova-consoleauth
     - nova-scheduler
+    - nova-novncproxy
   when: database_create.changed or force_sync|default('false')|bool
   tags: db-migrate
 
@@ -63,13 +68,11 @@
     - nova-conductor
     - nova-consoleauth
     - nova-scheduler
+    - nova-novncproxy
 
 - name: permit access to nova api
   ufw: rule=allow to_port={{ endpoints.nova.port.haproxy_api }} proto=tcp
   tags: ufw
-
-- include: novnc.yml
-  tags: novnc
 
 - include: monitoring.yml
   tags:
