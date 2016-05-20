@@ -423,9 +423,13 @@ POLICY_FILES = {
     'identity': '/etc/keystone/policy.json',
 {% endif %}
     'compute': '/etc/nova/policy.json',
+{% if cinder.enabled|default('False')|bool %}
     'volume': '/etc/cinder/policy.json',
+{% endif %}
     'image': '/etc/glance/policy.json',
+{% if heat.enabled|default('False')|bool %}
     'orchestration': '/etc/heat/policy.json',
+{% endif %}
     'network': '/etc/neutron/policy.json',
 {% if ceilometer.enabled|default('False')|bool -%}
     'telemetry': '/etc/ceilometer/policy.json',
