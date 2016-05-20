@@ -9,7 +9,6 @@ nova:
   api_workers: 5
   conductor_workers: 5
   metadata_api_workers: 5
-  ec2_workers: 5
   cpu_allocation_ratio: 1.0
   ram_allocation_ratio: 1.0
   libvirt_cpu_model: null
