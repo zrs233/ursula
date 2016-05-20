@@ -24,6 +24,7 @@
   tags: common
   roles:
     - role: common
+  environment: "{{ env_vars|default({}) }}"
 
 - name: stop the restarts
   hosts: all:!vyatta-*
@@ -56,6 +57,7 @@
       restart: False
       database_create:
         changed: false
+  environment: "{{ env_vars|default({}) }}"
 
 # Cinder block
 - name: stage cinder data software
@@ -72,6 +74,7 @@
     - role: stop-services
       services:
         - cinder-volume
+  environment: "{{ env_vars|default({}) }}"
 
 - name: stage cinder control software and stop services
   hosts: controller
@@ -96,6 +99,7 @@
       restart: False
       database_create:
         changed: false
+  environment: "{{ env_vars|default({}) }}"
 
 - name: start cinder data services
   hosts: cinder_volume
@@ -122,6 +126,7 @@
       database_create:
         changed: false
       when: heat.enabled|bool
+  environment: "{{ env_vars|default({}) }}"
 
 # Ceilometer block
 - name: stage ceilometer data software
@@ -141,6 +146,7 @@
         - ceilometer-agent-compute
       must_exist: False
       when: ceilometer.enabled|bool
+  environment: "{{ env_vars|default({}) }}"
 
 - name: start the restarts
   hosts: all:!vyatta-*
@@ -170,6 +176,7 @@
 
     - role: ceilometer-control
       when: ceilometer.enabled|bool
+  environment: "{{ env_vars|default({}) }}"
 
 - name: start ceilometer data services
   hosts: compute
@@ -216,6 +223,7 @@
       restart: False
       database_create:
         changed: False
+  environment: "{{ env_vars|default({}) }}"
 
 # Nova block
 - name: stage nova compute
@@ -233,8 +241,9 @@
     - role: stop-services
       services:
         - nova-compute
-        - nova-novncproxy
+      must_exist: False
       when: ironic.enabled == False
+  environment: "{{ env_vars|default({}) }}"
 
 - name: stage nova control and stop services
   hosts: controller
@@ -259,6 +268,7 @@
       restart: False
       database_create:
         changed: false
+  environment: "{{ env_vars|default({}) }}"
 
 - name: start nova compute
   hosts: compute
@@ -274,7 +284,6 @@
         state: started
       with_items:
         - nova-compute
-        - nova-novncproxy
       when: ironic.enabled == False
 
 # Neutron block
@@ -288,6 +297,7 @@
   roles:
     - role: neutron-data
       restart: False
+  environment: "{{ env_vars|default({}) }}"
 
 - name: stage neutron network
   hosts: network
@@ -299,6 +309,7 @@
   roles:
     - role: neutron-data-network
       restart: False
+  environment: "{{ env_vars|default({}) }}"
 
 - name: upgrade neutron control plane
   hosts: controller
@@ -323,6 +334,7 @@
       restart: False
       database_create:
         changed: false
+  environment: "{{ env_vars|default({}) }}"
 
 - name: restart neutron data service
   hosts: compute:network
@@ -375,6 +387,7 @@
 
     - role: swift-proxy
       tags: ['openstack', 'swift', 'control']
+  environment: "{{ env_vars|default({}) }}"
 
 - name: start the restarts
   hosts: all:!vyatta-*
@@ -393,5 +406,6 @@
 
   roles:
     - role: horizon
+  environment: "{{ env_vars|default({}) }}"
 
 - include: site.yml
