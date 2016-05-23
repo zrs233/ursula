@@ -8,10 +8,16 @@
     - { service_name: account-reaper, conf: account-server }
     - { service_name: account-replicator, conf: account-server }
 
+- stat: path=/etc/swift/account.ring.gz
+  register: account_ring
+
+- set_fact: start_account={{ account_ring.stat.exists }}
+
 - name: account-server config
   template: src=etc/swift/account-server.conf mode=0640
             dest=/etc/swift/account-server.conf owner=swift group=swift
-  notify: restart swift-account-services
+  notify:
+    - restart swift-account-services
 
 - name: trigger restart on upgrades
   debug:
@@ -26,7 +32,8 @@
 - name: start swift-account services
   service: name={{ item }} state=started
   with_items:
-    - swift-account-auditor
     - swift-account-replicator
+    - swift-account-auditor
     - swift-account-reaper
     - swift-account
+  when: start_account|bool

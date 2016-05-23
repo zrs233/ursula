@@ -9,3 +9,4 @@
     - swift-container-replicator
     - swift-container-sync
     - swift-container-updater
+  when: start_container|bool

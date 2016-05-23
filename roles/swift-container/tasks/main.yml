@@ -9,10 +9,16 @@
     - { service_name: container-sync, conf: container-server }
     - { service_name: container-updater, conf: container-server }
 
+- stat: path=/etc/swift/container.ring.gz
+  register: container_ring
+
+- set_fact: start_container={{ container_ring.stat.exists }}
+
 - name: container-server config
   template: src=etc/swift/container-server.conf mode=0640
             dest=/etc/swift/container-server.conf owner=swift group=swift
-  notify: restart-swift-container-services
+  notify: 
+    - restart-swift-container-services
 
 - name: trigger restart on upgrades
   debug:
@@ -27,8 +33,9 @@
 - name: start swift-container services
   service: name={{ item }} state=started
   with_items:
-    - swift-container-replicator
-    - swift-container-updater
-    - swift-container-auditor
-    - swift-container-sync
     - swift-container
+    - swift-container-auditor
+    - swift-container-replicator
+    - swift-container-sync
+    - swift-container-updater
+  when: start_container|bool

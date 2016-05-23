@@ -9,10 +9,24 @@
   with_items:
     - { service_name: proxy, conf: proxy-server }
 
+- stat: path=/etc/swift/object.ring.gz
+  register: object_ring
+
+- stat: path=/etc/swift/container.ring.gz
+  register: container_ring
+
+- stat: path=/etc/swift/account.ring.gz
+  register: account_ring
+
+- set_fact: start_proxy={{ container_ring.stat.exists }} and 
+                        {{ object_ring.stat.exists }} and
+                        {{ account_ring.stat.exists }}
+
 - name: configure swift-proxy
   template: src=etc/swift/proxy-server.conf dest=/etc/swift/proxy-server.conf
             owner=swift group=swift mode=0640
-  notify: restart swift-proxy service
+  notify:
+    - restart swift-proxy service
 
 - name: trigger restart on upgrades
   debug:
@@ -24,5 +38,6 @@
 
 - meta: flush_handlers
 
-- name: start swift-proxy service
+- name: start swift-proxy services
   service: name=swift-proxy state=started
+  when: start_proxy|bool
