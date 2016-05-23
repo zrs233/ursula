@@ -54,12 +54,12 @@ keystone:
       # for keystone to keystone federation
       k2k:
         enabled: False
-        sp_id: "default-service-provider-id"
+        sp_id: None
         shibboleth_crt: None
         shibboleth_key: None
         support_contact: ""
-        idp_id: "default-identity-provider-id"
-        idp_metadata_url: "default-keystone-idp-url"
+        idp_id: None
+        idp_metadata_url: None
         idp_metadata_min_refresh_delay: 600
         idp_metadata_max_refresh_delay: 3600
         idp_metadata_factor_refresh_delay: 0.75
@@ -69,36 +69,22 @@ keystone:
           url: https://github.com/pingidentity/mod_auth_openidc/releases/download/v1.8.3/libapache2-mod-auth-openidc_1.8.3-1_amd64.deb
         module_name: libapache2-mod-auth-openidc_1.8.3-1_amd64.deb
         scope: 'openid'
-        issuer: 'issuer'
-        remote_user_claim: 'Email'
-        user_info_endpoint: 'https://op.example.org/oauth/userinfo'
-        authorization_endpoint: 'https://op.example.org/oauth/authorize'
-        token_endpoint: 'https://op.example.org/oauth/token'
-        introspection_endpoint: 'https://op.example.org/oauth/introspection'
-        client_id: 'clientid'
-        client_secret: 'client_secret'
-        crypto_passphrase: 'openstack'
-        redirect_uri: 'https://openstack.example.org:5000/v3/auth/OS-FEDERATION/websso/oidc/redirect'
+        issuer: None
+        remote_user_claim: None
+        user_info_endpoint: None
+        authorization_endpoint: None
+        token_endpoint: None
+        introspection_endpoint: None
+        client_id: None
+        client_secret: None
+        crypto_passphrase: None
+        redirect_uri: None
         ssl_validate_server: True
-    identity_providers:
-      - { name: someprovider, remote_ids: oidc }
-    groups:
-      - { name: someprovider-admins }
-    role:
-      - { group: someprovider-admins, role: some-role, project: some-project }
-    mappings:
-      - name: someprovider-admins
-        rules:
-          - local:
-            - group:
-                name: someprovider-admins
-                domain:
-                  name: Default
-            remote:
-            - type: HTTP_OIDC_CLAIM_USERNAME
-              any_one_of: ['user@someprovider.com']
-    protocols:
-      - { name: oidc, mapping: someprovider-admins, identity_provider: someprovider }
+      identity_providers: []
+      groups: []
+      role: []
+      mappings: []
+      protocols: []
 
   bootstrap:
     user: admin
