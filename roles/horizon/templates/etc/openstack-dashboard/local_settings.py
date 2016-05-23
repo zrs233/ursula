@@ -176,7 +176,7 @@ OPENSTACK_KEYSTONE_DEFAULT_ROLE = "_member_"
 SESSION_TIMEOUT = {{ horizon.session_timeout }}
 
 #TODO: parameterize strings that get shown on the login page
-{% if keystone.federation.enabled|bool -%}
+{% if keystone.federation.enabled|bool and keystone.federation.sp.oidc.enabled|bool -%}
 WEBSSO_ENABLED = True
 WEBSSO_CHOICES = (
     ("credentials", _("{{ horizon.websso.choices.credentials }}")),
@@ -423,9 +423,13 @@ POLICY_FILES = {
     'identity': '/etc/keystone/policy.json',
 {% endif %}
     'compute': '/etc/nova/policy.json',
+{% if cinder.enabled|default('False')|bool %}
     'volume': '/etc/cinder/policy.json',
+{% endif %}
     'image': '/etc/glance/policy.json',
+{% if heat.enabled|default('False')|bool %}
     'orchestration': '/etc/heat/policy.json',
+{% endif %}
     'network': '/etc/neutron/policy.json',
 {% if ceilometer.enabled|default('False')|bool -%}
     'telemetry': '/etc/ceilometer/policy.json',
