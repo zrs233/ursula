@@ -65,10 +65,6 @@ cat >> ${ROOT}/envs/test/group_vars/all.yml <<eof
 neutron:
    enable_external_interface: True
 eof
-cat >> ${ROOT}/envs/test/group_vars/all.yml <<eof
-nova:
-   default_availability_zone: ci
-eof
 UNDERCLOUD_CIDR="$(python -c 'import shade; cloud = shade.openstack_cloud(); print cloud.search_subnets("internal")[0]["cidr"]')"
 cat >> ${ROOT}/envs/test/defaults-2.0.yml <<eof
 logging:
