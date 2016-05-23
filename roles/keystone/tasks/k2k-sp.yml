@@ -1,0 +1,29 @@
+---
+- name: install libapache2-mod-shib2
+  apt: name=libapache2-mod-shib2 state=present
+
+- name: install shibboleth private key
+  template: src=etc/shibboleth/sp-key.pem dest=/etc/shibboleth/sp-key.pem
+            owner=_shibd group=_shibd mode=0600
+  notify: restart shibboleth
+
+- name: install shibboleth public certificate
+  template: src=etc/shibboleth/sp-cert.pem dest=/etc/shibboleth/sp-cert.pem
+            owner=_shibd group=_shibd mode=0644
+  notify: restart shibboleth
+
+- name: configure shibboleth identity attributes
+  template: src=etc/shibboleth/attribute-map.xml
+            dest=/etc/shibboleth/attribute-map.xml mode=0600
+            owner=_shibd group=_shibd
+  notify: restart shibboleth
+
+- name: configure shibboleth settings
+  template: src=etc/shibboleth/shibboleth2.xml
+            dest=/etc/shibboleth/shibboleth2.xml mode=0644
+            owner=_shibd group=_shibd
+  notify: restart shibboleth
+
+- name: enable apache mod shib2
+  apache2_module: name=shib2
+  notify: reload apache
