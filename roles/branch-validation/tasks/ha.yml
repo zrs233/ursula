@@ -3,49 +3,24 @@
   debug:
     msg: Running ha.yml playbook
 
-- name: add floating IPs to instances on controllers
+- name: add floating IPs to instances
   os_floating_ip:
     auth: "{{ auth }}"
     network: external
     server: "validate-{{ item }}"
     reuse: true
-  register: fip_controllers
-  with_items: groups['controller']
-  when: converged
+  register: fip_instances
+  with_items: "{{ groups['compute'] }}"
 
 - name: floating ips are reachable
   command: "ping -c 5 {{ item.floating_ip.floating_ip_address }}"
-  with_items: fip_controllers.results
+  with_items: "{{ fip_instances.results }}"
   register: pings
   until: pings|success
   delay: 1
   retries: 5
   become: no
   delegate_to: localhost
-  when: converged
-
-- name: add floating IP to a non-controller instance
-  os_floating_ip:
-    auth: "{{ auth }}"
-    network: external
-    server: "validate-{{ item }}"
-    reuse: true
-  register: fip_compute
-  ignore_errors: yes
-  with_items:
-    - "{{ (groups['compute'][1:]|difference(groups['controller']))[0] }}"
-  when: not converged
-
-- name: floating ips are reachable
-  command: "ping -c 5 {{ item.floating_ip.floating_ip_address }}"
-  with_items: fip_compute.results
-  register: pings
-  until: pings|success
-  delay: 10
-  retries: 5
-  become: no
-  delegate_to: localhost
-  when: not converged
 
 # initiate hard reboot on controller 0
 - name: reboot controller 0
@@ -62,17 +37,21 @@
 
 # Check API
 - include: api.yml
-  vars:
-    ip_addr: "{{ fip_controllers.results[0].floating_ip.floating_ip_address }}"
-  when: converged
 
+# Check we still have outbound connectivity
+- include: check_instances_connectivity.yml
+  when: item.item != groups['controller'][0]
+
+- name: wait for the controller to come online (master)
+  wait_for:
+    host: "{{ primary_ip }}"
+    port: 22
+    delay: 10
+    timeout: 600
+  delegate_to: "{{ groups['compute'][1] }}"
+
+# Check API
 - include: api.yml
-  vars:
-    ip_addr: "{{ fip_compute.results[0].floating_ip.floating_ip_address }}"
-  when: not converged
 
-- include: converged.yml
-  when: converged
-
-- include: dedicated.yml
-  when: not converged
+# Check we still have outbound connectivity
+- include: check_instances_connectivity.yml

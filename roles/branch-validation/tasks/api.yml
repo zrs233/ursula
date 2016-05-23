@@ -1,5 +1,5 @@
 ---
-- name: check nova
+- name: check services
   shell: "curl -I --connect-timeout 2 --fail {{ endpoints[item].url.public }} 2>&1"
   with_items:
     - glance
