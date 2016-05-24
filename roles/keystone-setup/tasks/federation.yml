@@ -31,7 +31,7 @@
                               description="{{ item.description|default(omit) }}"
                               remote_ids="{{ item.remote_ids|default(omit) }}"
                               enabled="{{ item.enabled|default(omit) }}"
-  with_items: "{{ keystone.federation.identity_providers }}"
+  with_items: "{{ keystone.federation.sp.identity_providers }}"
 
 - name: create keystone groups
   keystone_group: auth_url="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/v3"
@@ -42,7 +42,7 @@
                   project_name_to_auth="admin"
                   domain_name_to_auth="Default"
                   domain="{{ item.domain|default(omit) }}"
-  with_items: "{{ keystone.federation.groups }}"
+  with_items: "{{ keystone.federation.sp.groups }}"
 
 - name: add role to keystone group
   keystone_role: auth_url="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/v3"
@@ -54,7 +54,7 @@
                   domain="{{ item.domain|default(omit) }}"
                   role="{{ item.role }}"
                   project="{{ item.project }}"
-  with_items: "{{ keystone.federation.role }}"
+  with_items: "{{ keystone.federation.sp.role }}"
 
 - name: create keystone federation mappings
   keystone_federation_mapping: auth_url="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/v3"
@@ -64,7 +64,7 @@
                                project_name_to_auth="admin"
                                domain_name_to_auth="Default"
                                rules="{{ item.rules }}"
-  with_items: "{{ keystone.federation.mappings }}"
+  with_items: "{{ keystone.federation.sp.mappings }}"
 
 - name: create keystone protocols
   keystone_federation_protocol: auth_url="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/v3"
@@ -75,4 +75,4 @@
                                 domain_name_to_auth="Default"
                                 identity_provider="{{ item.identity_provider }}"
                                 mapping="{{ item.mapping }}"
-  with_items: "{{ keystone.federation.protocols }}"
+  with_items: "{{ keystone.federation.sp.protocols }}"
