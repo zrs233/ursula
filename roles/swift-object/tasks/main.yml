@@ -44,7 +44,7 @@
   swift_disk: dev={{ item.disk|default(omit) }}
               partition_path={{ item.partition_path|default(omit) }}
               mount_point={{ item.mount_point|default(omit) }}
-  with_items: swift.disks
+  with_items: "{{ swift.disks }}"
 
 - name: configure shared ssd partition if it exist
   swift_disk: partition_path={{ swift.os_shared_partition }}

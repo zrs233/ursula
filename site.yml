@@ -302,11 +302,11 @@
     - role: swift-object
       tags: ['openstack', 'swift', 'swift-object', 'data']
     - role: swift-account
-      tags: ['openstack', 'swift', 'data']
+      tags: ['openstack', 'swift', 'swift-account', 'data']
     - role: swift-container
-      tags: ['openstack', 'swift', 'data']
+      tags: ['openstack', 'swift', 'swift-container', 'data']
     - role: swift-proxy
-      tags: ['openstack', 'swift', 'control']
+      tags: ['openstack', 'swift', 'swift-proxy', 'control']
   environment: "{{ env_vars|default({}) }}"
 
 - name: swift bootstrap rings
