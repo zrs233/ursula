@@ -10,12 +10,6 @@
   notify:
     - reload apache
 
-- name: disable apache status
-  template: src=etc/apache2/mods-enabled/headers.conf
-            dest=/etc/apache2/mods-enabled/headers.conf
-  notify:
-    - reload apache
-
 - name: create horizon config directory
   file: dest=/etc/openstack-dashboard state=directory
 
