@@ -61,22 +61,15 @@
   failed_when: heat_domain|failed and "HTTP 409" not in heat_domain.stderr
 
 - name: create heat domain admin user
-  os_user:
-    auth:
-      auth_url: "{{ endpoints.keystone.url.admin }}"
-      project_name: admin
-      username: admin
-      password: "{{ secrets.admin_password }}"
-    state: present
-    name: heat_domain_admin
-    password: "{{ secrets.stack_domain_admin_password }}"
-    domain: heat
+  shell: . /root/stackrc; openstack --os-identity-api-version 3 --os-auth-url "{{ endpoints.keystone.url.admin }}/v3" user create --domain heat --password "{{ secrets.stack_domain_admin_password }}" heat_domain_admin
   run_once: true
   register: heat_user
+  failed_when: heat_user|failed and "HTTP 409" not in heat_user.stderr
 
 - name: add admin role to the heat domain admin user
-  shell: . /root/stackrc; openstack --os-identity-api-version 3 --os-auth-url "{{ endpoints.keystone.url.admin }}/v3" role add --domain heat --user "{{ heat_user.user.id }}" admin
+  shell: . /root/stackrc; openstack --os-identity-api-version 3 --os-auth-url "{{ endpoints.keystone.url.admin }}/v3" role add --domain heat --user "{{ heat_user.stdout_lines[5].split('|')[2].strip() }}" admin
   run_once: true
+  when: heat_user.stderr == '' # otherwise result of user create not populated
 
 - name: stop heat services before db sync
   service: name={{ item }} state=stopped
