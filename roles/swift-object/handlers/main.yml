@@ -1,9 +1,11 @@
 ---
 - name: restart swift-object service
   service: name=swift-object state=restarted
+  when: start_object|bool
 
 - name: restart swift-object-expirer service
   service: name=swift-object-expirer state=restarted
+  when: start_object|bool
 
 - name: restart swift-object-services
   service:
@@ -15,3 +17,4 @@
     - swift-object
     - swift-object-expirer
     - swift-object-auditor
+  when: start_object|bool

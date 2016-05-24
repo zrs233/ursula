@@ -8,3 +8,4 @@
     - swift-account-auditor
     - swift-account-reaper
     - swift-account-replicator
+  when: start_account|bool

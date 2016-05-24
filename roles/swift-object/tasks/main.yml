@@ -12,6 +12,11 @@
     - { service_name: object-updater, conf: object-server }
     - { service_name: object-expirer, conf: object-expirer }
 
+- stat: path=/etc/swift/object.ring.gz
+  register: object_ring
+
+- set_fact: start_object={{ object_ring.stat.exists }}
+
 - name: object-server config
   template: src=etc/swift/object-server.conf dest=/etc/swift/object-server.conf
             owner=swift group=swift mode=0640
@@ -32,14 +37,6 @@
 
 - meta: flush_handlers
 
-- name: start swift-object services
-  service: name={{ item }} state=started
-  with_items:
-    - swift-object-replicator
-    - swift-object-updater
-    - swift-object
-    - swift-object-expirer
-
 - name: configure disks
   swift_disk: dev={{ item.disk|default(omit) }}
               partition_path={{ item.partition_path|default(omit) }}
@@ -57,3 +54,12 @@
 - name: add swift-drive-audit to cron.hourly
   template: src=usr/local/bin/swift-drive-auditor mode=0755
             dest=/usr/local/bin/swift-drive-auditor owner=root group=root
+
+- name: start swift-object services
+  service: name={{ item }} state=started
+  with_items:
+    - swift-object-replicator
+    - swift-object
+    - swift-object-expirer
+    - swift-object-updater
+  when: start_object|bool
