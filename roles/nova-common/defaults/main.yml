@@ -34,6 +34,7 @@ nova:
   block_device_allocate_retries: 200
   block_device_allocate_retries_interval: 3
   heartbeat_timeout_threshold: 30
+  floating_pool: external
   install_packages:
     - python-numpy
     - virt-top
