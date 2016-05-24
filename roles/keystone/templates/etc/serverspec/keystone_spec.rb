@@ -44,5 +44,6 @@ describe file('/etc/keystone/keystone.conf') do
   it { should contain 'debug = {{ keystone.logging.debug }}' }
   it { should contain 'verbose = {{ keystone.logging.verbose }}' }
   it { should contain 'log_dir = /var/log/keystone' }
-
+  it { should contain 'notification_format = cadf' }
+  it { should contain 'notification_driver = log' }
 end
