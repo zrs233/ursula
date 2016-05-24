@@ -94,8 +94,8 @@
   template: src=etc/update-motd.d/99-swift-motd dest=/etc/update-motd.d/99-swift-motd mode=0755
 
 - name: system tuning recommendations for swift per deployment guide
-  sysctl: name="{{ item.key }}" value="{{ item.value }}"
-  with_dict: swift.tuning
+  sysctl: name={{ item.key }} value={{ item.value }}
+  with_dict: "{{ swift.tuning }}"
 
 - name: disable swift directory parsing by updatedb
   command: updatedb -e /srv/node
