@@ -28,7 +28,7 @@ def main():
     module = AnsibleModule(
         argument_spec=dict(
             name=dict(default=None, required=True),
-            use_sudo=dict(required=False, choices=BOOLEANS, default=False),
+            use_sudo=dict(required=False, type='bool', default=False),
             plugin=dict(default=None, required=True),
             args=dict(default='', required=False),
             plugin_dir=dict(default='/etc/sensu/plugins', required=False),
