@@ -8,6 +8,28 @@ describe process('mysqld_safe') do
   it { should be_running }
 end
 
+describe process('mysqld') do
+  it { should be_running }
+  its(:user) { should eq "mysql" }
+end
+
+files = Dir['/var/lib/mysql/*/'].map { |a| File.basename(a) }
+files.each do |file|
+  describe file("/var/lib/mysql/#{file}") do
+    it { should be_mode 700 }
+    it { should be_owned_by 'mysql' }
+    it { should be_grouped_into 'mysql' }
+  end
+end
+
+files = Dir['/var/lib/mysql/*.*'].map { |a| File.basename(a) }
+files.each do |file|
+  describe file("/var/lib/mysql/#{file}") do
+    it { should be_mode '[6][4-6][0-4]' }
+  end
+end
+
+
 files = ['bind-inaddr-any.cnf', 'replication.cnf', 'tuning.cnf' , 'utf8.cnf']
 files.each do |file|
   describe file("/etc/mysql/conf.d/#{file}") do
