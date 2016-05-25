@@ -1,14 +1,13 @@
 {
-    "context_is_admin": "role:admin or role:cloud_admin",
-    "cloud_admin_privilege": "role:admin or role:cloud_admin",
-    "is_owner": "project_id:%(tenant_id)s or project_id:%(project_id)s",
-    "admin_or_owner": "rule:cloud_admin_privilege or rule:is_owner or rule:project_admin_privilege",
+    "context_is_admin": "role:admin",
+    "owner": "tenant_id:%(tenant_id)s or project_id:%(tenant_id)s or project_id:%(project_id)s",
+    "projectadmin": "role:project_admin and rule:owner",
+    "admin_or_cloudadmin_or_projectadmin": "rule:context_is_admin or role:cloud_admin or rule:projectadmin",
+    "admin_or_owner": "rule:admin_or_cloudadmin_or_projectadmin or rule:owner",
     "context_is_advsvc":  "role:advsvc",
-    "admin_or_network_owner": "rule:admin_or_owner or tenant_id:%(network:tenant_id)s",
-    "admin_only": "role:admin",
-    "project_admin_privilege": "(project_id:%(tenant_id)s and role:project_admin) or rule:horizon_project_admin_privilege",
-    "horizon_project_admin_privilege": "(project_id:%(project_id)s and role:project_admin)",
-    "admin_or_admin_owner": "rule:cloud_admin_privilege or rule:project_admin_privilege",
+    "admin_or_network_owner": "rule:admin_or_cloudadmin_or_projectadmin or tenant_id:%(network:tenant_id)s",
+    "admin_owner_or_network_owner": "rule:owner or rule:admin_or_network_owner",
+    "admin_only": "rule:context_is_admin",
     "regular_user": "",
     "shared": "field:networks:shared=True",
     "shared_firewalls": "field:firewalls:shared=True",
@@ -74,7 +73,7 @@
     "create_port:binding:profile": "rule:admin_only",
     "create_port:mac_learning_enabled": "rule:context_is_advsvc or rule:admin_or_network_owner",
     "create_port:allowed_address_pairs": "rule:admin_or_network_owner",
-    "get_port": "rule:admin_or_owner or rule:context_is_advsvc",
+    "get_port": "rule:context_is_advsvc or rule:admin_owner_or_network_owner",
     "get_port:queue_id": "rule:admin_only",
     "get_port:binding:vif_type": "rule:admin_only",
     "get_port:binding:vif_details": "rule:admin_only",
@@ -89,7 +88,7 @@
     "update_port:binding:profile": "rule:admin_only",
     "update_port:mac_learning_enabled": "rule:context_is_advsvc or rule:admin_or_network_owner",
     "update_port:allowed_address_pairs": "rule:admin_or_network_owner",
-    "delete_port": "rule:admin_or_owner or rule:context_is_advsvc",
+    "delete_port": "rule:context_is_advsvc or rule:admin_owner_or_network_owner",
 
     "get_router:ha": "rule:admin_or_owner",
     "create_router": "rule:regular_user",
@@ -101,8 +100,6 @@
     "update_router:external_gateway_info:enable_snat": "rule:admin_only",
     "update_router:distributed": "rule:admin_only",
     "update_router:ha": "rule:admin_only",
-    "_COMMENT": "required for horizon",
-    "update_router": "rule:admin_or_network_owner",
     "delete_router": "rule:admin_or_network_owner",
 
     "add_router_interface": "rule:admin_or_network_owner",
@@ -243,5 +240,6 @@
     "update_security_group": "",
     "get_security_group": "",
     "create_security_group_rule": "",
-    "delete_security_group_rule": ""
+    "delete_security_group_rule": "",
+    "update_router": "rule:admin_or_network_owner"
 }
