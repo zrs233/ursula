@@ -1,5 +1,4 @@
-
-# playbook for validating a branch for release tagging
+# Playbook for validating a branch for release tagging
 # interactive, may prompt runner to affirm things have completed
 ---
 - name: Run rally and validate
