@@ -1,7 +1,5 @@
 {
-    "context_is_admin": "role:admin or role:cloud_admin",
-    "context_is_project": "project_id:%(target.project_id)s",
-    "context_is_owner": "user_id:%(target.user_id)s",
+    "context_is_admin": "role:admin",
     "segregation": "rule:context_is_admin",
 
     "telemetry:get_samples": "",
