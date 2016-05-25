@@ -28,9 +28,9 @@ def main():
     module = AnsibleModule(
         argument_spec=dict(
             name=dict(default=None, required=True),
-            use_sudo=dict(required=False, choices=BOOLEANS, default=False),
-            handle=dict(required=False, choices=BOOLEANS, default=True),
-            auto_resolve=dict(required=False, choices=BOOLEANS, default=True),
+            use_sudo=dict(required=False, type='bool', default=False),
+            handle=dict(required=False, type='bool', default=True),
+            auto_resolve=dict(required=False, type='bool', default=True),
             interval=dict(required=False, default=30),
             occurrences=dict(required=False, default=2),
             plugin=dict(required=True),

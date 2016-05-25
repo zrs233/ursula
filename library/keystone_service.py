@@ -252,7 +252,7 @@ def main():
                           default="http://127.0.0.1:35358/v2.0",
                           aliases=['auth_url']),
             token=dict(required=False),
-            insecure=dict(required=False, default=False, choices=BOOLEANS),
+            insecure=dict(required=False, default=False, type='bool'),
 
             login_user=dict(required=False),
             login_password=dict(required=False),
