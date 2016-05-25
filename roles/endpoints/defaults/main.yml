@@ -223,5 +223,6 @@ endpoints:
       proxy_api: 8080
     haproxy:
       health_check: 'httpchk HEAD /healthcheck HTTP/1.0'
-      balance: 'source'
+      balance: 'roundrobin'
       prefer_primary_backend: False
+      maxconn: 4096
