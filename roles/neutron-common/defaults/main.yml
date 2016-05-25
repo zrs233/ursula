@@ -26,6 +26,7 @@ neutron:
   metadata_workers: 3
   agent_down_time: 20
   report_interval: 4
+  state_path: "/var/lib/neutron"
   dhcp_dns_servers:
     - 8.8.8.8
     - 8.8.4.4
