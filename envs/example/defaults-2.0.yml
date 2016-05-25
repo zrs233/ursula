@@ -325,12 +325,6 @@ keystone:
       tenant: admin
       role: heat_stack_owner
     - user: admin
-      tenant: demo
-      role: cloud_admin
-    - user: admin
-      tenant: demo
-      role: heat_stack_owner
-    - user: admin
       tenant: service
       role: admin
     - user: nova
