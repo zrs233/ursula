@@ -1,4 +1,5 @@
 ---
+project_name: neutron
 neutron:
   enable_fatal_deprecations: True
   l2_population: False
