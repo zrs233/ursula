@@ -1,0 +1,10 @@
+---
+- name: restart aodh services
+  service: name={{ item }} state=restarted must_exist=false
+  when: restart|default('True')
+  with_items:
+    - aodh-api
+    - aodh-evaluator
+    - aodh-expirer
+    - aodh-listener
+    - aodh-notifier

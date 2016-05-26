@@ -396,3 +396,12 @@
       tags: ['ceph', 'ceph-update']
       when: ceph.scaleout|default('False')|bool
   environment: "{{ env_vars|default({}) }}"
+
+- name: aodh setup
+  hosts: controller
+  any_errors_fatal: true
+  roles:
+    - role: 'aodh'
+      tags: ['openstack', 'aodh']
+      when: aodh.enabled|default('false')|bool
+  environment: "{{ env_vars|default({}) }}"

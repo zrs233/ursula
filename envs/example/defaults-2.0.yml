@@ -317,6 +317,9 @@ keystone:
     - name: cloud_admin
       password: "{{ secrets.cloud_admin_password }}"
       tenant: demo
+    - name: aodh
+      password: "{{ secrets.service_password }}"
+      tenant: service
   user_roles:
     - user: admin
       tenant: admin
@@ -369,6 +372,9 @@ keystone:
     - user: cloud_admin
       tenant: demo
       role: heat_stack_owner
+    - user: aodh
+      tenant: service
+      role: admin
   services:
     - name: keystone
       type: identity
@@ -448,6 +454,12 @@ keystone:
       public_url: https://{{ endpoints.main }}:9511
       internal_url: https://{{ endpoints.main }}:9511
       admin_url: https://{{ endpoints.main }}:9511
+    - name: aodh
+      type: alarming
+      description: 'aodh alarming service'
+      public_url: https://{{ endpoints.main }}:8042
+      internal_url: https://{{ endpoints.main }}:8042
+      admin_url: https://{{ endpoints.main }}:8042
   federation:
     enabled: False
 
@@ -572,6 +584,12 @@ heat:
     verbose: True
 
 ceilometer:
+  enabled: False
+  logging:
+    debug: True
+    verbose: True
+
+aodh:
   enabled: False
   logging:
     debug: True

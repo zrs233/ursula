@@ -226,3 +226,18 @@ endpoints:
       balance: 'roundrobin'
       prefer_primary_backend: False
       maxconn: 4096
+  aodh:
+    name: aodh
+    type: alarming
+    description: 'Alarming Service'
+    url:
+      admin: https://{{ fqdn }}:8042
+      internal: https://{{ fqdn }}:8042
+      public: https://{{ fqdn }}:8042
+    port:
+      backend_api: 8043
+      haproxy_api: 8042
+    haproxy:
+      health_check: 'httpchk GET /healthcheck'
+      balance: 'source'
+      prefer_primary_backend: False
