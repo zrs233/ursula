@@ -1,4 +1,5 @@
 ---
+project_name: keystone
 keystone:
   token_expiration_in_seconds: 86400
   admin_workers: 5
