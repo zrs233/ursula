@@ -57,5 +57,3 @@ common:
 openstack:
   gem_sources:
     - https://gem-mirror.openstack.blueboxgrid.com
-
-logs_to_scan: []
