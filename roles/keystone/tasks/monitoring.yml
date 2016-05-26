@@ -7,6 +7,11 @@
   sensu_process_check: service=uwsgi
   notify: restart sensu-client
 
+- name: shibboleth process check
+  sensu_process_check: service=shibd
+  notify: restart sensu-client
+  when: keystone.federation.enabled|bool and keystone.federation.sp.k2k.enabled|bool
+
 - name: keystone-api check
   sensu_check: name=check-keystone-api plugin=check-os-api.rb
                args="--service keystone --criticality {{ keystone.monitoring.sensu_checks.check_keystone_api.criticality }}"
