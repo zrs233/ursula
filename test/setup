@@ -67,14 +67,7 @@ neutron:
 eof
 UNDERCLOUD_CIDR="$(python -c 'import shade; cloud = shade.openstack_cloud(); print cloud.search_subnets("internal")[0]["cidr"]')"
 cat >> ${ROOT}/envs/test/defaults-2.0.yml <<eof
-logging:
-  follow:
-    global_fields:
-      cluster_name: "ci-test"
-  forward:
-    host: kibana.sea03.blueboxgrid.com
-    port: 4560
-undercloud_cidr: 
+undercloud_cidr:
   - cidr: ${UNDERCLOUD_CIDR}
 eof
 popd
