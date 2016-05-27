@@ -51,25 +51,51 @@
     - heat_stack_user
   run_once: true
 
-## These heat openstack client calls can be replaced with ansible modules calls
-## when we upgrade to ansible 2.0
-
 - name: create heat domain
-  shell: . /root/stackrc; openstack --os-identity-api-version 3 --os-auth-url "{{ endpoints.keystone.url.admin }}/v3" domain create heat
+  environment:
+    OS_IDENTITY_API_VERSION: 3
+    OS_DOMAIN_ID: default
+  os_keystone_domain:
+    name: heat
+    auth:
+      auth_url: "{{ endpoints.keystone.url.internal }}/v3"
+      project_name: admin
+      username: admin
+      password: "{{ secrets.admin_password }}"
   run_once: true
   register: heat_domain
-  failed_when: heat_domain|failed and "HTTP 409" not in heat_domain.stderr
 
 - name: create heat domain admin user
-  shell: . /root/stackrc; openstack --os-identity-api-version 3 --os-auth-url "{{ endpoints.keystone.url.admin }}/v3" user create --domain heat --password "{{ secrets.stack_domain_admin_password }}" heat_domain_admin
+  environment:
+    OS_IDENTITY_API_VERSION: 3
+    OS_DOMAIN_ID: default
+  os_user:
+    name: heat_domain_admin
+    password: "{{ secrets.stack_domain_admin_password }}"
+    default_project: admin
+    domain: "{{ heat_domain.domain.id }}"
+    auth:
+      auth_url: "{{ endpoints.keystone.url.internal }}/v3"
+      project_name: admin
+      username: admin
+      password: "{{ secrets.admin_password }}"
   run_once: true
-  register: heat_user
-  failed_when: heat_user|failed and "HTTP 409" not in heat_user.stderr
 
 - name: add admin role to the heat domain admin user
-  shell: . /root/stackrc; openstack --os-identity-api-version 3 --os-auth-url "{{ endpoints.keystone.url.admin }}/v3" role add --domain heat --user "{{ heat_user.stdout_lines[5].split('|')[2].strip() }}" admin
+  environment:
+    OS_IDENTITY_API_VERSION: 3
+    OS_DOMAIN_ID: default
+  os_user_role:
+    role: admin
+    user: heat_domain_admin
+    domain: "{{ heat_domain.domain.id }}"
+    auth:
+      auth_url: "{{ endpoints.keystone.url.internal }}/v3"
+      project_name: admin
+      username: admin
+      password: "{{ secrets.admin_password }}"
+  when: heat.enabled|bool
   run_once: true
-  when: heat_user.stderr == '' # otherwise result of user create not populated
 
 - name: stop heat services before db sync
   service: name={{ item }} state=stopped
