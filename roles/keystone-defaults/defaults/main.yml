@@ -21,6 +21,9 @@ keystone:
   jellyroll: False # custom middleware for password compliance
   roles:
     - project_admin
+    - cloud_admin
+    - heat_stack_owner
+    - service
   logs:
     - paths:
       - /var/log/keystone/keystone-all.log

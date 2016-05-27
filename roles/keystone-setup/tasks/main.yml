@@ -13,60 +13,124 @@
     OS_BOOTSTRAP_REGION_ID: "RegionOne"
 
 - name: keystone tenants
-  keystone_user: tenant={{ item }}
-                 tenant_description="{{ item }} tenant"
-                 endpoint="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}/"
-                 login_tenant_name={{ keystone.bootstrap.project }}
-                 login_user={{ keystone.bootstrap.user }}
-                 login_password={{ secrets.admin_password }}
+  environment:
+    OS_IDENTITY_API_VERSION: 3
+    OS_DOMAIN_ID: default
+  os_project:
+    name: "{{ item }}"
+    description: "{{ item }} tenant"
+    domain: default
+    auth:
+      auth_url: "{{ endpoints.keystone.url.internal }}/v3"
+      project_name: admin
+      username: admin
+      password: "{{ secrets.admin_password }}"
   with_items: "{{ keystone.tenants }}"
 
 - name: keystone users
-  keystone_user: user={{ item.name }}
-                 password={{ item.password }}
-                 tenant={{ item.tenant }}
-                 endpoint="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}/"
-                 login_tenant_name={{ keystone.bootstrap.project }}
-                 login_user={{ keystone.bootstrap.user }}
-                 login_password={{ secrets.admin_password }}
+  environment:
+    OS_IDENTITY_API_VERSION: 3
+    OS_DOMAIN_ID: default
+  os_user:
+    name: "{{ item.name }}"
+    password: "{{ item.password }}"
+    default_project: "{{ item.tenant }}"
+    domain: default
+    auth:
+      auth_url: "{{ endpoints.keystone.url.internal }}/v3"
+      project_name: admin
+      username: admin
+      password: "{{ secrets.admin_password }}"
   with_items: "{{ keystone.users }}"
 
 - name: keystone roles
-  keystone_user: role={{ item }}
-                 endpoint="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}/"
-                 login_tenant_name={{ keystone.bootstrap.project }}
-                 login_user={{ keystone.bootstrap.user }}
-                 login_password={{ secrets.admin_password }}
+  environment:
+    OS_IDENTITY_API_VERSION: 3
+    OS_DOMAIN_ID: default
+  os_keystone_role:
+    name: "{{ item }}"
+    auth:
+      auth_url: "{{ endpoints.keystone.url.internal }}/v3"
+      project_name: admin
+      username: admin
+      password: "{{ secrets.admin_password }}"
   with_items: "{{ keystone.roles }}"
 
 - name: keystone user roles
-  keystone_user: role={{ item.role }}
-                 user={{ item.user }}
-                 tenant={{ item.tenant }}
-                 endpoint="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}/"
-                 login_tenant_name={{ keystone.bootstrap.project }}
-                 login_user={{ keystone.bootstrap.user }}
-                 login_password={{ secrets.admin_password }}
+  environment:
+    OS_IDENTITY_API_VERSION: 3
+    OS_DOMAIN_ID: default
+  os_user_role:
+    role: "{{ item.role }}"
+    user: "{{ item.user }}"
+    project: "{{ item.tenant }}"
+    auth:
+      auth_url: "{{ endpoints.keystone.url.internal }}/v3"
+      project_name: admin
+      username: admin
+      password: "{{ secrets.admin_password }}"
   with_items: "{{ keystone.user_roles }}"
 
+# This task is added separately as to not change the format in the
+# defaults-2.0.yml file, as that would be backwards incompatible.
+# The admin user needs admin role on the domain itself in keystonev3,
+# in particular to see the Domains tab in Horizon.
+- name: grant admin domain admin rights
+  environment:
+    OS_IDENTITY_API_VERSION: 3
+    OS_DOMAIN_ID: default
+  os_user_role:
+    role: admin
+    user: admin
+    domain: default
+    auth:
+      auth_url: "{{ endpoints.keystone.url.internal }}/v3"
+      project_name: admin
+      username: admin
+      password: "{{ secrets.admin_password }}"
+
 - name: heat stack user
-  keystone_user: user=heat_stack_user
-                 password={{ secrets.service_password }}
-                 tenant=admin
-                 endpoint="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}/"
-                 login_tenant_name={{ keystone.bootstrap.project }}
-                 login_user={{ keystone.bootstrap.user }}
-                 login_password={{ secrets.admin_password }}
+  environment:
+    OS_IDENTITY_API_VERSION: 3
+    OS_DOMAIN_ID: default
+  os_user:
+    name: heat_stack_user
+    password: "{{ secrets.service_password }}"
+    default_project: admin
+    domain: default
+    auth:
+      auth_url: "{{ endpoints.keystone.url.internal }}/v3"
+      project_name: admin
+      username: admin
+      password: "{{ secrets.admin_password }}"
+  when: heat.enabled|bool
+
+- name: heat stack role
+  environment:
+    OS_IDENTITY_API_VERSION: 3
+    OS_DOMAIN_ID: default
+  os_keystone_role:
+    name: heat_stack_user
+    auth:
+      auth_url: "{{ endpoints.keystone.url.internal }}/v3"
+      project_name: admin
+      username: admin
+      password: "{{ secrets.admin_password }}"
   when: heat.enabled|bool
 
 - name: heat stack user role
-  keystone_user: role=heat_stack_user
-                 user=heat_stack_user
-                 tenant=admin
-                 endpoint="http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/{{ endpoints.keystone.version }}/"
-                 login_tenant_name={{ keystone.bootstrap.project }}
-                 login_user={{ keystone.bootstrap.user }}
-                 login_password={{ secrets.admin_password }}
+  environment:
+    OS_IDENTITY_API_VERSION: 3
+    OS_DOMAIN_ID: default
+  os_user_role:
+    role: heat_stack_user
+    user: heat_stack_user
+    project: admin
+    auth:
+      auth_url: "{{ endpoints.keystone.url.internal }}/v3"
+      project_name: admin
+      username: admin
+      password: "{{ secrets.admin_password }}"
   when: heat.enabled|bool
 
 - include: federation.yml
