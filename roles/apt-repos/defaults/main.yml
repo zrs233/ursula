@@ -30,7 +30,7 @@ apt_repos:
     key_url: 'https://www.percona.com/redir/downloads/RPM-GPG-KEY-percona'
   rabbitmq:
     repo: 'http://www.rabbitmq.com/debian/'
-    key_url: 'https://www.rabbitmq.com/rabbitmq-signing-key-public.asc'
+    key_url: 'https://www.rabbitmq.com/rabbitmq-release-signing-key.asc'
   cloud_archive:
     repo: 'http://ubuntu-cloud.archive.canonical.com/ubuntu'
   erlang:

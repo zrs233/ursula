@@ -131,7 +131,7 @@ apt_repos:
     key_url: https://apt-mirror.openstack.blueboxgrid.com/keys/percona.key
   rabbitmq:
     repo: https://apt-mirror.openstack.blueboxgrid.com/rabbitmq/debian
-    key_url: https://apt-mirror.openstack.blueboxgrid.com/keys/rabbitmq.key
+    key_url: https://www.rabbitmq.com/rabbitmq-release-signing-key.asc
   cloud_archive:
     repo: https://apt-mirror.openstack.blueboxgrid.com/cloud_archive/ubuntu
   erlang:
