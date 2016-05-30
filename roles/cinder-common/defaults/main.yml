@@ -1,4 +1,5 @@
 ---
+project_name: cinder
 cinder:
   enabled: True
   enabled_backends: [] # rbd_volumes for Ceph

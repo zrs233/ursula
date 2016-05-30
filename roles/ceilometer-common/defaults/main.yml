@@ -1,4 +1,5 @@
 ---
+project_name: ceilometer
 ceilometer:
   enabled: False
   source:
