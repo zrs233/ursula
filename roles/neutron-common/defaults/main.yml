@@ -64,6 +64,7 @@ neutron:
     - neutron-db-manage
     - neutron-debug
     - neutron-dhcp-agent
+    - neutron-keepalived-state-change
     - neutron-l3-agent
     - neutron-lbaasv2-agent
     - neutron-linuxbridge-agent
@@ -74,6 +75,7 @@ neutron:
     - neutron-openvswitch-agent
     - neutron-ovs-cleanup
     - neutron-rootwrap
+    - neutron-rootwrap-daemon
     - neutron-rootwrap-xen-dom0
     - neutron-sanity-check
     - neutron-server
