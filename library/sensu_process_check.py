@@ -30,6 +30,8 @@ def main():
             crit_over=dict(default=30, required=False),
             interval=dict(default=30, required=False),
             occurrences=dict(default=2, required=False),
+            tags=dict(required=False, type='list'),
+            dependencies=dict(required=False, type='list'),
             plugin_dir=dict(default='/etc/sensu/plugins', required=False),
             check_dir=dict(default='/etc/sensu/conf.d/checks', required=False),
             state=dict(default='present', required=False, choices=['present','absent'])
@@ -52,7 +54,9 @@ def main():
                         'handlers': [ 'default' ],
                         'interval': int(module.params['interval']),
                         'notification': notification,
-                        'occurrences':  int(module.params['occurrences'])
+                        'occurrences':  int(module.params['occurrences']),
+                        'tags': module.params['tags'],
+                        'dependencies': module.params['dependencies']
                     }
                 }
             })

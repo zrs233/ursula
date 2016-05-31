@@ -39,6 +39,8 @@ def main():
             env_vars=dict(required=False,default=''),
             command=dict(required=False,default=''),
             handler=dict(required=False,default='default'),
+            tags=dict(required=False, type='list'),
+            dependencies=dict(required=False, type='list'),
             plugin_dir=dict(default='/etc/sensu/plugins', required=False),
             check_dir=dict(default='/etc/sensu/conf.d/checks', required=False),
             state=dict(default='present', required=False, choices=['present','absent'])
@@ -69,7 +71,9 @@ def main():
                         'interval': int(module.params['interval']),
                         'occurrences': int(module.params['occurrences']),
                         'auto_resolve': module.params['auto_resolve'],
-                        'handle': module.params['handle']
+                        'handle': module.params['handle'],
+                        'tags': module.params['tags'],
+                        'dependencies': module.params['dependencies']
                     }
                 }
             })

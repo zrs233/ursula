@@ -31,6 +31,7 @@ def main():
             use_sudo=dict(required=False, type='bool', default=False),
             plugin=dict(default=None, required=True),
             args=dict(default='', required=False),
+            tags=dict(required=False, type='list'),
             plugin_dir=dict(default='/etc/sensu/plugins', required=False),
             check_dir=dict(default='/etc/sensu/conf.d/checks', required=False),
             prefix=dict(default='', required=False),
@@ -56,7 +57,8 @@ def main():
                         'command': command,
                         'standalone': True,
                         'interval': int(module.params['interval']),
-                        'handlers': [ 'metrics' ]
+                        'handlers': [ 'metrics' ],
+                        'tags': module.params['tags'],
                     }
                 }
             })
