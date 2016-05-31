@@ -1,4 +1,5 @@
 ---
+project_name: glance
 glance:
   api_workers: 5
   rbd_store_chunk_size: 8

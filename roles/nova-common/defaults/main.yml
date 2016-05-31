@@ -1,4 +1,5 @@
 ---
+project_name: nova
 nova:
   enable_fatal_deprecations: True
   patches:

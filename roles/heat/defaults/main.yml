@@ -1,4 +1,5 @@
 ---
+project_name: heat
 heat:
   enabled: True
   heartbeat_timeout_threshold: 30
