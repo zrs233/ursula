@@ -33,7 +33,7 @@ import os
 def main():
     module = AnsibleModule(
         argument_spec=dict(
-            disks=dict(required=True),
+            disks=dict(type='list',required=True),
             ssd_device=dict(required=True),
         ),
     )
