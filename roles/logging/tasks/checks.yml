@@ -1,0 +1,4 @@
+---
+- name: install logstash-forwarder process check
+  sensu_check_dict: name="check-logstash-forwarder-process" check="{{ sensu_checks.logging.check_logstash_forwarder_process }}"
+  notify: restart sensu-client missing ok

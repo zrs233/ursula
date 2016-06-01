@@ -5,3 +5,4 @@ dependencies:
       - repo: 'deb {{ apt_repos.logstash_forwarder.repo }} trusty main'
         key_url: '{{ apt_repos.logstash_forwarder.key_url }}'
     when: logging.install_method == 'apt'
+  - role: sensu-check
