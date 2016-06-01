@@ -72,29 +72,23 @@
   os_user:
     name: heat_domain_admin
     password: "{{ secrets.stack_domain_admin_password }}"
-    default_project: admin
     domain: "{{ heat_domain.domain.id }}"
     auth:
       auth_url: "{{ endpoints.keystone.url.internal }}/v3"
       project_name: admin
       username: admin
       password: "{{ secrets.admin_password }}"
+  register: heat_admin_user
+  failed_when: heat_admin_user|failed and
+               "409" not in heat_admin_user.msg|default('')
   run_once: true
 
 - name: add admin role to the heat domain admin user
   environment:
     OS_IDENTITY_API_VERSION: 3
     OS_DOMAIN_ID: default
-  os_user_role:
-    role: admin
-    user: heat_domain_admin
-    domain: "{{ heat_domain.domain.id }}"
-    auth:
-      auth_url: "{{ endpoints.keystone.url.internal }}/v3"
-      project_name: admin
-      username: admin
-      password: "{{ secrets.admin_password }}"
-  when: heat.enabled|bool
+  shell: . /root/stackrc; openstack --os-auth-url "{{ endpoints.keystone.url.internal }}/v3" role add --domain "{{ heat_domain.domain.id }}" --user "{{ heat_admin_user.user.id }}" admin
+  when: heat.enabled|bool and heat_admin_user|changed
   run_once: true
 
 - name: stop heat services before db sync
