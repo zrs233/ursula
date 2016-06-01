@@ -129,7 +129,7 @@ def main():
         service_provider_id=dict(required=True),
         service_provider_url=dict(required=True),
         service_provider_auth_url=dict(required=True),
-        enabled=dict(required=False, default=True),
+        enabled=dict(required=False, type='bool', default=True),
         description=dict(required=False, default=None),
         state=dict(default='present', choices=['absent', 'present']),
     )
