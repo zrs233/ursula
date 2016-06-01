@@ -1,24 +1,15 @@
 ---
-- name: ntp.conf include directive
-  lineinfile: dest=/etc/ntp.conf
-              line="includefile /etc/ntp/cluster.conf" state=present
-
-- name: ntp servers
-  lineinfile: dest=/etc/ntp.conf
-              line="server {{ item }} iburst" state=present
-  with_items: "{{ common.ntpd.servers }}"
-  notify:
-    - restart-ntp
-
-- name: /etc/ntp directory
-  file: dest=/etc/ntp state=directory mode=755 owner=root
-
-- name: ntp/cluster.conf
-  template: dest=/etc/ntp/cluster.conf
-            src=etc/ntp/cluster.conf
-            mode=644 owner=root
+- name: install ntp.conf
+  template:
+    dest: /etc/ntp.conf
+    src: etc/ntp.conf
+    mode: 0644
+    owner: root
   notify:
     - restart-ntp
 
 - name: ntp service enabled
-  service: name=ntp state=started enabled=true
+  service:
+    name: ntp
+    state: started
+    enabled: true
