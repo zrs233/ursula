@@ -29,9 +29,11 @@
           minRefreshDelay="{{ keystone.federation.sp.k2k.idp_metadata_min_refresh_delay }}"
           maxRefreshDelay="{{ keystone.federation.sp.k2k.idp_metadata_max_refresh_delay }}"
           refreshDelayFactor="{{ keystone.federation.sp.k2k.idp_metadata_factor_refresh_delay }}">
+          {% if keystone.federation.sp.k2k.verify_idp_cert|bool -%}
           <TransportOption provider="CURL" option="64">1</TransportOption>
           <TransportOption provider="CURL" option="81">2</TransportOption>
           <TransportOption provider="CURL" option="10065">/etc/ssl/certs/ca-certificates.crt</TransportOption>
+          {% endif -%}
         </MetadataProvider>
         <AttributeExtractor type="XML" validate="true" reloadChanges="false" path="attribute-map.xml"/>
         <AttributeResolver type="Query" subjectMatch="true"/>
