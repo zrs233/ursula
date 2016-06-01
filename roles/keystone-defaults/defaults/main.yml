@@ -26,6 +26,7 @@ keystone:
     - cloud_admin
     - heat_stack_owner
     - service
+    - _member_
   logs:
     - paths:
       - /var/log/keystone/keystone-all.log
