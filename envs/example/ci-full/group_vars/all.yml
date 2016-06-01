@@ -1,0 +1,7 @@
+---
+stack_env: example_ci-full
+
+state_path_base: /opt/stack/data
+
+neutron:
+  enable_external_interface: True

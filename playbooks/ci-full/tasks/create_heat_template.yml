@@ -1,0 +1,10 @@
+---
+- name: create heat template for test env
+  hosts: localhost
+  connection: local
+  vars_files:
+  - ../vars/main.yml
+  tasks:
+    - name: create heat template
+      template: src=../templates/heat_stack.yml
+                dest="{{ testenv_heat_template_file }}"
