@@ -31,4 +31,4 @@
     state: present
     sysctl_file: /etc/sysctl.conf
     ignoreerrors: yes
-  with_items: ceph.os_tuning_params
+  with_items: "{{ ceph.os_tuning_params }}"

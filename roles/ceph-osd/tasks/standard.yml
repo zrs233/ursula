@@ -2,7 +2,7 @@
 # we check for a ceph partition to avoid destructive tasks below
 - name: check if 'ceph' partition exists on osd disks
   shell: "parted --script /dev/{{ item }} print | egrep -sq 'ceph'"
-  with_items: ceph.disks
+  with_items: "{{ ceph.disks }}"
   ignore_errors: true
   changed_when: false
   register: ceph_partitions
