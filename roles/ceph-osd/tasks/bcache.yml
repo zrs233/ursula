@@ -44,7 +44,7 @@
 
 - name: make-bcache -B <sata disks>
   command: "make-bcache -B /dev/{{ item }}"
-  with_items: ceph.disks
+  with_items: "{{ ceph.disks }}"
   when: ok_to_deploy
 
 - name: udevadm trigger

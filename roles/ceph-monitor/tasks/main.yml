@@ -73,7 +73,7 @@
   command: ceph auth get-or-create {{ item.name }} {{ item.value }}
            -o /etc/ceph/ceph.{{ item.name }}.keyring
            creates=/etc/ceph/ceph.{{ item.name }}.keyring
-  with_items: ceph.openstack_keys
+  with_items: "{{ ceph.openstack_keys }}"
 
 - include: monitoring.yml
   tags:

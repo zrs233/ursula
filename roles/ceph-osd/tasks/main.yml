@@ -6,12 +6,12 @@
 - name: install dependencies
   apt: pkg={{ item }}
        state=present
-  with_items: ceph.osd_pkgs
+  with_items: "{{ ceph.osd_pkgs }}"
 
 - name: install bcache dependencies
   apt: pkg={{ item }}
        state=present
-  with_items: ceph.bcache_pkgs
+  with_items: "{{ ceph.bcache_pkgs }}"
   when: ceph.bcache_ssd_device is defined
 
 - name: register admin.keyring
