@@ -1,0 +1,20 @@
+---
+- name: aodh-api process check
+  sensu_process_check: service=aodh-api
+  notify: restart sensu-client
+
+- name: aodh-evaluator process check
+  sensu_process_check: service=aodh-evaluator
+  notify: restart sensu-client
+
+- name: aodh-expirer process check
+  sensu_process_check: service=aodh-expirer
+  notify: restart sensu-client
+
+- name: aodh-listener process check
+  sensu_process_check: service=aodh-listener
+  notify: restart sensu-client
+  
+- name: aodh-notifier process check
+  sensu_process_check: service=aodh-notifier
+  notify: restart sensu-client

@@ -1,0 +1,91 @@
+---
+- name: create aodh user
+  user: name=aodh comment=aodh shell=/bin/false system=yes home=/nonexistent
+        createhome=no
+
+- name: create aodh directory
+  file: dest=/etc/aodh state=directory
+
+- name: create aodh log directory
+  file: dest=/var/log/aodh state=directory mode=0755 owner=aodh
+
+- name: create aodh cache dir
+  file: dest=/var/cache/aodh state=directory mode=0700
+        owner=aodh group=aodh
+        
+- name: install aodh services
+  upstart_service: name={{ item }}
+                   user=aodh
+                   cmd=/usr/local/bin/{{ item }}
+                   config_dirs=/etc/aodh
+  with_items:
+    - aodh-api
+    - aodh-evaluator
+    - aodh-expirer
+    - aodh-listener
+    - aodh-notifier
+    
+- name: aodh config
+  template: src={{ item }} dest=/etc/aodh/
+            mode={{ 0644 if 'policy.json' in item else 0640 }}
+            owner=aodh group=aodh
+  with_fileglob: ../templates/etc/aodh/*
+  notify:
+    - restart aodh services
+    
+- name: stop aodh services before db sync
+  service: name={{ item }} state=stopped
+  when: database_create.changed or force_sync|default('false')|bool
+  with_items:
+    - aodh-api
+    - aodh-evaluator
+    - aodh-expirer
+    - aodh-listener
+    - aodh-notifier
+  tags: db-migrate
+
+- name: sync aodh database
+  command: aodh-dbsync
+  when: database_create.changed or force_sync|default('false')|bool
+  run_once: true
+  changed_when: true
+  notify:
+    - restart aodh services
+  # we want this to always be changed so that it can notify the service restart
+  tags: db-migrate
+
+- name: trigger restart on upgrades
+  debug:
+    msg: "Triggering service restart for upgrade"
+  changed_when: True
+  notify: restart aodh services
+  when: code_has_changed | default('False') | bool and
+        upgrade | default('False') | bool
+
+- meta: flush_handlers
+    
+- name: start aodh services
+  service: name={{ item }} state=started
+  with_items:
+    - aodh-api
+    - aodh-evaluator
+    - aodh-expirer
+    - aodh-listener
+    - aodh-notifier
+
+- include: monitoring.yml
+  tags:
+    - monitoring
+    - common
+  when: monitoring.enabled|default('True')|bool
+
+- include: logging.yml
+  tags:
+    - logrotate
+    - logging
+  when: logging.enabled|default('True')|bool
+
+- include: serverspec.yml
+  tags:
+    - serverspec
+  when: serverspec.enabled|default('False')|bool

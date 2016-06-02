@@ -1,0 +1,14 @@
+---
+dependencies:
+  - role: endpoints
+  - role: openstack-source
+    project_name: aodh
+    project_rev: "{{ aodh.source.rev }}"
+    alternatives: "{{ aodh.alternatives }}"
+    system_dependencies: "{{ aodh.source.system_dependencies }}"
+    python_dependencies: "{{ aodh.source.python_dependencies }}"
+    when: openstack_install_method == 'source'
+  - role: monitoring-common
+    when: monitoring.enabled|default(True)|bool
+  - role: openstack-database
+    database_name: aodh
