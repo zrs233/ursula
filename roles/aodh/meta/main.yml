@@ -8,6 +8,10 @@ dependencies:
     system_dependencies: "{{ aodh.source.system_dependencies }}"
     python_dependencies: "{{ aodh.source.python_dependencies }}"
     when: openstack_install_method == 'source'
+  - role: openstack-package
+    project_name: aodh
+    alternatives: "{{ aodh.alternatives }}"
+    when: openstack_install_method == 'package'
   - role: monitoring-common
     when: monitoring.enabled|default(True)|bool
   - role: openstack-database
