@@ -54,7 +54,7 @@ def main():
             domain_name_to_auth=dict(default=None, required=True),
             verify=dict(default=True, type='bool', required=False),
             name=dict(default=None, required=True),
-            rules=dict(default=None, required=False),
+            rules=dict(default=None, type='list', required=False),
             state=dict(default='present', required=False,
                        choices=['present', 'absent']),
         )
