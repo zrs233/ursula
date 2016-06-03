@@ -29,7 +29,7 @@
 - name: make journal partitions
   command: parted --script /dev/{{ ceph.bcache_ssd_device }}
            mkpart journal {{ (item|int * 10000) + 1 }}MiB {{ (item|int * 10000) + 10000 }}MiB
-  with_sequence: start=0 end={{ ceph.disks|length - 1 }}
+  with_sequence: "start=0 end={{ ceph.disks|length - 1 }}"
   when: ok_to_deploy
 
 - name: make bcache partition
@@ -53,12 +53,12 @@
 
 - name: wait for bcache directories to be created before running next task
   wait_for: path=/sys/block/bcache{{ item }}
-  with_sequence: start=0 end={{ ceph.disks|length - 1 }}
+  with_sequence: "start=0 end={{ ceph.disks|length - 1 }}"
   when: ok_to_deploy
 
 - name: set cache mode to writeback
   shell: echo writeback > /sys/block/bcache{{ item }}/bcache/cache_mode
-  with_sequence: start=0 end={{ ceph.disks|length - 1 }}
+  with_sequence: "start=0 end={{ ceph.disks|length - 1 }}"
   when: ok_to_deploy
 
 - name: determine bcache uuid
@@ -70,12 +70,12 @@
 
 - name: attach to bcache devices
   shell: echo {{ bcache_uuid.stdout }} > /sys/block/bcache{{ item }}/bcache/attach
-  with_sequence: start=0 end={{ ceph.disks|length - 1 }}
+  with_sequence: "start=0 end={{ ceph.disks|length - 1 }}"
   when: ok_to_deploy
 
 - name: make xfs on bcache devices
   command: "mkfs -t xfs -f -i size=2048 -- /dev/bcache{{ item }}"
-  with_sequence: start=0 end={{ ceph.disks|length - 1 }}
+  with_sequence: "start=0 end={{ ceph.disks|length - 1 }}"
   when: ok_to_deploy
 
 - name: activate osds
