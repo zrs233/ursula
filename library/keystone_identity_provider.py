@@ -58,7 +58,7 @@ def main():
             verify=dict(default=True, type='bool', required=False),
             name=dict(default=None, required=True),
             description=dict(default=None, required=False),
-            remote_ids=dict(default=None, required=False),
+            remote_ids=dict(default=None, type='list', required=False),
             enabled=dict(default=True, type='bool', required=False),
             state=dict(default='present', required=False,
                        choices=['present', 'absent']),
@@ -75,7 +75,7 @@ def main():
                           verify=module.params['verify'],
                           project_name=module.params['project_name_to_auth'],
                           project_domain_name=module.params['domain_name_to_auth'])
-                          
+
 
         if module.params['state'] == 'present':
             if not _identity_provider_exists(keystone, module.params['name']):
