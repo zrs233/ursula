@@ -23,7 +23,7 @@
         remote_group: "{{ item.group | default(omit) }}"
         ethertype: "{{ item.ethertype | default(omit) }}"
         state: present
-      with_items: testenv_security_group_rules
+      with_items: "{{ testenv_security_group_rules }}"
 
     - name: create instances
       os_server:
@@ -37,14 +37,14 @@
         nics:
           - net-id: internal
         auto_floating_ip: false
-      with_items: testenv_instance_names
+      with_items: "{{ testenv_instance_names }}"
 
     - name: associate a floating IP to instances
       os_floating_ip:
         server: "{{ item }}"
         network: external
         reuse: true
-      with_items: testenv_instance_names
+      with_items: "{{ testenv_instance_names }}"
       register: testenv_floating_ips
 
     - name: wait for instances to boot
@@ -53,4 +53,4 @@
         delay: 5
         timeout: 600
         host: "{{ item.floating_ip.floating_ip_address }}"
-      with_items: testenv_floating_ips.results
+      with_items: "{{ testenv_floating_ips.results }}"

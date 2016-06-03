@@ -10,7 +10,7 @@
         dest=/etc/network/interfaces.d/{{ item.filename }}
         force=yes owner=root group=root mode=0644
   when: network_interfaces_d is defined
-  with_items: network_interfaces_d
+  with_items: "{{ network_interfaces_d }}"
   tags: ['prereboot']
 
 #Set gateway for each undercloud_cidr subnet. gateway is a member of undercloud_cidr list for every subnet.

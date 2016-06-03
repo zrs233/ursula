@@ -7,7 +7,7 @@
   lineinfile: dest=/etc/hosts
               regexp='.*{{ hostvars[item]['ansible_hostname'] }}$'
               line='{{ hostvars[item][primary_interface]["ipv4"]["address"] }} {{ hostvars[item]['ansible_hostname'] }}'
-  with_items: groups["controller"]
+  with_items: "{{ groups["controller"] }}"
 
 - name: add rabbitmq erlang cookie
   template: src=var/lib/rabbitmq/erlang.cookie
