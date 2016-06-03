@@ -14,7 +14,11 @@
   with_items: "{{ manage_disks.volume_groups }}"
 
 - name: create logical volumes
-  lvol: vg={{ item.volume_group }} lv={{ item.name }} size={{ item.size }}
+  lvol:
+    vg: "{{ item.volume_group }}"
+    lv: "{{ item.name }}"
+    size: "{{ item.size }}"
+    shrink: no
   with_items: "{{ manage_disks.logical_volumes }}"
 
 - name: create filesystems
