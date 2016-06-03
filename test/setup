@@ -17,6 +17,9 @@ USE_PRIVATE_IPS=${USE_PRIVATE_IPS:-"false"}
 
 ${ROOT}/test/check-deps
 
+echo "testenv_instance_prefix: ${testenv_instance_prefix}"
+echo "testenv_heat_stack_name: ${testenv_heat_stack_name}"
+
 echo "writing initial inventory file"
 mkdir -p ${ROOT}/envs/test
 cat > ${ROOT}/envs/test/hosts <<eof
@@ -32,21 +35,18 @@ testenv_keypair_name: ${KEY_NAME}
 testenv_keypair_path: ${KEY_PATH}
 eof
 
-echo "destroying: ${VMS}"
+echo "deleting heat stack to destroy resources including VMs: ${VMS}"
 ${ROOT}/test/cleanup
 
-echo "booting ${VMS}"
-ursula "envs/test" ${ROOT}/playbooks/${TEST_ENV}/tasks/create.yml --extra-vars="use_private_ips=${USE_PRIVATE_IPS}"
+echo "creating heat template for test env ..."
+ursula --ursula-debug "envs/test" ${ROOT}/playbooks/${TEST_ENV}/tasks/create_heat_template.yml --extra-vars="use_private_ips=${USE_PRIVATE_IPS}"
 
 echo "building config"
-CONTROLLER_IP=$(private_ip ${testenv_instance_prefix}-controller-0)
 rm -rf ${ROOT}/envs/test/group_vars/
 rm -f ${ROOT}/envs/test/hosts
 mkdir -p ${ROOT}/envs/test/group_vars
-cp -r ${ROOT}/envs/example/ci/* ${ROOT}/envs/test
-echo "---" > ${ROOT}/envs/test/group_vars/all.yml
+cp -r ${ROOT}/envs/example/${TEST_ENV}/* ${ROOT}/envs/test
 echo "testenv_instance_prefix: ${testenv_instance_prefix}" >> ${ROOT}/envs/test/group_vars/all.yml
-echo "state_path_base: /opt/stack/data" >> ${ROOT}/envs/test/group_vars/all.yml
 
 echo "generating ssl cert for openstack.example.com"
 CERT_DIR=$(mktemp -d 2> /dev/null || mktemp -d -t 'setup')
@@ -61,10 +61,6 @@ cat >> ${ROOT}/envs/test/group_vars/all.yml <<eof
   key: |
 eof
 cat ${CERT_DIR}/openstack.example.com.key | sed 's/^/    /' >> ${ROOT}/envs/test/group_vars/all.yml
-cat >> ${ROOT}/envs/test/group_vars/all.yml <<eof
-neutron:
-   enable_external_interface: True
-eof
 UNDERCLOUD_CIDR="$(python -c 'import shade; cloud = shade.openstack_cloud(); print cloud.search_subnets("internal")[0]["cidr"]')"
 cat >> ${ROOT}/envs/test/defaults-2.0.yml <<eof
 undercloud_cidr:
@@ -73,76 +69,17 @@ eof
 popd
 rm -rf ${CERT_DIR}
 
-echo "writing inventory file"
+echo "booting ${VMS} by heat, then copy files for pre-deployment"
+extra_args="--ursula-debug --provisioner=heat --heat-stack-name=${testenv_heat_stack_name}"
+ursula ${extra_args} "envs/test" ${ROOT}/playbooks/${TEST_ENV}/tasks/pre-deploy.yml -u ${LOGIN_USER}
+
 if [[ ${TEST_ENV} == "ci-full" ]]; then
-  shopt -s expand_aliases
   CONTROLLER_IP=$(private_ip ${testenv_instance_prefix}-controller-0)
-  if [[ ${USE_PRIVATE_IPS} == "true" ]]; then
-    alias get_ip=private_ip
-  else
-    alias get_ip=public_ip
-  fi
-  cat > ${ROOT}/envs/test/hosts <<eof
-[db]
-$(get_ip "${testenv_instance_prefix}-controller-0")
-$(get_ip "${testenv_instance_prefix}-controller-1")
-
-[db_arbiter]
-$(get_ip "${testenv_instance_prefix}-compute-0")
-
-[mongo_db]
-$(get_ip "${testenv_instance_prefix}-controller-0")
-$(get_ip "${testenv_instance_prefix}-controller-1")
-
-[mongo_arbiter]
-$(get_ip "${testenv_instance_prefix}-compute-0")
-
-[controller]
-$(get_ip "${testenv_instance_prefix}-controller-0")
-$(get_ip "${testenv_instance_prefix}-controller-1")
-
-[compute]
-$(get_ip "${testenv_instance_prefix}-compute-0")
-$(get_ip "${testenv_instance_prefix}-controller-0")
-$(get_ip "${testenv_instance_prefix}-controller-1")
-
-[network]
-$(get_ip "${testenv_instance_prefix}-controller-0")
-$(get_ip "${testenv_instance_prefix}-controller-1")
-
-[cinder_volume]
-$(get_ip "${testenv_instance_prefix}-compute-0")
-eof
 else
   CONTROLLER_IP=$(private_ip ${testenv_instance_prefix}-allinone)
-  cat > ${ROOT}/envs/test/hosts <<eof
-[db]
-$(public_ip "${testenv_instance_prefix}-allinone")
-
-[db_arbiter]
-$(public_ip "${testenv_instance_prefix}-allinone")
-
-[mongo_db]
-$(public_ip "${testenv_instance_prefix}-allinone")
-
-[controller]
-$(public_ip "${testenv_instance_prefix}-allinone")
-
-[compute]
-$(public_ip "${testenv_instance_prefix}-allinone")
-
-[network]
-$(public_ip "${testenv_instance_prefix}-allinone")
-
-[cinder_volume]
-$(public_ip "${testenv_instance_prefix}-allinone")
-eof
 fi
 
 echo "controller_primary: ${CONTROLLER_IP}" >> ${ROOT}/envs/test/group_vars/all.yml
-
-echo "copying files"
-ursula "envs/test" ${ROOT}/playbooks/${TEST_ENV}/tasks/pre-deploy.yml -u ${LOGIN_USER} --sudo
 
 ring_bell
 echo "vms are up: ${VMS} !!"

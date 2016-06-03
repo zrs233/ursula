@@ -16,23 +16,25 @@ source $(dirname $0)/common
 
 cd ${ROOT}
 
+extra_args="--ursula-debug --provisioner=heat --heat-stack-name=${testenv_heat_stack_name}"
+
 if [ "${ACTION}" == "all" -o "${ACTION}" == "deploy" ]; then
-  time ursula "envs/test" site.yml -u ${LOGIN_USER} --sudo "$@"
+  time ursula ${extra_args} "envs/test" site.yml -u ${LOGIN_USER} "$@"
   ring_bell
 fi
 
 if [ "${ACTION}" == "all" -o "${ACTION}" == "test" ]; then
-  time ursula "envs/test" ${ROOT}/playbooks/tests/tasks/main.yml -u ${LOGIN_USER} --sudo  $@
+  time ursula ${extra_args} "envs/test" ${ROOT}/playbooks/tests/tasks/main.yml -u ${LOGIN_USER} $@
   ring_bell
 fi
 
 if [ "${ACTION}" == "all" -o "${ACTION}" == "cleanup" ]; then
-  time ursula "envs/test" ${ROOT}/playbooks/tests/tasks/cleanup.yml -u ${LOGIN_USER} --sudo
+  time ursula ${extra_args} "envs/test" ${ROOT}/playbooks/tests/tasks/cleanup.yml -u ${LOGIN_USER}
   ring_bell
 fi
 
 if [ "${ACTION}" == "upgrade" ]; then
-  time ursula "envs/test" upgrade.yml -u ${LOGIN_USER} --sudo "$@"
+  time ursula ${extra_args} "envs/test" upgrade.yml -u ${LOGIN_USER} "$@"
   ring_bell
 fi
 

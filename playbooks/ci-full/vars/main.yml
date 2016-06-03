@@ -23,3 +23,4 @@ testenv_security_group_rules:
   - { ethertype: 'IPv4', group: "{{ testenv_security_group.id }}" }
   - { ethertype: 'IPv6', group: "{{ testenv_security_group.id }}" }
 testenv_security_groups_cleanup: True
+testenv_heat_template_file: "{{ ansible_env.testenv_heat_template_file }}"

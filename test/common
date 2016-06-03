@@ -4,16 +4,7 @@ export STACK_RC=${STACK_RC:-~/.stackrc}
 [[ -f ${STACK_RC} ]] && source ${STACK_RC}
 
 export ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
-export KEY_NAME=${KEY_NAME:=int-test}
-export KEY_PATH=${ROOT}/envs/test/${KEY_NAME}.pem
-LOGIN_USER=ubuntu
-SSH_ARGS=\
-" ${ANSIBLE_SSH_ARGS}"\
-' -o LogLevel=quiet'\
-' -o StrictHostKeyChecking=no'\
-' -o UserKnownHostsFile=/dev/null'\
-" -i ${KEY_PATH}"
-export ANSIBLE_SSH_ARGS="${SSH_ARGS}"
+
 export ANSIBLE_VAR_DEFAULTS_FILE="${ROOT}/envs/test/defaults-2.0.yml"
 export IMAGE_ID=${IMAGE_ID:=ubuntu-14.04}
 export AVAILABILITY_ZONE=${OS_AVAILABILITY_ZONE:=nova}
@@ -26,12 +17,30 @@ else
   export testenv_instance_prefix=$(git rev-parse --abbrev-ref HEAD)
 fi
 
+export testenv_heat_template_file=${ROOT}/envs/test/heat_stack.yml
+export testenv_heat_stack_name="${testenv_instance_prefix}_stack"
+export testenv_flavor=${testenv_flavor:=m1.large}
+export testenv_network=${testenv_network:=internal}
+export testenv_floating_ip_pool=${testenv_floating_ip_pool:=external}
+
 if [[ $TEST_ENV == "ci-allinone" ]]; then
   VMS="${testenv_instance_prefix}-allinone"
 else
   TEST_ENV="ci-full"
   VMS="${testenv_instance_prefix}-controller-0 ${testenv_instance_prefix}-controller-1 ${testenv_instance_prefix}-compute-0"
 fi
+
+export KEY_NAME="${testenv_instance_prefix}_key"
+export KEY_PATH=${ROOT}/tmp/ssh_key
+LOGIN_USER=ubuntu
+SSH_ARGS=\
+" ${ANSIBLE_SSH_ARGS}"\
+' -o LogLevel=quiet'\
+' -o StrictHostKeyChecking=no'\
+' -o UserKnownHostsFile=/dev/null'\
+" -i ${KEY_PATH}"
+export ANSIBLE_SSH_ARGS="${SSH_ARGS}"
+
 
 die() {
   echo "[ERROR] $*"; exit 1
