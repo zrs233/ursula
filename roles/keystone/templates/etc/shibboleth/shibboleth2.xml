@@ -1,9 +1,32 @@
+{% macro memcached_hosts() -%}
+{% for host in groups['controller'] -%}
+   {%- if loop.last -%}
+{{ hostvars[host][primary_interface]['ipv4']['address'] }}:{{ memcached.port }}
+   {%- else -%}
+{{ hostvars[host][primary_interface]['ipv4']['address'] }}:{{ memcached.port }}, {% endif -%}
+{% endfor -%}
+{% endmacro -%}
 <SPConfig xmlns="urn:mace:shibboleth:2.0:native:sp:config"
     xmlns:conf="urn:mace:shibboleth:2.0:native:sp:config"
     xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
     xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
     xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
     clockSkew="180">
+
+    <OutOfProcess logger="shibd.logger">
+        <Extensions>
+            <Library path="memcache-store.so" fatal="true"/>
+        </Extensions>
+    </OutOfProcess>
+    <StorageService type="MEMCACHE" id="mc" prefix="SHIBD_SERVICE" buildMap="1">
+       <Hosts>
+           {{ memcached_hosts() }}
+       </Hosts>
+    </StorageService>
+    <SessionCache type="StorageService" StorageService="mc" cacheAssertions="false"
+                  cacheTimeout="3600" inprocTimeout="900" cleanupInterval="900"/>
+    <ReplayCache StorageService="mc"/>
+    <ArtifactMap StorageService="mc" artifactTTL="180"/>
 
     <ApplicationDefaults entityID="{{ keystone.federation.sp.k2k.sp_id }}">
         <Sessions lifetime="28800" timeout="3600" relayState="ss:mem"
