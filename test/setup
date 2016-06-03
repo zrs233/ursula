@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash -x
 
 # if in jenkins, make the venv from the workspace and build ID
 # to allow concurrent runs.
