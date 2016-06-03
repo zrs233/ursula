@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash -x
 
 # Bash shell script for generating self-signed certs. Run this in a folder, as it
 # generates a few files. Large portions of this script were taken from the

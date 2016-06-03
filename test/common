@@ -1,4 +1,4 @@
-set -e
+set -xe
 
 export STACK_RC=${STACK_RC:-~/.stackrc}
 [[ -f ${STACK_RC} ]] && source ${STACK_RC}
