@@ -7,5 +7,8 @@
   service: name=apache2 state=restarted must_exist=false
 
 - name: compress horizon assets
-  command: sudo -u www-data tools/with_venv.sh ./manage.py compress
-           chdir=/opt/stack/horizon/
+  command: tools/with_venv.sh ./manage.py compress
+  args:
+    chdir: /opt/stack/horizon/
+  become: true
+  become_user: www-data
