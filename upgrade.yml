@@ -26,6 +26,26 @@
     - role: common
   environment: "{{ env_vars|default({}) }}"
 
+- name: upgrade rabbit for security
+  hosts: controller
+  serial: 1
+  max_fail_percentage: 1
+  tags: rabbit
+
+  tasks:
+    - name: upgrade rabbit
+      apt:
+        pkg: rabbitmq-server
+        state: latest
+      notify: restart-rabbit
+
+  handlers:
+    - name: restart-rabbit
+      service:
+        name: rabbitmq-server
+        state: restarted
+  environment: "{{ env_vars|default({}) }}"
+
 - name: stop the restarts
   hosts: all:!vyatta-*
   tags: always
