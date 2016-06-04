@@ -10,11 +10,11 @@
     - resolvconf
 
 - name: install packages for l3ha
-  apt: pkg={{ item }}
-  with_items:
-    - keepalived
-    - conntrackd
+  apt: pkg=keepalived
   when: neutron.l3ha.enabled|bool
+
+- name: remove conntrackd
+  apt: name=conntrackd purge=yes state=absent
 
 - include: dnsmasq.yml
 
