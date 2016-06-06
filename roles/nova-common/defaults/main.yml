@@ -15,7 +15,7 @@ nova:
   libvirt_cpu_model: null
   libvirt_type: kvm
   enable_ssh: False
-  enable_novnc: False
+  enable_novnc: True
   novnc_method: git
   novnc_repo: https://github.com/kanaka/noVNC.git
   novnc_rev: 292f6a5d
