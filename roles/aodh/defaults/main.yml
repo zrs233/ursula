@@ -1,7 +1,6 @@
 ---
 project_name: aodh
 aodh:
-  enabled: true
   debug: False
   source:
     rev: 'stable/mitaka'
