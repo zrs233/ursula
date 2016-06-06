@@ -3,6 +3,8 @@ project_name: neutron
 neutron:
   enable_fatal_deprecations: True
   l2_population: False
+  extension_drivers: 
+    - port_security
   vxlan:
     # The multicast prefix to use for broadcast, multicast and unknown frames
     # Consider using a larger prefix (e.g. a /24) on deployments with a
