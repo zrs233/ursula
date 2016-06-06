@@ -16,7 +16,7 @@ describe file('/etc/swift/') do
   it { should be_mode 755 } 
 end 
 
-files = ['account.log', 'container.log', 'object.log']
+files = ['account.log', 'container.log', 'object.log', 'proxy.log']
 files.each do |file|
   has_file = file("/var/log/swift/#{file}").exists?
   describe file("/var/log/swift/#{file}"), :if => has_file do 
