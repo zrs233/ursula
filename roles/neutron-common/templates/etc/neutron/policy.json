@@ -48,21 +48,21 @@
     "get_network:queue_id": "rule:admin_only",
     "get_network_ip_availabilities": "rule:admin_or_cloudadmin",
     "get_network_ip_availability": "rule:admin_or_cloudadmin",
-    "create_network:shared": "rule:admin_only",
+    "create_network:shared": "rule:admin_or_cloudadmin",
     "create_network:router:external": "rule:admin_only",
     "create_network:is_default": "rule:admin_only",
     "create_network:segments": "rule:admin_only",
     "create_network:provider:network_type": "rule:admin_only",
     "create_network:provider:physical_network": "rule:admin_only",
     "create_network:provider:segmentation_id": "rule:admin_only",
-    "update_network": "rule:admin_or_network_owner",
+    "update_network": "rule:admin_or_owner",
     "update_network:segments": "rule:admin_only",
     "update_network:shared": "rule:admin_only",
     "update_network:provider:network_type": "rule:admin_only",
     "update_network:provider:physical_network": "rule:admin_only",
     "update_network:provider:segmentation_id": "rule:admin_only",
     "update_network:router:external": "rule:admin_only",
-    "delete_network": "rule:admin_or_network_owner",
+    "delete_network": "rule:admin_or_owner",
 
     "network_device": "field:port:device_owner=~^network:",
     "create_port": "",
@@ -101,10 +101,10 @@
     "update_router:external_gateway_info:enable_snat": "rule:admin_only",
     "update_router:distributed": "rule:admin_only",
     "update_router:ha": "rule:admin_only",
-    "delete_router": "rule:admin_or_network_owner",
+    "delete_router": "rule:admin_or_owner",
 
-    "add_router_interface": "rule:admin_or_network_owner",
-    "remove_router_interface": "rule:admin_or_network_owner",
+    "add_router_interface": "rule:admin_or_owner",
+    "remove_router_interface": "rule:admin_or_owner",
 
     "create_router:external_gateway_info:external_fixed_ips": "rule:admin_only",
     "update_router:external_gateway_info:external_fixed_ips": "rule:admin_only",
@@ -153,9 +153,9 @@
 
     "create_floatingip": "rule:regular_user",
     "create_floatingip:floating_ip_address": "rule:admin_only",
-    "update_floatingip": "rule:admin_or_network_owner",
-    "delete_floatingip": "rule:admin_or_network_owner",
-    "get_floatingip": "rule:admin_or_network_owner",
+    "update_floatingip": "rule:admin_or_owner",
+    "delete_floatingip": "rule:admin_or_owner",
+    "get_floatingip": "rule:admin_or_owner",
 
     "create_network_profile": "rule:admin_only",
     "update_network_profile": "rule:admin_only",
@@ -242,5 +242,5 @@
     "get_security_group": "",
     "create_security_group_rule": "",
     "delete_security_group_rule": "",
-    "update_router": "rule:admin_or_network_owner"
+    "update_router": "rule:admin_or_owner"
 }
