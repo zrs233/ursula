@@ -403,5 +403,5 @@
   roles:
     - role: 'aodh'
       tags: ['openstack', 'aodh']
-      when: aodh.enabled|default('false')|bool
+      when: ceilometer.enabled|default('false')|bool
   environment: "{{ env_vars|default({}) }}"
