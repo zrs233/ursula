@@ -1,10 +1,6 @@
 require 'spec_helper'
 
-describe file('/etc/ceilometer/ceilometer.conf') do
-  it { should contain('^admin_password[ ]*=[ ]*.\{8,\}') }
-end
-
-dirs = ['/etc/ceilometer/', '/var/log/ceilometer/']
+dirs = ['/etc/ceilometer', '/var/log/ceilometer']
 dirs.each do |dir|
   describe file(dir) do
     it { should be_directory }
@@ -24,7 +20,7 @@ end
 processes = ['ceilometer-api',
   'ceilometer-collector',
   'ceilometer-polling',
-  'ceilometer-agent-notification',
+  'ceilometer-agent-notification']
 processes.each do |process|
   describe process(process) do
     its(:user) { should eq 'ceilometer' }
@@ -32,9 +28,9 @@ processes.each do |process|
 end
 {% endif %}
 
-files = Dir['/var/log/ceilometer/*']
+files = Dir['/var/log/ceilometer/*.*'].map { |a| File.basename(a) }
 files.each do |file|
-  describe file(file) do
+  describe file("/var/log/ceilometer/#{file}") do
     it { should be_mode 644 }
   end
 end
