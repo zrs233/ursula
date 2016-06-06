@@ -25,7 +25,7 @@ end
 files = Dir['/var/lib/mysql/*.*'].map { |a| File.basename(a) }
 files.each do |file|
   describe file("/var/lib/mysql/#{file}") do
-    it { should be_mode '[6][4-6][0-4]' }
+    it { should be_mode '[6][0-6][0-4]' }
   end
 end
 
