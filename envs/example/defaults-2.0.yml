@@ -197,7 +197,7 @@ neutron:
   tunnel_types:
     - vxlan
   lbaas:
-    enable: False
+    enabled: False
   logging:
     debug: True
     verbose: True

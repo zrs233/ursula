@@ -97,7 +97,7 @@
   file:
     src: "{{ horizon.horizon_lib_dir }}/lib/python2.7/site-packages/neutron_lbaas_dashboard/enabled/_1481_project_ng_loadbalancersv2_panel.py"
     path: "{{ horizon.horizon_lib_dir }}/lib/python2.7/site-packages/openstack_dashboard/local/enabled/_1481_project_ng_loadbalancersv2_panel.py"
-    state: "{{ (neutron.lbaas.enable | bool) | ternary('link', 'absent') }}"
+    state: "{{ (neutron.lbaas.enabled | bool) | ternary('link', 'absent') }}"
   notify: reload apache
 
 - name: gather static assets from openstack install

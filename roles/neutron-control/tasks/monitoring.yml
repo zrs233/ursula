@@ -25,7 +25,7 @@
 - name: lbaas sla metrics
   sensu_metrics_check: name=lbaas-sla-metrics plugin=metrics-os-api.py
                        args='-S lbaas --scheme {{ monitoring.graphite.host_prefix }}'
-  when: (neutron.lbaas.enable == "smart" and
+  when: (neutron.lbaas.enabled == "smart" and
         groups['controller'][0] not in groups['compute']) or
-        neutron.lbaas.enable|bool
+        neutron.lbaas.enabled|bool
   notify: restart sensu-client
