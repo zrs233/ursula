@@ -46,7 +46,7 @@ neutron:
   lbaas:
     # enabled can be "smart" or true / false. Smart will turn on lbaas if
     # controllers are dedicated.
-    enable: smart
+    enabled: smart
     interface_driver: neutron.agent.linux.interface.BridgeInterfaceDriver
     service_plugin:
       - neutron_lbaas.services.loadbalancer.plugin.LoadBalancerPluginv2

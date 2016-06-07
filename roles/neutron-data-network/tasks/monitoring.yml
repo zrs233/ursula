@@ -10,9 +10,9 @@
 - name: neutron lbaas process check
   sensu_process_check: service=neutron-lbaasv2-agent
   notify: restart sensu-client
-  when: (neutron.lbaas.enable == "smart" and
+  when: (neutron.lbaas.enabled == "smart" and
          groups['controller'][0] not in groups['compute']) or
-         neutron.lbaas.enable|bool
+         neutron.lbaas.enabled|bool
 
 - name: ipchanged process check
   sensu_process_check: service=/usr/local/sbin/ipchanged
