@@ -15,7 +15,7 @@ ceilometer:
   purge_frequency: 86400
   mongodb_database: ceilometer
   mongodb_user: ceilometer
-  mongodb_password: "{{ secrets.mongodb_password }}"
+  mongodb_password: "{{ secrets.mongodb_password | default('BADPASS') }}"
   heartbeat_timeout_threshold: 30
   logs:
     - paths:
