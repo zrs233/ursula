@@ -52,13 +52,23 @@
   notify:
     - reload apache
 
-- name: horizon local settings
-  template: src=etc/openstack-dashboard/{{ item }}
-            dest=/etc/openstack-dashboard/{{ item }}
-            mode=0644
-  with_items:
-    - local_settings.py
-    - __init__.py
+- name: horizon local settings 
+  template: 
+    src: "etc/openstack-dashboard/__init__.py"
+    dest: "/etc/openstack-dashboard/__init__.py"
+    mode: 0644
+    owner: "root"
+    group: "root"
+  notify:
+    - reload apache
+
+- name: horizon local settings 
+  template:
+    src: "etc/openstack-dashboard/local_settings.py"
+    dest: "/etc/openstack-dashboard/local_settings.py"
+    mode: 0644
+    owner: "root"
+    group: "www-data"
   notify:
     - reload apache
 
@@ -79,7 +89,7 @@
   file: src=/etc/openstack-dashboard/local_settings.py
         dest=/opt/openstack/current/horizon/lib/python2.7/site-packages/openstack_dashboard/local/local_settings.py
         owner=root
-        group=root
+        group=www-data
         mode=0644
         state=link
 
