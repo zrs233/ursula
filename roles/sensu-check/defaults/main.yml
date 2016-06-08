@@ -49,7 +49,58 @@ sensu_checks:
       command: "check-procs.rb -p logstash-forwarder -W 1 -C 1"
       service_owner: openstack
 
+  neutron:
+    check_neutron_agents:
+      handler: default
+      notification: "unexpected number of neutron agents"
+      interval: 120
+      standalone: true
+      command: check-neutron-agents.sh -z critical
+      service_owner: openstack
+      dependencies: "{{ groups['controller'] | union(groups['compute']) | unique | map('regex_replace', '(.*)', '\\1' ~ '.' ~ ansible_domain ~ '-' ~ stack_env ~ '/keepalive') | list }}"
+      # above is incredibly ugly, but works. Creates the list below.
+      #dependencies:
+      #  - "controller1.ursula-vagrant/keepalive"
+      #  - "controller2.ursula-vagrant/keepalive"
+      #  - "compute1.ursula-vagrant/keepalive"
+    check_neutron_agents_duplicate:
+      handler: default
+      notification: "duplicate neutron agents"
+      interval: 120
+      standalone: true
+      command: check-neutron-agents-duplicate.py --criticality critical
+      service_owner: openstack
+      dependencies: []
+
+  nova:
+    check_nova_services:
+      sudo: true
+      handler: default
+      interval: 120
+      standalone: true
+      command: check-nova-services.sh -z critical
+      service_owner: openstack
+      dependencies: "{{ groups['controller'] | map('regex_replace', '(.*)', '\\1' ~ '.' ~ ansible_domain ~ '-' ~ stack_env ~ '/keepalive') | list }}"
+      # above is incredibly ugly, but works. Creates the list below.
+      #dependencies:
+      #  - "controller1.ursula-vagrant/keepalive"
+      #  - "controller2.ursula-vagrant/keepalive"
+
   percona:
+    check_cluster_size:
+      sudo: true
+      handler: default
+      notification: "unexpected number of mysql processes"
+      interval: 120
+      standalone: true
+      command: "percona-cluster-size.rb -d /root/.my.cnf --expected 3 --criticality critical"
+      service_owner: openstack
+      dependencies: "{{ groups['db'] | union(groups['db_arbiter']) | unique | map('regex_replace', '(.*)', '\\1' ~ '.' ~ ansible_domain ~ '-' ~ stack_env ~ '/keepalive') | list }}"
+      # above is incredibly ugly, but works. Creates the list below.
+      #dependencies:
+      #  - "controller1.ursula-vagrant/keepalive"
+      #  - "controller2.ursula-vagrant/keepalive"
+      #  - "compute1.ursula-vagrant/keepalive"
     check_mysql_process:
       handler: default
       notification: "unexpected number of mysql processes"
