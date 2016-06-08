@@ -70,19 +70,10 @@ xtradb:
   sst_auth_user: sst_admin
   sst_auth_password: asdf
 
-# TODO(retr0h): Determine the best way to connect to a sensu server.
-# Currently, unable to test monitoring in a VM environment, without
-# changing the following to a valid sensu server.
 monitoring:
   enabled: true
-  sensu_package_version: 0.12.5-1
-  rabbit:
-    host: "{{ undercloud_floating_ip }}"
-    port: 5672
-    user: openstack
-    pass: asdf
   keepalive:
-    handler: email
+    handler: default
   scan_for_log_errors: true
   openstack:
     user:

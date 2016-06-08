@@ -1,6 +1,8 @@
 ---
 monitoring:
   client_name: ~
+  client_cert: ~
+  client_key: ~
   checks:
     memory:
       warning: 4096
@@ -12,8 +14,10 @@ monitoring:
     cluster_prefix: "stats.bbc.{{ stack_env }}.openstack"
     host_prefix: "stats.bbc.{{ stack_env }}.{{ ansible_nodename|regex_replace('\\\\.*$', '') }}"
   rabbit:
+    host: 172.16.0.103
+    port: 5671
+    user: sensu
+    pass: sensu
     vhost: /sensu
-    username: sensu
-    password: sensu
   check_handler: pagerduty
   metrics_handler: graphite
