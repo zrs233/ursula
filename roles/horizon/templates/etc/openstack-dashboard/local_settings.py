@@ -186,6 +186,28 @@ WEBSSO_CHOICES = (
 WEBSSO_INITIAL_CHOICE = "credentials"
 {% endif -%}
 
+{% if keystone.federation.enabled|bool and keystone.federation.idp.k2k.enabled|bool -%}
+# Show K2K provider selection dropdown at login sreen.
+K2K_SELECTION_AT_LOGIN_ENABLED = True
+
+# Initial choice, should be the idp id.
+# If user selects the idp, then k2k authentication is skipped.
+K2K_INITIAL_CHOICE = "local"
+{% if keystone.federation.idp.k2k.service_providers|length > 0 %}
+#Service Provider choices, value return should be SP ID
+K2K_CHOICES = (
+    ("local", _("Identity Provider")),
+{% for sp in keystone.federation.idp.k2k.service_providers %}
+{% if not loop.last %}
+    ("{{ sp.id }}", _("Service Provider {{ sp.id }} ")),
+{% else %}
+    ("{{ sp.id }}", _("Service Provider {{ sp.id }} "))
+{% endif %}
+{% endfor %}
+)
+{% endif %}
+{% endif %}
+
 # Disable SSL certificate checks (useful for self-signed certificates):
 OPENSTACK_SSL_NO_VERIFY = {{ client.self_signed_cert | bool }}
 
