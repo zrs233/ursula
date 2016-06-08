@@ -66,7 +66,7 @@ describe command('rabbitmqctl environment | grep log') do
             "      {sasl_error_logger,{file,\"/var/log/rabbitmq/rabbit@#{hostname}-sasl.log\"}},\n",
             "      {ssl_cert_login_from,distinguished_name},\n",
             "          [{backlog,128},\n",
-            "     [{http_log_dir,none},\n {sasl,[{errlog_type,error},{sasl_error_logger,false}]},\n"].join()
+            "      {http_log_dir,none},\n {sasl,[{errlog_type,error},{sasl_error_logger,false}]},\n"].join()
   its(:stdout){ should match (output) }
 end
 
