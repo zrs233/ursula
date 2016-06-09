@@ -1,0 +1,15 @@
+---
+- name: test various things from the ceph_osds
+  hosts: ceph_osds
+  tasks:
+  - name: check ceph cluster health
+    shell: ceph health
+
+  - name: check ceph osd status
+    shell: ceph osd stat
+
+- name: check ceph related configuration on controllers
+  hosts: controller
+  tasks:
+  - name: cinder uses rbd_volumes as backend
+    shell: grep enabled_backends | grep rbd_volumes /etc/cinder/cinder.conf

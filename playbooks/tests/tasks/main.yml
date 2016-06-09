@@ -2,4 +2,6 @@
 - include: all.yml
 - include: controller.yml
 - include: network.yml
+- include: ceph.yml
+  when: ceph.enabled|default('False')|bool
 - include: integration.yml
