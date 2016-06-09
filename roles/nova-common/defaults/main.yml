@@ -52,6 +52,7 @@ nova:
       - { name: python-memcached }
       - { name: paramiko==1.16.0 }
       - { name: amqp, version: '1.4.9' }
+      - { name: os-brick, version: '1.3.0' }
     system_dependencies:
       - libjs-jquery-tablesorter
       - python-libvirt
