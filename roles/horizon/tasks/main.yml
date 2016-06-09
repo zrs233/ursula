@@ -101,7 +101,7 @@
 
 - name: custom horizon logo
   get_url: url={{ item.url }}
-           dest={{ horizon.horizon_lib_dir }}/lib/python2.7/site-packages/openstack_dashboard/static/{{ item.name }}
+           dest={{ horizon.horizon_lib_dir }}/lib/python2.7/site-packages/openstack_dashboard/static/dashboard/{{ item.name }}
            force=True
   with_items:
     - { name: img/logo.png, url: "{{ horizon.logo_url|default('') }}"  }
