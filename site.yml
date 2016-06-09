@@ -7,6 +7,7 @@
   tasks:
     # This forces the gathering of facts from every host in the inventory
     # even if hosts were --limit'd out.
+    # This is a setup task
     - setup:
       delegate_to: "{{ item }}"
       delegate_facts: yes
