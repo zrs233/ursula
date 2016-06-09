@@ -10,6 +10,12 @@
   notify:
     - reload apache
 
+- name: remove custom headers config
+  file: path=/etc/apache2/mods-enabled/headers.conf
+        state=absent
+  notify:
+    - reload apache
+
 - name: create horizon config directory
   file: dest=/etc/openstack-dashboard state=directory
 
