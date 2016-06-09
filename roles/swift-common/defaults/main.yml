@@ -9,6 +9,8 @@ swift:
   allow_versions: True
   source:
     rev: 'stable/mitaka'
+    constrain: True
+    upper_constraints: 'https://raw.githubusercontent.com/openstack/requirements/stable/mitaka/upper-constraints.txt'
     python_dependencies:
       - { name: keystonemiddleware }
       - { name: python-swiftclient }

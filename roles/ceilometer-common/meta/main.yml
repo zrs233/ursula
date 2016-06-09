@@ -12,6 +12,8 @@ dependencies:
     project_rev: "{{ ceilometer.source.rev }}"
     alternatives: "{{ ceilometer.alternatives }}"
     python_dependencies: "{{ ceilometer.source.python_dependencies }}"
+    constrain: "{{ ceilometer.source.constrain }}"
+    upper_constraints: "{{ ceilometer.source.upper_constraints }}"
     when: openstack_install_method == 'source'
   - role: openstack-package
     project_name: ceilometer

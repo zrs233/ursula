@@ -14,6 +14,8 @@ dependencies:
     alternatives: "{{ cinder.alternatives }}"
     system_dependencies: "{{ cinder.source.system_dependencies }}"
     python_dependencies: "{{ cinder.source.python_dependencies }}"
+    constrain: "{{ cinder.source.constrain }}"
+    upper_constraints: "{{ cinder.source.upper_constraints }}"
     when: openstack_install_method == 'source'
   - role: openstack-package
     project_name: cinder

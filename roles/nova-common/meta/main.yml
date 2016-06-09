@@ -20,6 +20,8 @@ dependencies:
     alternatives: "{{ nova.alternatives }}"
     system_dependencies: "{{ nova.source.system_dependencies }}"
     python_dependencies: "{{ nova.source.python_dependencies }}"
+    constrain: "{{ nova.source.constrain }}"
+    upper_constraints: "{{ nova.source.upper_constraints }}"
     when: openstack_install_method == 'source'
   - role: openstack-package
     project_name: nova

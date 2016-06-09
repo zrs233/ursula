@@ -7,6 +7,8 @@ dependencies:
     alternatives: "{{ aodh.alternatives }}"
     system_dependencies: "{{ aodh.source.system_dependencies }}"
     python_dependencies: "{{ aodh.source.python_dependencies }}"
+    constrain: "{{ aodh.source.constrain }}"
+    upper_constraints: "{{ aodh.source.upper_constraints }}"
     when: openstack_install_method == 'source'
   - role: openstack-package
     project_name: aodh

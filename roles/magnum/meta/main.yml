@@ -13,6 +13,8 @@ dependencies:
     virtualenv: "{{ magnum.source.virtualenv }}"
     system_dependencies: "{{ magnum.source.system_dependencies }}"
     python_dependencies: "{{ magnum.source.python_dependencies }}"
+    constrain: "{{ magnum.source.constrain }}"
+    upper_constraints: "{{ magnum.source.upper_constraints }}"
     alternatives: "{{ magnum.alternatives }}"
     when: openstack_install_method == 'source'
   - role: openstack-package

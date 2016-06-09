@@ -8,4 +8,4 @@ openstack_source:
   rootwrap: "{{ rootwrap|default(False)|bool }}"
   system_dependencies: "{{ system_dependencies|default([]) }}"
   python_dependencies: "{{ python_dependencies|default([]) }}"
-
+  pip_extra_args: ""

@@ -46,6 +46,8 @@ nova:
       dest: /opt/stack/novadocker
   source:
     rev: 'stable/mitaka'
+    constrain: True
+    upper_constraints: 'https://raw.githubusercontent.com/openstack/requirements/stable/mitaka/upper-constraints.txt'
     python_dependencies:
       - { name: Babel==2.2.0 }
       - { name: PyMySQL }

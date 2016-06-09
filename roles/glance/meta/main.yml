@@ -13,6 +13,8 @@ dependencies:
     alternatives: "{{ glance.alternatives }}"
     system_dependencies: "{{ glance.source.system_dependencies }}"
     python_dependencies: "{{ glance.source.python_dependencies }}"
+    constrain: "{{ glance.source.constrain }}"
+    upper_constraints: "{{ glance.source.upper_constraints }}"
     when: openstack_install_method == 'source'
   - role: openstack-package
     project_name: glance
