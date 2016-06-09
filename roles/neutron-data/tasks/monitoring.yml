@@ -1,10 +1,12 @@
 ---
 - name: neutron agents check
-  sensu_check: name=check-neutron-agents plugin=check-neutron-agents.sh
-               args="-z {{ neutron.monitoring.sensu_checks.check_neutron_agents.criticality }}"
-  notify: restart sensu-client
+  sensu_check_dict:
+    name: "check-neutron-agents"
+    check: "{{ sensu_checks.neutron.check_neutron_agents }}"
+  notify: restart sensu-client missing ok
 
 - name: neutron agents duplicate check
-  sensu_check: name=check-neutron-agents-duplicate plugin=check-neutron-agents-duplicate.py
-               args="--criticality {{ neutron.monitoring.sensu_checks.check_neutron_agents_duplicate.criticality }}"
-  notify: restart sensu-client
+  sensu_check_dict:
+    name: "check-neutron-agents-duplicate"
+    check: "{{ sensu_checks.neutron.check_neutron_agents_duplicate }}"
+  notify: restart sensu-client missing ok

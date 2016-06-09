@@ -1,11 +1,15 @@
 ---
-- name: percona cluster size check
-  sensu_check: name=percona-cluster-size use_sudo=true
-               plugin=percona-cluster-size.rb
-               args="-d /root/.my.cnf --expected 3 --criticality {{ percona.monitoring.sensu_checks.percona_cluster_size.criticality }}"
+- name: check percona cluster size
+  sensu_check_dict:
+    name: "percona-cluster-size"
+    check: "{{ sensu_checks.percona.check_cluster_size }}"
+  notify: restart sensu-client missing ok
 
-- name: mysqld process check
-  sensu_process_check: service=/usr/sbin/mysqld
+- name: check mysql process
+  sensu_check_dict:
+    name: "check-mysql-process"
+    check: "{{ sensu_checks.percona.check_mysql_process }}"
+  notify: restart sensu-client missing ok
 
 - name: mysql metrics
   template: src=etc/collectd/plugins/mysql.conf dest=/etc/collectd/plugins/mysql.conf

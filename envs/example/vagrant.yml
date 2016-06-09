@@ -5,14 +5,6 @@ undercloud_cidr:
 
 fqdn: openstack.example.org
 
-monitoring:
-  rabbit:
-    host: 172.16.0.15
-    port: 5671
-    user: rabbit
-    pass: rabbit
-    vhost: /rabbit
-
 nova:
   scheduler_default_filters: RetryFilter,AvailabilityZoneFilter,ComputeFilter,CoreFilter,ComputeCapabilitiesFilter,ImagePropertiesFilter,ServerGroupAntiAffinityFilter,ServerGroupAffinityFilter
 

@@ -17,10 +17,11 @@
                args="--service nova --criticality {{ nova.monitoring.sensu_checks.check_nova_api.criticality }}"
   notify: restart sensu-client
 
-- name: nova-services check
-  sensu_check: name=check-nova-services plugin=check-nova-services.sh
-               use_sudo=true args="-z {{ nova.monitoring.sensu_checks.check_nova_services.criticality }}"
-  notify: restart sensu-client
+- name: check nova services
+  sensu_check_dict:
+    name: "check-nova-services"
+    check: "{{ sensu_checks.nova.check_nova_services }}"
+  notify: restart sensu-client missing ok
 
 - name: nova metrics check
   sensu_metrics_check: name=nova-metrics plugin=metrics-nova.py
