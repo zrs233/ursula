@@ -19,8 +19,8 @@
                   insertafter=EOF
                   line="127.0.1.1 {{ testenv_instance_names[1] }}"
 
-- name: compute hosts file
-  hosts: compute
+- name: compute 0 hosts file
+  hosts: compute[0]
   vars_files:
   - ../vars/main.yml
   tasks:
