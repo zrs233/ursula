@@ -10,7 +10,7 @@ files.each do |file, mode|
   end
 end
 
-files = ['api-metadata.filters' , 'baremetal-compute-ipmi.filters' , 'baremetal-deploy-helper.filters' , 'compute.filters', 'network.filters']
+files = ['api-metadata.filters' , 'compute.filters', 'network.filters']
 files.each do |file|
   describe file("/etc/nova/rootwrap.d/#{file}") do
     it { should be_owned_by 'root' }
