@@ -1,6 +1,5 @@
 ---
 - name: drop our ring configuration
-  copy: src={{ swift_ring.ring_definition_file }} owner=root group=root
-        dest=/etc/swift/ring_definition.yml mode=644 backup=yes
-  notify: setup swift rings
-
+  copy: src={{ swift_ring.ring_definition_file }} owner=swiftops group=swiftops
+        dest={{ swift_ring.outdir }}/ring_definition.yml mode=644 backup=yes
+  notify: setup swift rings - {{ swift_ring.mode }}
