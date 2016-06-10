@@ -208,7 +208,8 @@
   file: path=/var/cache/check-log owner=sensu state=directory
 
 - name: raid check
-  sensu_check: name=check-raid plugin=check-raid.sh interval=300 occurrences=1
-               args="-z {{ common.monitoring.sensu_checks.check_raid.criticality }}"
-  notify: restart sensu-client
+  sensu_check_dict:
+    name: check-raid
+    check: "{{ sensu_checks.common.check_raid }}"
+  notify: restart sensu-client missing ok
   when: common.hwraid.enabled|bool

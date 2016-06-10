@@ -39,6 +39,15 @@ sensu_checks:
       standalone: true
       command: "check-disk.rb -w 80 -c 90"
       service_owner: openstack
+    check_raid:
+      handler: default
+      interval: 300
+      occurrences: 1
+      standalone: true
+      command: "check-raid.sh -z critical"
+      service_owner: openstack
+      tags:
+        - ticket
 
   logging:
     check_logstash_forwarder_process:

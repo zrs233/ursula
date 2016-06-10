@@ -26,6 +26,7 @@ dependencies:
     when: docker.enabled is defined and docker.enabled|bool
   - role: monitoring-common
     when: monitoring.enabled|default(True)|bool
+  - role: sensu-check
   - role: logging-config
     when: logging.enabled|default(True)|bool
     service: common
