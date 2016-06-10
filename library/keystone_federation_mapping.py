@@ -17,7 +17,6 @@
 # limitations under the License.
 #
 try:
-    import yaml
     from keystoneclient.v3.client import Client
 except ImportError:
     print("failed=True msg='keystoneclient and pyyaml are required'")
@@ -77,7 +76,7 @@ def main():
                 params = {
                     'client': keystone,
                     'mapping_id': module.params['name'],
-                    'rules': yaml.load(module.params['rules'])
+                    'rules': module.params['rules']
                 }
                 _create_federation_mapping(**params)
                 changed = True

@@ -76,12 +76,9 @@ def main():
                           project_name=module.params['project_name_to_auth'],
                           project_domain_name=module.params['domain_name_to_auth'])
 
-
         if module.params['state'] == 'present':
             if not _identity_provider_exists(keystone, module.params['name']):
                 remote_ids = module.params['remote_ids']
-                if remote_ids:
-                    remote_ids = [i.strip() for i in remote_ids.split(',')]
 
                 params = {
                     'client': keystone,
