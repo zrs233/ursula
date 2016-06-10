@@ -1,0 +1,28 @@
+---
+- name: create ldap domain
+  environment:
+    OS_IDENTITY_API_VERSION: 3
+    OS_DOMAIN_ID: default
+  os_keystone_domain:
+    name: "{{ keystone.ldap_domain.domain }}"
+    auth:
+      auth_url: "{{ endpoints.keystone.url.internal }}/v3"
+      project_name: admin
+      username: admin
+      password: "{{ secrets.admin_password }}"
+  run_once: true
+  register: ldap_domain
+
+- name: create ldap project
+  environment:
+    OS_IDENTITY_API_VERSION: 3
+    OS_DOMAIN_ID: default
+  os_project:
+    name: "{{ keystone.ldap_domain.project }}"
+    domain_id: "{{ ldap_domain.domain.id }}"
+    auth:
+      auth_url: "{{ endpoints.keystone.url.internal }}/v3"
+      project_name: admin
+      username: admin
+      password: "{{ secrets.admin_password }}"
+  run_once: true

@@ -13,3 +13,8 @@ ceilometer:
   logging:
     debug: True
     verbose: True
+
+keystone:
+  ldap_domain:
+    enabled: True
+    domain: users

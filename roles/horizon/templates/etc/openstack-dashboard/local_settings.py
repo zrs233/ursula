@@ -220,6 +220,10 @@ OPENSTACK_SSL_NO_VERIFY = {{ client.self_signed_cert | bool }}
 # can_edit_user to False and name to 'ldap'.
 #
 # TODO(tres): Remove these once Keystone has an API to identify auth backend.
+{% if keystone.ldap_domain.enabled|bool %}
+OPENSTACK_KEYSTONE_DEFAULT_DOMAIN = '{{ keystone.ldap_domain.domain }}'
+OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = True
+{% endif %}
 OPENSTACK_KEYSTONE_BACKEND = {
     'name': 'native',
     'can_edit_user': True,

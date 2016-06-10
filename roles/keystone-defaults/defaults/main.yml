@@ -12,6 +12,8 @@ keystone:
       - { name: PyMySQL }
       - { name: uwsgi }
       - { name: amqp, version: '1.4.9' }
+      - { name: python-ldap }
+      - { name: ldappool }
     system_dependencies:
       - openssl
       - libldap2-dev
@@ -100,3 +102,42 @@ keystone:
     password: "{{ secrets.admin_password }}"
     project: admin
     role: admin
+  ldap_domain:
+    enabled: False
+    domain: users
+    project: users
+    ldap:
+      chase_referrals: false
+      group_allow_create: false
+      group_allow_delete: false
+      group_allow_update: false
+      group_desc_attribute: description
+      group_id_attribute: cn
+      group_member_attribute: uniquemember
+      group_name_attribute: cn
+      group_objectclass: groupOfUniqueNames
+      group_tree_dn: ou=memberlist,ou=groups,o=example.com
+      page_size: 0
+      project_allow_create: false
+      project_allow_delete: false
+      project_allow_update: false
+      query_scope: sub
+      role_allow_create: false
+      role_allow_delete: false
+      role_allow_update: false
+      suffix: o=example.com
+      tls_req_cert: never
+      url: ldaps://openstack.example.com:636/
+      user_allow_create: false
+      user_allow_delete: false
+      user_allow_update: false
+      user_enabled_attribute: enabled
+      user_filter: ""
+      user_id_attribute: mail
+      user_mail_attribute: mail
+      user_name_attribute: mail
+      user_objectclass: Person
+      user_pass_attribute: userPassword
+      user_tree_dn: ou=groups,o=example.com
+      user: ""
+      password: ""

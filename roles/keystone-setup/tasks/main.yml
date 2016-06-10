@@ -137,3 +137,6 @@
   when: keystone.federation.enabled|bool
   tags:
     - keystone-federation
+
+- include: ldap.yml
+  when: keystone.ldap_domain.enabled|default('False')|bool

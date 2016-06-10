@@ -82,7 +82,7 @@
     - restart keystone services
 
 - include: k2k-idp.yml
-  when: keystone.federation.enabled|bool and keystone.federation.idp.k2k.enabled|bool    
+  when: keystone.federation.enabled|bool and keystone.federation.idp.k2k.enabled|bool
 
 - name: stop keystone service before db sync
   service: name=keystone state=stopped
@@ -156,12 +156,14 @@
     path: /etc/cron.hourly/drop-expired-keystone-tokens
     state: absent
 
+- include: ldap.yml
+  when: keystone.ldap_domain.enabled|default('False')|bool
+
 - include: monitoring.yml
   tags:
     - monitoring
     - common
   when: monitoring.enabled|default('True')|bool
-
 
 - include: logging.yml
   tags:
