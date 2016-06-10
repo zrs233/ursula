@@ -8,7 +8,7 @@ describe file('/etc/pam.d/login') do
 end
 
 describe file('/etc/pam.d/common-password') do
-  it { should contain '^password \[success=7 default=ignore\] pam_unix.so obscure sha512' }
+  it { should contain '^password \[success=1 default=ignore\] pam_unix.so obscure use_authtok sha512 remember=7 shadow' }
 end
 
 describe file('/etc/login.defs') do
