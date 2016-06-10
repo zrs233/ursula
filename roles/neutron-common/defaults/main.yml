@@ -59,6 +59,8 @@ neutron:
     envs: []
   source:
     rev: 'stable/mitaka'
+    constrain: True
+    upper_constraints: 'https://raw.githubusercontent.com/openstack/requirements/stable/mitaka/upper-constraints.txt'
     python_dependencies:
       - { name: "git+git://github.com/openstack/neutron-lbaas.git@stable/mitaka#egg=neutron-lbaas" }
       - { name: PyMySQL }

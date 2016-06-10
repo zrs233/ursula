@@ -9,6 +9,8 @@ horizon:
   session_engine: django.contrib.sessions.backends.cache
   source:
     rev: 'stable/mitaka'
+    constrain: True
+    upper_constraints: 'https://raw.githubusercontent.com/openstack/requirements/stable/mitaka/upper-constraints.txt'
     python_dependencies:
       - { name: PyMySQL }
       - { name: python-memcached, version: '1.48' }

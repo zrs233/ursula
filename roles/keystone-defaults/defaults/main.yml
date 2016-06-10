@@ -6,6 +6,8 @@ keystone:
   public_workers: 5
   source:
     rev: 'stable/mitaka'
+    constrain: True
+    upper_constraints: 'https://raw.githubusercontent.com/openstack/requirements/stable/mitaka/upper-constraints.txt'
     python_dependencies:
       - { name: PyMySQL }
       - { name: uwsgi }

@@ -24,6 +24,8 @@ glance:
   show_multiple_locations: True
   source:
     rev: 'stable/mitaka'
+    constrain: True
+    upper_constraints: 'https://raw.githubusercontent.com/openstack/requirements/stable/mitaka/upper-constraints.txt'
     python_dependencies:
       - { name: PyMySQL }
       - { name: python-swiftclient }

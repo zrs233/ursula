@@ -12,50 +12,57 @@
   until: git_result|success
   retries: 3
 
+- name: set pip args fact
+  set_fact:
+    pip_extra_args: "{{ openstack_source.pip_extra_args|default('') }}"
+  when: openstack.pypi_mirror is defined
+
+- name: set pip proxy args
+  set_fact:
+    pip_extra_args: "{{ pip_extra_args }} -i {{ openstack.pypi_mirror }}"
+  when: openstack.pypi_mirror is defined
+
+- name: update pip in virtualenv
+  pip:
+    name: pip
+    state: latest
+    virtualenv: "{{ openstack_source.virtualenv_base }}/{{ project_name }}"
+    extra_args: "{{ pip_extra_args }}"
+
+- name: get constraints file
+  get_url:
+    url: "{{ upper_constraints }}"
+    dest: /opt/stack/constraints.txt
+    force: true
+  when: constrain | bool
+
+- name: set pip constraints args
+  set_fact:
+    pip_extra_args: "{{ pip_extra_args }} -c /opt/stack/constraints.txt"
+  when: constrain | bool
+
 - name: set code has changed fact
   set_fact:
     code_has_changed: True
   when: git_result | changed
-
-- name: python requirements for project from alternative proxy
-  pip:
-    name: "{{ item.name }}"
-    version: "{{ item.version|default(omit) }}"
-    virtualenv: "{{ openstack_source.virtualenv_base }}/{{ project_name }}"
-    extra_args: "-i {{ openstack_source.pypi_mirror }}"
-  with_items: "{{ openstack_source.python_dependencies }}"
-  when: openstack_source.pypi_mirror
-
-- name: pip install project from alternative proxy
-  pip:
-    name: "/opt/stack/{{ project_name }}"
-    extra_args: "-i {{ openstack_source.pypi_mirror }}"
-    virtualenv: "{{ openstack_source.virtualenv_base }}/{{ project_name }}"
-  register: pip_result
-  until: pip_result|success
-  retries: 3
-  delay: 10
-  when: openstack_source.pypi_mirror
-  notify:
-    - update ca-certs
 
 - name: python requirements for project
   pip:
     name: "{{ item.name }}"
     version: "{{ item.version|default(omit) }}"
     virtualenv: "{{ openstack_source.virtualenv_base }}/{{ project_name }}"
+    extra_args: "{{ pip_extra_args }}"
   with_items: "{{ openstack_source.python_dependencies }}"
-  when: not openstack_source.pypi_mirror
 
-- name: pip install project_name
+- name: pip install project
   pip:
     name: "/opt/stack/{{ project_name }}"
+    extra_args: "{{ pip_extra_args }}"
     virtualenv: "{{ openstack_source.virtualenv_base }}/{{ project_name }}"
   register: pip_result
   until: pip_result|success
   retries: 3
   delay: 10
-  when: not openstack_source.pypi_mirror
   notify:
     - update ca-certs
 

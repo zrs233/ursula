@@ -5,6 +5,8 @@ magnum:
   heartbeat_timeout_threshold: 30
   source:
     rev: 'stable/mitaka'
+    constrain: True
+    upper_constraints: 'https://raw.githubusercontent.com/openstack/requirements/stable/mitaka/upper-constraints.txt'
     virtualenv: "/opt/openstack/magnum"
     python_dependencies:
       - { name: PyMySQL }

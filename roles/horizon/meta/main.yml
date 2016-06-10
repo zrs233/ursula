@@ -12,6 +12,8 @@ dependencies:
     project_rev: "{{ horizon.source.rev }}"
     system_dependencies: "{{ horizon.source.system_dependencies }}"
     python_dependencies: "{{ horizon.source.python_dependencies }}"
+    constrain: "{{ horizon.source.constrain }}"
+    upper_constraints: "{{ horizon.source.upper_constraints }}"
     additional_handlers: [ "compress horizon assets" ]
     when: openstack_install_method == 'source'
   - role: openstack-package

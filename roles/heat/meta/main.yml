@@ -13,6 +13,8 @@ dependencies:
     alternatives: "{{ heat.alternatives }}"
     system_dependencies: "{{ heat.source.system_dependencies }}"
     python_dependencies: "{{ heat.source.python_dependencies }}"
+    constrain: "{{ heat.source.constrain }}"
+    upper_constraints: "{{ heat.source.upper_constraints }}"
     when: openstack_install_method == 'source'
   - role: openstack-package
     project_name: heat
