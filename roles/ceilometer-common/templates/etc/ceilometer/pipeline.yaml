@@ -4,6 +4,7 @@ sources:
       interval: 60
       meters:
           - "cpu"
+          - "network.services.lb.member"
       sinks:
           - meter_sink
     - name: cpu_source

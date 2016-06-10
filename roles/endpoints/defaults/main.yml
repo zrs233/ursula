@@ -238,6 +238,6 @@ endpoints:
       backend_api: 8043
       haproxy_api: 8042
     haproxy:
-      health_check: 'httpchk GET /healthcheck'
+      health_check: 'httpchk /'
       balance: 'source'
       prefer_primary_backend: False

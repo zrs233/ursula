@@ -43,3 +43,4 @@ aodh:
       fields:
         type: openstack
         tags: aodh,aodh-evaluator
+  cafile: "{{ ssl.cafile|default('/etc/ssl/certs/ca-certificates.crt') }}"
