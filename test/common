@@ -25,6 +25,15 @@ export testenv_floating_ip_pool=${testenv_floating_ip_pool:=external}
 
 if [[ $TEST_ENV == "ci-allinone" ]]; then
   VMS="${testenv_instance_prefix}-allinone"
+elif [[ $TEST_ENV == "ci-ceph_swift" ]]; then
+  VMS="${testenv_instance_prefix}-controller-0\
+  ${testenv_instance_prefix}-controller-1\
+  ${testenv_instance_prefix}-compute-0\
+  ${testenv_instance_prefix}-ceph-0\
+  ${testenv_instance_prefix}-ceph-1\
+  ${testenv_instance_prefix}-ceph-2"
+
+  export testenv_flavor_ceph_swift=${testenv_flavor_ceph_swift:=ci_ceph_swift}
 else
   TEST_ENV="ci-full"
   VMS="${testenv_instance_prefix}-controller-0 ${testenv_instance_prefix}-controller-1 ${testenv_instance_prefix}-compute-0"

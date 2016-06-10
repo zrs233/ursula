@@ -1,0 +1,22 @@
+---
+stack_env: example_ci-ceph_swift
+
+state_path_base: /opt/stack/data
+
+neutron:
+  enable_external_interface: True
+
+ceph:
+  enabled: True
+  disks:
+    - vdb
+  monitor_interface: eth0
+
+cinder:
+  enabled: True
+  enabled_backends:
+    - rbd_volumes
+  backends:
+    # Ceph
+    - name: rbd_volumes
+      volume_driver: cinder.volume.drivers.rbd.RBDDriver

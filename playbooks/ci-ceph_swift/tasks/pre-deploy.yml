@@ -29,6 +29,13 @@
                   insertafter=EOF
                   line="127.0.1.1 {{ testenv_instance_names[2] }}"
 
+- name: umount ephemeral disk on ceph_osds
+  hosts: ceph_osds
+  tasks:
+    - name: umount ephemeral disk on ceph_osds
+      shell: umount /dev/{{ item }}
+      with_items: "{{ ceph.disks }}"
+
 - name: tasks for all
   hosts: all
   serial: 10
