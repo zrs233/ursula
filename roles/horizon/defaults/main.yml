@@ -13,7 +13,7 @@ horizon:
     upper_constraints: 'https://raw.githubusercontent.com/openstack/requirements/stable/mitaka/upper-constraints.txt'
     python_dependencies:
       - { name: PyMySQL }
-      - { name: python-memcached, version: '1.48' }
+      - { name: python-memcached }
       - { name: neutron-lbaas-dashboard }
       - { name: "git+https://github.com/blueboxgroup/horizon-customization#egg=horizon-customization"}
     system_dependencies:

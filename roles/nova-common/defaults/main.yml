@@ -49,12 +49,8 @@ nova:
     constrain: True
     upper_constraints: 'https://raw.githubusercontent.com/openstack/requirements/stable/mitaka/upper-constraints.txt'
     python_dependencies:
-      - { name: Babel==2.2.0 }
       - { name: PyMySQL }
       - { name: python-memcached }
-      - { name: paramiko==1.16.0 }
-      - { name: amqp, version: '1.4.9' }
-      - { name: os-brick, version: '1.3.0' }
     system_dependencies:
       - libjs-jquery-tablesorter
       - python-libvirt

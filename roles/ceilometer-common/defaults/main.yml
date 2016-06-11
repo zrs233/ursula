@@ -7,8 +7,7 @@ ceilometer:
     constrain: True
     upper_constraints: 'https://raw.githubusercontent.com/openstack/requirements/stable/mitaka/upper-constraints.txt'
     python_dependencies:
-      - { name: pymongo, version: '3.0.3' }
-      - { name: amqp, version: '1.4.9' }
+      - { name: pymongo }
   alternatives:
     - ceilometer-api
     - ceilometer-collector

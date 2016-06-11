@@ -64,7 +64,6 @@ neutron:
     python_dependencies:
       - { name: "git+git://github.com/openstack/neutron-lbaas.git@stable/mitaka#egg=neutron-lbaas" }
       - { name: PyMySQL }
-      - { name: amqp, version: '1.4.9' }
     system_dependencies:
       - conntrack 
   alternatives:

@@ -11,7 +11,6 @@ keystone:
     python_dependencies:
       - { name: PyMySQL }
       - { name: uwsgi }
-      - { name: amqp, version: '1.4.9' }
       - { name: python-ldap }
       - { name: ldappool }
     system_dependencies:

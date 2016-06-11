@@ -32,7 +32,6 @@ cinder:
     upper_constraints: 'https://raw.githubusercontent.com/openstack/requirements/stable/mitaka/upper-constraints.txt'
     python_dependencies:
       - { name: PyMySQL }
-      - { name: amqp, version: '1.4.9' }
     system_dependencies: []
   logs:
   - paths:
