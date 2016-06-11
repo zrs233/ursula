@@ -1,6 +1,6 @@
 {
 {% if policy_for_horizon|default('False')|bool %}
-    "admin_required": "role:admin or is_admin:1 or role:cloud_admin",
+    "admin_required": "role:admin or is_admin:1 or role:cloud_admin or role:project_admin",
 {% else %}
     "admin_required": "role:admin or is_admin:1",
 {% endif %}
@@ -22,48 +22,47 @@
     "admin_or_cloudadmin_or_projectadmin": "rule:admin_required or rule:cloudadmin or rule:projectadmin",
     "admin_or_cloudadmin_or_projectadmin_or_member": "rule:admin_or_cloudadmin_or_projectadmin or role:_member_",
     "create_revoke_grant_rule": "rule:admin_required or (rule:cloudadmin and not 'admin':%(target.role.name)s) or (rule:projectadmin and not 'cloud_admin':%(target.role.name)s and not 'admin':%(target.role.name)s)",
-
     "identity:get_region": "",
     "identity:list_regions": "",
     "identity:create_region": "rule:admin_required",
     "identity:update_region": "rule:admin_required",
     "identity:delete_region": "rule:admin_required",
 
-    "identity:get_service": "rule:admin_or_cloudadmin_or_projectadmin",
-    "identity:list_services": "rule:admin_or_cloudadmin_or_projectadmin",
+    "identity:get_service": "rule:admin_or_cloudadmin or role:project_admin",
+    "identity:list_services": "rule:admin_or_cloudadmin or role:project_admin",
     "identity:create_service": "rule:admin_required",
     "identity:update_service": "rule:admin_required",
     "identity:delete_service": "rule:admin_required",
 
-    "identity:get_endpoint": "rule:admin_or_cloudadmin_or_projectadmin",
-    "identity:list_endpoints": "rule:admin_or_cloudadmin_or_projectadmin",
+    "identity:get_endpoint": "rule:admin_or_cloudadmin or role:project_admin",
+    "identity:list_endpoints": "rule:admin_or_cloudadmin or role:project_admin",
     "identity:create_endpoint": "rule:admin_required",
     "identity:update_endpoint": "rule:admin_required",
     "identity:delete_endpoint": "rule:admin_required",
 
-    "identity:get_domain": "rule:admin_or_cloudadmin_or_projectadmin_or_member",
-    "identity:list_domains": "rule:admin_or_cloudadmin_or_projectadmin",
+    "identity:get_domain": "rule:admin_or_cloudadmin or role:project_admin or role:_member_",
+    "identity:list_domains": "rule:admin_or_cloudadmin or role:project_admin",
     "identity:create_domain": "rule:admin_required",
     "identity:update_domain": "rule:admin_required",
     "identity:delete_domain": "rule:admin_required",
 
-    "identity:get_project": "rule:admin_or_cloudadmin_or_projectadmin_or_member",
-    "identity:list_projects": "rule:admin_or_cloudadmin_or_projectadmin",
-    "identity:list_user_projects": "rule:admin_or_owner_or_cloudadmin_or_projectadmin",
+    "identity:get_project": "rule:admin_or_cloudadmin or role:project_admin or role:_member_",
+    "identity:list_projects": "rule:admin_or_cloudadmin or role:project_admin",
+    "identity:list_user_projects": "rule:admin_or_owner_or_cloudadmin or role:project_admin",
     "identity:create_project": "rule:admin_or_cloudadmin",
     "identity:update_project": "rule:admin_or_cloudadmin_or_projectadmin",
     "identity:delete_project": "rule:admin_or_cloudadmin",
 
     "identity:get_user": "rule:admin_or_owner_or_cloudadmin_or_projectadmin",
-    "identity:list_users": "rule:admin_or_cloudadmin_or_projectadmin or rule:support_role",
+    "identity:list_users": "rule:admin_or_cloudadmin or role:project_admin or rule:support_role",
     "identity:create_user": "rule:admin_or_cloudadmin_or_projectadmin",
     "identity:update_user": "rule:admin_or_owner_or_cloudadmin_or_projectadmin or rule:support_role",
     "identity:delete_user": "rule:admin_or_cloudadmin_or_projectadmin",
     "identity:change_password": "rule:admin_or_owner_or_cloudadmin_or_projectadmin or rule:support_role",
 
     "identity:get_group": "",
-    "identity:list_groups": "rule:admin_or_cloudadmin_or_projectadmin",
-    "identity:list_groups_for_user": "rule:admin_or_owner_or_cloudadmin_or_projectadmin",
+    "identity:list_groups": "rule:admin_or_cloudadmin or role:project_admin",
+    "identity:list_groups_for_user": "rule:admin_or_owner_or_cloudadmin or role:project_admin",
     "identity:create_group": "rule:admin_or_cloudadmin",
     "identity:update_group": "rule:admin_or_cloudadmin",
     "identity:delete_group": "rule:admin_or_cloudadmin",
@@ -83,8 +82,8 @@
     "identity:ec2_create_credential": "rule:admin_or_owner",
     "identity:ec2_delete_credential": "rule:admin_required or (rule:owner and user_id:%(target.credential.user_id)s)",
 
-    "identity:get_role": "rule:admin_or_cloudadmin_or_projectadmin",
-    "identity:list_roles": "rule:admin_or_cloudadmin_or_projectadmin",
+    "identity:get_role": "rule:admin_or_cloudadmin or role:project_admin",
+    "identity:list_roles": "rule:admin_or_cloudadmin or role:project_admin",
     "identity:create_role": "rule:admin_required",
     "identity:update_role": "rule:admin_required",
     "identity:delete_role": "rule:admin_required",
@@ -106,8 +105,8 @@
     "identity:create_grant": "rule:create_revoke_grant_rule",
     "identity:revoke_grant": "rule:create_revoke_grant_rule",
 
-    "identity:list_role_assignments": "rule:admin_or_cloudadmin_or_projectadmin",
-    "identity:list_role_assignments_for_tree": "rule:admin_or_cloudadmin_or_projectadmin",
+    "identity:list_role_assignments": "rule:admin_or_cloudadmin or role:project_admin",
+    "identity:list_role_assignments_for_tree": "rule:admin_or_cloudadmin or role:project_admin",
 
     "identity:get_policy": "rule:admin_required",
     "identity:list_policies": "rule:admin_required",
@@ -177,7 +176,7 @@
     "identity:update_mapping": "rule:admin_or_cloudadmin",
 
     "identity:create_service_provider": "rule:admin_required",
-    "identity:list_service_providers": "rule:admin_or_cloudadmin_or_projectadmin_or_member",
+    "identity:list_service_providers": "rule:admin_or_cloudadmin or role:project_admin or role:_member_",
     "identity:get_service_provider": "rule:admin_or_cloudadmin",
     "identity:update_service_provider": "rule:admin_required",
     "identity:delete_service_provider": "rule:admin_required",
