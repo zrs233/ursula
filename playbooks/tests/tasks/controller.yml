@@ -103,7 +103,7 @@
     with_items: "{{ controller_ips }}"
 
   - name: keystone should include OpenStack services
-    shell: . /root/stackrc; keystone service-list | grep {{ item }}
+    shell: . /root/stackrc; openstack service list | grep {{ item }}
     with_items:
       - keystone
       - nova
