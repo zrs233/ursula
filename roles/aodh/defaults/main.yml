@@ -8,6 +8,7 @@ aodh:
     upper_constraints: 'https://raw.githubusercontent.com/openstack/requirements/stable/mitaka/upper-constraints.txt'
     python_dependencies:
       - { name: PyMySQL }
+      - { name: python-memcached }
       - { name: python-ceilometerclient }
     system_dependencies: []
   alternatives:

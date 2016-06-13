@@ -8,6 +8,7 @@ ceilometer:
     upper_constraints: 'https://raw.githubusercontent.com/openstack/requirements/stable/mitaka/upper-constraints.txt'
     python_dependencies:
       - { name: pymongo }
+      - { name: python-memcached }
   alternatives:
     - ceilometer-api
     - ceilometer-collector
