@@ -48,6 +48,10 @@ common:
     verbose: True
   monitoring:
     sensu_checks:
+      check_lro:
+        criticality: 'critical'
+        enabled: true
+        interface: "{{ hostvars[inventory_hostname][primary_interface] }}"
       check_static_route:
         criticality: 'critical'
       check_raid:
