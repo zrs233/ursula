@@ -3,7 +3,7 @@ dependencies:
   - role: endpoints
   - role: apt-repos
     repos:
-      - repo: 'deb {{ apt_repos.cloud_archive.repo }} {{ ansible_distribution_release }}-updates/kilo main'
+      - repo: 'deb {{ apt_repos.cloud_archive.repo }} {{ ansible_distribution_release }}-updates/mitaka main'
         key_package: ubuntu-cloud-keyring
     when: ansible_architecture == "ppc64le"
   - role: sensu-check
