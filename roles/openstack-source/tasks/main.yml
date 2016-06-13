@@ -22,12 +22,15 @@
     pip_extra_args: "{{ pip_extra_args }} -i {{ openstack.pypi_mirror }}"
   when: openstack.pypi_mirror is defined
 
-- name: update pip in virtualenv
+- name: update things in virtualenv
   pip:
-    name: pip
+    name: "{{ item }}"
     state: latest
     virtualenv: "{{ openstack_source.virtualenv_base }}/{{ project_name }}"
     extra_args: "{{ pip_extra_args }}"
+  with_items:
+    - pip
+    - setuptools
 
 - name: get constraints file
   get_url:
