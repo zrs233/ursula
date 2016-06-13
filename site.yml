@@ -16,6 +16,7 @@
 - name: common role for all hosts
   hosts: all:!vyatta-*
   any_errors_fatal: true
+  strategy: free
   roles:
     - role: common
       tags: ['common','common-base']
@@ -35,6 +36,7 @@
 - name: security and errata
   hosts: all:!vyatta-*
   any_errors_fatal: true
+  strategy: free
   roles:
     - role: security_errata
       tags: ['common', 'security', 'errata']
@@ -43,6 +45,7 @@
 - name: install logging and dependencies
   hosts: all:!vyatta-*
   any_errors_fatal: true
+  strategy: free
   roles:
     - role: logging
       tags: ['common', 'logging']
@@ -51,6 +54,7 @@
 
 - name: setup IPv6 router advertisements
   hosts: controller
+  strategy: free
   any_errors_fatal: true
   roles:
     - role: ipv6ra
@@ -69,6 +73,7 @@
 - name: install common percona components and gather facts
   hosts: db
   any_errors_fatal: true
+  strategy: free
   roles:
     - role: percona-common
       tags: ['infra', 'percona', 'percona-facts']
@@ -87,6 +92,7 @@
 - name: install percona on secondaries
   hosts: db:!db[0]
   any_errors_fatal: true
+  strategy: free
   vars:
     should_bootstrap_as_primary: False
   roles:
@@ -131,6 +137,7 @@
 - name: memcached for keystone and horizon
   hosts: controller
   any_errors_fatal: true
+  strategy: free
   roles:
     - role: memcached
       tags: ['infra']
@@ -139,6 +146,7 @@
 - name: controller haproxy
   hosts: controller
   any_errors_fatal: true
+  strategy: free
   roles:
     - role: haproxy
       haproxy_type: openstack
@@ -149,6 +157,7 @@
 - name: iptables
   hosts: network
   any_errors_fatal: true
+  strategy: free
   roles:
     - role: iptables
       tags: ['iptables', 'infra']
@@ -177,6 +186,7 @@
   hosts: all:!vyatta-*
   any_errors_fatal: true
   gather_facts: false
+  strategy: free
   roles:
     - role: current_symlink
       tags:
@@ -186,6 +196,7 @@
 - name: openstack client tools
   hosts: all:!vyatta-*
   any_errors_fatal: true
+  strategy: free
   roles:
     - role: client
       tags: ['openstack', 'client']
@@ -227,6 +238,8 @@
 - name: nova data plane
   hosts: compute
   any_errors_fatal: true
+# make free when  verify-ssh is moved out of this role
+# strategy: free
   roles:
     - role: nova-data
       tags: ['openstack', 'nova', 'data']
@@ -245,6 +258,7 @@
 - name: cinder data plane
   hosts: cinder_volume
   any_errors_fatal: true
+  strategy: free
   roles:
     - role: cinder-data
       tags: ['openstack', 'cinder', 'data', 'cinder-data', 'ceph']
@@ -254,6 +268,7 @@
 - name: ceph compute
   hosts: compute
   any_errors_fatal: true
+  strategy: free
   roles:
     - role: ceph-compute
       tags: ['ceph', 'ceph-compute']
@@ -271,6 +286,7 @@
 - name: neutron core data plane
   hosts: compute:network
   any_errors_fatal: true
+  strategy: free
   roles:
     - role: neutron-data
       tags: ['openstack', 'neutron', 'data']
@@ -279,6 +295,7 @@
 - name: neutron network services data plane
   hosts: network
   any_errors_fatal: true
+  strategy: free
   roles:
     - role: neutron-data-network
       tags: ['openstack', 'neutron', 'data']
@@ -287,6 +304,7 @@
 - name: horizon code and config
   hosts: controller
   any_errors_fatal: true
+  strategy: free
   roles:
     - role: horizon
       tags: ['openstack', 'horizon', 'control']
@@ -338,6 +356,7 @@
 - name: ceilometer data plane
   hosts: compute
   any_errors_fatal: true
+  strategy: free
   roles:
     - role: ceilometer-data
       tags: ['openstack', 'ceilometer', 'data']
