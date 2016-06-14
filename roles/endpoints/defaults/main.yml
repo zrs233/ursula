@@ -22,7 +22,7 @@ endpoints:
       backend_api: 9774
       haproxy_api: 8774
     haproxy:
-      health_check: 'httpchk /'
+      health_check: 'httpchk GET /healthcheck'
       balance: 'roundrobin'
       prefer_primary_backend: False
   glance:
@@ -54,7 +54,7 @@ endpoints:
       backend_api: 8778
       haproxy_api: 8776
     haproxy:
-      health_check: 'httpchk /'
+      health_check: 'httpchk GET /healthcheck'
       balance: 'source'
       prefer_primary_backend: False
   cinderv2:
@@ -89,7 +89,7 @@ endpoints:
       backend_api: 35358
       haproxy_api: 35357
     haproxy:
-      health_check: 'httpchk /'
+      health_check: 'httpchk GET /healthcheck'
       balance: 'roundrobin'
       prefer_primary_backend: False
   keystone_legacy:
@@ -97,7 +97,7 @@ endpoints:
       backend_api: 5002
       haproxy_api: 5001
     haproxy:
-      health_check: 'httpchk /'
+      health_check: 'httpchk GET /healthcheck'
       balance: 'roundrobin'
       prefer_primary_backend: False
   keystonev3:
@@ -157,7 +157,7 @@ endpoints:
       backend_api: 8005
       haproxy_api: 8004
     haproxy:
-      health_check: 'httpchk /'
+      health_check: 'httpchk GET /healthcheck'
       balance: 'source'
       prefer_primary_backend: False
   heat_cfn:
@@ -173,7 +173,7 @@ endpoints:
       backend_api: 8001
       haproxy_api: 8000
     haproxy:
-      health_check: 'httpchk /'
+      health_check: 'httpchk GET /healthcheck'
       balance: 'source'
       prefer_primary_backend: False
   ceilometer:
@@ -188,7 +188,7 @@ endpoints:
       backend_api: 9777
       haproxy_api: 8777
     haproxy:
-      health_check: 'tcp-check /'
+      health_check: 'httpchk GET /healthcheck'
       balance: 'source'
       prefer_primary_backend: False
   ironic:
@@ -238,6 +238,6 @@ endpoints:
       backend_api: 8043
       haproxy_api: 8042
     haproxy:
-      health_check: 'httpchk /'
+      health_check: 'httpchk GET /healthcheck'
       balance: 'source'
       prefer_primary_backend: False
