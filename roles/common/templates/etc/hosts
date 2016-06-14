@@ -12,6 +12,8 @@ ff02::2 ip6-allrouters
 {{ entry.ip }} {{ entry.name }}
 {% endfor %}
 
+{% if 'compute' in groups %}
 {% for host in groups['compute'] if inventory_hostname in groups['compute'] %}
 {{ hostvars[host].ansible_default_ipv4.address }} {{ hostvars[host].ansible_nodename }}
 {% endfor %}
+{% endif %}
