@@ -10,8 +10,8 @@
 
 - name: fetch rbd.py
   get_url:
-    url: "{{ ceph.rdb_url }}"
-    dest: /opt/openstack/current/glance/lib/python2.7/site-packages/rdb.py
+    url: "{{ ceph.rbd_url }}"
+    dest: /opt/openstack/current/glance/lib/python2.7/site-packages/rbd.py
     owner: root
     group: root
     mode: 0644
