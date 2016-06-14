@@ -21,7 +21,7 @@ nova:
   novnc_rev: 292f6a5d
   novnc_url: https://github.com/kanaka/noVNC/archive/v0.5.1.tar.gz
   vnc_keymap: en-us
-  scheduler_default_filters: RetryFilter,AvailabilityZoneFilter,RamFilter,ComputeFilter,CoreFilter,ComputeCapabilitiesFilter,ImagePropertiesFilter,ServerGroupAntiAffinityFilter,ServerGroupAffinityFilter,AggregateInstanceExtraSpecsFilter,DiskFilter
+  scheduler_default_filters: RetryFilter,AvailabilityZoneFilter,RamFilter,ComputeFilter,CoreFilter,ComputeCapabilitiesFilter,ImagePropertiesFilter,ServerGroupAntiAffinityFilter,ServerGroupAffinityFilter,AggregateInstanceExtraSpecsFilter
   libvirt_bin_version: 1.2.2-0ubuntu13.1.9~cloud0
   python_libvirt_version: 1.2.2-0ubuntu2~cloud0
   qemu_kvm_version: 2.0.0+dfsg-2ubuntu1.16~cloud0
