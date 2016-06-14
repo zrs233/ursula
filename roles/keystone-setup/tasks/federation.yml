@@ -4,7 +4,6 @@
             section=federation
             option=federated_domain_name
             value=Default
-  when: keystone.federation.sp.oidc.enabled|bool
   notify: restart keystone services
 
 - name: Register keystone sp info on keystone idp
