@@ -16,6 +16,7 @@ horizon:
       - { name: python-memcached }
       - { name: neutron-lbaas-dashboard }
       - { name: "git+https://github.com/blueboxgroup/horizon-customization#egg=horizon-customization"}
+      - { name: django_openstack_auth, version: '2.2.1.dev1' }
     system_dependencies:
       - apache2
       - libapache2-mod-wsgi
