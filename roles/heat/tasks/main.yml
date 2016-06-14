@@ -65,6 +65,16 @@
   run_once: true
   register: heat_domain
 
+- name: remove heat domain user from default domain
+  environment:
+    OS_IDENTITY_API_VERSION: 3
+    OS_DOMAIN_ID: default
+  shell: . /root/stackrc; openstack --os-auth-url "{{ endpoints.keystone.url.internal }}/v3" user delete --domain default heat_domain_admin
+  register: remove_heat_admin
+  failed_when: remove_heat_admin|failed and
+               "No user with a name or ID" not in remove_heat_admin.stderr|default('')
+  run_once: true
+
 - name: create heat domain admin user
   environment:
     OS_IDENTITY_API_VERSION: 3
