@@ -448,9 +448,9 @@ keystone:
     - name: aodh
       type: alarming
       description: 'aodh alarming service'
-      public_url: https://{{ endpoints.main }}:8042
-      internal_url: https://{{ endpoints.main }}:8042
-      admin_url: https://{{ endpoints.main }}:8042
+      public_url: "{{ endpoints.aodh.url.public }}"
+      internal_url: "{{ endpoints.aodh.url.internal }}"
+      admin_url: "{{ endpoints.aodh.url.admin }}"
   federation:
     enabled: False
 

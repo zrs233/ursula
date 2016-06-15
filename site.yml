@@ -344,6 +344,15 @@
       when: ceilometer.enabled|bool
   environment: "{{ env_vars|default({}) }}"
 
+- name: aodh setup
+  hosts: controller
+  any_errors_fatal: true
+  roles:
+    - role: 'aodh'
+      tags: ['openstack', 'aodh']
+      when: ceilometer.enabled|default('false')|bool
+  environment: "{{ env_vars|default({}) }}"
+
 - name: magnum code and config
   hosts: controller
   any_errors_fatal: true
@@ -395,13 +404,4 @@
     - role: ceph-update
       tags: ['ceph', 'ceph-update']
       when: ceph.scaleout|default('False')|bool
-  environment: "{{ env_vars|default({}) }}"
-
-- name: aodh setup
-  hosts: controller
-  any_errors_fatal: true
-  roles:
-    - role: 'aodh'
-      tags: ['openstack', 'aodh']
-      when: ceilometer.enabled|default('false')|bool
   environment: "{{ env_vars|default({}) }}"
