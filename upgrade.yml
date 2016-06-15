@@ -46,6 +46,25 @@
         state: restarted
   environment: "{{ env_vars|default({}) }}"
 
+- name: upgrade client bits
+  hosts: all:!vyatta-*
+  max_fail_percentage: 1
+  tags: client
+
+  pre_tasks:
+    - name: remove clients for re-install
+      pip:
+        name: "{{ item }}"
+        state: absent
+      with_items:
+        - python-openstackclient
+        - python-neutronclient
+        - python-heatclient
+
+  roles:
+    - role: client
+  environment: "{{ env_vars|default({}) }}"
+
 - name: stop the restarts
   hosts: all:!vyatta-*
   tags: always
