@@ -1,6 +1,6 @@
 ---
 - name: gather facts on all hosts
-  hosts: localhost
+  hosts: all:!vyatta-*
   tags: always
   gather_facts: false
   become: no
@@ -11,7 +11,7 @@
       delegate_to: "{{ item }}"
       delegate_facts: yes
       with_items: "{{ groups['all'] }}"
-      run_once: true
+      when: inventory_hostname == play_hosts[0]
 
 - name: common role for all hosts
   hosts: all:!vyatta-*
