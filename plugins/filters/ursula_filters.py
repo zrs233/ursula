@@ -10,7 +10,8 @@ def ursula_controller_ips(hostvars, groups, controller_name='controller'):
     return sorted(list(controller_ips))
 
 
-def ursula_memcache_hosts(hostvars, groups, memcache_port, controller_name='controller'):
+def ursula_memcache_hosts(hostvars, groups, memcache_port,
+                          controller_name='controller'):
     controller_ips = ursula_controller_ips(hostvars, groups, controller_name)
     host_strings = ['%s:%s' % (c, memcache_port) for c in controller_ips]
     return ','.join(host_strings)
@@ -22,6 +23,15 @@ def ursula_package_path(project, version):
     return path
 
 
+def net_physical_devices(interface):
+    devices = []
+    if 'slaves' in interface:
+        devices = interface['slaves']
+    elif 'device' in interface:
+        devices = [interface['device']]
+    return devices
+
+
 class FilterModule(object):
     ''' ursula utility filters '''
 
@@ -30,4 +40,5 @@ class FilterModule(object):
             'ursula_controller_ips':    ursula_controller_ips,
             'ursula_memcache_hosts':    ursula_memcache_hosts,
             'ursula_package_path':      ursula_package_path,
+            'net_physical_devices':     net_physical_devices,
         }

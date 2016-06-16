@@ -198,7 +198,7 @@
 
 - name: check that large receive offload (LRO) is off
   sensu_check: name=check-large-receive-offload plugin=check-large-receive-offload.py
-               args="--interface r\'"{{ common.monitoring.sensu_checks.check_lro.interface }}"\' {{ ' --warning' if common.monitoring.sensu_checks.check_lro.warning|bool else ' ' }}"
+               args="--devices {{ common.monitoring.sensu_checks.check_lro.devices }} {{ ' --warning' if common.monitoring.sensu_checks.check_lro.warning|bool else ' ' }}"
   when: common.monitoring.sensu_checks.check_lro.enabled|bool
   notify: restart sensu-client
 

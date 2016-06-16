@@ -51,7 +51,7 @@ common:
       check_lro:
         warning: False
         enabled: True
-        interface: "{{ hostvars[inventory_hostname][primary_interface] }}"
+        devices: "{{ hostvars[inventory_hostname][primary_interface]|net_physical_devices|join(',') }}"
       check_static_route:
         criticality: 'critical'
       check_raid:
