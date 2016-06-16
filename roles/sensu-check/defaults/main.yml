@@ -66,7 +66,7 @@ sensu_checks:
       standalone: true
       command: check-neutron-agents.sh -z critical
       service_owner: openstack
-      dependencies: "{{ groups['controller'] | union(groups['compute']) | unique | map('regex_replace', '(.*)', '\\1' ~ '.' ~ ansible_domain ~ '-' ~ stack_env ~ '/keepalive') | list }}"
+      dependencies: "{{ 'keepalive' | sensu_dependencies(hostvars, groups, 'controller,compute') }}"
       # above is incredibly ugly, but works. Creates the list below.
       #dependencies:
       #  - "controller1.ursula-vagrant/keepalive"
@@ -89,7 +89,7 @@ sensu_checks:
       standalone: true
       command: check-nova-services.sh -z critical
       service_owner: openstack
-      dependencies: "{{ groups['controller'] | map('regex_replace', '(.*)', '\\1' ~ '.' ~ ansible_domain ~ '-' ~ stack_env ~ '/keepalive') | list }}"
+      dependencies: "{{ 'keepalive' | sensu_dependencies(hostvars, groups, 'controller') }}"
       # above is incredibly ugly, but works. Creates the list below.
       #dependencies:
       #  - "controller1.ursula-vagrant/keepalive"
@@ -104,7 +104,7 @@ sensu_checks:
       standalone: true
       command: "percona-cluster-size.rb -d /root/.my.cnf --expected 3 --criticality critical"
       service_owner: openstack
-      dependencies: "{{ groups['db'] | union(groups['db_arbiter']) | unique | map('regex_replace', '(.*)', '\\1' ~ '.' ~ ansible_domain ~ '-' ~ stack_env ~ '/keepalive') | list }}"
+      dependencies: "{{ 'keepalive' | sensu_dependencies(hostvars, groups, 'db,db_arbiter') }}"
       # above is incredibly ugly, but works. Creates the list below.
       #dependencies:
       #  - "controller1.ursula-vagrant/keepalive"
