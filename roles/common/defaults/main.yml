@@ -49,8 +49,8 @@ common:
   monitoring:
     sensu_checks:
       check_lro:
-        criticality: 'critical'
-        enabled: true
+        warning: False
+        enabled: True
         interface: "{{ hostvars[inventory_hostname][primary_interface] }}"
       check_static_route:
         criticality: 'critical'
