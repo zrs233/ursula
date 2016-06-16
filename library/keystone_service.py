@@ -171,14 +171,8 @@ def ensure_endpoint_present(keystone, name, public_url, internal_url,
         # Endpoint doesn't exist yet, we'll need to create one
         pass
     else:
-        # See if it matches
-        if endpoint.publicurl == public_url and \
-           endpoint.adminurl == admin_url and \
-           endpoint.internalurl == internal_url and \
-           endpoint.region == region:
-
-            # Same, no changes needed
-            return (False, endpoint.id)
+        # endpoints can't be updated with this module (v2 API)
+        return (False, endpoint.id)
 
     # At this point, we know we will need to make a change
     if check_mode:
@@ -191,10 +185,6 @@ def ensure_endpoint_present(keystone, name, public_url, internal_url,
                                              adminurl=admin_url,
                                              internalurl=internal_url)
         return (True, endpoint.id)
-    else:
-        msg = "keystone v2 API doesn't support updating endpoints"
-        raise ValueError(msg)
-
 
 def ensure_service_absent(keystone, name, check_mode):
     """ Ensure the service is absent"""
