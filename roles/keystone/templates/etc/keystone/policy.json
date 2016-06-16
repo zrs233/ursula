@@ -84,9 +84,9 @@
 
     "identity:get_role": "rule:admin_or_cloudadmin or role:project_admin",
     "identity:list_roles": "rule:admin_or_cloudadmin or role:project_admin",
-    "identity:create_role": "rule:admin_required",
-    "identity:update_role": "rule:admin_required",
-    "identity:delete_role": "rule:admin_required",
+    "identity:create_role": "role:admin or is_admin:1",
+    "identity:update_role": "role:admin or is_admin:1",
+    "identity:delete_role": "role:admin or is_admin:1",
     "identity:get_domain_role": "rule:admin_required",
     "identity:list_domain_roles": "rule:admin_required",
     "identity:create_domain_role": "rule:admin_required",
