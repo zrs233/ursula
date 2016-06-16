@@ -6,4 +6,4 @@
     - ceilometer-api
     - ceilometer-collector
     - ceilometer-agent-notification
-    - ceiloemter-polling
+    - ceilometer-polling
