@@ -26,6 +26,9 @@
   # don't run this on existing clusters
   - name: Run a full dist-upgrade
     apt: update_cache=yes cache_valid_time=3600 upgrade=dist
+    register: result
+    until: result|succeeded
+    retries: 5
 
   - name: Ubuntu 14.04 style /etc/network/interfaces.d/ directory
     file: dest=/etc/network/interfaces.d state=directory owner=root

@@ -11,6 +11,9 @@
   apt: pkg="{{ item.key_package }}"
   with_items: "{{ repos }}"
   when: repos is defined and item.key_package is defined
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: add any dependent repositories
   apt_repository:

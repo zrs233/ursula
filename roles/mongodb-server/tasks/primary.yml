@@ -10,6 +10,9 @@
 
 - name: install pymongo for mongodb_user module
   pip: name=pymongo state=present
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: create admin user
   mongodb_user: database=admin name=admin password={{ mongodb.db_password }} replica_set={{ mongodb.replica_name }} roles='userAdminAnyDatabase' state=present

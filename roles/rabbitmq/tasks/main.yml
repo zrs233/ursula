@@ -10,6 +10,9 @@
   with_items:
     - esl-erlang
     - rabbitmq-server
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: add rabbitmq environment configuration
   template: src=etc/rabbitmq/rabbitmq-env.conf

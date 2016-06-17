@@ -8,13 +8,22 @@
     - ucarp
     - radvd
     - resolvconf
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: install packages for l3ha
   apt: pkg=keepalived
   when: neutron.l3ha.enabled|bool
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: remove conntrackd
   apt: name=conntrackd purge=yes state=absent
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - include: dnsmasq.yml
 

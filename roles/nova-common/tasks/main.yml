@@ -14,6 +14,9 @@
   apt:
     pkg="{{ item }}"
   with_items: "{{ nova.install_packages }}"
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: create nova config dir
   file: dest=/etc/nova state=directory

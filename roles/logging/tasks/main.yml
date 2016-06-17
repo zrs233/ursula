@@ -10,6 +10,9 @@
 - name: install logstash-forwarder
   apt: pkg=logstash-forwarder
   when: logging.install_method == 'apt'
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: stop logstash-forwarder service
   service: name=logstash-forwarder state=stopped enabled=yes
@@ -24,6 +27,9 @@
 - name: install logstash
   apt: deb=/tmp/logstash-forwarder_{{ logging.version }}_amd64.deb
   when: logging.install_method == 'file'
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: install logstash-forwarder service
   template: src=etc/init/logstash-forwarder.conf dest=/etc/init/logstash-forwarder.conf mode=0644

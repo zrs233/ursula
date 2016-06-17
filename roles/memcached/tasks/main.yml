@@ -5,6 +5,9 @@
     - memcached
     - python-memcache
     - libsasl2-dev
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: "remove /nonexistent inadvertently created by memcached package: see https://bugs.launchpad.net/ubuntu/+source/memcached/+bug/1255328/"
   file: dest=/nonexistent state=absent

@@ -4,9 +4,15 @@
   with_items:
   - bwm-ng
   - ipset
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: update iproute2 to latest ppa
   apt: name=iproute2 state=latest
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: permit VXLAN traffic
   ufw: rule=allow to_port=4789 proto=udp

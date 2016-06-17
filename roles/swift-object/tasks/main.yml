@@ -1,6 +1,9 @@
 ---
 - name: install xfsprogs
   apt: pkg=xfsprogs
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: swift-object service scripts
   template: src=roles/swift-common/templates/etc/init/swift-service.conf

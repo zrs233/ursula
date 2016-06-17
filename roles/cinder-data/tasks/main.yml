@@ -8,6 +8,9 @@
     - nbd-client
     - open-iscsi
     - qemu-utils
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: iscsi target framework conf dir
   file: dest=/etc/tgt/conf.d state=directory

@@ -17,6 +17,9 @@
 
 - name: install xmlsec1 command
   apt: name=xmlsec1 state=present
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: setup keystone idp metadata
   shell: keystone-manage saml_idp_metadata > /etc/keystone/keystone_idp_metadata.xml

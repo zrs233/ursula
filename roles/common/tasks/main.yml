@@ -14,6 +14,9 @@
 - name: update apt index
   apt: update_cache=yes cache_valid_time=3600
   tags: ['prereboot']
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - include: system-tools.yml
 
@@ -36,6 +39,9 @@
     - libssl-dev
     - libxml2-dev
     - libxslt1-dev
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - include: python.yml
   tags: pip, python
@@ -91,6 +97,9 @@
     name: "{{ item }}"
     state: absent
   with_items: "{{ common.packages_to_remove }}"
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: fetch Ursula revision
   local_action: command git describe --tags

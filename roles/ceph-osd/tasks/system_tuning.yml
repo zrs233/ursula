@@ -7,6 +7,9 @@
 - name: install dependencies
   apt: pkg="hugepages"
   when: ceph.disable_transparent_hugepage
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: disable transparent hugepage until next reboot
   command: hugeadm --thp-never

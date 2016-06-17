@@ -3,6 +3,8 @@
   apt: pkg="{{ package_name|default(openstack_package.package_name) }}"
        update_cache=yes cache_valid_time=3600
   register: project_package
+  until: project_package|succeeded
+  retries: 5
 
 - name: set code has changed fact
   set_fact:

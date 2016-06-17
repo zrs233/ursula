@@ -1,6 +1,9 @@
 ---
 - name: install ipchanged dependencies
   apt: pkg=python-daemon
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: install ipchanged script
   template: src=usr/local/sbin/ipchanged dest=/usr/local/sbin/ipchanged

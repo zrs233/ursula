@@ -52,10 +52,16 @@
       update_cache: yes
       cache_valid_time: 3600
       name: python-pip
+    register: result
+    until: result|succeeded
+    retries: 5
 
   - name: get backports.ssl_match_hostname for apt repo installs
     pip:
       name: backports.ssl_match_hostname
+    register: result
+    until: result|succeeded
+    retries: 5
 
   - name: Add BlueBox OpenStack PPA
     apt_repository: repo='ppa:blueboxgroup/openstack'
@@ -63,6 +69,9 @@
   # don't run this on existing clusters
   - name: Run a full dist-upgrade
     apt: update_cache=yes cache_valid_time=3600 upgrade=dist
+    register: result
+    until: result|succeeded
+    retries: 5
 
   - name: Ubuntu 14.04 style /etc/network/interfaces.d/ directory
     file: dest=/etc/network/interfaces.d state=directory owner=root

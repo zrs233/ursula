@@ -38,6 +38,9 @@
         pkg: rabbitmq-server
         state: latest
       notify: restart-rabbit
+      register: result
+      until: result|succeeded
+      retries: 5
 
   handlers:
     - name: restart-rabbit
@@ -60,6 +63,9 @@
         - python-openstackclient
         - python-neutronclient
         - python-heatclient
+      register: result
+      until: result|succeeded
+      retries: 5
 
   roles:
     - role: client

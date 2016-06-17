@@ -17,6 +17,9 @@
   apt: pkg={{ item }} state=installed
   with_items:
     - percona-xtradb-cluster-garbd-3.x
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: install garbd config
   template: src=etc/default/garbd dest=/etc/default/garbd mode=0644

@@ -1,6 +1,9 @@
 ---
 - name: install ufw
   apt: pkg=ufw
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: permit ucarp (IP protocol 112)
   lineinfile: dest=/etc/ufw/before.rules

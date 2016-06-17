@@ -7,6 +7,9 @@
   apt:
     pkg: haproxy
   notify: restart rsyslog 
+  register: result
+  until: result|succeeded
+  retries: 5
 
 # WORKAROUND: `service haproxy stop` fails due to incorrect `start-stop-daemon --pid`
 - name: fix haproxy init script

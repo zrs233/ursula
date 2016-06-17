@@ -5,6 +5,9 @@
     - libjansson4
     - libhiredis0.10
     - libcurl3
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: download mod_auth_openidc
   get_url: url={{ keystone.federation.sp.oidc.download.url }}
@@ -14,6 +17,9 @@
   apt: deb=/tmp/{{ keystone.federation.sp.oidc.module_name }}
        install_recommends=yes
   notify: reload apache
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: enable apache mod auth_openidc
   apache2_module: name=auth_openidc

@@ -6,6 +6,9 @@
     - tftp
     - syslinux
     - syslinux-common
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: create tftpboot
   file: path={{ ironic.tftpboot_path }}

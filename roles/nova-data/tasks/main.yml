@@ -15,6 +15,9 @@
 
 - name: install nova data plan requirements
   apt: pkg=sysfsutils
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: nova instances directory
   file:

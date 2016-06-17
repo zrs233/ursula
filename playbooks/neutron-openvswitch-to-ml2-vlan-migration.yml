@@ -68,6 +68,9 @@
       - openvswitch-switch
       - openvswitch-common
       - openvswitch-datapath-dkms
+    register: result
+    until: result|succeeded
+    retries: 5
 
 - hosts: controller
   serial: 10

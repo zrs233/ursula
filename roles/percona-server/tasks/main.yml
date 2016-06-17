@@ -1,6 +1,9 @@
 ---
 - name: python-mysqldb package
   apt: pkg=python-mysqldb
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: create mysql config directory
   file: path=/etc/mysql/conf.d state=directory
@@ -47,6 +50,9 @@
   - percona-xtradb-cluster-client-{{ xtradb.client_version }}
   - percona-xtradb-cluster-server-{{ xtradb.server_version }}
   - percona-xtrabackup
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: mysql log dir
   file: dest=/var/log/mysql state=directory mode=2750 owner=mysql group=adm

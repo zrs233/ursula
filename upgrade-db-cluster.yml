@@ -10,6 +10,9 @@
     - percona-xtradb-cluster-galera-2.x
     - percona-xtradb-cluster-common-5.5
     - percona-xtradb-cluster-client-5.5
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: configure my.cnf
   template: src=roles/percona-server/templates/etc/my.cnf dest=/etc/my.cnf mode=0644
@@ -59,6 +62,9 @@
 
 - name: install new packages
   apt: name=percona-xtradb-cluster-56
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: run mysql_upgrade
   command: mysql_upgrade

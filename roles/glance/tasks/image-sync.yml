@@ -5,12 +5,18 @@
 
 - name: remove btsync
   apt: pkg=btsync state=absent
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: btsync config
   file: dest=/etc/btsync/glance-cache.conf state=absent
 
 - name: install rsync
   apt: pkg=rsync
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: rsync defaults
   lineinfile: dest=/etc/default/rsync regexp={{ item.value.regexp }}

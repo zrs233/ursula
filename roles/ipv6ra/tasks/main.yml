@@ -1,6 +1,9 @@
 ---
 - name: Update dnsmasq to the ppa version
   apt: pkg=dnsmasq state=latest
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: Configure dnsmasq
   template: src=etc/dnsmasq.d/internal-ipv6-ra.conf

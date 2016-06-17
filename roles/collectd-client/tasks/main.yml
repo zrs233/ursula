@@ -10,6 +10,9 @@
     - collectd
     - collectd-utils
     - collectd-core
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: create config dirs
   file: dest={{ collectd.plugin_conf_dir }} state=directory owner=root mode=0755

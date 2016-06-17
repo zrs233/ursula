@@ -1,6 +1,9 @@
 ---
 - name: lesscpy must be in apache PATH
   pip: name=lesscpy version=0.9j
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: enable apache modules
   apache2_module: state=present name="{{ item }}"

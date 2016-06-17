@@ -1,6 +1,9 @@
 ---
 - name: remove older libruby
   apt: pkg=libruby1.8 purge=yes state=absent
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: install system tools
   apt: pkg={{ item }}
@@ -33,12 +36,18 @@
     - vlan
     - lvm2
     - libpam-cracklib
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: install tools for x86
   apt: pkg={{ item }}
   with_items:
     - ack-grep
   when: ansible_architecture != "ppc64le"
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: load vlan module
   lineinfile: dest=/etc/modules
@@ -48,6 +57,9 @@
 - name: install mcelog package
   apt: pkg=mcelog
   when: common.system_tools.mcelog|bool and ansible_architecture != "ppc64le"
+  register: result
+  until: result|succeeded
+  retries: 5
 
 # http://www.supermicro.com/support/faqs/faq.cfm?faq=14537
 - name: blacklist mei
@@ -61,5 +73,8 @@
   apt: name=lm-sensors state=present update_cache=yes
   notify:
     - load sensors
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - meta: flush_handlers

@@ -7,6 +7,9 @@
   with_items:
   - sensu
   - libfile-which-perl
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: sensu sudoers
   template: src=monitoring/sensu-sudoers dest=/etc/sudoers.d/sensu owner=root
@@ -71,6 +74,9 @@
 
 - name: install sensu plugin pip modules
   pip: name=sensu_plugin version=0.1.0
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: sensu conf dir
   file: dest=/etc/sensu/conf.d/checks state=directory owner=root mode=0755

@@ -10,6 +10,9 @@
   tasks:
     - name: update apt cache
       apt: cache_valid_time=3600 update_cache=yes
+      register: result
+      until: result|succeeded
+      retries: 5
 
     # Set Locale
     - name: Generate locales
@@ -37,6 +40,9 @@
       with_items:
         - vlan
         - ucarp
+      register: result
+      until: result|succeeded
+      retries: 5
 
 - name: openstack base setup
   hosts: openstack
@@ -44,9 +50,15 @@
     - name: pycurl
       apt: pkg=python-pycurl
       when: ansible_distribution_version == "12.04"
+      register: result
+      until: result|succeeded
+      retries: 5
 
     - name: bridge-utils
       apt: pkg=bridge-utils
+      register: result
+      until: result|succeeded
+      retries: 5
 
     - name: enable ip forwarding
       sysctl: name="net.ipv4.ip_forward" value=1 sysctl_set=yes state=present reload=yes
@@ -61,9 +73,15 @@
         - vim
         - wget
         - git
+      register: result
+      until: result|succeeded
+      retries: 5
 
     - name: install-ubuntu vagrant call
       command: /vagrant/bin/install-ubuntu
 
     - name: install python requirements
       pip: requirements=/vagrant/requirements.txt
+      register: result
+      until: result|succeeded
+      retries: 5

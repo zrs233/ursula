@@ -32,10 +32,16 @@
 - name: pip install httplib2 - precise
   pip: name=httplib2 version=0.8
   when: ansible_distribution_version == "12.04"
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: pip install requests - precise
   pip: name=requests state=latest
   when: ansible_distribution_version == "12.04"
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: force our ssl cert for python libs on precise
   file: src=/etc/ssl/certs/ca-certificates.crt dest={{ item }} owner=root
@@ -52,6 +58,9 @@
     - python-httplib2
     - python-requests
   when: ansible_distribution_version == "14.04"
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - meta: flush_handlers
 

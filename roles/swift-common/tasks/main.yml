@@ -65,6 +65,9 @@
 
 - name: install rsync
   apt: pkg=rsync
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - template: src=etc/rsyncd.conf dest=/etc/rsyncd.conf owner=root
             group=root mode=0644

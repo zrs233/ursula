@@ -9,6 +9,9 @@
     - kdump-tools
     - makedumpfile
     - crash
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: Set crash directory permissions to 0775
   file: path=/var/crash state=directory mode=0775

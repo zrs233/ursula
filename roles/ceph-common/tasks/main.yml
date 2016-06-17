@@ -23,11 +23,17 @@
        update_cache=yes
        cache_valid_time=3600
   with_items: "{{ ceph.debian_pkgs }}"
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: install ceph
   apt: pkg={{ item }}
        state=present
   with_items: "{{ ceph.ceph_pkgs }}"
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: check for a ceph socket
   shell: "stat /var/run/ceph/*.asok > /dev/null 2>&1"

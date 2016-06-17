@@ -4,6 +4,9 @@
 #
 - name: install ipmitool
   apt: pkg=ipmitool
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: load kernel ipmi modules
   modprobe: name={{ item }} state={{ common.ipmi.state }}

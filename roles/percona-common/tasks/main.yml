@@ -1,3 +1,6 @@
 ---
 - name: install python-pycurl
   apt: pkg=python-pycurl
+  register: result
+  until: result|succeeded
+  retries: 5

@@ -16,6 +16,9 @@
   pip:
     name: functools32
     state: present
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: glance-store check
   sensu_check:

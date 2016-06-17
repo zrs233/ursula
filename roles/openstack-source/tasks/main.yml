@@ -2,6 +2,9 @@
 - name: install project system dependencies
   apt: pkg={{ item }}
   with_items: "{{ openstack_source.system_dependencies }}"
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: "get {{ project_name }} source repo"
   git: repo="{{ openstack_source.git_mirror }}/{{ project_name }}.git"
@@ -31,6 +34,9 @@
   with_items:
     - pip
     - setuptools
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: get constraints file
   get_url:
@@ -56,6 +62,9 @@
     virtualenv: "{{ openstack_source.virtualenv_base }}/{{ project_name }}"
     extra_args: "{{ pip_extra_args }}"
   with_items: "{{ openstack_source.python_dependencies }}"
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: pip install project
   pip:
@@ -68,6 +77,9 @@
   delay: 10
   notify:
     - update ca-certs
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: setup openstack current base path
   file:

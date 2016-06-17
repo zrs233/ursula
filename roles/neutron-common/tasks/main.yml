@@ -4,6 +4,9 @@
   with_items:
     - vlan
     - bridge-utils
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: unload openvswitch if present
   modprobe: name=openvswitch state=absent

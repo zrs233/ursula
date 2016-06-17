@@ -8,12 +8,18 @@
     name: "{{ item }}"
     state: present
   with_items: "{{ client.apt_packages }}"
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: install openstack clients
   pip: name={{ item }}
   with_items: "{{ client.names }}"
   notify:
     - update ca certs
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: fix ssl certs for requests for keystone-client on trusty
   file: src=/etc/ssl/certs/ca-certificates.crt

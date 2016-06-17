@@ -1,4 +1,8 @@
 ---
 - name: install raid utilities
   apt: pkg={{ item }}
+  register: result
+  until: result|succeeded
+  retries: 5
+
   with_items: "{{ common.hwraid.clients }}"

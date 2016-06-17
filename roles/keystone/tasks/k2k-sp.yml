@@ -1,6 +1,9 @@
 ---
 - name: install libapache2-mod-shib2
   apt: name=libapache2-mod-shib2 state=present
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: install shibboleth private key
   template: src=etc/shibboleth/sp-key.pem dest=/etc/shibboleth/sp-key.pem
