@@ -9,6 +9,9 @@
   tasks:
   - name: Add BlueBox OpenStack PPA
     apt_repository: repo='ppa:blueboxgroup/openstack'
+    register: result
+    until: result|succeeded
+    retries: 5
 
   - name: Upgrade iproute to support VXLAN
     apt: name=iproute=1:3.12.0-2~ubuntu12.04.1~ppa1

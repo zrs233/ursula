@@ -58,6 +58,9 @@
 
   - name: Add BlueBox OpenStack PPA
     apt_repository: repo='ppa:blueboxgroup/openstack'
+    register: result
+    until: result|succeeded
+    retries: 5
 
   # don't run this on existing clusters
   - name: Run a full dist-upgrade
