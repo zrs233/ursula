@@ -10,6 +10,9 @@
 - name: memcached gem for sensu check
   gem: name=memcached user_install=no include_dependencies=yes
        executable=/opt/sensu/embedded/bin/gem
+  register: result
+  until: result|succeeded
+  retries: 5
 
 - name: memcached stats check
   sensu_check: name=memcached-stats plugin=check-memcached-stats.rb
