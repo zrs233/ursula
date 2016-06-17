@@ -1,5 +1,5 @@
 {
-    "context_is_admin":  "role:admin",
+    "context_is_admin":  "role:admin or role:cloud_admin",
     "admin_or_owner":  "is_admin:True or project_id:%(project_id)s",
     "default": "rule:admin_or_owner",
     "is_projAdmin": "role:project_admin and project_id:%(project_id)s",
@@ -14,12 +14,12 @@
     "admin_or_projAdmin_or_cloudAdmin_or_member": "rule:admin_or_projAdmin_or_cloudAdmin or rule:member_role",
     "admin_or_cloudadmin": "role:admin or role:cloud_admin",
 
-    "cells_scheduler_filter:TargetCellFilter": "is_admin:True",
+    "cells_scheduler_filter:TargetCellFilter": "role:admin",
 
     "compute:create": "rule:admin_or_owner",
     "compute:create:attach_network": "rule:admin_or_owner",
     "compute:create:attach_volume": "rule:admin_or_owner",
-    "compute:create:forced_host": "is_admin:True",
+    "compute:create:forced_host": "role:admin",
 
     "compute:get": "rule:admin_or_owner",
     "compute:get_all": "rule:admin_or_owner",
@@ -99,7 +99,7 @@
     "compute:volume_snapshot_create": "rule:admin_or_owner",
     "compute:volume_snapshot_delete": "rule:admin_or_owner",
 
-    "admin_api": "is_admin:True",
+    "admin_api": "role:admin",
     "compute_extension:accounts": "rule:admin_api",
     "compute_extension:admin_actions": "rule:admin_or_projAdmin_or_cloudAdmin",
     "compute_extension:admin_actions:pause": "rule:admin_or_projAdmin_or_cloudAdmin_or_owner",
@@ -160,7 +160,7 @@
     "compute_extension:floating_ips_bulk": "rule:admin_api",
     "compute_extension:fping": "rule:admin_or_owner",
     "compute_extension:fping:all_tenants": "rule:admin_api",
-    "compute_extension:hide_server_addresses": "is_admin:False",
+    "compute_extension:hide_server_addresses": "not role:admin",
     "compute_extension:hosts": "rule:admin_api",
     "compute_extension:hypervisors": "rule:admin_or_cloudAdmin",
     "compute_extension:image_size": "rule:admin_or_owner",
@@ -382,7 +382,7 @@
     "os_compute_api:os-fping": "rule:admin_or_owner",
     "os_compute_api:os-fping:discoverable": "@",
     "os_compute_api:os-fping:all_tenants": "rule:admin_api",
-    "os_compute_api:os-hide-server-addresses": "is_admin:False",
+    "os_compute_api:os-hide-server-addresses": "not role:admin",
     "os_compute_api:os-hide-server-addresses:discoverable": "@",
     "os_compute_api:os-hosts": "rule:admin_api",
     "os_compute_api:os-hosts:discoverable": "@",

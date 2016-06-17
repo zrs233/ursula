@@ -1,5 +1,5 @@
 {
-    "context_is_admin": "role:admin",
+    "context_is_admin": "role:admin or role:cloud_admin",
     "owner": "tenant_id:%(tenant_id)s or project_id:%(tenant_id)s or project_id:%(project_id)s",
     "projectadmin": "role:project_admin and rule:owner",
     "admin_or_cloudadmin_or_projectadmin": "rule:context_is_admin or role:cloud_admin or rule:projectadmin",
@@ -8,7 +8,7 @@
     "context_is_advsvc":  "role:advsvc",
     "admin_or_network_owner": "rule:admin_or_cloudadmin_or_projectadmin or tenant_id:%(network:tenant_id)s",
     "admin_owner_or_network_owner": "rule:owner or rule:admin_or_network_owner",
-    "admin_only": "rule:context_is_admin",
+    "admin_only": "role:admin",
     "regular_user": "",
     "shared": "field:networks:shared=True",
     "shared_firewalls": "field:firewalls:shared=True",
