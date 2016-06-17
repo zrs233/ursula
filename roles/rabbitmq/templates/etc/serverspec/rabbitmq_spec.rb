@@ -54,19 +54,7 @@ describe command('rabbitmqctl environment | grep default_user') do
   its(:stdout) { should eq output }
 end   
 
-describe command('rabbitmqctl environment | grep log_levels') do
-  output = "      {log_levels,[{connection,info}]},\n"
-  its(:stdout) { should eq output }
-end 
-
-describe command('rabbitmqctl environment | grep log') do
-  output = ["     [{error_logger,tty},\n",
-            "      {error_logger,{file,\"/var/log/rabbitmq/rabbit@#{hostname}.log\"}},\n",
-            "      {log_levels,[{connection,info}]},\n",
-            "      {sasl_error_logger,{file,\"/var/log/rabbitmq/rabbit@#{hostname}-sasl.log\"}},\n",
-            "      {ssl_cert_login_from,distinguished_name},\n",
-            "          [{backlog,128},\n",
-            "      {http_log_dir,none},\n {sasl,[{errlog_type,error},{sasl_error_logger,false}]},\n"].join()
+describe command('rabbitmqctl environment | grep log_level | tr -d " ""\n"') do
+  output = "{log_levels,[{connection,info}]},"
   its(:stdout){ should match (output) }
 end
-
