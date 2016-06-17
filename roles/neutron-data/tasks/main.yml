@@ -1,9 +1,11 @@
 ---
 - name: install required packages and diagnostic tools
-  apt: name={{ item }}
+  apt:
+    name: "{{ item }}"
   with_items:
-  - bwm-ng
-  - ipset
+    - bwm-ng
+    - ipset
+    - ebtables
   register: result
   until: result|succeeded
   retries: 5
