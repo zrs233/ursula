@@ -1,27 +1,27 @@
 {
 {% if policy_for_horizon|default('False')|bool %}
-    "admin_required": "role:admin or is_admin:1 or role:cloud_admin or role:project_admin",
+    "admin_required": "role:admin or is_admin:1 or role:cloud_admin or role:project_admin or rule:owner",
 {% else %}
     "admin_required": "role:admin or is_admin:1",
 {% endif %}
     "service_role": "role:service",
-    "service_or_admin": "rule:admin_required or rule:service_role",
+    "service_or_admin": "role:admin or is_admin:1  or rule:service_role",
     "owner" : "user_id:%(user_id)s",
-    "admin_or_owner": "rule:admin_required or rule:owner",
+    "admin_or_owner": "role:admin or is_admin:1  or rule:owner",
     "token_subject": "user_id:%(target.token.user_id)s",
-    "admin_or_token_subject": "rule:admin_required or rule:token_subject",
+    "admin_or_token_subject": "role:admin or is_admin:1  or rule:token_subject",
     "service_admin_or_token_subject": "rule:service_or_admin or rule:token_subject",
 
     "support_role" : "role:support",
     "default": "rule:admin_required",
     "projectadmin": "role:project_admin and (project_id:%(project_id)s or project_id:%(user.default_project_id)s or project_id:%(target.user.default_project_id)s)",
     "cloudadmin": "role:cloud_admin",
-    "admin_or_cloudadmin": "rule:admin_required or rule:cloudadmin",
+    "admin_or_cloudadmin": "role:admin or is_admin:1 or rule:cloudadmin",
     "admin_or_owner_or_cloudadmin": "rule:admin_or_owner or rule:cloudadmin",
     "admin_or_owner_or_cloudadmin_or_projectadmin": "rule:admin_or_owner_or_cloudadmin or rule:projectadmin",
-    "admin_or_cloudadmin_or_projectadmin": "rule:admin_required or rule:cloudadmin or rule:projectadmin",
+    "admin_or_cloudadmin_or_projectadmin": "role:admin or is_admin:1  or rule:cloudadmin or rule:projectadmin",
     "admin_or_cloudadmin_or_projectadmin_or_member": "rule:admin_or_cloudadmin_or_projectadmin or role:_member_",
-    "create_revoke_grant_rule": "rule:admin_required or (rule:cloudadmin and not 'admin':%(target.role.name)s) or (rule:projectadmin and not 'cloud_admin':%(target.role.name)s and not 'admin':%(target.role.name)s)",
+    "create_revoke_grant_rule": "role:admin or is_admin:1  or (rule:cloudadmin and not 'admin':%(target.role.name)s) or (rule:projectadmin and not 'cloud_admin':%(target.role.name)s and not 'admin':%(target.role.name)s)",
     "identity:get_region": "",
     "identity:list_regions": "",
     "identity:create_region": "rule:admin_required",
@@ -53,10 +53,10 @@
     "identity:update_project": "rule:admin_or_cloudadmin_or_projectadmin",
     "identity:delete_project": "rule:admin_or_cloudadmin",
 
-    "identity:get_user": "rule:admin_or_cloudadmin or role:project_admin or rule:support_role",
+    "identity:get_user": "rule:admin_or_owner_or_cloudadmin_or_projectadmin or rule:support_role",
     "identity:list_users": "rule:admin_or_cloudadmin or role:project_admin or rule:support_role",
     "identity:create_user": "rule:admin_or_cloudadmin_or_projectadmin",
-    "identity:update_user": "rule:admin_or_owner_or_cloudadmin_or_projectadmin or rule:support_role",
+    "identity:update_user": "rule:admin_or_cloudadmin_or_projectadmin or rule:support_role",
     "identity:delete_user": "rule:admin_or_cloudadmin_or_projectadmin",
     "identity:change_password": "rule:admin_or_owner_or_cloudadmin_or_projectadmin or rule:support_role",
 
