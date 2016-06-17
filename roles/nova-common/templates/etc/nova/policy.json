@@ -1,6 +1,6 @@
 {
     "context_is_admin":  "role:admin or role:cloud_admin",
-    "admin_or_owner":  "is_admin:True or project_id:%(project_id)s",
+    "admin_or_owner":  "is_admin:True or project_id:%(project_id)s or role:cloud_admin",
     "default": "rule:admin_or_owner",
     "is_projAdmin": "role:project_admin and project_id:%(project_id)s",
     "is_cloudAdmin": "role:cloud_admin",
