@@ -72,3 +72,4 @@ glance:
   auditing:
     enabled: False
     logging: False
+  swift_large_object_size: 250
