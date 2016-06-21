@@ -77,9 +77,6 @@
   delay: 10
   notify:
     - update ca-certs
-  register: result
-  until: result|succeeded
-  retries: 5
 
 - name: setup openstack current base path
   file:

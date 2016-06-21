@@ -11,9 +11,6 @@
     - update ca-certs
     - pip clean swifttool outside venv
     - setup swifttool alternatives
-  register: result
-  until: result|succeeded
-  retries: 5
 
 - name: pip clean swifttool outside venv
   pip: name=swifttool state=absent
