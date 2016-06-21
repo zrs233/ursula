@@ -6,6 +6,8 @@ neutron:
   extension_drivers: 
     - port_security
   advertise_mtu: False
+  path_mtu: 1550
+  segment_mtu: 1550
   vxlan:
     # The multicast prefix to use for broadcast, multicast and unknown frames
     # Consider using a larger prefix (e.g. a /24) on deployments with a
