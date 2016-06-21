@@ -115,8 +115,8 @@
     "identity:delete_policy": "rule:admin_required",
 
     "identity:check_token": "rule:admin_or_cloudadmin or rule:token_subject",
-    "identity:validate_token": "rule:service_or_admin or rule:admin_or_owner_or_cloudadmin_or_projectadmin or rule:token_subject",
-    "identity:validate_token_head": "rule:service_or_admin or rule:admin_or_owner_or_cloudadmin_or_projectadmin",
+    "identity:validate_token": "rule:service_or_admin or rule:admin_or_owner_or_cloudadmin or rule:token_subject or role:project_admin",
+    "identity:validate_token_head": "rule:service_or_admin or rule:admin_or_owner_or_cloudadmin or role:project_admin",
     "identity:revocation_list": "rule:service_or_admin",
     "identity:revoke_token": "rule:admin_or_owner_or_cloudadmin or rule:token_subject",
 
