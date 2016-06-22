@@ -41,7 +41,7 @@
 - name: install swifttool pip
   pip:
     name: swifttool
-    version: "{{ swift.swiftool_version }}"
+    version: "{{ swift.swifttool_version }}"
     extra_args: "-i {{ openstack.pypi_mirror | default(omit) }}"
     virtualenv: "{{ swift.venv_dir }}"
   register: result
