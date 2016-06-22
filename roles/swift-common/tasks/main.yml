@@ -42,7 +42,7 @@
   pip:
     name: swifttool
     version: "{{ swift.swifttool_version }}"
-    extra_args: "-i {{ openstack.pypi_mirror | default(omit) }}"
+    extra_args: "-i {{ swift.swifttool_pypi_mirror | default(omit) }}"
     virtualenv: "{{ swift.venv_dir }}"
   register: result
   until: result|success

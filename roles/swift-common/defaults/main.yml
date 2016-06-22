@@ -87,6 +87,7 @@ swift:
   swifttool_url: https://github.com/blueboxgroup/swifttool/archive/v0.0.1.tar.gz
   swifttool_version: 'v0.0.1'
   swifttool_method: 'git'
+  swifttool_pypi_mirror: https://pypi-mirror.openstack.blueboxgrid.com/bluebox/openstack
   monitoring:
     sensu_checks:
       check_ucarp_procs:
