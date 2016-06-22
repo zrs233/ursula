@@ -38,15 +38,21 @@
     - pip install swifttool
   when: swift.swifttool_method == 'git'
 
-- name: fetch swifttool tarball
-  get_url: url={{ swift.swifttool_url }} dest=/opt/stack/swifttool-{{ swift.swifttool_version }}.tar.gz
-  when: swift.swifttool_method == 'file'
-
-- name: unzip swifttool tarball
-  unarchive: src=/opt/stack/swifttool-{{ swift.swifttool_version }}.tar.gz dest=/opt/stack copy=no
+- name: install swifttool pip
+  pip:
+    name: swifttool
+    version: "{{ swift.swiftool_version }}"
+    extra_args: "-i {{ openstack.pypi_mirror | default(omit) }}"
+    virtualenv: "{{ swift.venv_dir }}"
+  register: result
+  until: result|success
+  retries: 3
+  delay: 10
   notify:
-    - pip install swifttool
-  when: swift.swifttool_method == 'file'
+    - update ca-certs
+    - pip clean swifttool outside venv
+    - setup swifttool alternatives
+  when: swift.swifttool_method == 'pip'
 
 - name: create swift configuration diectory
   file: dest=/etc/swift state=directory owner=swiftops
