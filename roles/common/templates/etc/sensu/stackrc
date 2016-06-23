@@ -1,13 +1,11 @@
-export OS_IDENTITY_API_VERSION=3
 export OS_PASSWORD={{ monitoring.openstack.user.password }}
-export OS_AUTH_URL={{ endpoints.keystonev3.url.internal }}/{{ endpoints.keystonev3.version }}
+export OS_AUTH_URL={{ endpoints.auth_uri }}
 export OS_USERNAME={{ monitoring.openstack.user.username }}
 export OS_TENANT_NAME={{ monitoring.openstack.user.tenant }}
-export OS_PROJECT_NAME={{ monitoring.openstack.user.tenant }}
-export OS_USER_DOMAIN_NAME=Default
-export OS_PROJECT_DOMAIN_NAME=Default
 {% if client.self_signed_cert -%}
 export OS_CACERT=/opt/stack/ssl/openstack.crt
 {% endif -%}
 export OS_NO_CACHE=True
 export NOVACLIENT_UUID_CACHE_DIR=/tmp/sensu
+export OS_VOLUME_API_VERSION=2
+export OS_COMPUTE_API_VERSION=2
