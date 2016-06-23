@@ -83,11 +83,10 @@ sensu_checks:
 
   nova:
     check_nova_services:
-      sudo: true
       handler: default
       interval: 120
       standalone: true
-      command: check-nova-services.sh -z critical
+      command: sudo check-nova-services.sh -z critical
       service_owner: openstack
       dependencies: "{{ 'keepalive' | sensu_dependencies(hostvars, groups, 'controller') }}"
       # above is incredibly ugly, but works. Creates the list below.
@@ -97,12 +96,11 @@ sensu_checks:
 
   percona:
     check_cluster_size:
-      sudo: true
       handler: default
       notification: "unexpected number of mysql processes"
       interval: 120
       standalone: true
-      command: "percona-cluster-size.rb -d /root/.my.cnf --expected 3 --criticality critical"
+      command: "sudo percona-cluster-size.rb -d /root/.my.cnf --expected 3 --criticality critical"
       service_owner: openstack
       dependencies: "{{ 'keepalive' | sensu_dependencies(hostvars, groups, 'db,db_arbiter') }}"
       # above is incredibly ugly, but works. Creates the list below.
