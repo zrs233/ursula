@@ -1,5 +1,7 @@
 ---
 stack_env: example_swift
+
+swift_fqdn: swift-openstack.example.org
 swift_floating_ip: "{{ hostvars[groups['swiftnode'][0]][primary_interface]['ipv4']['address'] }}"
 
 undercloud_cidr: 
@@ -17,8 +19,11 @@ percona:
 swift:
   enabled: True
   disks:
-    - sdb
-  enabled: True
+    - disk: vda
+      make_label: True
+
+haproxy:
+  stats_group: haproxy
 
 openstack_setup:
   add_users: True

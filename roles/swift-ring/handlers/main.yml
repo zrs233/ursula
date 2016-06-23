@@ -4,22 +4,3 @@
            --config {{ swift_ring.outdir }}/ring_definition.yml --outdir {{ swift_ring.outdir }} bootstrap
   become: True
   become_user: swiftops
-
-- name: setup swift rings - scaleup
-  command: setsid /usr/local/bin/swifttool -u swiftops -i /home/swiftops/.ssh/id_rsa
-           --config {{ swift_ring.outdir }}/ring_definition.yml --outdir {{ swift_ring.outdir }} scaleup
-           --iterations {{ swift_ring.iterations }} 
-  async: "{{ (swift_ring.iterations + 1) * 60 * 60|int }}"
-  become: True
-  become_user: swiftops
-  poll: 0
-
-- name: setup swift rings - scaledown
-  command:  setsid /usr/local/bin/swifttool -u swiftops -i /home/swiftops/.ssh/id_rsa
-           --config {{ swift_ring.outdir }}/ring_definition.yml --outdir {{ swift_ring.outdir }} scaledown
-           --iterations {{ swift_ring.iterations }}
-  async: "{{ (swift_ring.iterations + 1) * 60 * 60|int }}"
-  become: True
-  become_user: swiftops
-  poll: 0
-

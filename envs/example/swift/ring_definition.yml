@@ -4,14 +4,17 @@ replicas: 3
 min_part_hours: 1
 zones:
   z1:
-    10.1.1.131:
+    172.16.0.111:
       disks:
-        - sdb1
+        - blockdev: vda1
+          weight: 1000
   z2:
-    10.1.1.132:
+    172.16.0.112:
       disks:
-        - sdb1
+        - blockdev: vda1
+          weight: 1000
   z3:
-    10.1.1.133:
+    172.16.0.113:
       disks:
-        - sdb1
+        - blockdev: vda1
+          weight: 1000

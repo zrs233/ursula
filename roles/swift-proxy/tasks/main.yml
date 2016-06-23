@@ -4,10 +4,10 @@
   tags: ufw
 
 - name: swift-proxy service script
-  template: src=roles/swift-common/templates/etc/init/swift-service.conf
-            dest=/etc/init/swift-{{ item.service_name }}.conf mode=0644
-  with_items:
-    - { service_name: proxy, conf: proxy-server }
+  upstart_service: name=swift-proxy
+                   cmd=/usr/local/bin/swift-proxy-server
+                   args=/etc/swift/proxy-server.conf
+                   user=swift
 
 - stat: path=/etc/swift/object.ring.gz
   register: object_ring

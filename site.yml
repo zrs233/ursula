@@ -292,6 +292,22 @@
       tags: ['openstack', 'horizon', 'control']
   environment: "{{ env_vars|default({}) }}"
 
+- name: install swift-common
+  hosts: swiftnode
+  any_errors_fatal: true
+  roles:
+    - role: swift-common
+      tags: ['openstack', 'swift', 'swift-common', 'data']
+  environment: "{{ env_vars|default({}) }}"
+
+- name: swift bootstrap rings
+  hosts: swiftnode_primary
+  any_errors_fatal: true
+  roles:
+    - role: swift-ring
+      tags: ['openstack', 'swift', 'swift-ring', 'data']
+  environment: "{{ env_vars|default({}) }}"
+
 - name: swift code and config
   hosts: swiftnode
   any_errors_fatal: true
@@ -307,14 +323,6 @@
       tags: ['openstack', 'swift', 'swift-container', 'data']
     - role: swift-proxy
       tags: ['openstack', 'swift', 'swift-proxy', 'control']
-  environment: "{{ env_vars|default({}) }}"
-
-- name: swift bootstrap rings
-  hosts: swiftnode_primary
-  any_errors_fatal: true
-  roles:
-    - role: swift-ring
-      tags: ['openstack', 'swift', 'swift-ring', 'data']
   environment: "{{ env_vars|default({}) }}"
 
 - name: heat code and config

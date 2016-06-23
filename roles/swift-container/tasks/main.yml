@@ -1,13 +1,15 @@
 ---
 - name: swift-container service scripts
-  template: src=roles/swift-common/templates/etc/init/swift-service.conf
-            dest=/etc/init/swift-{{ item.service_name }}.conf mode=0644
+  upstart_service: name=swift-{{ item.name }}
+                   cmd=/usr/local/bin/swift-{{ item.cmd|default(item.name) }}
+                   args=/etc/swift/container-server.conf
+                   user=swift
   with_items:
-    - { service_name: container-auditor, conf: container-server }
-    - { service_name: container, conf: container-server }
-    - { service_name: container-replicator, conf: container-server }
-    - { service_name: container-sync, conf: container-server }
-    - { service_name: container-updater, conf: container-server }
+    - { name: container, cmd: container-server }
+    - { name: container-auditor }
+    - { name: container-replicator }
+    - { name: container-sync }
+    - { name: container-updater }
 
 - stat: path=/etc/swift/container.ring.gz
   register: container_ring

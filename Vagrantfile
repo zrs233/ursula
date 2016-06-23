@@ -78,14 +78,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         c.vm.provider "libvirt" do |v|
           v.memory = vm['memory'] if vm.has_key?('memory')
           v.cpus = vm['cpus'] if vm.has_key?('cpus')
-          if vm.has_key?('custom')
-            if vm['custom'].kind_of?(Array)
-              vm['custom'].each do |custom|
-                v.customize eval(custom)
-              end
-            else
-              v.customize eval(vm['custom'])
-            end
+	  if vm.has_key?('libvirt')
+	    if vm['libvirt'].has_key?('storage')
+		v.storage :file, vm['libvirt']['storage']
+	    end
           end
           v.nested = true
         end

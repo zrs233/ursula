@@ -1,5 +1,6 @@
 ---
 stack_env: example
+ursula_env_path: "{{ lookup('env','URSULA_ENV') }}"
 
 country_code: US
 

@@ -31,21 +31,3 @@ vms:
       - 192.168.255.111
     memory: 1536
     custom: '["modifyvm", :id, "--nicpromisc3", "allow-all"]'
-  swiftnode1:
-    ip_address: 10.1.1.131
-    memory: 768
-    custom:
-      - "['createhd', '--filename', 'proxy1.1.vdi', '--size', 1024]"
-      - "['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', 'proxy1.1.vdi']"
-  swiftnode2:
-    ip_address: 10.1.1.132
-    memory: 768
-    custom:
-      - "['createhd', '--filename', 'proxy2.1.vdi', '--size', 1024]"
-      - "['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', 'proxy2.1.vdi']"
-  swiftnode3:
-    ip_address: 10.1.1.133
-    memory: 768
-    custom:
-      - "['createhd', '--filename', 'proxy3.1.vdi', '--size', 1024]"
-      - "['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', 'proxy3.1.vdi']"

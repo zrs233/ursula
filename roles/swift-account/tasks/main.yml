@@ -1,12 +1,14 @@
 ---
 - name: swift-account service scripts
-  template: src=roles/swift-common/templates/etc/init/swift-service.conf
-            dest=/etc/init/swift-{{ item.service_name }}.conf mode=0644
+  upstart_service: name=swift-{{ item.name }} 
+                   cmd=/usr/local/bin/swift-{{ item.cmd|default(item.name) }}
+                   args=/etc/swift/account-server.conf
+                   user=swift
   with_items:
-    - { service_name: account-auditor, conf: account-server }
-    - { service_name: account, conf: account-server }
-    - { service_name: account-reaper, conf: account-server }
-    - { service_name: account-replicator, conf: account-server }
+    - { name: account, cmd: account-server }
+    - { name: account-auditor }
+    - { name: account-reaper }
+    - { name: account-replicator }
 
 - stat: path=/etc/swift/account.ring.gz
   register: account_ring

@@ -2,4 +2,12 @@
 - name: drop our ring configuration
   copy: src={{ swift_ring.ring_definition_file }} owner=swiftops group=swiftops
         dest={{ swift_ring.outdir }}/ring_definition.yml mode=644 backup=yes
-  notify: setup swift rings - {{ swift_ring.mode }}
+  notify: 
+    - setup swift rings - bootstrap
+
+- name: flush handlers
+  meta: flush_handlers
+
+- name: swift-init stop all
+  command: swift-init stop all
+  ignore_errors: true
