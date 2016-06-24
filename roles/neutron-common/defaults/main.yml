@@ -1,9 +1,10 @@
 ---
 project_name: neutron
 neutron:
+  jellyroll: False
   enable_fatal_deprecations: True
   l2_population: False
-  extension_drivers: 
+  extension_drivers:
     - port_security
   advertise_mtu: False
   path_mtu: 1550
@@ -67,7 +68,7 @@ neutron:
       - { name: "git+git://github.com/openstack/neutron-lbaas.git@stable/mitaka#egg=neutron-lbaas" }
       - { name: PyMySQL }
     system_dependencies:
-      - conntrack 
+      - conntrack
   alternatives:
     - neutron-db-manage
     - neutron-debug
