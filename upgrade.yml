@@ -63,6 +63,8 @@
         - python-openstackclient
         - python-neutronclient
         - python-heatclient
+        - python-novaclient
+        - python-keystoneclient
       register: result
       until: result|succeeded
       retries: 5
