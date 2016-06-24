@@ -39,6 +39,7 @@ heat:
   cafile: "{{ ssl.cafile|default('/etc/ssl/certs/ca-certificates.crt') }}"
   plugin_dirs: []
   engine_workers: 4
+  api_workers: 5
   monitoring:
     sensu_checks:
       check_heat_api:
