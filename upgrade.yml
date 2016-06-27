@@ -418,6 +418,14 @@
   any_errors_fatal: true
   tags: swift
 
+  pre_tasks:
+    # FIXME Added since we are changing swift init scripts in 3.0.x
+    # This will stop services started by "old" scripts. This can be removed
+    # after all systems have migrated to 3.0.x
+    - name: stop swift services started by swift-init
+      command: swift-init stop all
+      failed_when: false
+
   roles:
     - role: haproxy
       haproxy_type: swift
