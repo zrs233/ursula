@@ -235,7 +235,6 @@
     "list_bgp_speaker_on_dragent": "rule:admin_only",
     "list_dragent_hosting_bgp_speaker": "rule:admin_only",
 
-    "_COMMENT": "required for horizon",
     "create_security_group": "",
     "delete_security_group": "",
     "update_security_group": "",
