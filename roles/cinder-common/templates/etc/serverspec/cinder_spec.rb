@@ -11,7 +11,8 @@ end
 
 files = {"cinder-api.log"=> 'cinder', "cinder-volume.log"=> 'cinder', "cinder-scheduler.log"=> 'cinder', "cinder-manage.log"=> 'root'}
 files.each do |file, owner|
-  describe file("/var/log/cinder/#{file}") do
+  file_exists = file("/var/log/cinder/#(file)").exists?
+  describe file("/var/log/cinder/#{file}"), :if => file_exists do
     it { should be_mode 644 }
     it { should be_owned_by owner }
     it { should be_grouped_into 'adm' }
