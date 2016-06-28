@@ -84,8 +84,8 @@ swift:
       net.ipv4.tcp_tw_reuse: 1
   # NOTE: Make sure you update the swifttool version in both places
   swifttool_dir: 'swifttool'
-  swifttool_url: https://github.com/blueboxgroup/swifttool/archive/v0.0.1.tar.gz
-  swifttool_version: 'v0.0.1'
+  swifttool_url: https://github.com/blueboxgroup/swifttool/archive/v0.0.2.dev27.tar.gz
+  swifttool_version: 'v0.0.2.dev27'
   swifttool_method: 'git'
   swifttool_pypi_mirror: https://pypi-mirror.openstack.blueboxgrid.com/bluebox/openstack
   monitoring:
