@@ -1,5 +1,5 @@
 {
-    "context_is_admin": "role:admin",
+    "context_is_admin": "role:admin or role:cloud_admin",
     "segregation": "rule:context_is_admin",
 
     "telemetry:get_samples": "",
