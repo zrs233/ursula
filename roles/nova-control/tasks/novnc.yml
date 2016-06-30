@@ -19,9 +19,13 @@
   unarchive: src=/opt/stack/novnc/novnc-0.5.1.tgz dest=/opt/stack/novnc/ copy=no
   when: nova.novnc_method == 'file'
 
+- name: is /usr/share/novnc a symlink or a dir
+  stat: path=/usr/share/novnc
+  register: sym
+
 - name: ensure novnc dir exists
   file: src=/opt/stack/novnc/noVNC-0.5.1 dest=/usr/share/novnc state=link
-  when: nova.novnc_method == 'file'
+  when: nova.novnc_method == 'file' and not sym.stat.exists
 
 - name: Permit access to NoVNC
   ufw: rule=allow to_port={{ endpoints.novnc.port.haproxy_api }} proto=tcp
