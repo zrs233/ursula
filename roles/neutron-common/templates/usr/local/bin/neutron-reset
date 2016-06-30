@@ -14,6 +14,7 @@ import signal
 import subprocess
 import sys
 import traceback
+import time
 
 
 class Interface(object):
@@ -43,8 +44,7 @@ class Interface(object):
             match = pattern.match(line)
             if match:
                 iface = cls(match.group(1), namespace=namespace)
-                if iface.is_neutron_interface():
-                    yield iface
+                yield iface
 
     def _ip_cmd(self):
         cmd = ['ip']
@@ -52,6 +52,24 @@ class Interface(object):
             cmd = ['ip', 'netns', 'exec', self.namespace] + cmd
 
         return cmd
+
+    @staticmethod
+    def get_neutron_interfaces(namespace=None):
+        for iface in Interface.enumerate(namespace):
+            if iface.is_neutron_interface():
+                yield iface
+
+    @staticmethod
+    def get_nova_interfaces(namespace=None):
+        for iface in Interface.enumerate(namespace):
+            if iface.is_nova_interface():
+                yield iface 
+
+    @staticmethod
+    def get_neutron_vxlan_interfaces():
+        for iface in Interface.get_neutron_interfaces():
+            if 'vxlan' in iface.ifname:
+                yield iface
 
     def is_neutron_interface(self):
         if self.ifname == 'lo':
@@ -61,19 +79,22 @@ class Interface(object):
             return True
 
         # veth interfaces named tap... belong to Neutron
-        if re.match(r'^tap[0-9a-z]{8}-[0-9a-z]{2}$', self.ifname) and \
-                self.iftype() == 'veth':
+        if re.match(r'^tap[0-9a-z]{8}-[0-9a-z]{2}$', self.ifname) \
+                and self.iftype() == 'veth':
             return True
 
-        if re.match(r'^vxlan[\d]{1-4}$', self.ifname) and \
-                self.iftype() == 'vxlan':
+        if re.match(r'^vxlan\-[0-9]{1,4}$', self.ifname) \
+                and self.iftype() == 'vxlan':
             return True
 
-        if re.match(r'^brq[0-9a-z]{8}-[0-9a-z]{2}$', self.ifname) and \
-                self.iftype() == 'bridge':
+        if re.match(r'^brq[0-9a-z]{8}-[0-9a-z]{2}$', self.ifname) \
+                and self.iftype() == 'bridge':
             return True
 
         return False
+
+    def is_nova_interface(self):
+        return self.ifname.startswith('tap') and self.iftype() == 'tun'
 
     def iftype(self):
         if self._iftype is None:
@@ -81,13 +102,36 @@ class Interface(object):
 
         return self._iftype
 
+    def attached_bridge(self):
+        if self._bridge_attached is None:
+            self._fetch_additional_info()
+
+        return self._bridge_attached
+
+    def wait_for_link_up(self):
+        cmd = self._ip_cmd() + ['link', 'show', self.ifname]
+
+        while True:
+            try:
+                output = subprocess.check_output(cmd)
+
+                for line in output.splitlines():
+                    if self.ifname in line:
+                        if "state UP" in line:
+                            return
+                        else:
+                            time.sleep(1)
+
+            except subprocess.CalledProcessError:
+                time.sleep(1)
+
     def _fetch_additional_info(self):
         cmd = self._ip_cmd() + ['-d', 'link', 'show', 'dev', self.ifname]
 
         output = subprocess.check_output(cmd)
 
         for line in output.splitlines():
-            match = re.match(r'^\d+:.+ master (\w+) ', line)
+            match = re.match(r'^\d+:.+ master ([\w-]+) ', line)
             if match:
                 self._bridge_attached = self.__class__(match.group(1),
                         namespace=self.namespace)
@@ -107,6 +151,15 @@ class Interface(object):
         cmd = self._ip_cmd() + ['link', 'delete', 'dev', self.ifname]
 
         subprocess.check_call(cmd)
+
+    def attach(self, bridge=None):
+        if bridge.ifname:
+            print "Attaching %s to %s" % (self.ifname, str(bridge))
+
+            cmd = self._ip_cmd() \
+                    + ['link', 'set', 'dev', self.ifname, 'master', str(bridge)]
+
+            subprocess.check_call(cmd)
 
 
 class IptablesChain(object):
@@ -188,7 +241,7 @@ class Namespace(object):
             yield int(pid)
 
     def interfaces(self):
-        return Interface.enumerate(namespace=self.namespace)
+        return Interface.get_neutron_interfaces(self.namespace)
 
     def iptables_chains(self):
         return IptablesChain.enumerate(namespace=self.namespace)
@@ -201,9 +254,25 @@ class Namespace(object):
 
 
 class ResetNeutron(object):
-    all_agents = ['neutron-dhcp-agent', 'neutron-l3-agent', 'neutron-metadata-proxy', 'neutron-linuxbridge-agent']
+    all_agents = [
+        'neutron-dhcp-agent',
+        'neutron-l3-agent',
+        'neutron-metadata-agent',
+        'neutron-linuxbridge-agent'
+    ]
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-d', '--device', help='device type to be reset. eg. vxlan')
+    args = parser.parse_args()
 
     def run(self):
+
+        if self.args.device and 'vxlan' in self.args.device:
+            self.reset_vxlan_interfaces()
+            exit()
+
+        nova_ifaces = list(Interface.get_nova_interfaces())
+
         with self.neutron_agents_stopped():
             for ns in Namespace.enumerate():
                 # Stop services
@@ -231,7 +300,9 @@ class ResetNeutron(object):
 
                 ns.destroy
 
-            for iface in Interface.enumerate():
+            neutron_ifaces = Interface.get_neutron_interfaces()
+
+            for iface in neutron_ifaces:
                 iface.down()
 
             # Delete iptables chains in two phases
@@ -244,8 +315,13 @@ class ResetNeutron(object):
                 except subprocess.CalledProcessError:
                     pass
 
-            for iface in Interface.enumerate():
+            for iface in neutron_ifaces:
                 iface.destroy()
+
+        for iface in nova_ifaces:
+            if iface.attached_bridge():
+                iface.attached_bridge().wait_for_link_up()
+                iface.attach(iface.attached_bridge())
 
     @contextlib.contextmanager
     def neutron_agents_stopped(self):
@@ -283,6 +359,14 @@ class ResetNeutron(object):
             return True
         except subprocess.CalledProcessError:
             return False
+
+    def reset_vxlan_interfaces(self): 
+        with self.neutron_agents_stopped():
+            for vxlan in Interface.get_neutron_vxlan_interfaces():
+                vxlan.down()
+
+            for vxlan in Interface.get_neutron_vxlan_interfaces():
+                vxlan.destroy()
 
 
 if __name__ == '__main__':
