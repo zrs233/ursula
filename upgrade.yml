@@ -422,6 +422,13 @@
     # FIXME Added since we are changing swift init scripts in 3.0.x
     # This will stop services started by "old" scripts. This can be removed
     # after all systems have migrated to 3.0.x
+    - name: set swiftops user as owner of ring definition
+      file:
+        path: /etc/swift/ring_definition.yml
+        owner: swiftops
+        group: swiftops
+      run_once: true
+      delegate_to: "{{ groups['swiftnode_primary'][0] }}"
     - name: stop swift services started by swift-init
       command: swift-init stop all
       failed_when: false

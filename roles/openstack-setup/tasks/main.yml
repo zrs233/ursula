@@ -15,7 +15,8 @@
 
 - include: computes.yml
   tags: hostagg
-
+ 
 - include: dispersion.yml
-  when: services_setup.changed and swift.enabled|default('False')|bool
+  when: (services_setup.changed or upgrade|default('False')|bool) and
+         swift.enabled|default('False')|bool
 
