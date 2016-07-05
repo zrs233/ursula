@@ -56,7 +56,7 @@
     "identity:get_user": "rule:admin_or_owner_or_cloudadmin_or_projectadmin or rule:support_role",
     "identity:list_users": "rule:admin_or_cloudadmin or role:project_admin or rule:support_role",
     "identity:create_user": "rule:admin_or_cloudadmin_or_projectadmin",
-    "identity:update_user": "rule:admin_or_cloudadmin_or_projectadmin or rule:support_role",
+    "identity:update_user": "rule:admin_or_owner_or_cloudadmin_or_projectadmin or rule:support_role",
     "identity:delete_user": "rule:admin_or_cloudadmin_or_projectadmin",
     "identity:change_password": "rule:admin_or_owner_or_cloudadmin_or_projectadmin or rule:support_role",
 
