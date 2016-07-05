@@ -71,7 +71,7 @@ rm -rf ${CERT_DIR}
 
 echo "booting ${VMS} by heat, then copy files for pre-deployment"
 extra_args="--ursula-debug --provisioner=heat --heat-stack-name=${testenv_heat_stack_name}"
-ursula ${extra_args} "envs/test" ${ROOT}/playbooks/${TEST_ENV}/tasks/pre-deploy.yml -u ${LOGIN_USER}
+ursula ${extra_args} "envs/test" ${ROOT}/playbooks/${TEST_ENV}/tasks/pre-deploy.yml -u ${LOGIN_USER} "$@"
 
 if [[ ${TEST_ENV} == "ci-allinone" ]]; then
   CONTROLLER_IP=$(private_ip ${testenv_instance_prefix}-allinone)
