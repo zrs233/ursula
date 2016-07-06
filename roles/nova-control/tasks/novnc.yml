@@ -23,6 +23,10 @@
   stat: path=/usr/share/novnc
   register: sym
 
+- name: rm novnc if not a symlink
+  file: path=/usr/share/novnc state=absent 
+  when: nova.novnc_method == 'file' and sym.stat.islnk is defined and sym.stat.islnk == False
+
 - name: ensure novnc dir exists
   file: src=/opt/stack/novnc/noVNC-0.5.1 dest=/usr/share/novnc state=link
   when: nova.novnc_method == 'file' and not sym.stat.exists
