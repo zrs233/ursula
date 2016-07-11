@@ -76,7 +76,7 @@ keystone:
       oidc:
         enabled: False
         download:
-          url: https://github.com/pingidentity/mod_auth_openidc/releases/download/v1.8.3/libapache2-mod-auth-openidc_1.8.3-1_amd64.deb
+          url: https://file-mirror.openstack.blueboxgrid.com/misc/libapache2-mod-auth-openidc_1.8.3-1_amd64.deb
         module_name: libapache2-mod-auth-openidc_1.8.3-1_amd64.deb
         scope: 'openid'
         issuer: None
