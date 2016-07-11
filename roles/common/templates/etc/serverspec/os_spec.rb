@@ -36,6 +36,8 @@ describe file('/etc/ssh/sshd_config') do
   it {should contain '^Protocol 2'}
   it {should contain '^GatewayPorts no'}
   it {should contain '^UsePAM yes'}
+  it {should contain '^Ciphers aes128-ctr,aes192-ctr,aes256-ctr'} #OPS092
+  it {should contain '^MACs hmac-sha1,hmac-ripemd160' } #OPS093
 end
 
 describe file('/etc/adduser.conf') do
