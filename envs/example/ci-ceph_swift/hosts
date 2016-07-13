@@ -37,3 +37,11 @@ ceph-2
 ceph-0
 ceph-1
 ceph-2
+
+[swiftnode]
+swift-0
+swift-1
+swift-2
+
+[swiftnode_primary]
+swift-0

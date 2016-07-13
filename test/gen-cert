@@ -63,7 +63,11 @@ cat >> req.conf <<eof
 [ v3_req ]
 basicConstraints = CA:FALSE
 keyUsage = nonRepudiation, digitalSignature, keyEncipherment, keyCertSign
-subjectAltName = DNS.1:${DOMAIN}
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = ${DOMAIN}
+DNS.2 = swift.${DOMAIN}
 eof
 
 # Generate the cert (good for 10 years)

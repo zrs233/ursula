@@ -57,6 +57,18 @@ parameters:
     type: string
     description: Name of ceph-2 server
     default: {{ ansible_env.testenv_instance_prefix }}-ceph-2
+  swift-0_name:
+    type: string
+    description: Name of swift-0 server
+    default: {{ ansible_env.testenv_instance_prefix }}-swift-0
+  swift-1_name:
+    type: string
+    description: Name of swift-1 server
+    default: {{ ansible_env.testenv_instance_prefix }}-swift-1
+  swift-2_name:
+    type: string
+    description: Name of swift-2 server
+    default: {{ ansible_env.testenv_instance_prefix }}-swift-2
 
 resources:
 
@@ -114,6 +126,10 @@ resources:
           protocol: tcp
           port_range_min: 9696
           port_range_max: 9696
+        - remote_ip_prefix: 0.0.0.0/0
+          protocol: tcp
+          port_range_min: 8090
+          port_range_max: 8090
         - remote_ip_prefix: 0.0.0.0/0
           protocol: icmp
         - ethertype: 'IPv4'
@@ -190,7 +206,7 @@ resources:
       availability_zone: {{ ansible_env.AVAILABILITY_ZONE }}
       {% endif -%}
       # placeholder line
-      
+
   ceph-1:
     type: OS::Nova::Server
     properties:
@@ -206,11 +222,59 @@ resources:
       availability_zone: {{ ansible_env.AVAILABILITY_ZONE }}
       {% endif -%}
       # placeholder line
-      
+
   ceph-2:
     type: OS::Nova::Server
     properties:
       name: { get_param: ceph-2_name }
+      image: { get_param: image }
+      flavor: { get_param: flavor_ceph_swift }
+      key_name: { get_resource: ssh_keypair }
+      user_data_format: RAW
+      security_groups: [{ get_resource: server_security_group }]
+      networks:
+        - network: { get_param: network }
+      {% if ansible_env.AVAILABILITY_ZONE -%}
+      availability_zone: {{ ansible_env.AVAILABILITY_ZONE }}
+      {% endif -%}
+      # placeholder line
+
+  swift-0:
+    type: OS::Nova::Server
+    properties:
+      name: { get_param: swift-0_name }
+      image: { get_param: image }
+      flavor: { get_param: flavor_ceph_swift }
+      key_name: { get_resource: ssh_keypair }
+      user_data_format: RAW
+      security_groups: [{ get_resource: server_security_group }]
+      networks:
+        - network: { get_param: network }
+      {% if ansible_env.AVAILABILITY_ZONE -%}
+      availability_zone: {{ ansible_env.AVAILABILITY_ZONE }}
+      {% endif -%}
+      # placeholder line
+
+  swift-1:
+    type: OS::Nova::Server
+    properties:
+      name: { get_param: swift-1_name }
+      image: { get_param: image }
+      flavor: { get_param: flavor_ceph_swift }
+      key_name: { get_resource: ssh_keypair }
+      user_data_format: RAW
+      security_groups: [{ get_resource: server_security_group }]
+      networks:
+        - network: { get_param: network }
+      {% if ansible_env.AVAILABILITY_ZONE -%}
+      availability_zone: {{ ansible_env.AVAILABILITY_ZONE }}
+      {% endif -%}
+      # placeholder line
+
+  swift-2:
+    type: OS::Nova::Server
+    properties:
+      name: { get_param: swift-2_name }
       image: { get_param: image }
       flavor: { get_param: flavor_ceph_swift }
       key_name: { get_resource: ssh_keypair }
@@ -292,6 +356,39 @@ resources:
       floating_ip: { get_resource: ceph-2_floating_ip }
       server_id: { get_resource: ceph-2 }
 
+  swift-0_floating_ip:
+    type: OS::Nova::FloatingIP
+    properties:
+      pool: { get_param: floating_ip_pool }
+
+  swift-0_fip_association:
+    type: OS::Nova::FloatingIPAssociation
+    properties:
+      floating_ip: { get_resource: swift-0_floating_ip }
+      server_id: { get_resource: swift-0 }
+
+  swift-1_floating_ip:
+    type: OS::Nova::FloatingIP
+    properties:
+      pool: { get_param: floating_ip_pool }
+
+  swift-1_fip_association:
+    type: OS::Nova::FloatingIPAssociation
+    properties:
+      floating_ip: { get_resource: swift-1_floating_ip }
+      server_id: { get_resource: swift-1 }
+
+  swift-2_floating_ip:
+    type: OS::Nova::FloatingIP
+    properties:
+      pool: { get_param: floating_ip_pool }
+
+  swift-2_fip_association:
+    type: OS::Nova::FloatingIPAssociation
+    properties:
+      floating_ip: { get_resource: swift-2_floating_ip }
+      server_id: { get_resource: swift-2 }
+
   {% endif -%}
   # placeholder line
 
@@ -320,6 +417,15 @@ outputs:
   ceph-2:
     description: IP address of ceph-2 in provider network
     value: { get_attr: [ ceph-2, first_address ] }
+  swift-0:
+    description: IP address of swift-0 in provider network
+    value: { get_attr: [ swift-0, first_address ] }
+  swift-1:
+    description: IP address of swift-1 in provider network
+    value: { get_attr: [ swift-1, first_address ] }
+  swift-2:
+    description: IP address of swift-2 in provider network
+    value: { get_attr: [ swift-2, first_address ] }
   {% else -%}
   controller-0:
     description: Floating IP address of controller-0
@@ -342,5 +448,14 @@ outputs:
   ceph-2_floating_ip:
     description: Floating IP address of ceph-2
     value: { get_attr: [ ceph-2_floating_ip, ip ] }
+  swift-0:
+    description: Floating IP address of swift-0
+    value: { get_attr: [ swift-0_floating_ip, ip ] }
+  swift-1:
+    description: Floating IP address of swift-1
+    value: { get_attr: [ swift-1_floating_ip, ip ] }
+  swift-2:
+    description: Floating IP address of swift-2
+    value: { get_attr: [ swift-2_floating_ip, ip ] }
   {% endif -%}
   # placeholder line

@@ -4,4 +4,6 @@
 - include: network.yml
 - include: ceph.yml
   when: ceph.enabled|default('False')|bool
+- include: swift.yml
+  when: swift.enabled|default('False')|bool
 - include: integration.yml

@@ -79,7 +79,36 @@ else
   CONTROLLER_IP=$(private_ip ${testenv_instance_prefix}-controller-0)
 fi
 
-echo "controller_primary: ${CONTROLLER_IP}" >> ${ROOT}/envs/test/group_vars/all.yml
+cat >> ${ROOT}/envs/test/group_vars/all.yml <<eof
+controller_primary: ${CONTROLLER_IP}
+ursula_env_path: ${ROOT}/envs/test
+eof
+
+if [[ ${TEST_ENV} == "ci-ceph_swift" ]]; then
+  echo "generating ring_definition.yml file for swift ..."
+  swift_0_ip="$(private_ip ${testenv_instance_prefix}-swift-0)"
+  swift_1_ip="$(private_ip ${testenv_instance_prefix}-swift-1)"
+  swift_2_ip="$(private_ip ${testenv_instance_prefix}-swift-2)"
+  cat > ${ROOT}/envs/test/ring_definition.yml <<eof
+---
+part_power: 13
+replicas: 3
+min_part_hours: 1
+zones:
+  z1:
+    ${swift_0_ip}:
+      disks:
+        - vdb1
+  z2:
+    ${swift_1_ip}:
+      disks:
+        - vdb1
+  z3:
+    ${swift_2_ip}:
+      disks:
+        - vdb1
+eof
+fi
 
 ring_bell
 echo "vms are up: ${VMS} !!"

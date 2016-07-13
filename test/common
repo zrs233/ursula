@@ -31,7 +31,10 @@ elif [[ $TEST_ENV == "ci-ceph_swift" ]]; then
   ${testenv_instance_prefix}-compute-0\
   ${testenv_instance_prefix}-ceph-0\
   ${testenv_instance_prefix}-ceph-1\
-  ${testenv_instance_prefix}-ceph-2"
+  ${testenv_instance_prefix}-ceph-2\
+  ${testenv_instance_prefix}-swift-0\
+  ${testenv_instance_prefix}-swift-1\
+  ${testenv_instance_prefix}-swift-2"
 
   export testenv_flavor_ceph_swift=${testenv_flavor_ceph_swift:=ci_ceph_swift}
 else

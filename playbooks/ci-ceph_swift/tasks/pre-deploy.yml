@@ -35,6 +35,33 @@
     - name: umount ephemeral disk on ceph_osds
       shell: umount /dev/{{ item }}
       with_items: "{{ ceph.disks }}"
+      failed_when: False
+
+- name: umount ephemeral disk on swiftnode
+  hosts: swiftnode
+  tasks:
+    - name: umount ephemeral disk on swiftnode
+      shell: umount /dev/{{ item.disk }}
+      with_items: "{{ swift.disks }}"
+      failed_when: False
+
+- name: create new partition table for ephemeral disk on swiftnode
+  hosts: swiftnode
+  tasks:
+    - name: create new msdos partition table for ephemeral disk
+      shell: parted /dev/{{ item.disk }} --script mklabel msdos
+      with_items: "{{ swift.disks }}"
+
+- name: deploy fake lshw file on swiftnode to get disk info
+  hosts: swiftnode
+  tasks:
+    - name: rename the original /usr/bin/lshw
+      command: mv /usr/bin/lshw /usr/bin/lshw.original
+
+    - name: deploy fake lshw file /usr/bin/lshw
+      template: src=../templates/usr/bin/lshw
+                dest=/usr/bin/lshw
+                owner=root group=root mode=0755
 
 - name: tasks for all
   hosts: all
