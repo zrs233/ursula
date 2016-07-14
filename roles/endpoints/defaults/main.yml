@@ -195,6 +195,7 @@ endpoints:
     name: ironic
     type: baremetal
     description: 'Ironic bare metal provisioning service'
+    version: v1
     url:
       admin: https://{{ fqdn }}:6385
       internal: https://{{ fqdn }}:6385
