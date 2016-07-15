@@ -27,6 +27,18 @@
       password: "{{ secrets.admin_password }}"
   with_items: "{{ keystone.tenants }}"
 
+- name: check for presence of cloud_admin
+  environment:
+    OS_IDENTITY_API_VERSION: 3
+    OS_DOMAIN_ID: default
+  os_user_facts:
+    auth:
+      auth_url: "{{ endpoints.keystone.url.internal }}/v3"
+      project_name: admin
+      username: admin
+      password: "{{ secrets.admin_password }}"
+  register: user_facts
+
 - name: keystone users
   environment:
     OS_IDENTITY_API_VERSION: 3
@@ -42,6 +54,8 @@
       username: admin
       password: "{{ secrets.admin_password }}"
   with_items: "{{ keystone.users }}"
+  # If cloud_admin already exists, don't set the cloud_admin user/pass (overwriting existing userpass)
+  when: "item.name != 'cloud_admin' or (item.name == 'cloud_admin' and 'cloud_admin' not in user_facts.ansible_facts.openstack_users|map(attribute='username')|list)"
 
 - name: keystone roles
   environment:
