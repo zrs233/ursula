@@ -1,0 +1,54 @@
+---
+- name: stage cinder data software
+  hosts: cinder_volume
+  max_fail_percentage: 1
+  tags:
+    - cinder
+    - cinder-volume
+
+  roles:
+    - role: cinder-data
+      restart: False
+
+    - role: stop-services
+      services:
+        - cinder-volume
+  environment: "{{ env_vars|default({}) }}"
+
+- name: stage cinder control software and stop services
+  hosts: controller
+  max_fail_percentage: 1
+  tags:
+    - cinder
+    - cinder-control
+
+  pre_tasks:
+    - name: dump cinder db
+      mysql_db:
+        name: cinder
+        state: dump
+        target: /backup/cinder-preupgrade.sql
+      run_once: True
+      tags: dbdump
+      delegate_to: "{{ groups['db'][0] }}"
+
+  roles:
+    - role: cinder-control
+      force_sync: true
+      restart: False
+      database_create:
+        changed: false
+  environment: "{{ env_vars|default({}) }}"
+
+- name: start cinder data services
+  hosts: cinder_volume
+  max_fail_percentage: 1
+  tags:
+    - cinder
+    - cinder-volume
+
+  tasks:
+    - name: start cinder data services
+      service:
+        name: cinder-volume
+        state: started
