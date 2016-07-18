@@ -5,10 +5,13 @@
 - name: add rabbitmq config directory
   file: dest=/etc/rabbitmq state=directory owner=root mode=0755
 
+# pin version of esl-erlang for
+# https://github.com/rabbitmq/rabbitmq-management/issues/244
+# lift when rabbitmq-server 3.6.4 is released
 - name: install erlang-solutions erlang
   apt: pkg={{ item }}
   with_items:
-    - esl-erlang
+    - esl-erlang=1:18.3
     - rabbitmq-server
   register: result
   until: result|succeeded
