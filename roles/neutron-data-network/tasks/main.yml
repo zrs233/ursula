@@ -63,7 +63,7 @@
       config_files: /etc/neutron/metadata_agent.ini
 
 - name: modified neutron lbaas templates to workaround 2000 connection limit
-  file:
+  copy:
     src: etc/neutron/lbaas_templates/{{ item }}
     dest: /etc/neutron/lbaas_templates/{{ item }}
     mode: 0644
