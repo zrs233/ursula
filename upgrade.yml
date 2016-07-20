@@ -18,6 +18,24 @@
         openstack_source:
           git_update: yes
 
+- name: cleanups
+  hosts: all:!vyatta-*
+  gather_facts: no
+  tags: always
+  tasks:
+    - name: clean out existing apt repos
+      file:
+        path: /etc/apt/sources.list.d/
+        state: absent
+
+    - name: recreate apt sources directory
+      file:
+        path: /etc/apt/sources.list.d
+        state: directory
+        owner: root
+        group: root
+        mode: 0755
+
 - name: upgrade common bits first
   hosts: all:!vyatta-*
   max_fail_percentage: 1
