@@ -17,3 +17,7 @@ ff02::2 ip6-allrouters
 {{ hostvars[host].ansible_default_ipv4.address }} {{ hostvars[host].ansible_nodename }}
 {% endfor %}
 {% endif %}
+
+{% if ansible_env.LOGSTASH_HOST is defined and ansible_env.LOGSTASH_PRIVATE_IP is defined %}
+{{ ansible_env.LOGSTASH_HOST }} {{ ansible_env.LOGSTASH_PRIVATE_IP }}
+{% endif %}
