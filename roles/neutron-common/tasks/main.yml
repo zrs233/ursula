@@ -122,6 +122,10 @@
             dest=/usr/local/bin/neutron-reset
             mode=0755
 
+- name: neutron vxlan reset
+  command: /usr/local/bin/neutron-reset -d vxlan
+  when: neutron.vxlan_reset.enabled|default('False')|bool
+
 - include: logging.yml
   tags:
     - logrotate

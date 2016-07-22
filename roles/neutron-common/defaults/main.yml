@@ -33,6 +33,8 @@ neutron:
   agent_down_time: 20
   report_interval: 4
   arp_responder: True
+  vxlan_reset:
+    enabled: False
   state_path: "/var/lib/neutron"
   dhcp_dns_servers:
     - 8.8.8.8
