@@ -62,10 +62,20 @@
     neutron-metadata-agent:
       config_files: /etc/neutron/metadata_agent.ini
 
+- name: create lbaas templates folder
+  file:
+    path: "/etc/neutron/lbaas_templates/"
+    state: directory
+    owner: root
+    group: neutron
+    mode: 0755
+
 - name: modified neutron lbaas templates to workaround 2000 connection limit
   copy:
     src: etc/neutron/lbaas_templates/{{ item }}
     dest: /etc/neutron/lbaas_templates/{{ item }}
+    owner: root
+    group: neutron
     mode: 0644
   with_items:
     - haproxy.loadbalancer.j2
@@ -79,6 +89,8 @@
   template:
     src: etc/neutron/neutron_lbaas.conf
     dest: /etc/neutron/neutron_lbaas.conf
+    owner: root
+    group: neutron
     mode: 0644
   when: (neutron.lbaas.enabled == "smart" and
          groups['controller'][0] not in groups['compute']) or
