@@ -18,6 +18,8 @@
 
 try:
     from neutronclient.neutron import client
+    from keystoneauth1.identity import v2
+    from keystoneauth1 import session
     from keystoneclient.v2_0 import client as ksclient
 except ImportError:
     print("failed=True msg='neutronclient and keystone client are required'")
@@ -85,16 +87,19 @@ _os_tenant_id = None
 
 def _get_ksclient(module, kwargs):
     try:
-        kclient = ksclient.Client(username=kwargs.get('login_username'),
-                                 password=kwargs.get('login_password'),
-                                 tenant_name=kwargs.get('login_tenant_name'),
-                                 auth_url=kwargs.get('auth_url'),
-                                 cacert=kwargs.get('cacert'))
+        auth = v2.Password(auth_url=kwargs.get('auth_url'),
+                           username=kwargs.get('login_username'),
+                           password=kwargs.get('login_password'),
+                           tenant_name=kwargs.get('login_tenant_name'))
+        sess = session.Session(auth=auth)
+
+        kclient = ksclient.Client(session=sess)
+        nclient = client.Client('2.0', session=sess)
     except Exception as e:
-        module.fail_json(msg = "Error authenticating to the keystone: %s " % e.message)
+        module.fail_json(msg = "Error authenticating to the keystone: %s" %e.message)
     global _os_keystone
     _os_keystone = kclient
-    return kclient
+    return nclient
 
 
 def _get_endpoint(module, ksclient):
@@ -105,17 +110,10 @@ def _get_endpoint(module, ksclient):
     return endpoint
 
 def _get_neutron_client(module, kwargs):
-    _ksclient = _get_ksclient(module, kwargs)
-    token = _ksclient.auth_token
-    endpoint = _get_endpoint(module, _ksclient)
-    kwargs = {
-            'token': token,
-            'endpoint_url': endpoint
-    }
     try:
-        neutron = client.Client('2.0', **kwargs)
+        neutron = _get_ksclient(module, kwargs)
     except Exception as e:
-        module.fail_json(msg = "Error in connecting to neutron: %s " % e.message)
+        module.fail_json(msg = " Error in connecting to Neutron: %s " %e.message)
     return neutron
 
 def _set_tenant_id(module):

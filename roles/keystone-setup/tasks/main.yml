@@ -6,9 +6,9 @@
     OS_BOOTSTRAP_PASSWORD: "{{ keystone.bootstrap.password }}"
     OS_BOOTSTRAP_PROJECT_NAME: "{{ keystone.bootstrap.project }}"
     OS_BOOTSTRAP_ROLE_NAME: "{{ keystone.bootstrap.role }}"
-    OS_BOOTSTRAP_ADMIN_URL: "{{ endpoints.keystone.url.admin }}/{{ endpoints.keystone.version }}"
-    OS_BOOTSTRAP_INTERNAL_URL: "{{ endpoints.keystone.url.internal }}/{{ endpoints.keystone.version }}"
-    OS_BOOTSTRAP_PUBLIC_URL: "{{ endpoints.keystone.url.public }}/{{ endpoints.keystone.version }}"
+    OS_BOOTSTRAP_ADMIN_URL: "{{ endpoints.keystone.url.admin }}/"
+    OS_BOOTSTRAP_INTERNAL_URL: "{{ endpoints.keystone.url.internal }}/"
+    OS_BOOTSTRAP_PUBLIC_URL: "{{ endpoints.keystone.url.public }}/"
     OS_BOOTSTRAP_SERVICE_NAME: "{{ 'keystone' }}"  # otherwise it uses the keystone variable
     OS_BOOTSTRAP_REGION_ID: "RegionOne"
 
@@ -21,7 +21,7 @@
     description: "{{ item }} tenant"
     domain: default
     auth:
-      auth_url: "{{ endpoints.keystone.url.internal }}/v3"
+      auth_url: "{{ endpoints.keystone.url.internal }}/"
       project_name: admin
       username: admin
       password: "{{ secrets.admin_password }}"
@@ -33,7 +33,7 @@
     OS_DOMAIN_ID: default
   os_user_facts:
     auth:
-      auth_url: "{{ endpoints.keystone.url.internal }}/v3"
+      auth_url: "{{ endpoints.keystone.url.internal }}/"
       project_name: admin
       username: admin
       password: "{{ secrets.admin_password }}"
@@ -49,7 +49,7 @@
     default_project: "{{ item.tenant }}"
     domain: default
     auth:
-      auth_url: "{{ endpoints.keystone.url.internal }}/v3"
+      auth_url: "{{ endpoints.keystone.url.internal }}/"
       project_name: admin
       username: admin
       password: "{{ secrets.admin_password }}"
@@ -66,7 +66,7 @@
   os_keystone_role:
     name: "{{ item }}"
     auth:
-      auth_url: "{{ endpoints.keystone.url.internal }}/v3"
+      auth_url: "{{ endpoints.keystone.url.internal }}/"
       project_name: admin
       username: admin
       password: "{{ secrets.admin_password }}"
@@ -81,7 +81,7 @@
     user: "{{ item.user }}"
     project: "{{ item.tenant }}"
     auth:
-      auth_url: "{{ endpoints.keystone.url.internal }}/v3"
+      auth_url: "{{ endpoints.keystone.url.internal }}/"
       project_name: admin
       username: admin
       password: "{{ secrets.admin_password }}"
@@ -100,7 +100,7 @@
     user: admin
     domain: default
     auth:
-      auth_url: "{{ endpoints.keystone.url.internal }}/v3"
+      auth_url: "{{ endpoints.keystone.url.internal }}/"
       project_name: admin
       username: admin
       password: "{{ secrets.admin_password }}"
@@ -115,7 +115,7 @@
     default_project: admin
     domain: default
     auth:
-      auth_url: "{{ endpoints.keystone.url.internal }}/v3"
+      auth_url: "{{ endpoints.keystone.url.internal }}/"
       project_name: admin
       username: admin
       password: "{{ secrets.admin_password }}"
@@ -128,7 +128,7 @@
   os_keystone_role:
     name: heat_stack_user
     auth:
-      auth_url: "{{ endpoints.keystone.url.internal }}/v3"
+      auth_url: "{{ endpoints.keystone.url.internal }}/"
       project_name: admin
       username: admin
       password: "{{ secrets.admin_password }}"
@@ -143,7 +143,7 @@
     user: heat_stack_user
     project: admin
     auth:
-      auth_url: "{{ endpoints.keystone.url.internal }}/v3"
+      auth_url: "{{ endpoints.keystone.url.internal }}/"
       project_name: admin
       username: admin
       password: "{{ secrets.admin_password }}"

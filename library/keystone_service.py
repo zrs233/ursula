@@ -76,6 +76,8 @@ keystone_service: >
 '''
 
 try:
+    from keystoneauth1.identity import v2
+    from keystoneauth1 import session
     from keystoneclient.v2_0 import client
 except ImportError:
     keystoneclient_found = False
@@ -90,11 +92,18 @@ def authenticate(endpoint, token, login_user, login_password, tenant_name,
     """Return a keystone client object"""
 
     if token:
-        return client.Client(endpoint=endpoint, token=token, insecure=insecure)
+        auth = v2.Token(auth_url=endpoint, token=token)
     else:
-        return client.Client(auth_url=endpoint, username=login_user,
-                             password=login_password, tenant_name=tenant_name,
-                             insecure=insecure)
+        auth = v2.Password(auth_url=endpoint, username=login_user,
+                           password=login_password, tenant_name=tenant_name)
+
+    if insecure:
+        verify=False
+    else:
+        verify=True
+    sess = session.Session(auth=auth, verify=verify)
+
+    return client.Client(session=sess)
 
 def get_service(keystone, name):
     """ Retrieve a service by name """

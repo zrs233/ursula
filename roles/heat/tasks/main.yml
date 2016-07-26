@@ -41,11 +41,34 @@
     - restart heat services
 
 - name: create heat trusts roles
-  keystone_user: role={{ item }}
-                 login_user=admin
-                 endpoint="{{ endpoints.keystone.url.admin }}/{{ endpoints.keystone.version }}/"
-                 login_password="{{ secrets.admin_password }}"
-                 login_tenant_name=admin
+  environment:
+    OS_IDENTITY_API_VERSION: 3
+    OS_DOMAIN_ID: default
+  os_keystone_role:
+    name: "{{ item }}"
+    auth:
+      auth_url: "{{ endpoints.keystone.url.internal }}/"
+      project_name: admin
+      username: admin
+      password: "{{ secrets.admin_password }}"
+  with_items:
+    - heat_stack_owner
+    - heat_stack_user
+  run_once: true
+
+- name: assign admin heat roles
+  environment:
+    OS_IDENTITY_API_VERSION: 3
+    OS_DOMAIN_ID: default
+  os_user_role:
+    role: "{{ item }}"
+    user: admin
+    project: admin
+    auth:
+      auth_url: "{{ endpoints.keystone.url.internal }}/"
+      project_name: admin
+      username: admin
+      password: "{{ secrets.admin_password }}"
   with_items:
     - heat_stack_owner
     - heat_stack_user
