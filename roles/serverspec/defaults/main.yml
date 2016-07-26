@@ -3,6 +3,8 @@ serverspec:
   enabled: true
   interval: 3600
   gems:
+    - name: rspec
+      version: 3.4.0
     - name: rspec-core
       version: 3.4.0
     - name: net-ssh
