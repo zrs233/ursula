@@ -6,7 +6,7 @@
     "admin_or_cloudadmin": "rule:context_is_admin or role:cloud_admin",
     "admin_or_owner": "rule:admin_or_cloudadmin_or_projectadmin or rule:owner",
     "context_is_advsvc":  "role:advsvc",
-    "admin_or_network_owner": "rule:admin_or_cloudadmin_or_projectadmin or tenant_id:%(network:tenant_id)s",
+    "admin_or_network_owner": "rule:admin_or_cloudadmin or tenant_id:%(network:tenant_id)s",
     "admin_owner_or_network_owner": "rule:owner or rule:admin_or_network_owner",
     "admin_only": "role:admin",
     "regular_user": "",
