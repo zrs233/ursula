@@ -18,6 +18,6 @@ ff02::2 ip6-allrouters
 {% endfor %}
 {% endif %}
 
-{% if ansible_env.LOGSTASH_HOST is defined and ansible_env.LOGSTASH_PRIVATE_IP is defined %}
-{{ ansible_env.LOGSTASH_HOST }} {{ ansible_env.LOGSTASH_PRIVATE_IP }}
+{% if logstash_host is defined and logstash_ip is defined %}
+{{ logstash_host }} {{ logstash_ip }}
 {% endif %}

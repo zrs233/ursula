@@ -112,6 +112,3 @@ fi
 
 ring_bell
 echo "vms are up: ${VMS} !!"
-
-echo "LOGSTASH_HOST=${LOGSTASH_HOST}"
-echo "LOGSTASH_PRIVATE_IP=${LOGSTASH_PRIVATE_IP}"
