@@ -69,8 +69,12 @@
   command: python setup.py install chdir=/opt/stack/{{ item.name }}
   with_items: "{{ common.python_extra_packages }}"
 
-- name: install shade for ansible modules
-  pip: name=shade>=1.9.0
+- name: install shade bits for ansible modules
+  pip:
+    name: "{{ item }}"
+  with_items:
+    - os-client-config==1.18.0
+    - shade>=1.9.0
   register: result
   until: result|succeeded
   retries: 5
