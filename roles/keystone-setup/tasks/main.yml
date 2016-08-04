@@ -27,17 +27,19 @@
       password: "{{ secrets.admin_password }}"
   with_items: "{{ keystone.tenants }}"
 
+# Putting user and project name in env works around a bug in openstack
+# modules, where the contents of the auth dict are considered no_log, so
+# users with "admin" somewhere in the name would be masked out of the facts.
 - name: get the current keystone users (requires Ansible >= 2.1)
   environment:
     OS_IDENTITY_API_VERSION: 3
     OS_DOMAIN_ID: default
+    OS_USERNAME: admin
+    OS_PROJECT_NAME: admin
   os_user_facts:
     auth:
       auth_url: "{{ endpoints.keystone.url.internal }}/"
-      project_name: admin
-      username: admin
       password: "{{ secrets.admin_password }}"
-  register: user_facts
 
 - name: keystone users
   environment:
@@ -57,7 +59,7 @@
   # If the username is not cloud_admin or monitor, create/update user.
   # If the name is cloud_admin or monitor, and the user does not exist, create user.
   when: "item.name not in ['cloud_admin', 'monitor'] or
-         (item.name in ['cloud_admin', 'monitor'] and item.name not in user_facts.ansible_facts.openstack_users|map(attribute='username')|list)"
+         (item.name in ['cloud_admin', 'monitor'] and item.name not in openstack_users|map(attribute='name')|list)"
 
 - name: keystone roles
   environment:
