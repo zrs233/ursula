@@ -9,10 +9,21 @@
 # https://github.com/rabbitmq/rabbitmq-management/issues/244
 # lift when rabbitmq-server 3.6.4 is released
 - name: install erlang-solutions erlang
-  apt: pkg={{ item }}
+  apt:
+    pkg: "{{ item }}"
+    force: True
   with_items:
     - esl-erlang=1:18.3
+  register: result
+  until: result|succeeded
+  retries: 5
+
+- name: install rabbitmq-server
+  apt:
+    pkg: "{{ item }}"
+  with_items:
     - rabbitmq-server
+    #- esl-erlang
   register: result
   until: result|succeeded
   retries: 5
