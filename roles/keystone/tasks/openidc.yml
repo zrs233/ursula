@@ -24,7 +24,3 @@
 - name: enable apache mod auth_openidc
   apache2_module: name=auth_openidc
   notify: reload apache
-
-- name: setup keystone sso template
-  template: src=etc/keystone/sso_callback_template.html
-            dest=/etc/keystone/sso_callback_template.html

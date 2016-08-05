@@ -60,8 +60,14 @@
             dest=/etc/keystone/uwsgi/keystone-main.ini mode=0775
             owner=keystone group=keystone
 
-- include: federation.yml
+- name: setup keystone sso template
+  template: src=etc/keystone/sso_callback_template.html
+            dest=/etc/keystone/sso_callback_template.html
   when: keystone.federation.enabled|bool
+  notify: restart keystone services
+
+- include: openidc.yml
+  when: keystone.federation.enabled|bool and keystone.federation.sp.oidc.enabled|bool
 
 - name: keystone apache vhost
   template: src=etc/apache2/sites-available/keystone.conf
