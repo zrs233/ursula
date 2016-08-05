@@ -203,6 +203,7 @@ endpoints:
     port:
       backend_api: 6384
       haproxy_api: 6385
+      internal_ipxe: 6383
     haproxy:
       health_check: 'httpchk GET /v1'
       balance: 'source'

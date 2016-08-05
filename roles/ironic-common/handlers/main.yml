@@ -5,3 +5,6 @@
   with_items:
     - ironic-api
     - ironic-conductor
+
+- name: restart tftpd
+  service: name=tftpd-hpa state=restarted
