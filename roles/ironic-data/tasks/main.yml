@@ -53,8 +53,9 @@
 
 - name: ipxe helper script
   template: src=etc/ironic/boot.ipxe
-        dest={{ ironic.httpboot_path }}/boot.ipxe
-        owner=ironic group=ironic mode=0744
+            dest={{ ironic.httpboot_path }}/boot.ipxe
+            owner=ironic group=ironic
+            mode=0744
 
 - name: link ipxe boot image into tftp dir
   file: src=/usr/lib/ipxe/undionly.kpxe
