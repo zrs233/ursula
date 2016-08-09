@@ -10,8 +10,10 @@
   retries: 5
 
 - name: download mod_auth_openidc
-  get_url: url={{ keystone.federation.sp.oidc.download.url }}
-           dest=/tmp/{{ keystone.federation.sp.oidc.module_name }}
+  get_url:
+    url: "{{ keystone.federation.sp.oidc.download.url }}"
+    dest: /tmp/{{ keystone.federation.sp.oidc.module_name }}
+    checksum: "{{ keystone.federation.sp.oidc.download.checksum }}"
 
 - name: install mod_auth_openidc
   apt: deb=/tmp/{{ keystone.federation.sp.oidc.module_name }}
