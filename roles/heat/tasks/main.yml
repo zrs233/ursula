@@ -43,12 +43,13 @@
 - name: create heat trusts roles
   environment:
     OS_IDENTITY_API_VERSION: 3
-    OS_DOMAIN_ID: default
   os_keystone_role:
     name: "{{ item }}"
     auth:
       auth_url: "{{ endpoints.keystone.url.internal }}/"
       project_name: admin
+      project_domain_name: default
+      user_domain_name: default
       username: admin
       password: "{{ secrets.admin_password }}"
   with_items:
@@ -59,7 +60,6 @@
 - name: assign admin heat roles
   environment:
     OS_IDENTITY_API_VERSION: 3
-    OS_DOMAIN_ID: default
   os_user_role:
     role: "{{ item }}"
     user: admin
@@ -67,6 +67,8 @@
     auth:
       auth_url: "{{ endpoints.keystone.url.internal }}/"
       project_name: admin
+      project_domain_name: default
+      user_domain_name: default
       username: admin
       password: "{{ secrets.admin_password }}"
   with_items:
@@ -77,12 +79,13 @@
 - name: create heat domain
   environment:
     OS_IDENTITY_API_VERSION: 3
-    OS_DOMAIN_ID: default
   os_keystone_domain:
     name: heat
     auth:
       auth_url: "{{ endpoints.keystone.url.internal }}/v3"
       project_name: admin
+      project_domain_name: default
+      user_domain_name: default
       username: admin
       password: "{{ secrets.admin_password }}"
   run_once: true
@@ -91,7 +94,6 @@
 - name: remove heat domain user from default domain
   environment:
     OS_IDENTITY_API_VERSION: 3
-    OS_DOMAIN_ID: default
   shell: . /root/stackrc; openstack --os-auth-url "{{ endpoints.keystone.url.internal }}/v3" user delete --domain default heat_domain_admin
   register: remove_heat_admin
   failed_when: remove_heat_admin|failed and
@@ -101,7 +103,6 @@
 - name: create heat domain admin user
   environment:
     OS_IDENTITY_API_VERSION: 3
-    OS_DOMAIN_ID: default
   os_user:
     name: heat_domain_admin
     password: "{{ secrets.stack_domain_admin_password }}"
@@ -109,6 +110,8 @@
     auth:
       auth_url: "{{ endpoints.keystone.url.internal }}/v3"
       project_name: admin
+      project_domain_name: default
+      user_domain_name: default
       username: admin
       password: "{{ secrets.admin_password }}"
   register: heat_admin_user
@@ -119,7 +122,6 @@
 - name: add admin role to the heat domain admin user
   environment:
     OS_IDENTITY_API_VERSION: 3
-    OS_DOMAIN_ID: default
   shell: . /root/stackrc; openstack --os-auth-url "{{ endpoints.keystone.url.internal }}/v3" role add --domain "{{ heat_domain.domain.id }}" --user "{{ heat_admin_user.user.id }}" admin
   when: heat.enabled|bool and heat_admin_user|changed
   run_once: true
