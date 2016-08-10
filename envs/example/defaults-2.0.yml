@@ -588,7 +588,7 @@ aodh:
     verbose: True
 
 ironic:
-  enabled: False
+  enabled: True
   logging:
     debug: True
     verbose: True

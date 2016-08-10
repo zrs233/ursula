@@ -230,7 +230,6 @@
   roles:
     - role: nova-data
       tags: ['openstack', 'nova', 'data']
-      when: not ironic.enabled|bool
   environment: "{{ env_vars|default({}) }}"
 
 - name: cinder control plane
