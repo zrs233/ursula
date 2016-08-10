@@ -1,0 +1,12 @@
+---
+- name: Running Rally against test cloud
+  hosts: controller[0]
+  tasks:
+    - name: copy Rally test profile template into place
+      copy: src=rally/bbc-cloud-validate.yml dest=./bbc-cloud-validate.yml mode=0444
+
+    - name: run Rally script
+      script: ./rally/run.sh {{ build_tag }}
+
+    - name: fetch Rally report
+      fetch: src={{ build_tag }}_rally_report.html dest={{ workspace }}/{{ build_tag }}_rally_report.html flat=yes
