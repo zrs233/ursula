@@ -12,3 +12,9 @@ allinone
 
 [cinder_volume]
 allinone
+
+[ironic]
+allinone
+
+[compute_ironic]
+allinone
