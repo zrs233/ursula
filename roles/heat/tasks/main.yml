@@ -61,7 +61,7 @@
   environment:
     OS_IDENTITY_API_VERSION: 3
   os_user_role:
-    role: "{{ item }}"
+    role: heat_stack_owner
     user: admin
     project: admin
     auth:
@@ -71,9 +71,6 @@
       user_domain_name: default
       username: admin
       password: "{{ secrets.admin_password }}"
-  with_items:
-    - heat_stack_owner
-    - heat_stack_user
   run_once: true
 
 - name: create heat domain
