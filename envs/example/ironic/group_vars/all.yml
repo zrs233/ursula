@@ -16,6 +16,11 @@ ironic:
   enabled: True
   logging:
     debug: False
+  flavors:
+    - name: 'baremetal'
+      ram: 512
+      disk: 19
+      vcpus: 1
 
 cinder:
   enabled: False
