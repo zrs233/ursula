@@ -10,10 +10,21 @@
   when: "'rbd_volumes' not in cinder.enabled_backends"
 
 - name: cinder volume group metrics
-  sensu_metrics_check: name=cinder-vg-metrics plugin=metrics-volgroup.sh
-                       args='-v cinder-volumes -s {{ monitoring.graphite.host_prefix }}'
+  sensu_metrics_check:
+    name: cinder-vg-metrics
+    plugin: metrics-volgroup.sh
+    args: '-v cinder-volumes -s {{ monitoring.graphite.host_prefix }}'
   notify: restart sensu-client
   when: cinder.create_vg|bool and ( cinder.fixed_key is not defined or (cinder.fixed_key is defined and "compute" not in group_names) )
+
+- name: cinder volume group metrics
+  sensu_metrics_check:
+    name: cinder-vg-metrics
+    plugin: metrics-volgroup.sh
+    args: '-v cinder-volumes -s {{ monitoring.graphite.host_prefix }}'
+    state: absent
+  notify: restart sensu-client
+  when: ceph.enabled|bool and 'rbd_volumes' in cinder.backends|map(attribute='name')|list
 
 - name: cinder-backup process check
   sensu_process_check: service=cinder-backup
