@@ -7,3 +7,5 @@
 - include: swift.yml
   when: swift.enabled|default('False')|bool
 - include: integration.yml
+- include: ironic.yml
+  when: ironic.enabled|default('False')|bool
