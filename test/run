@@ -7,8 +7,8 @@ fi
 
 shift
 
-if [ "${ACTION}" != "all" -a "${ACTION}" != "test" -a "${ACTION}" != "deploy" -a "${ACTION}" != "cleanup" -a "${ACTION}" != 'unit' -a "${ACTION}" != 'upgrade' ]; then
-  echo "Usage: run [unit | test | deploy | cleanup | upgrade] [EXTRA ANSIBLE ARGS]"
+if [ "${ACTION}" != "all" -a "${ACTION}" != "test" -a "${ACTION}" != "rally" -a "${ACTION}" != "deploy" -a "${ACTION}" != "cleanup" -a "${ACTION}" != 'unit' -a "${ACTION}" != 'upgrade' ]; then
+  echo "Usage: run [unit | test | rally | deploy | cleanup | upgrade] [EXTRA ANSIBLE ARGS]"
   exit 1
 fi
 
@@ -25,6 +25,11 @@ fi
 
 if [ "${ACTION}" == "all" -o "${ACTION}" == "test" ]; then
   time ursula ${extra_args} "envs/test" ${ROOT}/playbooks/tests/tasks/main.yml -u ${LOGIN_USER} $@
+  ring_bell
+fi
+
+if [ "${ACTION}" == "all" -o "${ACTION}" == "rally" ]; then
+  time ursula ${extra_args} "envs/test" ${ROOT}/playbooks/tests/tasks/rally.yml -u ${LOGIN_USER} "$@"
   ring_bell
 fi
 
