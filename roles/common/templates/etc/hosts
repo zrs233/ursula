@@ -19,5 +19,5 @@ ff02::2 ip6-allrouters
 {% endif %}
 
 {% if logstash_host is defined and logstash_ip is defined %}
-{{ logstash_host }} {{ logstash_ip }}
+{{ logstash_ip }} {{ logstash_host }}
 {% endif %}
