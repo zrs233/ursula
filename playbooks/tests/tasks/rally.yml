@@ -7,6 +7,8 @@
 
     - name: run Rally script
       script: ./rally/run.sh {{ build_tag }}
+      become: yes
+      become_user: root
 
     - name: fetch Rally report
       fetch: src={{ build_tag }}_rally_report.html dest={{ workspace }}/{{ build_tag }}_rally_report.html flat=yes
