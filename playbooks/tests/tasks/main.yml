@@ -6,6 +6,12 @@
   when: ceph.enabled|default('False')|bool
 - include: swift.yml
   when: swift.enabled|default('False')|bool
+- include: lbaas.yml
+  when: neutron.lbaas.enabled|default('False')|bool
 - include: integration.yml
 - include: ironic.yml
   when: ironic.enabled|default('False')|bool
+- include: ceilometer.yml
+  when: ceilometer.enabled|default('False')|bool
+- include: aodh.yml
+  when: aodh.enabled|default('False')|bool

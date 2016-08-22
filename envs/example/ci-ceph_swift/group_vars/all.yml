@@ -14,6 +14,14 @@ etc_hosts:
 
 neutron:
   enable_external_interface: True
+  lbaas:
+    enabled: True
+
+ceilometer:
+  enabled: True
+
+aodh:
+  enabled: True
 
 ceph:
   enabled: True
