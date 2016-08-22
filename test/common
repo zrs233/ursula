@@ -1,7 +1,10 @@
-set -xe
-
+set -e
+set -x
 export STACK_RC=${STACK_RC:-~/.stackrc}
+# Do not print credentials to log
+set +x
 [[ -f ${STACK_RC} ]] && source ${STACK_RC}
+set -x
 
 export ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
 
