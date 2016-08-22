@@ -11,4 +11,4 @@
       become_user: root
 
     - name: fetch Rally report
-      fetch: src={{ build_tag }}_rally_report.html dest={{ workspace }}/{{ build_tag }}_rally_report.html flat=yes
+      fetch: src=rally_report.html dest={{ workspace }}/rally_report.html flat=yes
