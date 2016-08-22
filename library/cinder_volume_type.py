@@ -74,6 +74,11 @@ options:
        - the key size to use in the Nova encryption provider
      required: None
      default: None
+   extra_specs:
+     description:
+       - A dictionary of extra specs to add to the volume type.
+     required: false
+     default: None
 requirements: [ "python-cinderclient", "python-keystoneclient" ]
 '''
 
@@ -84,6 +89,7 @@ EXAMPLES = '''
     login_tenant_id=123456789
     auth_url=http://keystone:5001/v2.0
     volume_type=encrypted-aes-256
+    extra_specs="volume_backend_name=some-name"
 '''
 
 try:
@@ -129,7 +135,15 @@ def _create_volume_type(module, cinderclient, type_name):
     volume_type_id = _get_volume_type_id(cinderclient, type_name)
     if volume_type_id:
         module.exit_json(changed=False, result="unchanged")
-    cinderclient.volume_types.create(type_name)
+    return cinderclient.volume_types.create(type_name)
+
+
+def _volume_type_set_keys(volume_type, extra_specs):
+    if extra_specs is not None:
+        try:
+            volume_type.set_keys(extra_specs)
+        except Exception as e:
+            raise e
 
 
 def _get_volume_type_id(cinderclient, type_name):
@@ -199,6 +213,7 @@ def main():
             cipher=dict(default=None),
             key_size=dict(default=None),
             control_location=dict(default=None),
+            extra_specs=dict(default=None, type='dict'),
         )
     )
 
@@ -212,8 +227,10 @@ def main():
                                           module.params['cipher'],
                                           module.params['key_size'])
         else:
-            _create_volume_type(module, cinderclient,
-                                module.params['volume_type'])
+            volume_type = _create_volume_type(module, cinderclient,
+                                              module.params['volume_type'])
+            _volume_type_set_keys(volume_type, module.params.get(
+                                  'extra_specs'))
         module.exit_json(changed=True, result="created")
     except Exception as e:
         module.fail_json(msg="creating the volume type failed: %s" % str(e))

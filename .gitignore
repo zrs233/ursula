@@ -10,3 +10,6 @@ build
 *~
 *\#*\#
 ursula.log
+openstack
+*.swp
+*.swo
