@@ -13,6 +13,6 @@ client:
     - python-ironicclient
     - python-swiftclient
     - python-magnumclient
-    - python-openstackclient
+    - python-openstackclient==2.3.0
   apt_packages:
     - python-prettytable
