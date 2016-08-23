@@ -11,5 +11,10 @@
             mode=0644
   notify: restart-dnsmasq
 
+- name: prevent dnsmasq from add itself to /etc/resolv.conf via resolvconf
+  lineinfile: dest=/etc/default/dnsmasq regexp="^DNSMASQ_EXCEPT="
+              line="DNSMASQ_EXCEPT=lo"
+  notify: restart-dnsmasq
+
 - name: Enable/start dnsmasq
   service: name=dnsmasq state=started enabled=yes
