@@ -15,3 +15,4 @@ rabbitmq:
     sensu_checks:
       rabbitmq_cluster:
         criticality: 'critical'
+      timeout: 5
