@@ -18,9 +18,11 @@
 #
 
 try:
+    from keystoneauth1 import session
+    from keystoneauth1.identity import v3
     from keystoneclient.v3.client import Client
 except ImportError:
-    print("failed=True msg='keystoneclient is required'")
+    print("failed=True msg='keystoneclient and keystoneauth1 are required'")
 
 
 def _get_identity_provider(client, identity_provider_id):
@@ -88,12 +90,18 @@ def main():
     result = None
     action = "Creating" if module.params['state'] == 'present' else "Deleting"
     try:
-        keystone = Client(auth_url=module.params['auth_url'],
+        auth = v3.Password(auth_url=module.params['auth_url'],
                           username=module.params['username'],
+                          user_domain_name=module.params['domain_name_to_auth'],
                           password=module.params['password'],
                           project_name=module.params['project_name_to_auth'],
-                          project_domain_name=module.params['domain_name_to_auth'],
-                          verify=module.params['verify'])
+                          project_domain_name=
+                                          module.params['domain_name_to_auth'])
+
+        client_session = session.Session(auth=auth,
+                                         verify=module.params['verify'])
+        keystone = Client(session=client_session)
+
         idp = module.params['identity_provider']
 
         if module.params['state'] == 'present':

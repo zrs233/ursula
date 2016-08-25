@@ -19,9 +19,11 @@
 
 
 try:
+    from keystoneauth1 import session
+    from keystoneauth1.identity import v3
     from keystoneclient.v3.client import Client
 except ImportError:
-    print("failed=True msg='keystoneclient is required'")
+    print("failed=True msg='keystoneclient and keystoneauth1 are required'")
 
 def _get_group_id(client, group_name):
    for group in client.groups.list():
@@ -48,7 +50,7 @@ def _get_role_id(client, role_name):
     return None
 
 def _add_role_to_group(client, group_name, project_name, role, domain):
-    
+
     domain_id = None
     if domain:
         domain_id = _get_domain_id(client, domain)
@@ -71,10 +73,10 @@ def _add_role_to_group(client, group_name, project_name, role, domain):
         if not group_id:
             raise Exception("group %s not found" % group_name)
 
-    if project_id:     
+    if project_id:
         client.roles.grant(role=role_id, project=project_id, group=group_id)
     else:
-        client.roles.grant(role_id, domain=domain_id, group=group_id)       
+        client.roles.grant(role_id, domain=domain_id, group=group_id)
 
 def main():
 
@@ -99,12 +101,17 @@ def main():
     result = None
     action = "Adding" if module.params['state'] == 'present' else ""
     try:
-        keystone = Client(auth_url=module.params['auth_url'],
+        auth = v3.Password(auth_url=module.params['auth_url'],
                           username=module.params['username'],
+                          user_domain_name=module.params['domain_name_to_auth'],
                           password=module.params['password'],
-                          verify=module.params['verify'],
                           project_name=module.params['project_name_to_auth'],
-                          project_domain_name=module.params['domain_name_to_auth'])
+                          project_domain_name=
+                                          module.params['domain_name_to_auth'])
+
+        client_session = session.Session(auth=auth,
+                                         verify=module.params['verify'])
+        keystone = Client(session=client_session)
 
         if module.params['state'] == 'present':
             params = {
