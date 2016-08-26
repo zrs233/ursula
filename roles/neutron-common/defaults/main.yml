@@ -56,6 +56,14 @@ neutron:
     # enabled can be "smart" or true / false. Smart will turn on lbaas if
     # controllers are dedicated.
     enabled: smart
+    haproxy:
+      maxconn: 200000
+      # timeouts default to ms unless explicitly defined
+      # default values are connect 5000, client 50000, server 50000
+      timeouts:
+        connect: 5000
+        client: 50000
+        server: 50000
     interface_driver: neutron.agent.linux.interface.BridgeInterfaceDriver
     service_plugin:
       - neutron_lbaas.services.loadbalancer.plugin.LoadBalancerPluginv2

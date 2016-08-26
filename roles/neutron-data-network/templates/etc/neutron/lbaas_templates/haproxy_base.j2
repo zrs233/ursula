@@ -13,22 +13,22 @@
 #    under the License.
 #
 #}
-# Configuration for {{ loadbalancer_name }}
+# Configuration for {{ '{{' }} loadbalancer_name {{ '}}' }}
 global
     daemon
     user nobody
-    group {{ usergroup }}
+    group {{ '{{' }} usergroup {{ '}}' }}
     log /dev/log local0
     log /dev/log local1 notice
-    maxconn 200000
-    stats socket {{ sock_path }} mode 0666 level user
+    maxconn {{ neutron.lbaas.haproxy.maxconn }}
+    stats socket {{ '{{' }} sock_path {{ '}}' }} mode 0666 level user
 
 defaults
     log global
     retries 3
     option redispatch
-    timeout connect 5000
-    timeout client 50000
-    timeout server 50000
+    timeout connect {{ neutron.lbaas.haproxy.timeouts.connect }}
+    timeout client {{ neutron.lbaas.haproxy.timeouts.client }}
+    timeout server {{ neutron.lbaas.haproxy.timeouts.server }}
 
-{% block proxies %}{% endblock proxies %}
+{{ '{%' }} block proxies {{ '%}{%' }} endblock proxies {{ '%}' }}
