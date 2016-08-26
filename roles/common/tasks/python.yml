@@ -1,7 +1,7 @@
 ---
 - name: update pip
   pip: name=pip version={{ common.pip_version }}
-       extra_args='-i {{ openstack.pypi_mirror }}/+simple'
+       extra_args='-i {{ openstack.pypi_mirror }}'
   when: ansible_distribution_version == "12.04" and openstack.pypi_mirror is defined
   register: result
   until: result|succeeded
@@ -9,7 +9,7 @@
 
 - name: update pip
   pip: name=pip version={{ common.pip_version }}
-       extra_args='-i {{ openstack.pypi_mirror }}/+simple'
+       extra_args='-i {{ openstack.pypi_mirror }}'
   when: ansible_distribution_version != "12.04"
   register: result
   until: result|succeeded
@@ -28,7 +28,7 @@
 
 - name: update pip
   pip: name=pip version={{ common.pip_version }}
-       extra_args='-i {{ openstack.pypi_mirror }}/+simple'
+       extra_args='-i {{ openstack.pypi_mirror }}'
   when: ansible_distribution_version == "12.04" and openstack.pypi_mirror is not defined
   register: result
   until: result|succeeded
