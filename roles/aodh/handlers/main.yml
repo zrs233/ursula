@@ -5,6 +5,5 @@
   with_items:
     - aodh-api
     - aodh-evaluator
-    - aodh-expirer
     - aodh-listener
     - aodh-notifier

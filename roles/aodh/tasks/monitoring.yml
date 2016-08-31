@@ -8,7 +8,7 @@
   notify: restart sensu-client
 
 - name: aodh-expirer process check
-  sensu_process_check: service=aodh-expirer
+  sensu_process_check: service=aodh-expirer state=absent
   notify: restart sensu-client
 
 - name: aodh-listener process check

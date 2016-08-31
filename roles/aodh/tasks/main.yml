@@ -21,7 +21,6 @@
   with_items:
     - aodh-api
     - aodh-evaluator
-    - aodh-expirer
     - aodh-listener
     - aodh-notifier
     
@@ -39,7 +38,6 @@
   with_items:
     - aodh-api
     - aodh-evaluator
-    - aodh-expirer
     - aodh-listener
     - aodh-notifier
   tags: db-migrate
@@ -69,9 +67,20 @@
   with_items:
     - aodh-api
     - aodh-evaluator
-    - aodh-expirer
     - aodh-listener
     - aodh-notifier
+
+- name: add aodh-expirer to cron.daily
+  file: src=/usr/local/bin/aodh-expirer dest=/etc/cron.daily/aodh-expirer state=link owner=root group=root mode=0755
+
+- name: uninstall aodh-expirer services
+  upstart_service: name={{ item }}
+                   user=aodh
+                   cmd=/usr/local/bin/{{ item }}
+                   config_dirs=/etc/aodh
+                   state=absent
+  with_items:
+    - aodh-expirer
 
 - include: monitoring.yml
   tags:

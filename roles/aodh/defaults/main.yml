@@ -45,3 +45,4 @@ aodh:
         type: openstack
         tags: aodh,aodh-evaluator
   cafile: "{{ ssl.cafile|default('/etc/ssl/certs/ca-certificates.crt') }}"
+  alarm_history_time_to_live: 864000
