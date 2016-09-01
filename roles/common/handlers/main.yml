@@ -6,7 +6,7 @@
   command: update-ca-certificates
 
 - name: apply-sysctl
-  shell: "cat /etc/sysctl.conf /etc/sysctl.d/*.conf | sysctl -e -p -"
+  shell: "cat /etc/sysctl.d/*.conf /etc/sysctl.conf | sysctl -e -p -"
 
 - name: update grub config
   command: /usr/sbin/update-grub

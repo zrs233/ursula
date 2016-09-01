@@ -68,6 +68,14 @@
 
 - include: system-file-permissions.yml
 
+- name: remove default sysctl.conf's entry
+  sysctl:
+    name: "{{ item.name }}"
+    state: absent
+    sysctl_file: /etc/sysctl.conf
+    ignoreerrors: yes
+  with_items: "{{ common.os_tuning_params_clean }}"
+
 - include: ufw.yml
   tags: ufw
 

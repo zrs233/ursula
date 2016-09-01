@@ -57,6 +57,9 @@ common:
       check_raid:
         criticality: 'critical'
     scan_for_log_errors: False
+  os_tuning_params_clean:
+    - { name: net.ipv4.tcp_syncookies }
+    - { name: net.ipv4.tcp_synack_retries }
 
 openstack:
   gem_sources:

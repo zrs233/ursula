@@ -24,5 +24,9 @@
   lineinfile: dest=/etc/default/ufw regexp="^DEFAULT_FORWARD_POLICY"
               line="DEFAULT_FORWARD_POLICY=\"ACCEPT\""
 
+- name: change UFW's sysctl.conf directory
+  lineinfile: dest=/etc/default/ufw regexp="^IPT_SYSCTL"
+              line="IPT_SYSCTL=/etc/sysctl.conf"
+
 - name: Enable UFW (after configuring SSH access)
   ufw: state=enabled
