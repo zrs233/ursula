@@ -19,5 +19,6 @@ sensu ALL= NOPASSWD: /etc/sensu/plugins/check-for-large-files.sh
 sensu ALL= NOPASSWD: /etc/sensu/plugins/check-keystone-expired-tokens.py
 sensu ALL= NOPASSWD: /etc/sensu/plugins/check-l3-router.sh
 sensu ALL= NOPASSWD: /etc/sensu/plugins/check-ceph.rb
+sensu ALL= NOPASSWD: /etc/sensu/plugins/check-ceph-usage.rb
 sensu ALL= NOPASSWD: /etc/sensu/plugins/metrics-os-api.py
 sensu ALL= NOPASSWD: /etc/sensu/plugins/check-serverspec.rb

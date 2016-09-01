@@ -158,3 +158,4 @@ ceph:
     sensu_checks:
       check_ceph_status:
         criticality: 'critical'
+        escalate_flags: '-e "osds are down,near full osd,clock skew,mons down"'
