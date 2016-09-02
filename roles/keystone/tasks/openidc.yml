@@ -26,3 +26,45 @@
 - name: enable apache mod auth_openidc
   apache2_module: name=auth_openidc
   notify: reload apache
+
+- name: create metadata folder for multiple oidc configuration files
+  file:
+    path: "/etc/apache2/openidc/metadata/"
+    state: directory
+    owner: www-data
+    group: root
+    mode: 0750
+    recurse: yes
+
+- name: create .client file for the IdPs
+  template:
+    src: etc/apache2/openidc/metadata/template.client
+    dest: /etc/apache2/openidc/metadata/{{ item.metadata_file_name }}.client
+    owner: www-data
+    group: root
+    mode: 0640
+  with_items: "{{ keystone.federation.sp.oidc.providers_info }}"
+
+- name: create .conf file for the IdPs
+  template:
+    src: etc/apache2/openidc/metadata/template.conf
+    dest: /etc/apache2/openidc/metadata/{{ item.metadata_file_name }}.conf
+    owner: www-data
+    group: root
+    mode: 0640
+  with_items: "{{ keystone.federation.sp.oidc.providers_info }}"
+
+- name: create .provider file for the IdPs
+  template:
+    src: etc/apache2/openidc/metadata/template.provider
+    dest: /etc/apache2/openidc/metadata/{{ item.metadata_file_name }}.provider
+    owner: www-data
+    group: root
+    mode: 0640
+  when: item.provider_metadata_url is undefined
+  with_items: "{{ keystone.federation.sp.oidc.providers_info }}"
+
+- name: create .provider file for the IdPs
+  shell: "curl --fail {{ item.provider_metadata_url }}  > /etc/apache2/openidc/metadata/{{ item.metadata_file_name }}.provider"
+  when: item.provider_metadata_url is defined
+  with_items: "{{ keystone.federation.sp.oidc.providers_info }}"

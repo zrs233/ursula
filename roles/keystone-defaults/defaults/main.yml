@@ -82,6 +82,7 @@ keystone:
         shibboleth_key: None
       oidc:
         enabled: False
+        remote_id_attribute: 'HTTP_OIDC_CLAIM_ISS'
         download:
           url: https://file-mirror.openstack.blueboxgrid.com/misc/libapache2-mod-auth-openidc_1.8.3-1_amd64.deb
           checksum: sha1:c89585e97ffd6671983b4b62318ed0e7ec7a7b7c
