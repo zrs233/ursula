@@ -10,7 +10,7 @@
 - name: shibboleth process check
   sensu_process_check: service=shibd
   notify: restart sensu-client
-  when: keystone.federation.enabled|bool and keystone.federation.sp.k2k.enabled|bool
+  when: keystone.federation.enabled|bool and keystone.federation.sp.saml.enabled|bool
 
 - name: keystone-api check
   sensu_check: name=check-keystone-api plugin=check-os-api.rb

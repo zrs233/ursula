@@ -60,18 +60,26 @@ keystone:
     sp:
       # Enable keystone to be a service provider
       # for keystone to keystone federation
-      k2k:
-        enabled: False
+      saml:
         sp_id: None
+        enabled: False
+        horizon_enabled: False
+        support_contact: ""
+        # These are service providers that will be configured into Shibboleth
+        providers:
+          - keystone_id: Place_holder_IDP
+            saml_entity_id: Place_holder_IDP
+            horizon_name: Place_holder_IDP
+            enabled: True
+            k2k_enabled: False
+            verify_idp_cert: True
+            idp_metadata_min_refresh_delay: 600
+            idp_metadata_max_refresh_delay: 3600
+            idp_metadata_factor_refresh_delay: 0.75
+            idp_metadata_url: None
+            attributes: []
         shibboleth_crt: None
         shibboleth_key: None
-        support_contact: ""
-        idp_id: None
-        idp_metadata_url: None
-        idp_metadata_min_refresh_delay: 600
-        idp_metadata_max_refresh_delay: 3600
-        idp_metadata_factor_refresh_delay: 0.75
-        verify_idp_cert: True
       oidc:
         enabled: False
         download:

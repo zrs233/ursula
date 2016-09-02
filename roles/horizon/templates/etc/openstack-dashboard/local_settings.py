@@ -176,13 +176,31 @@ OPENSTACK_KEYSTONE_DEFAULT_ROLE = "_member_"
 SESSION_TIMEOUT = {{ horizon.session_timeout }}
 
 #TODO: parameterize strings that get shown on the login page
-{% if keystone.federation.enabled|bool and keystone.federation.sp.oidc.enabled|bool -%}
+{% if keystone.federation.enabled|bool and (keystone.federation.sp.oidc.enabled|bool or keystone.federation.sp.saml.horizon_enabled|bool) -%}
 WEBSSO_ENABLED = True
 WEBSSO_CHOICES = (
     ("credentials", _("{{ horizon.websso.choices.credentials }}")),
-    ("oidc", _("{{ horizon.websso.choices.oidc }}"))
-)
+    {% if keystone.federation.sp.oidc.enabled|bool %}
+    ("oidc", _("{{ horizon.websso.choices.oidc }}")),
+    {% endif %}
 
+    {% if keystone.federation.sp.saml.horizon_enabled|bool %}
+    {% for sp in keystone.federation.sp.saml.providers %}
+    {% if sp.enabled|bool and not sp.k2k_enabled %}
+        ("{{ sp.keystone_id }}", _("{{ sp.horizon_name }}")),
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+)
+{% if keystone.federation.sp.saml.enabled|bool %}
+WEBSSO_IDP_MAPPING = {
+      {% for sp in keystone.federation.sp.saml.providers %}
+      {% if sp.enabled|bool and not sp.k2k_enabled %}
+      "{{ sp.keystone_id }}": ("{{ sp.keystone_id }}", "saml2")
+      {% endif %}
+      {% endfor %}
+    }
+{% endif %}
 WEBSSO_INITIAL_CHOICE = "credentials"
 {% endif -%}
 
