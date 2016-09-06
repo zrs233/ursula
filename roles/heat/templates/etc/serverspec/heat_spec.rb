@@ -8,11 +8,12 @@ dirs.each do |dir|
   end
 end
 
-files = ['api-paste.ini', 'policy.json',
-  'heat.conf', 'heat_api_audit_map.conf']
-files.each do |file|
+files = { "api-paste.ini"=> 640, "heat.conf"=> 640, "policy.json"=> 644, "heat_api_audit_map.conf"=> 640 }
+files.each do |file, mode|
   describe file("/etc/heat/#{file}") do
-    it { should be_mode '644'}
+    it { should be_mode mode }
+    it { should be_owned_by 'heat' }
+    it { should be_grouped_into 'heat' }
   end
 end
 
@@ -48,6 +49,8 @@ files = Dir['/var/log/heat/*.*'].map { |a| File.basename(a) }
 files.each do |file|
   describe file("/var/log/heat/#{file}") do
     it { should be_mode 644 }
+    it { should be_owned_by 'heat' }
+    it { should be_grouped_into 'heat' }
   end
 end
 
