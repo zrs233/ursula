@@ -128,6 +128,9 @@
   notify:
     - reload apache
 
+- include: ldap.yml
+  when: keystone.ldap_domain.enabled|default('False')|bool
+
 - meta: flush_handlers
 
 - name: start keystone
@@ -161,9 +164,6 @@
   file:
     path: /etc/cron.hourly/drop-expired-keystone-tokens
     state: absent
-
-- include: ldap.yml
-  when: keystone.ldap_domain.enabled|default('False')|bool
 
 - include: monitoring.yml
   tags:
