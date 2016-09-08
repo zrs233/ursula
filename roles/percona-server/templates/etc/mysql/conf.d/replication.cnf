@@ -37,3 +37,5 @@ binlog_format = ROW
 innodb_autoinc_lock_mode = 2
 # This is a recommended tuning variable for performance (required for parallel applying)
 innodb_locks_unsafe_for_binlog = 1
+# only keep 2 gcache page storage
+wsrep_provider_options="gcache.size=1G; gcache.keep_pages_count=2"
