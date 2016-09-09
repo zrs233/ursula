@@ -180,9 +180,11 @@ SESSION_TIMEOUT = {{ horizon.session_timeout }}
 WEBSSO_ENABLED = True
 WEBSSO_CHOICES = (
     ("credentials", _("{{ horizon.websso.choices.credentials }}")),
+    {% if keystone.federation.sp.oidc.enabled|bool %}
     {% for sp in keystone.federation.sp.oidc.providers_info %}
     ("{{ sp.name }}oidcidp", _("{{ sp.name }}")),
     {% endfor %}
+    {% endif %}
     {% if keystone.federation.sp.saml.horizon_enabled|bool %}
     {% for sp in keystone.federation.sp.saml.providers %}
     {% if sp.enabled|bool and not sp.k2k_enabled %}
