@@ -186,7 +186,7 @@ WEBSSO_CHOICES = (
     ("credentials", _("{{ horizon.websso.choices.credentials }}")),
     {% if keystone.federation.sp.oidc.enabled|bool %}
     {% for sp in keystone.federation.sp.oidc.providers_info %}
-    ("{{ sp.name }}oidcidp", _("{{ sp.name }}")),
+    ("{{ sp.name }}-OIDC-IDP", _("{{ sp.horizon_name }}")),
     {% endfor %}
     {% endif %}
     {% if keystone.federation.sp.saml.horizon_enabled|bool %}
@@ -197,16 +197,20 @@ WEBSSO_CHOICES = (
     {% endfor %}
     {% endif %}
 )
-{% if keystone.federation.sp.saml.enabled|bool or keystone.federation.sp.oidc.enabled|bool%}
+{% if keystone.federation.sp.saml.enabled|bool or keystone.federation.sp.oidc.enabled|bool %}
 WEBSSO_IDP_MAPPING = {
+      {% if keystone.federation.sp.oidc.enabled|bool %}
       {% for sp in keystone.federation.sp.oidc.providers_info -%}
-      "{{ sp.name }}oidcidp": ("{{ sp.name }}", "oidc"),
-      {% endfor %}
+      "{{ sp.name }}-OIDC-IDP": ("{{ sp.name }}", "{{ sp.protocol_name}}"),
+      {% endfor -%}
+      {% endif %}
+      {% if keystone.federation.sp.saml.enabled|bool %}
       {% for sp in keystone.federation.sp.saml.providers %}
       {% if sp.enabled|bool and not sp.k2k_enabled %}
       "{{ sp.keystone_id }}": ("{{ sp.keystone_id }}", "saml2")
       {% endif %}
       {% endfor %}
+      {% endif %}
 
     }
 {% endif %}
