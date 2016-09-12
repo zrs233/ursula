@@ -37,6 +37,8 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
 # settings to better secure the cookies from security exploits
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = True
+SESSION_COOKIE_HTTPONLY = True
 SESSION_ENGINE = "{{ horizon.session_engine }}"
 
 # The absolute path to the directory where message files are collected.
