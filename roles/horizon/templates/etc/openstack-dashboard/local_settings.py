@@ -175,6 +175,10 @@ OPENSTACK_KEYSTONE_URL = "https://%s:{{ endpoints.keystone.port.haproxy_api }}/v
 OPENSTACK_KEYSTONE_DEFAULT_ROLE = "_member_"
 SESSION_TIMEOUT = {{ horizon.session_timeout }}
 
+{% if keystone.federation.enabled|bool -%}
+OPENSTACK_KEYSTONE_FEDERATION_MANAGEMENT = True
+{% endif %}
+
 #TODO: parameterize strings that get shown on the login page
 {% if keystone.federation.enabled|bool and (keystone.federation.sp.oidc.enabled|bool or keystone.federation.sp.saml.horizon_enabled|bool) -%}
 WEBSSO_ENABLED = True
