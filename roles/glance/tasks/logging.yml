@@ -7,3 +7,5 @@
       - missingok
       - rotate 7
       - compress
+      - notifempty
+      - delaycompress
