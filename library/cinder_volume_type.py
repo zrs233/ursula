@@ -208,7 +208,7 @@ def main():
             login_tenant_name=dict(default=None),
             auth_url=dict(default='http://127.0.0.1:5001/v2.0/'),
             volume_type=dict(required=True),
-            encryption_type=dict(default=False),
+            encryption_type=dict(default=False, type='bool'),
             provider=dict(default=None),
             cipher=dict(default=None),
             key_size=dict(default=None),
