@@ -19,25 +19,6 @@
     - genisoimage
     - util-linux
   notify: restart nova services
-  when: ansible_distribution_version == "12.04"
-  register: result
-  until: result|succeeded
-  retries: 5
-
-- name: install nova-compute packages (trusty)
-  apt: pkg={{ item }}
-  with_items:
-    - cpu-checker
-    - libvirt-bin
-    - python-libvirt
-    - qemu-kvm
-    - open-iscsi
-    - libvirt-dev
-    - pkg-config
-    - genisoimage
-    - util-linux
-  notify: restart nova services
-  when: ansible_distribution_version == "14.04"
   register: result
   until: result|succeeded
   retries: 5
