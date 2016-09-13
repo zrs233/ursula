@@ -94,7 +94,7 @@ openstack:
     - https://rubygems.org
   git_mirror:  https://github.com/openstack
   git_update: yes
-  ubuntu_mirror: https://apt-mirror.openstack.blueboxgrid.com/archive.ubuntu.com/ubuntu
+  ubuntu_mirror: https://apt-mirror.openstack.blueboxgrid.com/trusty/ubuntu
 
 apt_repos:
   docker:

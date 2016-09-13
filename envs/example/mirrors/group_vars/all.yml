@@ -54,7 +54,7 @@ openstack:
   easy_install_mirror: https://pypi-mirror.openstack.blueboxgrid.com/root/pypi/+simple
   gem_sources:
     - https://gem-mirror.openstack.blueboxgrid.com
-  ubuntu_mirror: https://apt-mirror.openstack.blueboxgrid.com/archive.ubuntu.com/ubuntu
+  ubuntu_mirror: https://apt-mirror.openstack.blueboxgrid.com/trusty/ubuntu
 
 logging:
   download:
