@@ -4,9 +4,9 @@ serverspec:
   interval: 3600
   gems:
     - name: rspec
-      version: 3.4.0
+      version: 3.5.1
     - name: rspec-core
-      version: 3.4.0
+      version: 3.5.1
     - name: net-ssh
       version: 2.9.2
     - name: specinfra
