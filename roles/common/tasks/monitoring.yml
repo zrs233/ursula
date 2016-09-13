@@ -225,3 +225,55 @@
     check: "{{ sensu_checks.common.check_raid }}"
   notify: restart sensu-client missing ok
   when: common.hwraid.enabled|bool
+
+- block:
+    - name: install snmp package on controllers
+      apt:
+        pkg: snmp
+      register: result
+      until: result|succeeded
+      retries: 5
+
+    - name: check that vyatta interfaces are up
+      sensu_check:
+        name: "check-vyatta-if-{{item.name}}"
+        plugin: check-vyatta-if.py
+        args: "--ip {{ item.ip }} --password {{ secrets.snmp_password }}"
+      with_items:
+        - name: primary
+          ip: "{{ undercloud_cidr[0].cidr | ipaddr('5') | ipaddr('address') }}"
+        - name: secondary
+          ip: "{{ undercloud_cidr[0].cidr | ipaddr('6') | ipaddr('address') }}"
+      notify: restart sensu-client
+
+    - name: check vyatta cpu utilization
+      sensu_check:
+        name: "check-vyatta-cpu-{{item.name}}"
+        plugin: check-vyatta-cpu.py
+        args: "--ip {{ item.ip }} --password {{ secrets.snmp_password }}"
+      with_items:
+        - name: primary
+          ip: "{{ undercloud_cidr[0].cidr | ipaddr('5') | ipaddr('address') }}"
+        - name: secondary
+          ip: "{{ undercloud_cidr[0].cidr | ipaddr('6') | ipaddr('address') }}"
+      notify: restart sensu-client
+
+    - name: check vyatta memory utilization
+      sensu_check:
+        name: "check-vyatta-mem-{{item.name}}"
+        plugin: check-vyatta-mem.py
+        args: "--ip {{ item.ip }} --password {{ secrets.snmp_password }}"
+      with_items:
+        - name: primary
+          ip: "{{ undercloud_cidr[0].cidr | ipaddr('5') | ipaddr('address') }}"
+        - name: secondary
+          ip: "{{ undercloud_cidr[0].cidr | ipaddr('6') | ipaddr('address') }}"
+      notify: restart sensu-client
+
+    - name: check vyatta vrrp status
+      sensu_check:
+        name: "check-vyatta-vrrp-status"
+        plugin: check-vyatta-vrrp.py
+        args: "--primary {{ undercloud_cidr[0].cidr | ipaddr('5') | ipaddr('address') }} --secondary {{ undercloud_cidr[0].cidr | ipaddr('6') | ipaddr('address') }} --password {{ secrets.snmp_password }}"
+      notify: restart sensu-client
+  when: inventory_hostname in groups['controller'] and groups['vyatta-openstack'] is defined
