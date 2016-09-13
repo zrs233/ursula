@@ -64,8 +64,8 @@
   notify:
     - restart cinder services
     - restart cinder backup service
-  when: code_has_changed | default('False') | bool and
-        upgrade | default('False') | bool
+  when: (code_has_changed | default('False') | bool and upgrade | default('False') | bool) or
+        (ceph.enabled|default('False')|bool and upgrade_ceph|bool)
 
 - meta: flush_handlers
 

@@ -20,18 +20,18 @@
 - name: set initial monitor key permissions
   file: path=/var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
         mode=0600
-        owner=root
-        group=root
+        owner=ceph
+        group=ceph
 
 - name: create monitor directory
   file: path=/var/lib/ceph/mon/ceph-{{ ansible_hostname }}
         state=directory
-        owner=root
-        group=root
+        owner=ceph
+        group=ceph
         mode=0755
 
 - name: ceph monitor mkfs
-  command: ceph-mon --mkfs -i {{ ansible_hostname }}
+  command: ceph-mon --setuser ceph --setgroup ceph --mkfs -i {{ ansible_hostname }}
            --fsid {{ fsid_file.content | b64decode }}
            --keyring /var/lib/ceph/tmp/keyring.mon.{{ ansible_hostname }}
            creates=/var/lib/ceph/mon/ceph-{{ ansible_hostname }}/keyring
@@ -53,8 +53,8 @@
 - name: activate monitor with upstart
   file: path=/var/lib/ceph/mon/ceph-{{ ansible_hostname }}/{{ item }}
         state=touch
-        owner=root
-        group=root
+        owner=ceph
+        group=ceph
         mode=0600
   with_items:
     - done

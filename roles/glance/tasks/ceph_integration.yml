@@ -1,21 +1,25 @@
 ---
-- name: fetch rados.py
-  get_url:
-    url: "{{ ceph.rados_url }}"
-    dest: /opt/openstack/current/glance/lib/python2.7/site-packages/rados.py
+- name: import rados module into glance
+  file:
+    src: /usr/lib/python2.7/dist-packages/{{ item }}
+    dest: /opt/openstack/current/glance/lib/python2.7/site-packages/{{ item }}
+    state: link
     owner: root
     group: root
     mode: 0644
-    timeout: 30
+  with_items:
+    - rados.so
+    - rbd.so
 
-- name: fetch rbd.py
-  get_url:
-    url: "{{ ceph.rbd_url }}"
-    dest: /opt/openstack/current/glance/lib/python2.7/site-packages/rbd.py
-    owner: root
-    group: root
-    mode: 0644
-    timeout: 30
+- name: remove modules those were used for Hammer
+  file:
+    path: /opt/openstack/current/glance/lib/python2.7/site-packages/{{ item }}
+    state: absent
+  with_items:
+    - rados.py
+    - rados.pyc
+    - rbd.py
+    - rbd.pyc
 
 - name: fetch glance keyring
   slurp: path=/etc/ceph/ceph.client.glance.keyring

@@ -130,8 +130,8 @@ apt_repos:
     repo: https://apt-mirror.openstack.blueboxgrid.com/erlang/debian
     key_url: https://apt-mirror.openstack.blueboxgrid.com/keys/erlang.key
   ceph:
-    repo: https://apt-mirror.openstack.blueboxgrid.com/ceph/debian-
-    key_url: https://apt-mirror.openstack.blueboxgrid.com/keys/ceph.key
+    repo: https://apt-mirror.openstack.blueboxgrid.com/packagecloud.io/blueboxcloud/ceph-bbg/ubuntu
+    key_url: https://apt-mirror.openstack.blueboxgrid.com/keys/ceph_bbg.key
   collectd:
     repo: http://ppa.launchpad.net/raravena80/collectd5/ubuntu
     key_url: "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xE97C3D97792BD34E"

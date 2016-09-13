@@ -1,4 +1,6 @@
 ---
+- include: upgrade_flags.yml
+
 - name: create ceph directory
   file:
     path: /etc/ceph
@@ -28,7 +30,7 @@
   retries: 5
 
 - name: install ceph
-  apt: pkg={{ item }}
+  apt: pkg={{ item }}={{ ceph.version }}
        state=present
   with_items: "{{ ceph.ceph_pkgs }}"
   register: result

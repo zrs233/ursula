@@ -1,0 +1,54 @@
+---
+# we shouldn't initial flag again for the case that one node is in multi groups
+- name: initial upgrade flags
+  set_fact:
+    upgrade_ceph: false
+    upgrade_ceph2jewel: false
+  when: upgrade_ceph is undefined
+
+- name: set target version pure number
+  set_fact:
+    ceph_pure_version: '{{ ceph.version | regex_replace("^(\d+\.\d+\.?\d{0,3}).*$", "\1") }}'
+  when: ceph_pure_version is undefined
+
+- name: get installed ceph version
+  shell: ceph --version |grep -oP "\d+\.\d+\.?\d{0,3}"
+  changed_when: false
+  failed_when: false
+  register: result_ceph_installed_version
+
+# result_ceph_running_version is only used for ceph monitors and osds
+- name: get running ceph version
+  shell: ceph daemon `ls /var/run/ceph/*.asok | head -n1` version |grep -oP "\d+\.\d+\.?\d{0,3}"
+  changed_when: false
+  failed_when: false
+  register: result_ceph_running_version
+  when: result_ceph_installed_version.rc == 0 and ( 'ceph_monitors' in group_names or 'ceph_osds' in group_names )
+
+# set flag=true if ceph is installed but not running
+- name: set upgrade flag true
+  set_fact:
+    upgrade_ceph: true
+    upgrade_ceph2jewel: true
+  when: result_ceph_running_version is defined and result_ceph_running_version.rc != 0
+
+- name: set upgrade flags if hammer running
+  set_fact:
+    upgrade_ceph: true
+    upgrade_ceph2jewel: true
+  when: result_ceph_running_version is defined and result_ceph_running_version.rc == 0 and
+        result_ceph_running_version.stdout < '10'
+
+- name: set upgrade_ceph=true
+  set_fact:
+    upgrade_ceph: true
+  when: result_ceph_running_version is defined and result_ceph_running_version.rc == 0 and
+        result_ceph_running_version.stdout < ceph_pure_version
+
+# set upgrade flag for controller and cinder_volume
+- name: set upgrade flag for controller and cinder_volume
+  set_fact:
+    upgrade_ceph: true
+  register: result_upgrade_ceph_controller
+  when: ('controller' in group_names or 'cinder_volume' in group_names) and
+        (result_ceph_installed_version.rc == 0 and result_ceph_installed_version.stdout < ceph_pure_version)

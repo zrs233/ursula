@@ -91,8 +91,8 @@
     msg: "Triggering service restart for upgrade"
   changed_when: True
   notify: restart glance services
-  when: code_has_changed | default('False') | bool and
-        upgrade | default('False') | bool
+  when: (code_has_changed | default('False') | bool and upgrade | default('False') | bool) or
+        (glance.store_ceph | default('False') | bool and upgrade_ceph | bool)
 
 - meta: flush_handlers
 

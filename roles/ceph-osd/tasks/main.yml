@@ -48,11 +48,6 @@
 - include: bcache.yml
   when: ceph.bcache_ssd_device is defined
 
-- name: start and add the osd service(s) to the init sequence
-  service: name=ceph
-           state=started
-           enabled=yes
-
 - name: delete default 'rbd' pool
   command: ceph osd pool delete rbd rbd --yes-i-really-really-mean-it
   register: poolout

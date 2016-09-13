@@ -410,5 +410,5 @@
   roles:
     - role: ceph-update
       tags: ['ceph', 'ceph-update']
-      when: ceph.scaleout|default('False')|bool
+      when: ceph.enabled|default('False')|bool and (ceph.scaleout|default('False')|bool or upgrade_ceph|bool)
   environment: "{{ env_vars|default({}) }}"
