@@ -8,4 +8,11 @@ export OS_CACERT=/opt/stack/ssl/openstack.crt
 export OS_NO_CACHE=True
 export NOVACLIENT_UUID_CACHE_DIR=/tmp/sensu
 export OS_VOLUME_API_VERSION=2
-export OS_COMPUTE_API_VERSION=2
+# NOTE(mriedem): Take care when changing OS_COMPUTE_API_VERSION as any sensu
+# plugin code that is using the Nova CLI could break since by default the CLI
+# does version negotation and requests the latest microversion available from
+# the server based on the latest version that the client currently supports,
+# which could change request/response semantics. This is why we pin to the 2.1
+# microversion which is backward compatible with the v2.0 API (which is
+# deprecated).
+export OS_COMPUTE_API_VERSION=2.1
