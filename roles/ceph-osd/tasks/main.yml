@@ -59,7 +59,7 @@
   ceph_pool:
     pool_name: "{{ ceph.pool_name }}"
   register: pool_output
-  run_once: true
+  when: inventory_hostname == groups['ceph_osds'][0]
   delegate_to: "{{ groups['ceph_monitors'][0] }}"
 
 - include: system_tuning.yml

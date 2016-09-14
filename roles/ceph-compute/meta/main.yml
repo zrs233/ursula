@@ -1,4 +1,4 @@
 ---
 dependencies:
-  - role: nova-data
   - role: ceph-common
+  - role: nova-data

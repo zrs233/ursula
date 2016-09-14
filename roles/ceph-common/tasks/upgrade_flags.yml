@@ -4,12 +4,10 @@
   set_fact:
     upgrade_ceph: false
     upgrade_ceph2jewel: false
-  when: upgrade_ceph is undefined
 
 - name: set target version pure number
   set_fact:
     ceph_pure_version: '{{ ceph.version | regex_replace("^(\d+\.\d+\.?\d{0,3}).*$", "\1") }}'
-  when: ceph_pure_version is undefined
 
 - name: get installed ceph version
   shell: ceph --version |grep -oP "\d+\.\d+\.?\d{0,3}"
