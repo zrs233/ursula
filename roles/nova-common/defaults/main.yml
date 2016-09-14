@@ -38,7 +38,6 @@ nova:
   heartbeat_timeout_threshold: 30
   floating_pool: external
   install_packages:
-    - python-numpy
     - virt-top
   driver:
     docker:
