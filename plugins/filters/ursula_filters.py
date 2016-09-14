@@ -23,6 +23,10 @@ def ursula_package_path(project, version):
     return path
 
 
+def remove_vlan_tag(interface):
+    return interface.split(".")[0]
+
+
 def net_physical_devices(interface):
     devices = []
     if 'slaves' in interface:
@@ -40,5 +44,6 @@ class FilterModule(object):
             'ursula_controller_ips':    ursula_controller_ips,
             'ursula_memcache_hosts':    ursula_memcache_hosts,
             'ursula_package_path':      ursula_package_path,
+            'remove_vlan_tag':          remove_vlan_tag,
             'net_physical_devices':     net_physical_devices,
         }
