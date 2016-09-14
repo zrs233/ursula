@@ -35,3 +35,9 @@
   sensu_metrics_check: name=keystone-sla-metrics plugin=metrics-os-api.py
                        args='-S keystone --scheme {{ monitoring.graphite.host_prefix }}'
   notify: restart sensu-client
+
+- name: keystone identity metrics
+  sensu_metrics_check:
+    name: identity-metrics
+    plugin: metrics-keystone.py
+  notify: restart sensu-client

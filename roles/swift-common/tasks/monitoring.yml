@@ -58,3 +58,9 @@
   sensu_metrics_check: name=swift-sla-metrics plugin=metrics-os-api.py
                        args='-S swift --scheme {{ monitoring.graphite.host_prefix }}'
   notify: restart sensu-client
+
+- name: swift usage metrics
+  sensu_metrics_check:
+    name: swift-usage-metrics
+    plugin: metrics-swift.py
+    args: "--ip-addr={{ primary_ip }}"

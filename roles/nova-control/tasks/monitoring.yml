@@ -56,3 +56,15 @@
   sensu_metrics_check: name=service-list-sla-metrics plugin=metrics-os-api.py
                        args='-S service-list --scheme {{ monitoring.graphite.host_prefix }} -f {{ fqdn }}'
   notify: restart sensu-client
+
+- name: nova quotas metrics
+  sensu_metrics_check:
+    name: compute-quotas-metrics
+    plugin: metrics-nova-project-quotas.py
+  notify: restart sensu-client
+
+- name: nova usage metrics
+  sensu_metrics_check:
+    name: compute-usage-metrics
+    plugin: metrics-nova-project-usage.py
+  notify: restart sensu-client
