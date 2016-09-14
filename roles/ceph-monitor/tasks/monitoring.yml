@@ -15,3 +15,9 @@
                        args='-S ceph --scheme {{ monitoring.graphite.host_prefix }}'
                        use_sudo=true
   notify: restart sensu-client
+
+- name: ceph usage metrics
+  sensu_metrics_check:
+    name: ceph-usage-metrics
+    plugin: metrics-ceph.py
+  notify: restart sensu-client
