@@ -1,0 +1,6 @@
+---
+- name: install raid utilities
+  apt: pkg=arcconf
+  register: result
+  until: result|succeeded
+  retries: 5

@@ -100,6 +100,10 @@
   when: common.hwraid.enabled and ansible_architecture != "ppc64le"
   tags: hwraid
 
+- include: hwraid-ppc.yml
+  when: common.hwraid.enabled and ansible_architecture == "ppc64le"
+  tags: hwraid
+
 - name: remove unwanted packages
   apt:
     name: "{{ item }}"
