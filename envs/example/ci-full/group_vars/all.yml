@@ -12,3 +12,6 @@ keystone:
   ldap_domain:
     enabled: True
     domain: users
+
+serverspec:
+  enabled: True

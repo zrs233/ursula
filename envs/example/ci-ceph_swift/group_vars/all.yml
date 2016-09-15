@@ -38,6 +38,9 @@ cinder:
     - name: rbd_volumes
       volume_driver: cinder.volume.drivers.rbd.RBDDriver
 
+serverspec:
+  enabled: True
+
 swift:
   enabled: True
   allow_versions: True
