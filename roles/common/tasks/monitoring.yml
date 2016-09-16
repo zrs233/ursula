@@ -276,4 +276,11 @@
         plugin: check-vyatta-vrrp.py
         args: "--primary {{ undercloud_cidr[0].cidr | ipaddr('5') | ipaddr('address') }} --secondary {{ undercloud_cidr[0].cidr | ipaddr('6') | ipaddr('address') }} --password {{ secrets.snmp_password }}"
       notify: restart sensu-client
+
+    - name: check vyatta tunnels status
+      sensu_check:
+        name: "check-vyatta-tunnels-status"
+        plugin: check-vyatta-tunnels.py
+        args: "--ip {{ undercloud_cidr[0].cidr | ipaddr('4') | ipaddr('address') }} --password {{ secrets.snmp_password }} --criticality {{ common.monitoring.sensu_checks.vyatta.tunnels.criticality }}"
+      notify: restart sensu-client
   when: inventory_hostname in groups['controller'] and groups['vyatta-openstack'] is defined

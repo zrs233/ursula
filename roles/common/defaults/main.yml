@@ -56,6 +56,9 @@ common:
         criticality: 'critical'
       check_raid:
         criticality: 'critical'
+      vyatta:
+        tunnels:
+          criticality: 'critical'
     scan_for_log_errors: False
   os_tuning_params_clean:
     - { name: net.ipv4.tcp_syncookies }
