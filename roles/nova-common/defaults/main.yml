@@ -26,7 +26,7 @@ nova:
   scheduler_host_subset_size: 1
   libvirt_bin_version: 1.3.1-1ubuntu10.1~cloud0
   python_libvirt_version: 1.3.1-1ubuntu1~cloud0
-  qemu_kvm_version: 1:2.5+dfsg-5ubuntu10.2~cloud0
+  qemu_kvm_version: 1:2.5+dfsg-5ubuntu10.4~cloud0
   librdb1_version: 10.2.2-0ubuntu0.16.04.2~cloud0
   glance_endpoint: http://{{ endpoints.main }}:9393
   reserved_host_disk_mb: 51200
