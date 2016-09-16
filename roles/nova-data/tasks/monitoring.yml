@@ -13,4 +13,4 @@
   sensu_metrics_check: name=check-cinder-sessions plugin=check-cinder-sessions.py
                        interval=10
   notify: restart sensu-client
-  when: "'rbd_volumes' not in cinder.enabled_backends"
+  when: not ceph.enabled|default('False')|bool or (not ceph_pools.rbd_ssd.enabled and not ceph_pools.rbd_hybrid.enabled)

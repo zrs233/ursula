@@ -7,7 +7,7 @@
 - name: iscsid process check
   sensu_process_check: service=iscsid
   notify: restart sensu-client
-  when: "'rbd_volumes' not in cinder.enabled_backends"
+  when: not ceph.enabled|default('False')|bool or (not ceph_pools.rbd_ssd.enabled and not ceph_pools.rbd_hybrid.enabled)
 
 - name: cinder volume group metrics
   sensu_metrics_check:
@@ -24,7 +24,7 @@
     args: '-v cinder-volumes -s {{ monitoring.graphite.host_prefix }}'
     state: absent
   notify: restart sensu-client
-  when: ceph.enabled|bool and 'rbd_volumes' in cinder.backends|map(attribute='name')|list
+  when: ceph.enabled|default('False')|bool and (ceph_pools.rbd_ssd.enabled or ceph_pools.rbd_hybrid.enabled)
 
 - name: cinder-backup process check
   sensu_process_check: service=cinder-backup
