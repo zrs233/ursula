@@ -46,6 +46,34 @@
   until: result|succeeded
   retries: 5
 
+# Upgrade to the latest xtradb for CVEs
+# This needs to be done serially because it'll restart the damn thing on
+# package upgrade.
+# While confusing, xtradb.server_version refers to the major version
+# (like 5.6) not the minor release version. So we're asking for the latest
+# minor release of the major release we're currently installing. The major
+# release exists in the package name itself.
+- block:
+  - name: upgrade percona to desired version
+    apt:
+      pkg: percona-xtradb-cluster-server-{{ xtradb.server_version }}
+      state: latest
+    run_once: true
+    delegate_to: "{{ item }}"
+    with_items: "{{ play_hosts }}"
+
+  # Make sure the cluster is healthy before moving on
+  # NOTE this will fail if we switch to apt packages for sensu plugins!!
+  - name: cluster health check
+    command: /etc/sensu/plugins/percona-cluster-size.rb -d /root/.my.cnf --expected 3 --criticality critical
+    register: cstat
+    until: cstat | succeeded
+    retries: 5
+    run_once: true
+    delegate_to: "{{ item }}"
+    with_items: "{{ play_hosts }}"
+  when: dbupgrade | default('False') | bool
+
 - name: mysql log dir
   file: dest=/var/log/mysql state=directory mode=2750 owner=mysql group=adm
 
