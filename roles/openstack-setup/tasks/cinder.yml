@@ -1,11 +1,15 @@
 ---
 - name: create cinder volume types
-  cinder_volume_type: volume_type={{ item }}
+  cinder_volume_type: volume_type={{ item.value.volume_type }}
                       auth_url={{ endpoints.auth_uri }}
                       login_username=admin
                       login_password={{ secrets.admin_password }}
                       login_tenant_name=admin
-  with_items: "{{ cinder.volume_types }}"
+                      extra_specs="volume_backend_name={{ item.key }}"
+  when:
+    - ceph.enabled | default('False') | bool
+    - item.value.enabled
+  with_dict: "{{ ceph_pools }}"
   run_once: true
 
 - name: create cinder encryption volume types

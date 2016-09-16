@@ -11,8 +11,10 @@ ceph:
   version: 10.2.3~bbc1
 
   openstack_keys:
-    - { name: client.glance, value: "mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx pool=default'" }
-    - { name: client.cinder, value: "mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx pool=default'" }
+    - { name: client.glance, value: "mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx'" }
+    - { name: client.cinder, value: "mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx'" }
+
+  journal_guid: 45b0969e-9b03-4f30-b4c6-b4b80ceff106
 
   # Packages
   debian_pkgs:

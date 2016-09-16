@@ -75,6 +75,12 @@
            creates=/etc/ceph/ceph.{{ item.name }}.keyring
   with_items: "{{ ceph.openstack_keys }}"
 
+# ceph auth get-or-create is not able to change caps of an existing user
+# we change the caps here
+- name: update openstack ceph user caps
+  command: ceph auth caps {{ item.name }} {{ item.value }}
+  with_items: "{{ ceph.openstack_keys }}"
+
 - include: monitoring.yml
   tags:
     - monitoring

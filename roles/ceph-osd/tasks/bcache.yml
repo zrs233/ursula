@@ -1,4 +1,30 @@
 ---
+# Create hybrid bucket
+- name: Create root hybrid-bucket
+  shell: ceph osd crush add-bucket {{ hybrid_pool }} root
+  register: result
+  changed_when: result.stdout |search("added bucket")
+  when: inventory_hostname == groups['ceph_osds_hybrid'][0]
+
+# Create crush ruleset for the hybrid root bucket
+- name: Create crush ruleset hybrid root bucket
+  shell: ceph osd crush rule create-simple {{ hybrid_ruleset }} {{ hybrid_pool }} host firstn
+  register: result
+  changed_when: not result.stdout |search("already exists")
+  when: inventory_hostname == groups['ceph_osds_hybrid'][0]
+
+# Create osd host bucket
+- name: Create osd host bucket
+  shell: ceph osd crush add-bucket {{ ansible_hostname }} host
+  register: result
+  changed_when: result.stdout |search("added bucket")
+
+# Move the host bucket under corresponding root
+- name: Move host bucket under root bucket
+  shell: ceph osd crush move {{ ansible_hostname }} root={{ hybrid_pool }}
+  register: result
+  changed_when: result.stdout |search("moved item")
+
 # we check for journal and bcache partitions to skip destructive tasks below
 - name: check if journal partitions exist on ssd device
   shell: "parted --script /dev/{{ ceph.bcache_ssd_device }} print | egrep -sq 'journal'"
@@ -82,4 +108,21 @@
   ceph_bcache:
     disks: "{{ ceph.disks }}"
     ssd_device: "{{ ceph.bcache_ssd_device }}"
-    journal_guid: 45b0969e-9b03-4f30-b4c6-b4b80ceff106
+    journal_guid: "{{ ceph.journal_guid }}"
+  when: ok_to_deploy
+
+# pool pg number is based on osd amount
+# we should create pool when all osds are up
+- name: create openstack pool
+  ceph_pool:
+    pool_name: "{{ hybrid_pool }}"
+    osds: "{{ groups['ceph_osds_hybrid']|length * ceph.disks|length }}"
+  delegate_to: "{{ groups['ceph_monitors'][0] }}"
+  when: inventory_hostname == groups['ceph_osds_hybrid'][-1]
+
+# not sure is there a better way to get ruleset id
+- name: set ruleset for pool
+  shell: ceph osd pool set {{ hybrid_pool }} crush_ruleset
+         $(ceph osd crush rule dump |grep {{ hybrid_ruleset }} -A1 |grep -oP '\d+')
+  delegate_to: "{{ groups['ceph_monitors'][0] }}"
+  when: inventory_hostname == groups['ceph_osds_hybrid'][-1]

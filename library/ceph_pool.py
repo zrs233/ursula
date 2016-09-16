@@ -16,6 +16,10 @@ options:
     description:
       - The pool in question: create it or ensure correct pg count
     required: true
+  osds:
+    description:
+      - The osds count: pg count is calculated based on this
+    required: true
 """
 
 EXAMPLES = """
@@ -23,6 +27,7 @@ EXAMPLES = """
 # pool_name = default
 - ceph_pool:
     pool_name: default
+    osds: "{{ groups['ceph_osds_ssd']|length * ceph.disks|length }}"
   register: pool_output
   run_once: true
   delegate_to: "{{ groups['ceph_monitors'][0] }}"
@@ -64,18 +69,12 @@ def main():
     module = AnsibleModule(
         argument_spec=dict(
             pool_name=dict(required=True),
+            osds=dict(required=True, type='int'),
         ),
     )
 
     pool_name = module.params.get('pool_name')
-
-    # determine number of osds in cluster
-    cmd = ['ceph', 'osd', 'stat']
-    rc, out, err = module.run_command(cmd, check_rc=True)
-    ## Example
-    # out.splitlines()[0] = "osdmap e1564: 9 osds: 9 up, 9 in"
-    # osds = 9
-    osds = int(out.splitlines()[0].split(":")[1].strip().split(" ")[0])
+    osds = module.params.get('osds')
 
     # calculate desired pg count
     # 100 is a constant and 3 is the number of copies

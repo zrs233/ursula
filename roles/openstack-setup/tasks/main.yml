@@ -10,6 +10,7 @@
 
 - include: cinder.yml
   when: cinder.enabled|default('True')|bool
+  tags: ceph
 
 - include: flavors.yml
 

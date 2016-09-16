@@ -29,7 +29,7 @@ EXAMPLES = """
   ceph_bcache:
     disks: "{{ ceph.disks }}"
     ssd_device: "{{ ceph.bcache_ssd_device }}"
-    journal_guid: 45b0969e-9b03-4f30-b4c6-b4b80ceff106
+    journal_guid: "{{ ceph.journal_guid }}
 """
 
 import os

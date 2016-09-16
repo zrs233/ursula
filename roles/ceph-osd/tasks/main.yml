@@ -1,4 +1,10 @@
 ---
+# set ceph related variables for future tasks
+- include: pool_names.yml
+  delegate_to: "{{ groups['ceph_monitors'][0] }}"
+  when: inventory_hostname == groups['ceph_osds'][0]
+  tags: ['openstack', 'control', 'glance', 'cinder', 'cinder-data', 'nova', 'data']
+
 - name: verify disks have been provided
   fail: msg="please provide osd disks"
   when: ceph.disks is not defined
@@ -15,7 +21,7 @@
   apt: pkg={{ item }}
        state=present
   with_items: "{{ ceph.bcache_pkgs }}"
-  when: ceph.bcache_ssd_device is defined
+  when: "'ceph_osds_hybrid' in group_names"
   register: result
   until: result|succeeded
   retries: 5
@@ -42,25 +48,18 @@
     dest: "{{ ceph_keyring['source'] }}"
     content: "{{ ceph_keyring['content'] | b64decode }}"
 
-- include: standard.yml
-  when: ceph.bcache_ssd_device is not defined
-
-- include: bcache.yml
-  when: ceph.bcache_ssd_device is defined
-
 - name: delete default 'rbd' pool
   command: ceph osd pool delete rbd rbd --yes-i-really-really-mean-it
   register: poolout
   changed_when: poolout.stdout | search('removed')
-  run_once: true
   delegate_to: "{{ groups['ceph_monitors'][0] }}"
+  when: inventory_hostname == groups['ceph_osds'][0] 
 
-- name: create openstack pool
-  ceph_pool:
-    pool_name: "{{ ceph.pool_name }}"
-  register: pool_output
-  when: inventory_hostname == groups['ceph_osds'][0]
-  delegate_to: "{{ groups['ceph_monitors'][0] }}"
+- include: standard.yml
+  when: "'ceph_osds_ssd' in group_names"
+
+- include: bcache.yml
+  when: "'ceph_osds_hybrid' in group_names"
 
 - include: system_tuning.yml
   tags: ceph-osd

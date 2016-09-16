@@ -2,22 +2,22 @@
 - name: set journal partition guid, for bcache env
   command: sgdisk -t {{ item }}:{{ ceph.journal_guid }} /dev/{{ ceph.bcache_ssd_device }}
   with_sequence: start=1 end={{ ceph.disks|length }}
-  when: ceph.bcache_ssd_device is defined
+  when: "'ceph_osds_hybrid' in group_names"
 
 - name: correct journal partition owner, for bcache env
   file: path=/dev/{{ ceph.bcache_ssd_device }}{{ item }} owner=ceph group=ceph
   with_sequence: start=1 end={{ ceph.disks|length }}
-  when: ceph.bcache_ssd_device is defined
+  when: "'ceph_osds_hybrid' in group_names"
 
 - name: set journal partition guid, for full ssd env
   command: sgdisk -t 2:{{ ceph.journal_guid }} /dev/{{ item }}
   with_items: "{{ ceph.disks }}"
-  when: ceph.bcache_ssd_device is not defined
+  when: "'ceph_osds_ssd' in group_names"
 
 - name: correct journal partition owner, for full ssd env
   file: path=/dev/{{ item }}2 owner=ceph group=ceph
   with_items: "{{ ceph.disks }}"
-  when: ceph.bcache_ssd_device is not defined
+  when: "'ceph_osds_ssd' in group_names"
 
 - name: correct ceph dir owner
   file: path=/var/lib/ceph state=directory owner=ceph group=ceph recurse=yes
