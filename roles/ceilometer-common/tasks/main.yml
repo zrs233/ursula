@@ -14,7 +14,7 @@
         owner=ceilometer group=ceilometer
 
 - name: ceilometer config
-  template: src=etc/ceilometer/{{ item }} dest=/etc/ceilometer/{{ item }} mode=0644
+  template: src=etc/ceilometer/{{ item }} dest=/etc/ceilometer/{{ item }} mode={{ 0644 if 'policy.json' in item else 0640 }} owner=ceilometer group=ceilometer
   with_items:
     - ceilometer.conf
     - policy.json

@@ -18,11 +18,6 @@ describe file('/var/log/aodh/aodh-evaluator.log') do
   it { should be_owned_by 'aodh' }
 end
 
-describe file('/var/log/aodh/aodh-expirer.log') do
-  it { should be_mode 644 }
-  it { should be_owned_by 'aodh' }
-end
-
 describe file('/var/log/aodh/aodh-listener.log') do
   it { should be_mode 644 }
   it { should be_owned_by 'aodh' }
@@ -32,6 +27,18 @@ describe file('/var/log/aodh/aodh-notifier.log') do
   it { should be_mode 644 }
   it { should be_owned_by 'aodh' }
 end
+
+{% if inventory_hostname in groups['controller'] %}
+processes = ['aodh-api',
+  'aodh-evaluator',
+  'aodh-listener',
+  'aodh-notifier']
+processes.each do |process|
+  describe process(process) do
+    its(:user) { should eq 'aodh' }
+  end
+end
+{% endif %}
 
 describe file('/etc/logrotate.d/aodh') do
   it { should exist }

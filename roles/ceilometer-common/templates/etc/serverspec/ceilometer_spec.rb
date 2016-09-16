@@ -8,11 +8,13 @@ dirs.each do |dir|
   end
 end
 
-files = ['api_paste.ini', 'event_pipeline.yaml', 'policy.json',
-  'ceilometer.conf', 'event_definitions.yaml', 'pipeline.yaml']
-files.each do |file|
+files = {'api_paste.ini'=> 640, 'event_pipeline.yaml'=> 640, 'policy.json'=> 644,
+  'ceilometer.conf'=> 640, 'event_definitions.yaml'=> 640, 'pipeline.yaml'=> 640}
+files.each do |file, mode|
   describe file("/etc/ceilometer/#{file}") do
-    it { should be_mode '644'}
+    it { should be_mode mode}
+    it { should be_owned_by 'ceilometer' }
+    it { should be_grouped_into 'ceilometer' }
   end
 end
 
