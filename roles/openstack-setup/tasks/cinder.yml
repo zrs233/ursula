@@ -9,7 +9,7 @@
   when:
     - ceph.enabled | default('False') | bool
     - item.value.enabled
-  with_dict: "{{ ceph_pools }}"
+  with_dict: "{{ ceph_pools | default({}) }}"
   run_once: true
 
 - name: create cinder encryption volume types
