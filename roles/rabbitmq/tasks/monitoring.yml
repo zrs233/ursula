@@ -1,6 +1,13 @@
 ---
-- name: rabbit process check
-  sensu_process_check: service=rabbitmq
+- name: remove overly greedy rabbit process check
+  sensu_process_check:
+    service: rabbitmq
+    state: absent
+  notify: restart sensu-client
+
+- name: rabbit server process check
+  sensu_process_check:
+    service: rabbitmq-server
   notify: restart sensu-client
 
 - name: rabbit cluster check
