@@ -50,3 +50,7 @@
   register: result_upgrade_ceph_controller
   when: ('controller' in group_names or 'cinder_volume' in group_names) and
         (result_ceph_installed_version.rc == 0 and result_ceph_installed_version.stdout < ceph_pure_version)
+
+- name: set flag so that this yml will not exected on the same host
+  set_fact:
+    ceph_upgrade_flag_done: true

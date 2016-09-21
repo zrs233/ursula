@@ -1,7 +1,7 @@
 ---
 # run once for each host
 - include: upgrade_flags.yml
-  when: upgrade_ceph is undefined
+  when: ceph_upgrade_flag_done is undefined
 
 - name: create ceph directory
   file:
