@@ -35,17 +35,29 @@
     - ../roles/endpoints
 
   pre_tasks:
-    - fail: msg="all.yml must not contain cinder.common_volume_name attribute."
+    - name: fail if cinder.common_volume_name is defined
+      fail: msg="all.yml must not contain cinder.common_volume_name attribute."
       when: cinder.common_volume_name is defined
       run_once: true
 
-    - fail: msg="Ceph is not enabled for this cluster."
+    - name: fail if ceph is not enabled
+      fail: msg="Ceph is not enabled for this cluster."
       when: not ceph.enabled|default('False')|bool
       run_once: true
 
-    - fail: msg="Cinder is not enabled for this cluster."
+    - name: fail if cinder is not enabled
+      fail: msg="Cinder is not enabled for this cluster."
       when: not cinder.enabled|default('False')|bool
       run_once: true
+
+    # make sure only one osd host group is configured
+    # because we detect ceph cluster is ssd or hybri according to osd host group
+    - name: fail if more than one osd host groups are configured
+      fail: msg="Only one osd host group should be configured"
+      run_once: true
+      when:
+        - groups['ceph_osds_hybrid'] |default([]) |length > 0
+        - groups['ceph_osds_ssd'] |default([]) |length > 0
 
     - name: dump cinder db
       mysql_db:
@@ -94,13 +106,13 @@
     set_fact:
       cinder_backend_name: rbd_hybrid
       default_volume_type: CEPH_HYBRID
-    when: ceph.bcache_ssd_device is defined
+    when: groups['ceph_osds_hybrid'] |default([]) |length > 0
 
   - name: set fact for ssd cinder backend
     set_fact:
       cinder_backend_name: rbd_ssd
       default_volume_type: CEPH_SSD
-    when: ceph.bcache_ssd_device is not defined
+    when: groups['ceph_osds_ssd'] |default([]) |length > 0
 
   - name: stop all cinder services
     command: echo "stopping all cinder services"
@@ -109,8 +121,7 @@
       - stop cinder services
       - stop cinder backup service
 
-  - name: trigger stop all cinder services
-    meta: flush_handlers
+  - meta: flush_handlers
 
   - name: update cinder db
     command: mysql -e "
@@ -155,8 +166,14 @@
       - restart cinder services
       - restart cinder backup service
 
-  - name: trigger restart cinder services
-    meta: flush_handlers
+  - meta: flush_handlers
+
+  - name: make sure cinder api,volume work
+    shell: . /root/stackrc ; cinder list
+    register: result
+    until: result | succeeded
+    retries: 12
+    run_once: true
 
   - name: create cinder volume type
     cinder_volume_type:
