@@ -84,9 +84,9 @@ keystone:
         enabled: False
         remote_id_attribute: 'HTTP_OIDC_CLAIM_ISS'
         download:
-          url: https://file-mirror.openstack.blueboxgrid.com/misc/libapache2-mod-auth-openidc_1.8.3-1_amd64.deb
-          checksum: sha1:c89585e97ffd6671983b4b62318ed0e7ec7a7b7c
-        module_name: libapache2-mod-auth-openidc_1.8.3-1_amd64.deb
+          url: https://file-mirror.openstack.blueboxgrid.com/misc/libapache2-mod-auth-openidc_1.8.5-1ubuntu1.trusty.1_amd64.deb
+          checksum: sha1:c0d37c0b6bcc1b7255674f757739f2ed5e8300eb
+        module_name: libapache2-mod-auth-openidc_1.8.5-1ubuntu1.trusty.1_amd64.deb
         scope: 'openid'
         issuer: None
         remote_user_claim: None
