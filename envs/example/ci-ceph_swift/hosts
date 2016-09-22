@@ -33,7 +33,10 @@ ceph-0
 ceph-1
 ceph-2
 
-[ceph_osds]
+[ceph_osds:children]
+ceph_osds_ssd
+
+[ceph_osds_ssd]
 ceph-0
 ceph-1
 ceph-2
