@@ -32,6 +32,7 @@ cinder:
     upper_constraints: 'https://raw.githubusercontent.com/openstack/requirements/stable/mitaka/upper-constraints.txt'
     python_dependencies:
       - { name: PyMySQL }
+      - { name: python-memcached }
     system_dependencies: []
   logs:
   - paths:
