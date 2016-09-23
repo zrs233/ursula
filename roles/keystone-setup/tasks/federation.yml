@@ -1,11 +1,4 @@
 ---
-- name: set federated domain name
-  ini_file: dest=/etc/keystone/keystone.conf
-            section=federation
-            option=federated_domain_name
-            value=Default
-  notify: restart keystone services
-
 - name: Register keystone sp info on keystone idp
   keystone_service_provider:
     auth:
