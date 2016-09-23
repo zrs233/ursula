@@ -10,6 +10,24 @@ monitoring:
     cpu:
       warning: 80
       critical: 99
+    disk:
+      criticality: 'critical'
+      ignore_mnts_check: '/opt/stack/data,/,/var/lib/mysql'
+      specific_mnts_check:
+        - name: 'stackdata'
+          path: '/opt/stack/data'
+          warning: 89
+          critical: 99 
+        - name: 'root'
+          path: '/'
+          warning: 80
+          critical: 90 
+        - name: 'mysql'
+          path: '/var/lib/mysql'
+          warning: 70
+          critical: 80
+    gems:
+      - sys-filesystem
   graphite:
     cluster_prefix: "stats.bbc.{{ stack_env }}.openstack"
     host_prefix: "stats.bbc.{{ stack_env }}.{{ ansible_nodename|regex_replace('\\\\.*$', '') }}"
