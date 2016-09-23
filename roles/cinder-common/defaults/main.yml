@@ -2,12 +2,10 @@
 project_name: cinder
 cinder:
   enabled: True
-  enabled_backends: [] # rbd_volumes for Ceph
+  enabled_backends: [] # determined automatically by Ceph roles
   default_backend:
   backends: []
-    # Ceph
-    #- name: rbd_volumes
-    #  volume_driver: cinder.volume.drivers.rbd.RBDDriver
+    # determined automatically by Ceph roles
   api_workers: 5
   state_path: "{{ state_path_base }}/cinder"
   volume_type: file

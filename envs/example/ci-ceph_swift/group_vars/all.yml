@@ -29,12 +29,9 @@ ceph:
 
 cinder:
   enabled: True
-  enabled_backends:
-    - rbd_volumes
-  backends:
-    # Ceph
-    - name: rbd_volumes
-      volume_driver: cinder.volume.drivers.rbd.RBDDriver
+  enabled_backends: [] # Determined automatically by Ceph roles
+  backends: []
+    # Determined automatically by Ceph roles
 
 serverspec:
   enabled: True

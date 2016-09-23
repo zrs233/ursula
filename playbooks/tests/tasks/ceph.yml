@@ -11,5 +11,5 @@
 - name: check ceph related configuration on controllers
   hosts: controller
   tasks:
-  - name: cinder uses rbd_volumes as backend
-    shell: grep enabled_backends | grep rbd_volumes /etc/cinder/cinder.conf
+  - name: cinder uses rbd_hybrid or rbd_ssd as backend
+    shell: grep -P "^enabled_backends.+rbd_(hybrid|ssd)" /etc/cinder/cinder.conf
