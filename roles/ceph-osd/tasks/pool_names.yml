@@ -20,7 +20,7 @@
 
 # if default pool exist and ssd/hybrid pool doesn't exist
 - name: get first osd type
-  shell: ceph osd tree |sort -rn -k1 |grep -m1  -oP "(?<=host )\w+"
+  shell: ceph osd tree |sort -rn -k1 |grep -m1  -oP "(?<=host )\S+"
   register: result_first_osd_host
   when:
     - existing_pools.stdout | search("default")
@@ -118,7 +118,7 @@
 
 # set default backend, pool
 - name: get first host if two pools exist
-  shell: ceph osd tree |sort -rn -k1 |grep -m1  -oP "(?<=host )\w+"
+  shell: ceph osd tree |sort -rn -k1 |grep -m1  -oP "(?<=host )\S+"
   failed_when: false
   register: result_running_first_osd
   when: ceph_pools.rbd_ssd.enabled and ceph_pools.rbd_hybrid.enabled
