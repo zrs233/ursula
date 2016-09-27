@@ -2,6 +2,7 @@
 # run once for each host
 - include: upgrade_flags.yml
   when: ceph_upgrade_flag_done is undefined
+  tags: ['openstack', 'cinder', 'control', 'data', 'cinder-data', 'glance', 'ceph-update']
 
 - name: create ceph directory
   file:
