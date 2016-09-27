@@ -73,6 +73,12 @@
 - name: add aodh-expirer to cron.daily
   file: src=/usr/local/bin/aodh-expirer dest=/etc/cron.daily/aodh-expirer state=link owner=root group=root mode=0755
 
+- name: stop aodh-expirer service
+  service:
+    name: aodhi-expirer
+    state: stopped
+    must_exist: false
+
 - name: uninstall aodh-expirer services
   upstart_service: name={{ item }}
                    user=aodh
