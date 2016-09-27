@@ -63,6 +63,7 @@
   template: src=etc/sysctl.d/60-tcp-tuning.conf
             dest=/etc/sysctl.d/60-tcp-tuning.conf owner=root group=root
             mode=0644
+  changed_when: true
   notify:
     - apply-sysctl
 
