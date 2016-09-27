@@ -384,23 +384,6 @@
   any_errors_fatal: true
   tags: swift
 
-  pre_tasks:
-    # FIXME Added since we are changing swift init scripts in 3.0.x
-    # This will stop services started by "old" scripts. This can be removed
-    # after all systems have migrated to 3.0.x
-    - name: stop swift services started by swift-init
-      command: swift-init stop all
-      failed_when: false
-
-    # Ownership needs to be changed for future use, do this at upgrade time
-    - name: set swiftops user as owner of ring definition
-      file:
-        path: /etc/swift/ring_definition.yml
-        owner: swiftops
-        group: swiftops
-      run_once: true
-      delegate_to: "{{ groups['swiftnode_primary'][0] }}"
-
   roles:
     - role: haproxy
       haproxy_type: swift
