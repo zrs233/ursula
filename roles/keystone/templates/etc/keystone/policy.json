@@ -20,7 +20,6 @@
     "admin_or_owner_or_cloudadmin": "rule:admin_or_owner or rule:cloudadmin",
     "admin_or_owner_or_cloudadmin_or_projectadmin": "rule:admin_or_owner_or_cloudadmin or rule:projectadmin",
     "admin_or_cloudadmin_or_projectadmin": "role:admin or is_admin:1  or rule:cloudadmin or rule:projectadmin",
-    "admin_or_cloudadmin_or_projectadmin_or_member": "rule:admin_or_cloudadmin_or_projectadmin or role:_member_",
     "create_revoke_grant_rule": "role:admin or is_admin:1  or (rule:cloudadmin and not 'admin':%(target.role.name)s) or (rule:projectadmin and not 'cloud_admin':%(target.role.name)s and not 'admin':%(target.role.name)s)",
     "identity:get_region": "",
     "identity:list_regions": "",
@@ -47,7 +46,7 @@
     "identity:delete_domain": "rule:admin_required",
 
     "identity:get_project": "rule:admin_or_cloudadmin or role:project_admin or role:_member_",
-    "identity:list_projects": "rule:admin_or_cloudadmin or role:project_admin",
+    "identity:list_projects": "",
     "identity:list_user_projects": "rule:admin_or_owner_or_cloudadmin or role:project_admin",
     "identity:create_project": "rule:admin_or_cloudadmin",
     "identity:update_project": "rule:admin_or_cloudadmin_or_projectadmin",
@@ -105,7 +104,7 @@
     "identity:create_grant": "rule:create_revoke_grant_rule",
     "identity:revoke_grant": "rule:create_revoke_grant_rule",
 
-    "identity:list_role_assignments": "rule:admin_or_cloudadmin or role:project_admin",
+    "identity:list_role_assignments": "",
     "identity:list_role_assignments_for_tree": "rule:admin_or_cloudadmin or role:project_admin",
 
     "identity:get_policy": "rule:admin_required",
