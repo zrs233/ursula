@@ -72,7 +72,8 @@
     run_once: true
     delegate_to: "{{ item }}"
     with_items: "{{ play_hosts }}"
-  when: dbupgrade | default('False') | bool
+  when: (dbupgrade | default('False') | bool) or
+        (upgrade | default('False') | bool)
 
 - name: mysql log dir
   file: dest=/var/log/mysql state=directory mode=2750 owner=mysql group=adm
