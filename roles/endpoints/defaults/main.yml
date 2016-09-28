@@ -80,7 +80,7 @@ endpoints:
       backend_api: 5002
       haproxy_api: 5000
     haproxy:
-      health_check: 'httpchk /'
+      health_check: 'httpchk GET /healthcheck'
       balance: 'roundrobin'
       prefer_primary_backend: False
       oidc_cookie: 'mod_auth_openidc_session prefix'
@@ -113,7 +113,7 @@ endpoints:
       backend_api: 5002
       haproxy_api: 5000
     haproxy:
-      health_check: 'httpchk /'
+      health_check: 'httpchk GET /healthcheck'
       balance: 'roundrobin'
       prefer_primary_backend: False
   novnc:
