@@ -13,6 +13,13 @@
       with_items: "{{ groups['all'] }}"
       when: inventory_hostname == play_hosts[0]
 
+- name: preflight checks
+  hosts: all:!vyatta-*
+  roles:
+    - role: preflight-checks
+      tags: ['always', 'precheck']
+  environment: "{{ env_vars|default({}) }}"  
+
 - name: common role for all hosts
   hosts: all:!vyatta-*
   any_errors_fatal: true

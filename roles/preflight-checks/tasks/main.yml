@@ -1,0 +1,15 @@
+---
+- block:
+  - name: check ceph installed
+    command: ceph --version
+    register: result_ceph_installed
+    failed_when: false
+    delegate_to: "{{ groups['ceph_monitors'][0] }}"
+  
+  - include: ceph.yml
+    when: result_ceph_installed.rc == 0
+
+  when: ceph.enabled | default('False') | bool
+  tags: 'precheck_ceph'
+  run_once: true
+

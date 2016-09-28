@@ -1,0 +1,28 @@
+---
+# this yml is executed with ceph installed
+- name: check ceph health
+  command: ceph -s
+  register: result_ceph_status
+  delegate_to: "{{ groups['ceph_monitors'][0] }}"
+
+- name: fail when ceph health is not ok
+  fail: msg="ceph status is not health ok"
+  when: not result_ceph_status.stdout |search("HEALTH_OK")
+
+- name: fail when there is no CEPH in cinder type list
+  shell: . /root/stackrc; cinder type-list |grep CEPH
+  delegate_to: "{{ groups['controller'][0] }}"
+
+# cinder.common_volume_name shouldn't be defined
+# in all.yml with value false
+- name: fail when cinder.common_volume_name is false
+  fail: msg="cinder.common_volume_name is not true"
+  when: not cinder.common_volume_name | default('True') | bool
+
+- name: fail when cinder configuration has rbd_volumes
+  shell: grep rbd_volumes /etc/cinder/cinder.conf
+  register: result
+  failed_when: result.rc == 0
+  delegate_to: "{{ item }}"
+  with_items:
+    - "{{ groups['controller'] }}"
