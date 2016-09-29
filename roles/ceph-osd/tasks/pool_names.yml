@@ -19,7 +19,7 @@
   when: not existing_pools.stdout | search("default")
 
 # if default pool exist and ssd/hybrid pool doesn't exist
-- name: get first osd type
+- name: get first osd host
   shell: ceph osd tree |sort -rn -k1 |grep -m1  -oP "(?<=host )\S+"
   register: result_first_osd_host
   when:
@@ -30,15 +30,23 @@
   set_fact:
     ssd_pool: "default"
     hybrid_pool: "rbd_hybrid"
-  when: result_first_osd_host is defined and
-        result_first_osd_host.stdout in groups["ceph_osds_ssd"]
+  with_items: "{{ groups['ceph_osds_ssd'] | default([]) }}"
+  when: result_first_osd_host is defined and item | search(result_first_osd_host.stdout)
 
 - name: set hybrid_pool=default if hybrid is original backend
   set_fact:
     hybrid_pool: "default"
     ssd_pool: "rbd_ssd"
-  when: result_first_osd_host is defined and
-        result_first_osd_host.stdout in groups["ceph_osds_hybrid"]
+  with_items: "{{ groups['ceph_osds_hybrid'] | default([]) }}"
+  when: result_first_osd_host is defined and item | search(result_first_osd_host.stdout)
+
+# there is potential risk of host name match, do a check here
+- name: pool name should be defined here if only default pool exists
+  assert:
+    that:
+      - ssd_pool is defined
+      - hybrid_pool is defined
+  when: result_first_osd_host is defined
 
 # if default pool exists, ssd/hybrid pool exists too
 - name: set pool names if default pool and ssd pool exist
@@ -133,15 +141,25 @@
   set_fact:
     ceph_default_backend: "rbd_ssd"
     ceph_default_pool: "{{ ceph_pools.rbd_ssd.pool_name }}"
+  with_items: "{{ groups['ceph_osds_ssd'] | default([]) }}"
   when: result_running_first_osd is defined and result_running_first_osd.rc == 0 and
-        result_running_first_osd.stdout in groups["ceph_osds_ssd"]
+        item | search(result_running_first_osd.stdout)
 
 - name: hybrid is the original backend
   set_fact:
     ceph_default_backend: "rbd_hybrid"
     ceph_default_pool: "{{ ceph_pools.rbd_hybrid.pool_name }}"
+  with_items: "{{ groups['ceph_osds_hybrid'] | default([]) }}"
   when: result_running_first_osd is defined and result_running_first_osd.rc == 0 and
-        result_running_first_osd.stdout in groups["ceph_osds_hybrid"]
+        item | search(result_running_first_osd.stdout)
+
+# make a check here in case hostname search fail for unknow error
+- name: ceph_default_backend should be defined here if two backends exist
+  assert:
+    that:
+      - ceph_default_backend is defined
+      - ceph_default_pool is defined
+  when: ceph_pools.rbd_ssd.enabled and ceph_pools.rbd_hybrid.enabled
 
 # if two pools exist, ceph_default_pool shoule has been defined
 # so we say only one pool exists if ceph_default_pool is undefined
