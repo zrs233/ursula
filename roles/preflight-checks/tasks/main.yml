@@ -5,11 +5,18 @@
     register: result_ceph_installed
     failed_when: false
     delegate_to: "{{ groups['ceph_monitors'][0] }}"
-  
+
+  - name: Check whether Cinder endpoint exists
+    shell: . /root/stackrc; openstack endpoint list | grep cinder
+    failed_when: false
+    register: result_cinder_endpoint
+    delegate_to: "{{ groups['controller'][0] }}"
+
   - include: ceph.yml
-    when: result_ceph_installed.rc == 0
+    when:
+      - result_ceph_installed.rc == 0
+      - result_cinder_endpoint.rc == 0
 
   when: ceph.enabled | default('False') | bool
   tags: 'precheck_ceph'
   run_once: true
-
