@@ -19,10 +19,10 @@
     "external": "field:networks:router:external=True",
     "default": "rule:admin_or_owner",
 
-    "create_subnet": "rule:admin_or_network_owner",
+    "create_subnet": "rule:admin_only or rule:network_owner",
     "get_subnet": "rule:admin_or_owner or rule:shared",
-    "update_subnet": "rule:admin_or_network_owner",
-    "delete_subnet": "rule:admin_or_network_owner",
+    "update_subnet": "rule:admin_only or rule:network_owner",
+    "delete_subnet": "rule:admin_only or rule:network_owner",
 
     "create_subnetpool": "",
     "create_subnetpool:shared": "rule:admin_or_cloudadmin",
