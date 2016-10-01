@@ -10,4 +10,3 @@ dependencies:
     repos:
       - repo: 'deb {{ apt_repos.ceph.repo }} {{ ansible_lsb.codename }} main'
         key_url: '{{ apt_repos.ceph.key_url }}'
-    when: ceph.enabled|bool and ansible_architecture != "ppc64le"
