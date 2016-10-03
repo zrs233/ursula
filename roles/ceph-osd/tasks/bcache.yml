@@ -104,6 +104,14 @@
   with_sequence: "start=0 end={{ ceph.disks|length - 1 }}"
   when: ok_to_deploy
 
+- name: make sure all uuids of bcaches exist
+  shell: test `ls -l /dev/disk/by-uuid/ |grep bcache |wc -l` -eq "{{ ceph.disks|length }}"
+  register: result
+  until: result.rc == 0
+  retries: 6
+  delay: 10
+  when: ok_to_deploy
+
 - name: activate osds
   ceph_bcache:
     disks: "{{ ceph.disks }}"
@@ -118,11 +126,15 @@
     pool_name: "{{ hybrid_pool }}"
     osds: "{{ groups['ceph_osds_hybrid']|length * ceph.disks|length }}"
   delegate_to: "{{ groups['ceph_monitors'][0] }}"
-  when: inventory_hostname == groups['ceph_osds_hybrid'][-1]
+  when:
+    - ok_to_deploy
+    - inventory_hostname == groups['ceph_osds_hybrid'][-1]
 
 # not sure is there a better way to get ruleset id
 - name: set ruleset for pool
   shell: ceph osd pool set {{ hybrid_pool }} crush_ruleset
          $(ceph osd crush rule dump |grep {{ hybrid_ruleset }} -A1 |grep -oP '\d+')
   delegate_to: "{{ groups['ceph_monitors'][0] }}"
-  when: inventory_hostname == groups['ceph_osds_hybrid'][-1]
+  when:
+    - ok_to_deploy
+    - inventory_hostname == groups['ceph_osds_hybrid'][-1]
