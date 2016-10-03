@@ -1,48 +1,130 @@
 ---
-- hosts: all:!db:!vyatta-*
+- hosts: controller
   serial: 1
   tasks:
   - name: Reboot
     command: shutdown -r now
     async: 0
     poll: 0
-    ignore_errors: true
+    failed_when: false
 
-  - name: Wait for SSH to come back
-    wait_for: host={{ ansible_default_ipv4.address }}
-              port={{ ansible_ssh_port|default(22) }}
-              delay=15
-    delegate_to: "{{ groups['controller']|first }}"
+  - name: waiting for server to come back
+    wait_for: host={{ inventory_hostname }}
+              state=started
+    delegate_to: localhost
+    become: false
 
-- hosts: db_arbiter
-  serial: 1
-  tasks:
-  - name: Ensure Garbd is up before rebooting database servers
-    wait_for: host={{ ansible_default_ipv4.address }}
-              port=4567
-              delay=15
-    delegate_to: "{{ groups['controller']|first }}"
+  - name: cluster health check
+    command: /etc/sensu/plugins/percona-cluster-size.rb -d /root/.my.cnf --expected 3 --criticality critical
+    register: cstat
+    until: cstat | succeeded
+    retries: 5
+    run_once: true
 
-- hosts: db
+- hosts: compute:!controller
   serial: 1
   tasks:
   - name: Reboot
     command: shutdown -r now
     async: 0
     poll: 0
-    ignore_errors: true
+    failed_when: false
 
-  - name: Wait for SSH to come back
-    local_action:
-      module: wait_for
-        host={{ ansible_default_ipv4.address }}
-        port={{ ansible_ssh_port|default(22) }}
-        delay=15
+  - name: waiting for server to come back
+    wait_for: host={{ inventory_hostname }}
+              state=started
+    delegate_to: localhost
+    become: false
 
-  - name: Ensure Galera is up before rebooting next node
-    wait_for: port=4567
+  - name: check nova services
+    command: /etc/sensu/plugins/check-nova-services.sh
+    register: result
+    until: result | succeeded
+    retries: 10
+    delegate_to: "{{ groups['controller']|first }}"
 
-  - name: Ensure mysql is running
-    service:
-      name: mysql
-      state: started
+  - name: check neutron agents
+    command: /etc/sensu/plugins/check-neutron-agents.sh
+    register: result
+    until: result | succeeded
+    retries: 10
+
+  - name: cluster health check on db_arbiter
+    command: /etc/sensu/plugins/percona-cluster-size.rb -d /root/.my.cnf --expected 3 --criticality critical
+    register: cstat
+    until: cstat | succeeded
+    retries: 5
+    when: inventory_hostname in groups['db_arbiter']
+
+- hosts: swiftnode
+  serial: 1
+  tasks:
+  - name: Reboot
+    command: shutdown -r now
+    async: 0
+    poll: 0
+    failed_when: false
+
+  - name: waiting for server to come back
+    wait_for: host={{ inventory_hostname }}
+              state=started
+    delegate_to: localhost
+    become: false
+
+  - name: swift health check
+    command: /etc/sensu/plugins/check-swift-dispersion.py
+    register: result
+    until: result | succeeded
+    retries: 10 
+
+- hosts: ceph_osds[0]
+  tasks:
+  - name: set noout flag
+    command: ceph osd set noout
+
+- hosts: ceph_osds
+  serial: 1
+  tasks:
+  - name: Reboot
+    command: shutdown -r now
+    async: 0
+    poll: 0
+    failed_when: false
+
+  - name: waiting for server to come back
+    wait_for: host={{ inventory_hostname }}
+              state=started
+    delegate_to: localhost
+    become: false
+
+  - name: ceph health check
+    command: /etc/sensu/plugins/check-ceph.rb
+    register: result
+    until: result | succeeded
+    retries: 10
+
+- hosts: ceph_monitors
+  serial: 1
+  tasks:
+  - name: Reboot
+    command: shutdown -r now
+    async: 0
+    poll: 0
+    failed_when: false
+
+  - name: waiting for server to come back
+    wait_for: host={{ inventory_hostname }}
+              state=started
+    delegate_to: localhost
+    become: false
+
+  - name: ceph health check
+    command: /etc/sensu/plugins/check-ceph.rb
+    register: result
+    until: result | succeeded
+    retries: 10
+
+- hosts: ceph_osds[0]
+  tasks:
+  - name: unset noout flag
+    command: ceph osd unset noout
