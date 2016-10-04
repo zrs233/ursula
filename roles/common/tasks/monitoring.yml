@@ -38,7 +38,7 @@
             owner=root group=sensu mode=0640
   notify: restart sensu-client
   when: monitoring.client_key is defined
-  
+
 - name: install dependancy gems
   shell: /opt/sensu/embedded/bin/gem install {{ item }} --no-user-install
   with_items: "{{ monitoring.checks.gems }}"
@@ -277,13 +277,6 @@
           ip: "{{ undercloud_cidr[0].cidr | ipaddr('5') | ipaddr('address') }}"
         - name: secondary
           ip: "{{ undercloud_cidr[0].cidr | ipaddr('6') | ipaddr('address') }}"
-      notify: restart sensu-client
-
-    - name: check vyatta vrrp status
-      sensu_check:
-        name: "check-vyatta-vrrp-status"
-        plugin: check-vyatta-vrrp.py
-        args: "--primary {{ undercloud_cidr[0].cidr | ipaddr('5') | ipaddr('address') }} --secondary {{ undercloud_cidr[0].cidr | ipaddr('6') | ipaddr('address') }} --password {{ secrets.snmp_password }}"
       notify: restart sensu-client
 
     - name: check vyatta tunnels status
