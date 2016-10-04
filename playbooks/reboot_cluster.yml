@@ -54,6 +54,7 @@
     register: cstat
     until: cstat | succeeded
     retries: 5
+    delegate_to: "{{ groups['controller']|first }}"
     when: inventory_hostname in groups['db_arbiter']
 
 - hosts: swiftnode
