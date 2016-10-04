@@ -80,23 +80,42 @@
 
 - hosts: ceph_osds[0]
   tasks:
-  - name: set noout flag
-    command: ceph osd set noout
+  - name: ceph health check before starting reboots
+    command: /etc/sensu/plugins/check-ceph.rb
+    register: result
+    until: result | succeeded
+    retries: 10
+    run_ once: true
 
 - hosts: ceph_osds
   serial: 1
   tasks:
+  - name: set noout flag
+    command: ceph osd set noout
+
   - name: Reboot
     command: shutdown -r now
     async: 0
     poll: 0
     failed_when: false
 
+  - name: ceph health check
+    command: /etc/sensu/plugins/check-ceph.rb
+    register: result
+    until: result | succeeded
+    retries: 10
+
   - name: waiting for server to come back
     wait_for: host={{ inventory_hostname }}
               state=started
     delegate_to: localhost
     become: false
+
+  - name: unset noout flag
+    command: ceph osd unset noout
+
+  - name: wait for noout flag
+    pause: seconds=30
 
   - name: ceph health check
     command: /etc/sensu/plugins/check-ceph.rb
@@ -124,8 +143,3 @@
     register: result
     until: result | succeeded
     retries: 10
-
-- hosts: ceph_osds[0]
-  tasks:
-  - name: unset noout flag
-    command: ceph osd unset noout
