@@ -85,7 +85,6 @@
     register: result
     until: result | succeeded
     retries: 10
-    run_ once: true
 
 - hosts: ceph_osds
   serial: 1
