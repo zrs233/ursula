@@ -98,12 +98,6 @@
     poll: 0
     failed_when: false
 
-  - name: ceph health check
-    command: /etc/sensu/plugins/check-ceph.rb
-    register: result
-    until: result | succeeded
-    retries: 10
-
   - name: waiting for server to come back
     wait_for: host={{ inventory_hostname }}
               state=started
