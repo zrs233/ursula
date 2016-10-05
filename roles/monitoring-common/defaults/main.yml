@@ -12,7 +12,6 @@ monitoring:
       critical: 99
     disk:
       criticality: 'critical'
-      ignore_mnts_check: '/opt/stack/data,/,/var/lib/mysql'
       specific_mnts_check:
         - name: 'stackdata'
           path: '/opt/stack/data'

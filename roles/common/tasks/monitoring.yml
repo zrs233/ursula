@@ -151,7 +151,10 @@
   notify: restart sensu-client
 
 - name: disk check with default threshold
-  sensu_check: name=disk plugin=check-disk.rb args='-i {{ monitoring.checks.disk.ignore_mnts_check }} -z {{ monitoring.checks.disk.criticality }}'
+  sensu_check:
+    name: disk
+    plugin: check-disk.rb
+    state: absent
   notify: restart sensu-client
 
 - name: disk check for specific threshold
