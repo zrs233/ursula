@@ -3,7 +3,7 @@
 - include: pool_names.yml
   delegate_to: "{{ groups['ceph_monitors'][0] }}"
   when: inventory_hostname == groups['ceph_osds'][0]
-  tags: ['openstack', 'control', 'glance', 'cinder', 'cinder-data', 'nova', 'data']
+  tags: ['monitoring', 'openstack', 'control', 'glance', 'cinder', 'cinder-data', 'nova', 'data', 'openstack-setup']
 
 - name: verify disks have been provided
   fail: msg="please provide osd disks"
