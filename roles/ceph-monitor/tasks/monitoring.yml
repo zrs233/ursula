@@ -20,4 +20,5 @@
   sensu_metrics_check:
     name: ceph-usage-metrics
     plugin: metrics-ceph.py
+    prefix: sudo -u ceph
   notify: restart sensu-client
