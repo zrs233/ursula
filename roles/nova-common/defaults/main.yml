@@ -24,7 +24,7 @@ nova:
   vnc_keymap: en-us
   scheduler_default_filters: RetryFilter,AvailabilityZoneFilter,RamFilter,ComputeFilter,CoreFilter,ComputeCapabilitiesFilter,ImagePropertiesFilter,ServerGroupAntiAffinityFilter,ServerGroupAffinityFilter,AggregateInstanceExtraSpecsFilter,NUMATopologyFilter
   scheduler_host_subset_size: 1
-  libvirt_bin_version: 1.3.1-1ubuntu10.1~cloud0
+  libvirt_bin_version: 1.3.1-1ubuntu10.3~cloud0
   python_libvirt_version: 1.3.1-1ubuntu1~cloud0
   qemu_kvm_version: 2.0.0+dfsg-2ubuntu1.27
   librdb1_version: 10.2.2-0ubuntu0.16.04.2~cloud0
