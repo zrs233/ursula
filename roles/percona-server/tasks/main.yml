@@ -154,6 +154,10 @@
   template: src=etc/mysql/conf.d/replication.cnf
             dest=/etc/mysql/conf.d/replication.cnf mode=0644
   when: percona.replication
+  notify:
+    - restart mysql server if upgrade
+  # the notify is for restart on upgrade. If restart on new install it will
+  # break. FIXME
 
 - name: bootstrap the primary node
   command: /etc/init.d/mysql bootstrap-pxc
