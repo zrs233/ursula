@@ -209,9 +209,12 @@
 
 - name: check for static route on multi subnet
   sensu_check: name=check-static-route-{{ item.cidr | regex_replace('(?P<host>.+)/(?P<size>.+)', '\\g<host>_\\g<size>') }} plugin=check-static-route.py
-               args='--subnet {{ item.cidr }} --gateway {{ item.gateway }} --criticality {{ common.monitoring.sensu_checks.check_static_route.criticality }}'
+               args='--subnet {{ item.cidr }} --gateway {{ nw_gw }} --criticality {{ common.monitoring.sensu_checks.check_static_route.criticality }}'
+  when:
+    - "{{ undercloud_cidr is defined and undercloud_cidr | length > 1 }}"
+    - update_routes|default('false')|bool
+    - (not (ansible_default_ipv4.network ==  ( item.cidr | ipaddr('network') )))
   with_items: "{{ undercloud_cidr }}"
-  when: "{{ undercloud_cidr is defined and undercloud_cidr | length > 1 }}"
   notify: restart sensu-client
 
 - name: check that large receive offload (LRO) is off
