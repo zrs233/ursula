@@ -1,3 +1,4 @@
 ---
 dependencies:
   - role: ironic-common
+  - role: apache

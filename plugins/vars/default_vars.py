@@ -53,10 +53,13 @@ class VarsModule(object):
 
     def run(self, host, vault_password=None):
         default_vars = self._get_defaults()
-        if hasattr(host, 'get_group_vars'):
-            group_vars = host.get_group_vars()
-        else:
-            group_vars = host.get_variables()
+        # This call to the variable_manager will get the variables of
+        # a given host, with the variable precedence already sorted out.
+        # This references some "private" like objects and may need to be
+        # adjusted in the future if/when this all gets overhauled.
+        # See also https://github.com/ansible/ansible/pull/17067
+        inv_vars = self.inventory._variable_manager.get_vars(
+                                 loader=self.inventory._loader, host=host)
         if default_vars:
-            return deep_update_dict(default_vars, group_vars)
+            return deep_update_dict(default_vars, inv_vars)
         return group_vars
