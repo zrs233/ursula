@@ -69,6 +69,9 @@
 - name: wait for client.admin key exists
   wait_for: path=/etc/ceph/ceph.client.admin.keyring
 
+- name: make admin keyring owned by ceph
+  file: path=/etc/ceph/ceph.client.admin.keyring owner=ceph group=ceph
+
 - name: create openstack keys
   command: ceph auth get-or-create {{ item.name }} {{ item.value }}
            -o /etc/ceph/ceph.{{ item.name }}.keyring
